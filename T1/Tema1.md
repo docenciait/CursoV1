@@ -785,6 +785,8 @@ El balanceador de carga enruta la petición hacia varias instancias idénticas. 
 
 Pero, cuando usas **arquitectura de microservicios** los datos del detalle de los productos son mostrados a través de múltiples microservicios.
 
+![](img/apigw_ms.png)
+
 ---
 
 ## Referencias
@@ -792,13 +794,7 @@ Pero, cuando usas **arquitectura de microservicios** los datos del detalle de lo
 * [1] <a id="ref1"></a>Bass, L., Clements, P., & Kazman, R. (2012). Software Architecture in Practice (3rd ed.). Addison-Wesley.
 * [2] <a id="ref2"></a>Bass, Clements y Kazman. "Software Architecture in Practice", 3rd ed. (2012)*
 * [3] <a id="ref3"></a>Sam Newman. "Building Microservices", 3rd ed. (2012)*
-* 
-Newman, S. (2021). Building Microservices (2nd Edition). O'Reilly Media.
-
-Skelton, M., & Pais, M. (2019). Team Topologies: Organizing Business and Technology Teams for Fast Flow. IT Revolution Press.
-
-Vernon, V. (2016). Domain-Driven Design Distilled. Addison-Wesley Professional.
-
-Hewitt, E. (2020). Architecting for Scale (2nd Edition). O'Reilly Media.
-
-Vogels, W. (2006). You Build It, You Run It. Public talks and blog posts.
+* [4] <a id="ref4"></a> Skelton, M., & Pais, M. (2019). Team Topologies: Organizing Business and Technology Teams for Fast Flow. IT Revolution Press.
+* [5] <a id="ref5"></a> Vernon, V. (2016). Domain-Driven Design Distilled. Addison-Wesley Professional.
+* [6] <a id="ref6"></a> Hewitt, E. (2020). Architecting for Scale (2nd Edition). O'Reilly Media.
+* [7] <a id="ref7"></a>Vogels, W. (2006). You Build It, You Run It. Public talks and blog posts.

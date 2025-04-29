@@ -1,3 +1,5 @@
+![](T1/img/portada.PNG)
+
 # CURSO: Arquitectura de Microservicios, Hexagonal, DDD y CQRS en FastAPI  
 
 ## Impartido por : Iván J.U.
