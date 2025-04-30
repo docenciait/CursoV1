@@ -39,14 +39,13 @@
 
 **Arquitectura de Software** 
 
-![](img/sw_arq.jpg)
+![](img/uber_sw_arq.png)
 
 > **Definición:** 
 
 La arquitectura de software es "la estructura o estructuras del sistema, que comprenden componentes de software, las propiedades externas visibles de esos componentes y las relaciones entre ellos". [<a href="#ref1">1</a>]
 
 Es decir, la arquitectura define **cómo**  se organiza un sistema software: qué partes tiene, cómo interactúan, qué restricciones existen y qué principios guían sus decisiones. No se trata solo del diseño técnico, sino también de cuestiones como escalabilidad, mantenibilidad, rendimiento o seguridad. [<a href="#ref2">2</a>]
-
 
 
 ---
@@ -84,15 +83,20 @@ Mientras un patrón de diseño (como Singleton) soluciona **detalles de clases y
  
 - **Modelo-Vista-Controlador (MVC)**  → separa datos, lógica y presentación.
  
-- **Arquitectura en Capas**  → organiza el sistema en capas jerárquicas (por ejemplo, presentación, lógica de negocio, datos).
+- **Puertos-Adaptadores (Hexagonal):**  → Este patrón se centra en aislar la lógica de negocio del resto del sistema (infraestructura, interfaces de usuario, bases de datos) mediante el uso de puertos e interfaces. Los "adaptadores" se encargan de la comunicación entre la lógica de negocio y el mundo exterior a través de estos puertos. Esto promueve la testabilidad y la independencia tecnológica.
  
-- **Microservicios**  → divide el sistema en pequeños servicios independientes que se comunican.
- 
-- **Event-Driven Architecture (EDA)**  → estructura el sistema alrededor de eventos y respuestas.
+- **Tubería y Filtros (Pipes and Filters):** Este patrón estructura el sistema como una secuencia de componentes de procesamiento (filtros) conectados por canales de transmisión de datos (tuberías). Cada filtro realiza una transformación específica en los datos a medida que fluyen a través de la tubería. Es útil para procesar flujos de datos.
+
+- **Agente-Mensajero (Broker)**: Se utiliza en sistemas distribuidos para estructurar aplicaciones desacopladas. Un componente central (el broker) media la comunicación entre otros componentes (agentes). Los agentes se comunican enviando mensajes al broker, quien luego los enruta a los destinatarios apropiados. Esto facilita la escalabilidad y la flexibilidad.
+
+- **Microkernel (Plug-in Architecture):** Este patrón separa la funcionalidad central de la aplicación (el microkernel) de la funcionalidad opcional (los plug-ins o extensiones). El microkernel proporciona los servicios esenciales, mientras que los plug-ins añaden funcionalidades específicas y se integran con el microkernel a través de interfaces bien definidas. Es útil para sistemas extensibles y personalizables. 
+
 
 **Referencia principal:** 
  
 - Bass, L., Clements, P., & Kazman, R. (2012). *Software Architecture in Practice* (3rd ed.). Addison-Wesley.
+- Avgeriou, Paris; Uwe Zdun (2005). «Architectural patterns revisited:a pattern language». 10th European Conference on Pattern Languages of Programs (EuroPlop 2005), July (Irsee, Germany).
+- Bass L., Clements P., Kazman R. (2005). Software Architecture in Practice: Second Edition. Addison-Wesley.
 
 
 **Metodología de Diseño (en Software)** 
@@ -114,7 +118,7 @@ Una metodología de diseño **no te dice**  qué patrón de arquitectura usar, *
 | Concepto | Categoría | Qué define | Ejemplos | 
 | --- | --- | --- | --- | 
 | Arquitectura de Software | Organización global del sistema | Cómo dividir y desplegar todo el sistema a gran escala. | Monolito, Microservicios, Serverless, SOA| 
-| Patrón de Arquitectura | Organización interna | Cómo estructurar el interior de cada parte del sistema (servicio, módulo). | Hexagonal, CQRS, MVC, Event-Driven, Clean Architecture | 
+| Patrón de Arquitectura | Organización interna | Cómo estructurar el interior de cada parte del sistema (servicio, módulo). | Hexagonal, CQRS, MVC, Broker | 
 | Metodología de Diseño | Estrategia de modelado | Cómo pensar y representar el problema real en el modelo de software. | Domain-Driven Design (DDD), Object-Oriented Design (OOD) | 
 | Patrón de Diseño | Solución local de diseño | Cómo resolver problemas comunes en diseño de clases y objetos. | Singleton, Factory, Observer, Strategy | 
 
@@ -160,9 +164,20 @@ No hay que confundir monolito con *legacy*. Una aplicación puede ser *legacy* y
 
 Los beneficios de la arquitectura monolítica:
 
-- Desarrollo simple: IDEs y otras herramientas se enfocan en construir una única aplicación.
 
-- Facilidad para realizar cambios grandes: se puede cambiar el código, el esquema de datos, se hace build y se despliega.
+- **Simple de desarrollar**: los IDEs y otras herramientas de desarrollo se centran en la creación de una única aplicación.
+  
+- **Fácil de realizar cambios radicales en la aplicación**: puedes modificar el código y el esquema de la base de datos, compilar e implementar.
+  
+- **Directo de probar**: los desarrolladores pueden escribir pruebas de extremo a extremo que iniciaban la aplicación, invocaban la API REST y probaban la interfaz de usuario con Selenium.
+  
+- **Directo de desplegar**: todo lo que un desarrollador tenía que hacer es copiar la estructura del proyecto a un servidor que tuviera un webserver instalado.
+  
+- **Fácil de escalar**: se ejecutan múltiples instancias de la aplicación detrás de un balanceador de carga.
+
+Por contraparte existen limitaciones en esta arquitectura sobretodo cuando la aplicación se va haciendo cada vez más compleja -> (**Monolitic Hell**). Los problemas que nos encontraremos se pueden resumir en:
+
+- **El desarrollo se vuelve lento por su complejidad**.
 
 
 ## 1.2 Ventajas y desventajas clave de los microservicios
