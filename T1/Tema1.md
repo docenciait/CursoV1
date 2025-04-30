@@ -340,14 +340,7 @@ Aunque los microservicios no son una solución mágica para todos los sistemas, 
    - Despliegues graduales (canary deployments) y reversión rápida en caso de fallo.
    - Elasticidad para responder a eventos como Black Friday o lanzamientos virales.
 
-6. **Sistemas de IoT y edge computing**
 
-   Microservicios permiten gestionar dispositivos de borde (edge) en tiempo real con actualizaciones ligeras y resilientes (Microsoft, 2024).
-
-   *Características clave:*
-   - Microservicios de control local en dispositivos inteligentes.
-   - Actualizaciones OTA (Over-the-Air) segmentadas por servicio.
-   - Análisis de datos en el borde para reducir latencias y optimizar el tráfico hacia la nube.
 
 ## 1.5 Distinción entre microservicios y SOA (Service-Oriented Architecture)
 
