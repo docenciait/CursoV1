@@ -352,8 +352,6 @@ Estos servicios se comunican entre sí a través de interfaces bien definidas y,
 
 El objetivo principal de SOA es promover la reutilización, la flexibilidad, la escalabilidad y la agilidad en el desarrollo e integración de sistemas de información, alineando la tecnología con los procesos de negocio.
 
-Además es un conjunto de [estándares](). 
-
 <center><img src="img/soa.png" width="400" height="300"></center>
 
 
