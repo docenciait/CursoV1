@@ -15,6 +15,8 @@
   - [1.9 Evaluación del impacto de los microservicios en la gestión del ciclo de vida del software](#19-evaluación-del-impacto-de-los-microservicios-en-la-gestión-del-ciclo-de-vida-del-software)
   - [1.10 Herramientas modernas para la gestión de arquitecturas distribuidas](#110-herramientas-modernas-para-la-gestión-de-arquitecturas-distribuidas)
   - [1.11 Introducción a patrones como API Gateway, Service Discovery, y Service Registry](#111-introducción-a-patrones-como-api-gateway-service-discovery-y-service-registry)
+    - [API Gateway](#api-gateway)
+    - [Service Discovery y Service Registry](#service-discovery-y-service-registry)
   - [Referencias](#referencias)
 
 ---
@@ -182,10 +184,15 @@ Por contraparte existen limitaciones en esta arquitectura sobretodo cuando la ap
 - **El escalado se vuelve complicado:** por ejemplo se puede necesitar un tipo de sgbd relacional para cierto módulo y otro módulo necesitar un sgbd en memoria.
 - **Se está atado un stack tecnológico:** se hace muy difícil adoptar nuevos frameworks y se opta por seguir con tecnologías obsoletas.
 
+![](img/monolitic_hell.png)
 
 ## 1.2 Ventajas y desventajas clave de los microservicios
 
 La arquitectura de microservicios se ha convertido en una de las estrategias más populares para el desarrollo de software distribuido. Sin embargo, no es una bala de plata. Comprender sus ventajas y desventajas es esencial para decidir cuándo y cómo aplicarla correctamente (Newman, 2021; NGINX, 2023).
+
+![](img/mono_hexagonal.PNG)
+
+![](img/mono_to_ms.PNG)
 
 ---
 
@@ -778,13 +785,14 @@ El control y exposición de APIs debe hacerse de forma segura y eficiente (Kong 
  
 ## 1.11 Introducción a patrones como API Gateway, Service Discovery, y Service Registry
 
-- Cuando eliges construir un conjunto de microservicios necesitas decidir cómo quieres que tus aplicaciones interactúen con los microservicios.
+### API Gateway
 
-- En una arquitectura de microserivcios, cada servicio se expone como un conjunto de endpoints.
+* Cuando eliges construir un conjunto de microservicios necesitas decidir cómo quieres que tus aplicaciones interactúen con los microservicios.
+* En una arquitectura de microserivcios, cada servicio se expone como un conjunto de endpoints.
 
 Imaginemos que desarrollamos una cliente móvil nativo para una aplicación de compras. Es muy probable que tengas una vista detalle de cada uno de los productos.
 
-Y, aunque sea un móvil, seguramente habrá un montón de detalles que mostrarán mucha información. No sólo habrá nombre de producto, descripción, precio, etc. 
+Y, aunque sea un móvil, seguramente habrá un montón de detalles que mostrarán mucha información. No sólo habrá nombre de producto, descripción, precio, etc.
 
 Sino que habrá una serie de items como:
 
@@ -795,15 +803,84 @@ Sino que habrá una serie de items como:
 5. Varias opciones de compra.
 6. ...
 
-En arquitectura monolítica, el cliente móvil trae los datos con una simple llamada REST como: 
+En arquitectura monolítica, el cliente móvil trae los datos con una simple llamada REST como:
 
-```GET api.company.com/productdetails/productId```
+`GET api.company.com/productdetails/productId`
 
 El balanceador de carga enruta la petición hacia varias instancias idénticas. Entonces se hacen varias *queries* a la base de datos y se retorna la información.
 
 Pero, cuando usas **arquitectura de microservicios** los datos del detalle de los productos son mostrados a través de múltiples microservicios.
 
+Necesitamos saber cómo el cliente accede a esos servicios. Existen dos patrones:
+
+* **Direct Client-to-Microservice Communication**: cada microservicio tendrá un endpoint público.
+  * Esto puede representar un problema porque en este ejemplo haríamos 7 llamadas. Pues por ejemplo, con Amazon, hay cientos de microservicios involucrados en renderiza la página de un producto.
+  * Dificultad al refactorizar microservicios. Por ejemplo, habrá servicios que habrá que dividir.
+* La otra forma será usando un **API Gateway**: es un servidor que tiene un único punto de entrada al sistema. El AG encapsula la arquitectura interna y encauza todas las peticiones a los endpoints para cada microservicio. Tiene otras características como autenticación, monitorización, balanceador de carga, etc.
+
+El **API Gateway** es responsable del **enrutamiento de solicitudes**, la **composición** y la **traducción de protocolos**.
+
+Todas las peticiones de los clientes pasan primero por el API Gateway, que luego las enruta al **microservicio apropiado**.
+
+A menudo, el API Gateway maneja una solicitud **invocando múltiples microservicios** y **agregando los resultados**.  
+También puede traducir entre **protocolos web** como `HTTP` y `WebSocket`, y protocolos **no orientados a la web** que se usan internamente.
+
+El API Gateway también puede proporcionar a cada cliente una **API personalizada**.  
+Normalmente expone una **API de alto nivel** (*coarse-grained*) para clientes móviles.
+
+Por ejemplo, en el caso de mostrar los detalles de un producto, el API Gateway puede ofrecer un **endpoint**: `(/productdetails?productid=xxx)`
+que permita a un cliente móvil obtener todos los detalles del producto con una sola solicitud.
+
+El API Gateway maneja esta petición invocando diversos servicios —**información del producto**, **recomendaciones**, **reseñas**, etc.— y **combinando los resultados**.
+
+Un gran ejemplo de API Gateway es [Netflix API Gateway](https://medium.com/@pablo.matteo/did-you-know-that-netflixs-api-gateway-handles-over-700-000-requests-per-second-9a97bf5dc71b)
+
 ![](img/apigw_ms.png)
+
+### Service Discovery y Service Registry
+
+El **API Gateway** necesita conocer la ubicación (dirección IP y puerto) de cada microservicio con el que se comunica.
+
+En una aplicación tradicional, probablemente podrías codificar estas ubicaciones de forma estática.  
+Pero en una aplicación moderna de microservicios basada en la nube, encontrar las ubicaciones necesarias **no es un problema trivial**.
+
+Los **servicios de infraestructura**, como un **broker de mensajería**, suelen tener una ubicación estática, que puede especificarse mediante **variables de entorno** del sistema operativo.
+
+Sin embargo, **determinar la ubicación de un servicio de aplicación** no es tan sencillo.
+
+Los servicios de aplicación tienen ubicaciones **asignadas dinámicamente**.
+
+Además, el conjunto de instancias de un servicio cambia dinámicamente debido a **escalado automático** y **actualizaciones**.
+
+Como resultado, el API Gateway —igual que cualquier otro cliente de servicios en el sistema— necesita utilizar el **mecanismo de descubrimiento de servicios** del sistema, ya sea:
+
+* **Descubrimiento del lado del servidor** (*server-side discovery*), o
+* **Descubrimiento del lado del cliente** (*client-side discovery*).
+
+Por ahora, es importante señalar que si el sistema utiliza **descubrimiento del lado del cliente**, entonces el API Gateway debe ser capaz de **consultar el registro de servicios**, que es una base de datos con todas las instancias de microservicios y sus ubicaciones.
+
+El **registro de servicios** es una parte clave del **descubrimiento de servicios**.
+
+Se trata de una **base de datos que contiene las ubicaciones en red de las instancias de servicio**.
+
+Un registro de servicios debe ser **altamente disponible** y estar **actualizado en todo momento**.  
+Los clientes pueden almacenar en caché las ubicaciones obtenidas del registro, pero esa información **acaba desactualizándose**, y los clientes podrían dejar de poder descubrir nuevas instancias.
+
+Por tanto, un registro de servicios está compuesto por un **clúster de servidores** que utilizan un **protocolo de replicación** para mantener la consistencia de los datos.
+
+Como se mencionó anteriormente, **Netflix Eureka** es un buen ejemplo de registro de servicios.  
+Proporciona una **API REST** para registrar y consultar instancias de servicio.
+
+* Una instancia de servicio **registra su ubicación de red** mediante una petición `POST`.
+* Cada **30 segundos**, debe **renovar su registro** con una petición `PUT`.
+* Un registro puede eliminarse usando una petición `DELETE` o por **timeout** si no se renueva a tiempo.
+* Como es de esperar, un cliente puede obtener las instancias registradas mediante una petición `GET`.
+
+![](img/serv_reg_discov.png)
+
+También podemos ver el diagrama junto al AG:
+
+![](img/agw_srvreg_srvdisc.png)
 
 ---
 
