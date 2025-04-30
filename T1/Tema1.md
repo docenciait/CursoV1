@@ -346,7 +346,7 @@ Aunque los microservicios no son una solución mágica para todos los sistemas, 
 
 **Qué es SOA**
 
-> **SOA (Service Oriented Architecture)**: es un paradigma de arquitectura de software que define un conjunto de principios para estructurar aplicaciones como un ensamblaje de servicios de negocio, autónomos, interoperables y descubribles. A
+> **SOA (Service Oriented Architecture)**: es un paradigma de arquitectura de software que define un conjunto de principios para estructurar aplicaciones como un ensamblaje de servicios de negocio, autónomos, interoperables y descubribles. 
 
 Estos servicios se comunican entre sí a través de interfaces bien definidas y, a menudo, utilizando protocolos estándar de comunicación en red. 
 
