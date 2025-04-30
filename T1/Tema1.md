@@ -178,6 +178,9 @@ Los beneficios de la arquitectura monolítica:
 Por contraparte existen limitaciones en esta arquitectura sobretodo cuando la aplicación se va haciendo cada vez más compleja -> (**Monolitic Hell**). Los problemas que nos encontraremos se pueden resumir en:
 
 - **El desarrollo se vuelve lento por su complejidad**.
+- **El despliegue también es lento y arduo:** por la complejidad del código se hace más tedioso tanto el proceso de despligue como el testeo del software.
+- **El escalado se vuelve complicado:** por ejemplo se puede necesitar un tipo de sgbd relacional para cierto módulo y otro módulo necesitar un sgbd en memoria.
+- **Se está atado un stack tecnológico:** se hace muy difícil adoptar nuevos frameworks y se opta por seguir con tecnologías obsoletas.
 
 
 ## 1.2 Ventajas y desventajas clave de los microservicios
