@@ -1,0 +1,1214 @@
+<!DOCTYPE html><html lang="es-ES"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0"><meta name="apple-mobile-web-app-capable" content="yes"><meta http-equiv="X-UA-Compatible" content="ie=edge"><meta property="og:type" content="website"><meta name="twitter:card" content="summary"><style>@media screen{body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button,body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container button,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container button{appearance:none;background-color:initial;border:0;color:inherit;cursor:pointer;font-size:inherit;opacity:.8;outline:none;padding:0;transition:opacity .2s linear;-webkit-tap-highlight-color:transparent}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button:disabled,body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button:disabled,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container button:disabled,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container button:disabled{cursor:not-allowed;opacity:.15!important}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button:hover,body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button:hover,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container button:hover,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container button:hover{opacity:1}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button:hover:active,body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button:hover:active,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container button:hover:active,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container button:hover:active{opacity:.6}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button:hover:not(:disabled),body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button:hover:not(:disabled),body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container button:hover:not(:disabled),body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container button:hover:not(:disabled){transition:none}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=prev],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=prev],body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container button.bespoke-marp-presenter-info-page-prev{background:#0000 url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSI1IiBkPSJNNjggOTAgMjggNTBsNDAtNDAiLz48L3N2Zz4=") no-repeat 50%;background-size:contain;overflow:hidden;text-indent:100%;white-space:nowrap}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=next],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=next],body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container button.bespoke-marp-presenter-info-page-next{background:#0000 url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSI1IiBkPSJtMzIgOTAgNDAtNDAtNDAtNDAiLz48L3N2Zz4=") no-repeat 50%;background-size:contain;overflow:hidden;text-indent:100%;white-space:nowrap}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=fullscreen],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=fullscreen]{background:#0000 url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48ZGVmcz48c3R5bGU+LmF7ZmlsbDpub25lO3N0cm9rZTojZmZmO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2Utd2lkdGg6NXB4fTwvc3R5bGU+PC9kZWZzPjxyZWN0IHdpZHRoPSI4MCIgaGVpZ2h0PSI2MCIgeD0iMTAiIHk9IjIwIiBjbGFzcz0iYSIgcng9IjUuNjciLz48cGF0aCBkPSJNNDAgNzBIMjBWNTBtMjAgMEwyMCA3MG00MC00MGgyMHYyMG0tMjAgMCAyMC0yMCIgY2xhc3M9ImEiLz48L3N2Zz4=") no-repeat 50%;background-size:contain;overflow:hidden;text-indent:100%;white-space:nowrap}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button.exit[data-bespoke-marp-osc=fullscreen],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button.exit[data-bespoke-marp-osc=fullscreen]{background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48ZGVmcz48c3R5bGU+LmF7ZmlsbDpub25lO3N0cm9rZTojZmZmO3N0cm9rZS1saW5lY2FwOnJvdW5kO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2Utd2lkdGg6NXB4fTwvc3R5bGU+PC9kZWZzPjxyZWN0IHdpZHRoPSI4MCIgaGVpZ2h0PSI2MCIgeD0iMTAiIHk9IjIwIiBjbGFzcz0iYSIgcng9IjUuNjciLz48cGF0aCBkPSJNMjAgNTBoMjB2MjBtLTIwIDAgMjAtMjBtNDAgMEg2MFYzMG0yMCAwTDYwIDUwIiBjbGFzcz0iYSIvPjwvc3ZnPg==")}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=presenter],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=presenter]{background:#0000 url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSI1IiBkPSJNODcuOCA0Ny41Qzg5IDUwIDg3LjcgNTIgODUgNTJIMzVhOC43IDguNyAwIDAgMS03LjItNC41bC0xNS42LTMxQzExIDE0IDEyLjIgMTIgMTUgMTJoNTBhOC44IDguOCAwIDAgMSA3LjIgNC41ek02MCA1MnYzNm0tMTAgMGgyME00NSA0MmgyMCIvPjwvc3ZnPg==") no-repeat 50%;background-size:contain;overflow:hidden;text-indent:100%;white-space:nowrap}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container button.bespoke-marp-presenter-note-bigger{background:#0000 url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBzdHJva2U9IiNmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSI1IiBkPSJNMTIgNTBoODBNNTIgOTBWMTAiLz48L3N2Zz4=") no-repeat 50%;background-size:contain;overflow:hidden;text-indent:100%;white-space:nowrap}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container button.bespoke-marp-presenter-note-smaller{background:#0000 url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSI1IiBkPSJNMTIgNTBoODAiLz48L3N2Zz4=") no-repeat 50%;background-size:contain;overflow:hidden;text-indent:100%;white-space:nowrap}}@keyframes __bespoke_marp_transition_reduced_outgoing__{0%{opacity:1}to{opacity:0}}@keyframes __bespoke_marp_transition_reduced_incoming__{0%{mix-blend-mode:plus-lighter;opacity:0}to{mix-blend-mode:plus-lighter;opacity:1}}.bespoke-marp-note,.bespoke-marp-osc,.bespoke-progress-parent{display:none;transition:none}@media screen{::view-transition-group(*){animation-duration:var(--marp-bespoke-transition-animation-duration,.5s);animation-timing-function:ease}::view-transition-new(*),::view-transition-old(*){animation-delay:0s;animation-direction:var(--marp-bespoke-transition-animation-direction,normal);animation-duration:var(--marp-bespoke-transition-animation-duration,.5s);animation-fill-mode:both;animation-name:var(--marp-bespoke-transition-animation-name,var(--marp-bespoke-transition-animation-name-fallback,__bespoke_marp_transition_no_animation__));mix-blend-mode:normal}::view-transition-old(*){--marp-bespoke-transition-animation-name-fallback:__bespoke_marp_transition_reduced_outgoing__;animation-timing-function:ease}::view-transition-new(*){--marp-bespoke-transition-animation-name-fallback:__bespoke_marp_transition_reduced_incoming__;animation-timing-function:ease}::view-transition-new(root),::view-transition-old(root){animation-timing-function:linear}::view-transition-new(__bespoke_marp_transition_osc__),::view-transition-old(__bespoke_marp_transition_osc__){animation-duration:0s!important;animation-name:__bespoke_marp_transition_osc__!important}::view-transition-new(__bespoke_marp_transition_osc__){opacity:0!important}.bespoke-marp-transition-warming-up::view-transition-group(*),.bespoke-marp-transition-warming-up::view-transition-new(*),.bespoke-marp-transition-warming-up::view-transition-old(*){animation-play-state:paused!important}body,html{height:100%;margin:0}body{background:#000;overflow:hidden}svg.bespoke-marp-slide{content-visibility:hidden;opacity:0;pointer-events:none;z-index:-1}svg.bespoke-marp-slide:not(.bespoke-marp-active) *{view-transition-name:none!important}svg.bespoke-marp-slide.bespoke-marp-active{content-visibility:visible;opacity:1;pointer-events:auto;z-index:0}svg.bespoke-marp-slide.bespoke-marp-active.bespoke-marp-active-ready *{animation-name:__bespoke_marp__!important}@supports not (content-visibility:hidden){svg.bespoke-marp-slide[data-bespoke-marp-load=hideable]{display:none}svg.bespoke-marp-slide[data-bespoke-marp-load=hideable].bespoke-marp-active{display:block}}}@media screen and (prefers-reduced-motion:reduce){svg.bespoke-marp-slide *{view-transition-name:none!important}}@media screen{[data-bespoke-marp-fragment=inactive]{visibility:hidden}body[data-bespoke-view=""] .bespoke-marp-parent,body[data-bespoke-view=next] .bespoke-marp-parent{inset:0;position:absolute}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc,body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc{background:#000000a6;border-radius:7px;bottom:50px;color:#fff;contain:paint;display:block;font-family:Helvetica,Arial,sans-serif;font-size:16px;left:50%;line-height:0;opacity:1;padding:12px;position:absolute;touch-action:manipulation;transform:translateX(-50%);transition:opacity .2s linear;-webkit-user-select:none;user-select:none;white-space:nowrap;will-change:transform;z-index:1;view-transition-name:__bespoke_marp_transition_osc__}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>*,body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>*{margin-left:6px}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>:first-child,body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>:first-child{margin-left:0}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>span,body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>span{opacity:.8}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>span[data-bespoke-marp-osc=page],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>span[data-bespoke-marp-osc=page]{display:inline-block;min-width:140px;text-align:center}body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=fullscreen],body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=next],body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=presenter],body[data-bespoke-view=""] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=prev],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=fullscreen],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=next],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=presenter],body[data-bespoke-view=next] .bespoke-marp-parent>.bespoke-marp-osc>button[data-bespoke-marp-osc=prev]{height:32px;line-height:32px;width:32px}body[data-bespoke-view=""] .bespoke-marp-parent.bespoke-marp-inactive,body[data-bespoke-view=next] .bespoke-marp-parent.bespoke-marp-inactive{cursor:none}body[data-bespoke-view=""] .bespoke-marp-parent.bespoke-marp-inactive>.bespoke-marp-osc,body[data-bespoke-view=next] .bespoke-marp-parent.bespoke-marp-inactive>.bespoke-marp-osc{opacity:0;pointer-events:none}body[data-bespoke-view=""] svg.bespoke-marp-slide,body[data-bespoke-view=next] svg.bespoke-marp-slide{height:100%;left:0;position:absolute;top:0;width:100%}body[data-bespoke-view=""] .bespoke-progress-parent{background:#222;display:flex;height:5px;width:100%}body[data-bespoke-view=""] .bespoke-progress-parent+.bespoke-marp-parent{top:5px}body[data-bespoke-view=""] .bespoke-progress-parent .bespoke-progress-bar{background:#0288d1;flex:0 0 0;transition:flex-basis .2s cubic-bezier(0,1,1,1)}body[data-bespoke-view=next]{background:#0000}body[data-bespoke-view=presenter]{background:#161616}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container{display:grid;font-family:Helvetica,Arial,sans-serif;grid-template:"current dragbar next" minmax(140px,1fr) "current dragbar note" 2fr "info    dragbar note" 3em;grid-template-columns:minmax(3px,var(--bespoke-marp-presenter-split-ratio,66%)) 0 minmax(3px,1fr);height:100%;left:0;position:absolute;top:0;width:100%}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-parent{grid-area:current;overflow:hidden;position:relative}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-parent svg.bespoke-marp-slide{height:calc(100% - 40px);left:20px;pointer-events:none;position:absolute;top:20px;-webkit-user-select:none;user-select:none;width:calc(100% - 40px)}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-parent svg.bespoke-marp-slide.bespoke-marp-active{filter:drop-shadow(0 3px 10px rgba(0,0,0,.5))}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-dragbar-container{background:#0288d1;cursor:col-resize;grid-area:dragbar;margin-left:-3px;opacity:0;position:relative;transition:opacity .4s linear .1s;width:6px;z-index:10}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-dragbar-container:hover{opacity:1}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-dragbar-container.active{opacity:1;transition-delay:0s}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-next-container{background:#222;cursor:pointer;display:none;grid-area:next;overflow:hidden;position:relative}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-next-container.active{display:block}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-next-container iframe.bespoke-marp-presenter-next{background:#0000;border:0;display:block;filter:drop-shadow(0 3px 10px rgba(0,0,0,.5));height:calc(100% - 40px);left:20px;pointer-events:none;position:absolute;top:20px;-webkit-user-select:none;user-select:none;width:calc(100% - 40px)}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container{background:#222;color:#eee;grid-area:note;position:relative;z-index:1}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container button{height:1.5em;line-height:1.5em;width:1.5em}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-presenter-note-wrapper{display:block;inset:0;position:absolute}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-presenter-note-buttons{background:#000000a6;border-radius:4px;bottom:0;display:flex;gap:4px;margin:12px;opacity:0;padding:6px;pointer-events:none;position:absolute;right:0;transition:opacity .2s linear}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-presenter-note-buttons:focus-within,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-presenter-note-wrapper:focus-within+.bespoke-marp-presenter-note-buttons,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container:hover .bespoke-marp-presenter-note-buttons{opacity:1;pointer-events:auto}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-note{box-sizing:border-box;font-size:calc(1.1em*var(--bespoke-marp-note-font-scale, 1));height:calc(100% - 40px);margin:20px;overflow:auto;padding-right:3px;white-space:pre-wrap;width:calc(100% - 40px);word-wrap:break-word;scrollbar-color:#eeeeee80 #0000;scrollbar-width:thin}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-note::-webkit-scrollbar{width:6px}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-note::-webkit-scrollbar-track{background:#0000}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-note::-webkit-scrollbar-thumb{background:#eeeeee80;border-radius:6px}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-note:empty{pointer-events:none}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-note.active{display:block}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-note p:first-child{margin-top:0}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-note-container .bespoke-marp-note p:last-child{margin-bottom:0}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container{align-items:center;box-sizing:border-box;color:#eee;display:flex;flex-wrap:nowrap;grid-area:info;justify-content:center;overflow:hidden;padding:0 10px}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container .bespoke-marp-presenter-info-page,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container .bespoke-marp-presenter-info-time,body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container .bespoke-marp-presenter-info-timer{box-sizing:border-box;display:block;padding:0 10px;white-space:nowrap;width:100%}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container button{height:1.5em;line-height:1.5em;width:1.5em}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container .bespoke-marp-presenter-info-page{order:2;text-align:center}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container .bespoke-marp-presenter-info-page .bespoke-marp-presenter-info-page-text{display:inline-block;min-width:120px;text-align:center}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container .bespoke-marp-presenter-info-time{color:#999;order:1;text-align:left}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container .bespoke-marp-presenter-info-timer{color:#999;order:3;text-align:right}body[data-bespoke-view=presenter] .bespoke-marp-presenter-container .bespoke-marp-presenter-info-container .bespoke-marp-presenter-info-timer:hover{cursor:pointer}}@media print{.bespoke-marp-presenter-info-container,.bespoke-marp-presenter-next-container,.bespoke-marp-presenter-note-container{display:none}}</style><style>div#\:\$p > svg > foreignObject > section{width:1280px;height:720px;box-sizing:border-box;overflow:hidden;position:relative;scroll-snap-align:center center;-webkit-text-size-adjust:100%;text-size-adjust:100%}div#\:\$p > svg > foreignObject > section::after{bottom:0;content:attr(data-marpit-pagination);padding:inherit;pointer-events:none;position:absolute;right:0}div#\:\$p > svg > foreignObject > section:not([data-marpit-pagination])::after{display:none}div#\:\$p > svg > foreignObject > section :is(h1, marp-h1){font-size:2em;margin:0.67em 0}div#\:\$p > svg > foreignObject > section video::-webkit-media-controls{will-change:transform}@page {size:1280px 720px;margin:0}@media print{html, body{background-color:#fff;margin:0;page-break-inside:avoid;break-inside:avoid-page}div#\:\$p > svg > foreignObject > section{page-break-before:always;break-before:page}div#\:\$p > svg > foreignObject > section, div#\:\$p > svg > foreignObject > section *{-webkit-print-color-adjust:exact!important;animation-delay:0s!important;animation-duration:0s!important;color-adjust:exact!important;transition:none!important}div#\:\$p > svg[data-marpit-svg]{display:block;height:100vh;width:100vw}}div#\:\$p > svg > foreignObject > :where(section){container-type:size}div#\:\$p > svg > foreignObject > section img[data-marp-twemoji]{background:transparent;height:1em;margin:0 .05em 0 .1em;vertical-align:-.1em;width:1em}/*!
+ * Marp default theme.
+ *
+ * @theme default
+ * @author Yuki Hattori
+ *
+ * @auto-scaling true
+ * @size 16:9 1280px 720px
+ * @size 4:3 960px 720px
+ */div#\:\$p > svg > foreignObject > section{--base-size-4:calc(var(--marpit-root-font-size, 1rem) * 0.25);--base-size-8:calc(var(--marpit-root-font-size, 1rem) * 0.5);--base-size-16:calc(var(--marpit-root-font-size, 1rem) * 1);--base-size-24:calc(var(--marpit-root-font-size, 1rem) * 1.5);--base-size-40:calc(var(--marpit-root-font-size, 1rem) * 2.5);--base-text-weight-normal:400;--base-text-weight-medium:500;--base-text-weight-semibold:600;--fontStack-monospace:ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;--fgColor-accent:Highlight;}div#\:\$p > svg > foreignObject > section [data-theme=light],div#\:\$p > svg > foreignObject > section{color-scheme:light;--focus-outlineColor:#0969da;--fgColor-default:#1f2328;--fgColor-muted:#59636e;--fgColor-accent:#0969da;--fgColor-success:#1a7f37;--fgColor-attention:#9a6700;--fgColor-danger:#d1242f;--fgColor-done:#8250df;--bgColor-default:#fff;--bgColor-muted:#f6f8fa;--bgColor-neutral-muted:#818b981f;--bgColor-attention-muted:#fff8c5;--borderColor-default:#d1d9e0;--borderColor-muted:#d1d9e0b3;--borderColor-neutral-muted:#d1d9e0b3;--borderColor-accent-emphasis:#0969da;--borderColor-success-emphasis:#1a7f37;--borderColor-attention-emphasis:#9a6700;--borderColor-danger-emphasis:#cf222e;--borderColor-done-emphasis:#8250df;--color-prettylights-syntax-comment:#59636e;--color-prettylights-syntax-constant:#0550ae;--color-prettylights-syntax-constant-other-reference-link:#0a3069;--color-prettylights-syntax-entity:#6639ba;--color-prettylights-syntax-storage-modifier-import:#1f2328;--color-prettylights-syntax-entity-tag:#0550ae;--color-prettylights-syntax-keyword:#cf222e;--color-prettylights-syntax-string:#0a3069;--color-prettylights-syntax-variable:#953800;--color-prettylights-syntax-brackethighlighter-unmatched:#82071e;--color-prettylights-syntax-brackethighlighter-angle:#59636e;--color-prettylights-syntax-invalid-illegal-text:#f6f8fa;--color-prettylights-syntax-invalid-illegal-bg:#82071e;--color-prettylights-syntax-carriage-return-text:#f6f8fa;--color-prettylights-syntax-carriage-return-bg:#cf222e;--color-prettylights-syntax-string-regexp:#116329;--color-prettylights-syntax-markup-list:#3b2300;--color-prettylights-syntax-markup-heading:#0550ae;--color-prettylights-syntax-markup-italic:#1f2328;--color-prettylights-syntax-markup-bold:#1f2328;--color-prettylights-syntax-markup-deleted-text:#82071e;--color-prettylights-syntax-markup-deleted-bg:#ffebe9;--color-prettylights-syntax-markup-inserted-text:#116329;--color-prettylights-syntax-markup-inserted-bg:#dafbe1;--color-prettylights-syntax-markup-changed-text:#953800;--color-prettylights-syntax-markup-changed-bg:#ffd8b5;--color-prettylights-syntax-markup-ignored-text:#d1d9e0;--color-prettylights-syntax-markup-ignored-bg:#0550ae;--color-prettylights-syntax-meta-diff-range:#8250df;--color-prettylights-syntax-sublimelinter-gutter-mark:#818b98;}div#\:\$p > svg > foreignObject > section [data-theme=dark],div#\:\$p > svg > foreignObject > section:where(.invert){color-scheme:dark;--focus-outlineColor:#1f6feb;--fgColor-default:#f0f6fc;--fgColor-muted:#9198a1;--fgColor-accent:#4493f8;--fgColor-success:#3fb950;--fgColor-attention:#d29922;--fgColor-danger:#f85149;--fgColor-done:#ab7df8;--bgColor-default:#0d1117;--bgColor-muted:#151b23;--bgColor-neutral-muted:#656c7633;--bgColor-attention-muted:#bb800926;--borderColor-default:#3d444d;--borderColor-muted:#3d444db3;--borderColor-neutral-muted:#3d444db3;--borderColor-accent-emphasis:#1f6feb;--borderColor-success-emphasis:#238636;--borderColor-attention-emphasis:#9e6a03;--borderColor-danger-emphasis:#da3633;--borderColor-done-emphasis:#8957e5;--color-prettylights-syntax-comment:#9198a1;--color-prettylights-syntax-constant:#79c0ff;--color-prettylights-syntax-constant-other-reference-link:#a5d6ff;--color-prettylights-syntax-entity:#d2a8ff;--color-prettylights-syntax-storage-modifier-import:#f0f6fc;--color-prettylights-syntax-entity-tag:#7ee787;--color-prettylights-syntax-keyword:#ff7b72;--color-prettylights-syntax-string:#a5d6ff;--color-prettylights-syntax-variable:#ffa657;--color-prettylights-syntax-brackethighlighter-unmatched:#f85149;--color-prettylights-syntax-brackethighlighter-angle:#9198a1;--color-prettylights-syntax-invalid-illegal-text:#f0f6fc;--color-prettylights-syntax-invalid-illegal-bg:#8e1519;--color-prettylights-syntax-carriage-return-text:#f0f6fc;--color-prettylights-syntax-carriage-return-bg:#b62324;--color-prettylights-syntax-string-regexp:#7ee787;--color-prettylights-syntax-markup-list:#f2cc60;--color-prettylights-syntax-markup-heading:#1f6feb;--color-prettylights-syntax-markup-italic:#f0f6fc;--color-prettylights-syntax-markup-bold:#f0f6fc;--color-prettylights-syntax-markup-deleted-text:#ffdcd7;--color-prettylights-syntax-markup-deleted-bg:#67060c;--color-prettylights-syntax-markup-inserted-text:#aff5b4;--color-prettylights-syntax-markup-inserted-bg:#033a16;--color-prettylights-syntax-markup-changed-text:#ffdfb6;--color-prettylights-syntax-markup-changed-bg:#5a1e02;--color-prettylights-syntax-markup-ignored-text:#f0f6fc;--color-prettylights-syntax-markup-ignored-bg:#1158c7;--color-prettylights-syntax-meta-diff-range:#d2a8ff;--color-prettylights-syntax-sublimelinter-gutter-mark:#3d444d;}div#\:\$p > svg > foreignObject > section{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;background-color:var(--bgColor-default);color:var(--fgColor-default);font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Noto Sans,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji;font-size:16px;line-height:1.5;margin:0;word-wrap:break-word}div#\:\$p > svg > foreignObject > section{--marpit-root-font-size:16px;}div#\:\$p > svg > foreignObject > section :is(h1, marp-h1):hover .anchor .octicon-link:before,div#\:\$p > svg > foreignObject > section :is(h2, marp-h2):hover .anchor .octicon-link:before,div#\:\$p > svg > foreignObject > section :is(h3, marp-h3):hover .anchor .octicon-link:before,div#\:\$p > svg > foreignObject > section :is(h4, marp-h4):hover .anchor .octicon-link:before,div#\:\$p > svg > foreignObject > section :is(h5, marp-h5):hover .anchor .octicon-link:before,div#\:\$p > svg > foreignObject > section :is(h6, marp-h6):hover .anchor .octicon-link:before{background-color:currentColor;content:" ";display:inline-block;height:16px;-webkit-mask-image:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 0 0 1.06 1.06l1.25-1.25a2 2 0 1 1 2.83 2.83l-2.5 2.5a2 2 0 0 1-2.83 0 .75.75 0 0 0-1.06 1.06 3.5 3.5 0 0 0 4.95 0l2.5-2.5a3.5 3.5 0 0 0-4.95-4.95zm-4.69 9.64a2 2 0 0 1 0-2.83l2.5-2.5a2 2 0 0 1 2.83 0 .75.75 0 0 0 1.06-1.06 3.5 3.5 0 0 0-4.95 0l-2.5 2.5a3.5 3.5 0 0 0 4.95 4.95l1.25-1.25a.75.75 0 0 0-1.06-1.06l-1.25 1.25a2 2 0 0 1-2.83 0"/></svg>');mask-image:url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 0 0 1.06 1.06l1.25-1.25a2 2 0 1 1 2.83 2.83l-2.5 2.5a2 2 0 0 1-2.83 0 .75.75 0 0 0-1.06 1.06 3.5 3.5 0 0 0 4.95 0l2.5-2.5a3.5 3.5 0 0 0-4.95-4.95zm-4.69 9.64a2 2 0 0 1 0-2.83l2.5-2.5a2 2 0 0 1 2.83 0 .75.75 0 0 0 1.06-1.06 3.5 3.5 0 0 0-4.95 0l-2.5 2.5a3.5 3.5 0 0 0 4.95 4.95l1.25-1.25a.75.75 0 0 0-1.06-1.06l-1.25 1.25a2 2 0 0 1-2.83 0"/></svg>');width:16px}div#\:\$p > svg > foreignObject > section details,div#\:\$p > svg > foreignObject > section figcaption,div#\:\$p > svg > foreignObject > section figure{display:block}div#\:\$p > svg > foreignObject > section summary{display:list-item}div#\:\$p > svg > foreignObject > section [hidden]{display:none!important}div#\:\$p > svg > foreignObject > section a{background-color:transparent;color:var(--fgColor-accent);text-decoration:none}div#\:\$p > svg > foreignObject > section abbr[title]{border-bottom:none;-webkit-text-decoration:underline dotted;text-decoration:underline dotted}div#\:\$p > svg > foreignObject > section b,div#\:\$p > svg > foreignObject > section strong{font-weight:var(--base-text-weight-semibold, 600)}div#\:\$p > svg > foreignObject > section dfn{font-style:italic}div#\:\$p > svg > foreignObject > section :is(h1, marp-h1){border-bottom:1px solid var(--borderColor-muted);font-size:2em;font-weight:var(--base-text-weight-semibold, 600);margin:.67em 0;padding-bottom:.3em}div#\:\$p > svg > foreignObject > section mark{background-color:var(--bgColor-attention-muted);color:var(--fgColor-default)}div#\:\$p > svg > foreignObject > section small{font-size:90%}div#\:\$p > svg > foreignObject > section sub,div#\:\$p > svg > foreignObject > section sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}div#\:\$p > svg > foreignObject > section sub{bottom:-.25em}div#\:\$p > svg > foreignObject > section sup{top:-.5em}div#\:\$p > svg > foreignObject > section img{border-style:none;box-sizing:content-box;max-width:100%}div#\:\$p > svg > foreignObject > section code,div#\:\$p > svg > foreignObject > section kbd,div#\:\$p > svg > foreignObject > section :is(pre, marp-pre),div#\:\$p > svg > foreignObject > section samp{font-family:monospace;font-size:1em}div#\:\$p > svg > foreignObject > section figure{margin:1em var(--base-size-40)}div#\:\$p > svg > foreignObject > section hr{background:transparent;background-color:var(--borderColor-default);border:0;box-sizing:content-box;height:.25em;margin:var(--base-size-24) 0;overflow:hidden;padding:0}div#\:\$p > svg > foreignObject > section input{font:inherit;font-family:inherit;font-size:inherit;line-height:inherit;margin:0;overflow:visible}div#\:\$p > svg > foreignObject > section [type=button],div#\:\$p > svg > foreignObject > section [type=reset],div#\:\$p > svg > foreignObject > section [type=submit]{-webkit-appearance:button;-moz-appearance:button;appearance:button}div#\:\$p > svg > foreignObject > section [type=checkbox],div#\:\$p > svg > foreignObject > section [type=radio]{box-sizing:border-box;padding:0}div#\:\$p > svg > foreignObject > section [type=number]::-webkit-inner-spin-button,div#\:\$p > svg > foreignObject > section [type=number]::-webkit-outer-spin-button{height:auto}div#\:\$p > svg > foreignObject > section [type=search]::-webkit-search-cancel-button,div#\:\$p > svg > foreignObject > section [type=search]::-webkit-search-decoration{-webkit-appearance:none;appearance:none}div#\:\$p > svg > foreignObject > section ::-webkit-input-placeholder{color:inherit;opacity:.54}div#\:\$p > svg > foreignObject > section ::-webkit-file-upload-button{-webkit-appearance:button;appearance:button;font:inherit}div#\:\$p > svg > foreignObject > section a:hover{text-decoration:underline}div#\:\$p > svg > foreignObject > section ::-moz-placeholder{color:var(--fgColor-muted);opacity:1}div#\:\$p > svg > foreignObject > section ::placeholder{color:var(--fgColor-muted);opacity:1}div#\:\$p > svg > foreignObject > section hr:after,div#\:\$p > svg > foreignObject > section hr:before{content:"";display:table}div#\:\$p > svg > foreignObject > section hr:after{clear:both}div#\:\$p > svg > foreignObject > section table{border-collapse:collapse;border-spacing:0;display:block;font-variant:tabular-nums;max-width:100%;overflow:auto;width:-moz-max-content;width:max-content}div#\:\$p > svg > foreignObject > section td,div#\:\$p > svg > foreignObject > section th{padding:0}div#\:\$p > svg > foreignObject > section details summary{cursor:pointer}div#\:\$p > svg > foreignObject > section [role=button]:focus,div#\:\$p > svg > foreignObject > section a:focus,div#\:\$p > svg > foreignObject > section input[type=checkbox]:focus,div#\:\$p > svg > foreignObject > section input[type=radio]:focus{box-shadow:none;outline:2px solid var(--focus-outlineColor);outline-offset:-2px}div#\:\$p > svg > foreignObject > section [role=button]:focus:not(:focus-visible),div#\:\$p > svg > foreignObject > section a:focus:not(:focus-visible),div#\:\$p > svg > foreignObject > section input[type=checkbox]:focus:not(:focus-visible),div#\:\$p > svg > foreignObject > section input[type=radio]:focus:not(:focus-visible){outline:1px solid transparent}div#\:\$p > svg > foreignObject > section [role=button]:focus-visible,div#\:\$p > svg > foreignObject > section a:focus-visible,div#\:\$p > svg > foreignObject > section input[type=checkbox]:focus-visible,div#\:\$p > svg > foreignObject > section input[type=radio]:focus-visible{box-shadow:none;outline:2px solid var(--focus-outlineColor);outline-offset:-2px}div#\:\$p > svg > foreignObject > section a:not([class]):focus,div#\:\$p > svg > foreignObject > section a:not([class]):focus-visible,div#\:\$p > svg > foreignObject > section input[type=checkbox]:focus,div#\:\$p > svg > foreignObject > section input[type=checkbox]:focus-visible,div#\:\$p > svg > foreignObject > section input[type=radio]:focus,div#\:\$p > svg > foreignObject > section input[type=radio]:focus-visible{outline-offset:0}div#\:\$p > svg > foreignObject > section kbd{background-color:var(--bgColor-muted);border-bottom-color:var(--borderColor-neutral-muted);border:1px solid var(--borderColor-neutral-muted);border-radius:6px;box-shadow:inset 0 -1px 0 var(--borderColor-neutral-muted);color:var(--fgColor-default);display:inline-block;font:11px var(--fontStack-monospace, ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace);line-height:10px;padding:var(--base-size-4);vertical-align:middle}div#\:\$p > svg > foreignObject > section :is(h1, marp-h1),div#\:\$p > svg > foreignObject > section :is(h2, marp-h2),div#\:\$p > svg > foreignObject > section :is(h3, marp-h3),div#\:\$p > svg > foreignObject > section :is(h4, marp-h4),div#\:\$p > svg > foreignObject > section :is(h5, marp-h5),div#\:\$p > svg > foreignObject > section :is(h6, marp-h6){font-weight:var(--base-text-weight-semibold, 600);line-height:1.25;margin-bottom:var(--base-size-16);margin-top:var(--base-size-24)}div#\:\$p > svg > foreignObject > section :is(h2, marp-h2){border-bottom:1px solid var(--borderColor-muted);font-size:1.5em;padding-bottom:.3em}div#\:\$p > svg > foreignObject > section :is(h2, marp-h2),div#\:\$p > svg > foreignObject > section :is(h3, marp-h3){font-weight:var(--base-text-weight-semibold, 600)}div#\:\$p > svg > foreignObject > section :is(h3, marp-h3){font-size:1.25em}div#\:\$p > svg > foreignObject > section :is(h4, marp-h4){font-size:1em}div#\:\$p > svg > foreignObject > section :is(h4, marp-h4),div#\:\$p > svg > foreignObject > section :is(h5, marp-h5){font-weight:var(--base-text-weight-semibold, 600)}div#\:\$p > svg > foreignObject > section :is(h5, marp-h5){font-size:.875em}div#\:\$p > svg > foreignObject > section :is(h6, marp-h6){color:var(--fgColor-muted);font-size:.85em;font-weight:var(--base-text-weight-semibold, 600)}div#\:\$p > svg > foreignObject > section p{margin-bottom:10px;margin-top:0}div#\:\$p > svg > foreignObject > section blockquote{border-left:.25em solid var(--borderColor-default);color:var(--fgColor-muted);margin:0;padding:0 1em}div#\:\$p > svg > foreignObject > section ol,div#\:\$p > svg > foreignObject > section ul{margin-bottom:0;margin-top:0;padding-left:2em}div#\:\$p > svg > foreignObject > section ol ol,div#\:\$p > svg > foreignObject > section ul ol{list-style-type:lower-roman}div#\:\$p > svg > foreignObject > section ol ol ol,div#\:\$p > svg > foreignObject > section ol ul ol,div#\:\$p > svg > foreignObject > section ul ol ol,div#\:\$p > svg > foreignObject > section ul ul ol{list-style-type:lower-alpha}div#\:\$p > svg > foreignObject > section dd{margin-left:0}div#\:\$p > svg > foreignObject > section code,div#\:\$p > svg > foreignObject > section :is(pre, marp-pre),div#\:\$p > svg > foreignObject > section samp,div#\:\$p > svg > foreignObject > section tt{font-family:var(--fontStack-monospace, ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace);font-size:12px}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre){margin-bottom:0;margin-top:0;word-wrap:normal}div#\:\$p > svg > foreignObject > section .octicon{display:inline-block;overflow:visible!important;vertical-align:text-bottom;fill:currentColor}div#\:\$p > svg > foreignObject > section input::-webkit-inner-spin-button,div#\:\$p > svg > foreignObject > section input::-webkit-outer-spin-button{-webkit-appearance:none;appearance:none;margin:0}div#\:\$p > svg > foreignObject > section .mr-2{margin-right:var(--base-size-8, 8px)!important}div#\:\$p > svg > foreignObject > section:after,div#\:\$p > svg > foreignObject > section:before{display:table}div#\:\$p > svg > foreignObject > section:after{clear:both}div#\:\$p > svg > foreignObject > section>:first-child{margin-top:0!important}div#\:\$p > svg > foreignObject > section>:last-child{margin-bottom:0!important}div#\:\$p > svg > foreignObject > section a:not([href]){color:inherit;text-decoration:none}div#\:\$p > svg > foreignObject > section .absent{color:var(--fgColor-danger)}div#\:\$p > svg > foreignObject > section .anchor{float:left;line-height:1;margin-left:-20px;padding-right:var(--base-size-4)}div#\:\$p > svg > foreignObject > section .anchor:focus{outline:none}div#\:\$p > svg > foreignObject > section blockquote,div#\:\$p > svg > foreignObject > section details,div#\:\$p > svg > foreignObject > section dl,div#\:\$p > svg > foreignObject > section ol,div#\:\$p > svg > foreignObject > section p,div#\:\$p > svg > foreignObject > section :is(pre, marp-pre),div#\:\$p > svg > foreignObject > section table,div#\:\$p > svg > foreignObject > section ul{margin-bottom:var(--base-size-16);margin-top:0}div#\:\$p > svg > foreignObject > section blockquote>:first-child{margin-top:0}div#\:\$p > svg > foreignObject > section blockquote>:last-child{margin-bottom:0}div#\:\$p > svg > foreignObject > section :is(h1, marp-h1) .octicon-link,div#\:\$p > svg > foreignObject > section :is(h2, marp-h2) .octicon-link,div#\:\$p > svg > foreignObject > section :is(h3, marp-h3) .octicon-link,div#\:\$p > svg > foreignObject > section :is(h4, marp-h4) .octicon-link,div#\:\$p > svg > foreignObject > section :is(h5, marp-h5) .octicon-link,div#\:\$p > svg > foreignObject > section :is(h6, marp-h6) .octicon-link{color:var(--fgColor-default);vertical-align:middle;visibility:hidden}div#\:\$p > svg > foreignObject > section :is(h1, marp-h1):hover .anchor,div#\:\$p > svg > foreignObject > section :is(h2, marp-h2):hover .anchor,div#\:\$p > svg > foreignObject > section :is(h3, marp-h3):hover .anchor,div#\:\$p > svg > foreignObject > section :is(h4, marp-h4):hover .anchor,div#\:\$p > svg > foreignObject > section :is(h5, marp-h5):hover .anchor,div#\:\$p > svg > foreignObject > section :is(h6, marp-h6):hover .anchor{text-decoration:none}div#\:\$p > svg > foreignObject > section :is(h1, marp-h1):hover .anchor .octicon-link,div#\:\$p > svg > foreignObject > section :is(h2, marp-h2):hover .anchor .octicon-link,div#\:\$p > svg > foreignObject > section :is(h3, marp-h3):hover .anchor .octicon-link,div#\:\$p > svg > foreignObject > section :is(h4, marp-h4):hover .anchor .octicon-link,div#\:\$p > svg > foreignObject > section :is(h5, marp-h5):hover .anchor .octicon-link,div#\:\$p > svg > foreignObject > section :is(h6, marp-h6):hover .anchor .octicon-link{visibility:visible}div#\:\$p > svg > foreignObject > section :is(h1, marp-h1) code,div#\:\$p > svg > foreignObject > section :is(h1, marp-h1) tt,div#\:\$p > svg > foreignObject > section :is(h2, marp-h2) code,div#\:\$p > svg > foreignObject > section :is(h2, marp-h2) tt,div#\:\$p > svg > foreignObject > section :is(h3, marp-h3) code,div#\:\$p > svg > foreignObject > section :is(h3, marp-h3) tt,div#\:\$p > svg > foreignObject > section :is(h4, marp-h4) code,div#\:\$p > svg > foreignObject > section :is(h4, marp-h4) tt,div#\:\$p > svg > foreignObject > section :is(h5, marp-h5) code,div#\:\$p > svg > foreignObject > section :is(h5, marp-h5) tt,div#\:\$p > svg > foreignObject > section :is(h6, marp-h6) code,div#\:\$p > svg > foreignObject > section :is(h6, marp-h6) tt{font-size:inherit;padding:0 .2em}div#\:\$p > svg > foreignObject > section summary :is(h1, marp-h1),div#\:\$p > svg > foreignObject > section summary :is(h2, marp-h2),div#\:\$p > svg > foreignObject > section summary :is(h3, marp-h3),div#\:\$p > svg > foreignObject > section summary :is(h4, marp-h4),div#\:\$p > svg > foreignObject > section summary :is(h5, marp-h5),div#\:\$p > svg > foreignObject > section summary :is(h6, marp-h6){display:inline-block}div#\:\$p > svg > foreignObject > section summary :is(h1, marp-h1) .anchor,div#\:\$p > svg > foreignObject > section summary :is(h2, marp-h2) .anchor,div#\:\$p > svg > foreignObject > section summary :is(h3, marp-h3) .anchor,div#\:\$p > svg > foreignObject > section summary :is(h4, marp-h4) .anchor,div#\:\$p > svg > foreignObject > section summary :is(h5, marp-h5) .anchor,div#\:\$p > svg > foreignObject > section summary :is(h6, marp-h6) .anchor{margin-left:-40px}div#\:\$p > svg > foreignObject > section summary :is(h1, marp-h1),div#\:\$p > svg > foreignObject > section summary :is(h2, marp-h2){border-bottom:0;padding-bottom:0}div#\:\$p > svg > foreignObject > section ol.no-list,div#\:\$p > svg > foreignObject > section ul.no-list{list-style-type:none;padding:0}div#\:\$p > svg > foreignObject > section ol[type="a s"]{list-style-type:lower-alpha}div#\:\$p > svg > foreignObject > section ol[type="A s"]{list-style-type:upper-alpha}div#\:\$p > svg > foreignObject > section ol[type="i s"]{list-style-type:lower-roman}div#\:\$p > svg > foreignObject > section ol[type="I s"]{list-style-type:upper-roman}div#\:\$p > svg > foreignObject > section div>ol:not([type]),div#\:\$p > svg > foreignObject > section ol[type="1"]{list-style-type:decimal}div#\:\$p > svg > foreignObject > section ol ol,div#\:\$p > svg > foreignObject > section ol ul,div#\:\$p > svg > foreignObject > section ul ol,div#\:\$p > svg > foreignObject > section ul ul{margin-bottom:0;margin-top:0}div#\:\$p > svg > foreignObject > section li>p{margin-top:var(--base-size-16)}div#\:\$p > svg > foreignObject > section li+li{margin-top:.25em}div#\:\$p > svg > foreignObject > section dl{padding:0}div#\:\$p > svg > foreignObject > section dl dt{font-size:1em;font-style:italic;font-weight:var(--base-text-weight-semibold, 600);margin-top:var(--base-size-16);padding:0}div#\:\$p > svg > foreignObject > section dl dd{margin-bottom:var(--base-size-16);padding:0 var(--base-size-16)}div#\:\$p > svg > foreignObject > section table th{font-weight:var(--base-text-weight-semibold, 600)}div#\:\$p > svg > foreignObject > section table td,div#\:\$p > svg > foreignObject > section table th{border:1px solid var(--borderColor-default);padding:6px 13px}div#\:\$p > svg > foreignObject > section table td>:last-child{margin-bottom:0}div#\:\$p > svg > foreignObject > section table tr{background-color:var(--bgColor-default);border-top:1px solid var(--borderColor-muted)}div#\:\$p > svg > foreignObject > section table tr:nth-child(2n){background-color:var(--bgColor-muted)}div#\:\$p > svg > foreignObject > section table img{background-color:transparent}div#\:\$p > svg > foreignObject > section img[align=right]{padding-left:20px}div#\:\$p > svg > foreignObject > section img[align=left]{padding-right:20px}div#\:\$p > svg > foreignObject > section .emoji{background-color:transparent;max-width:none;vertical-align:text-top}div#\:\$p > svg > foreignObject > section :is(span, marp-span).frame,div#\:\$p > svg > foreignObject > section :is(span, marp-span).frame>:is(span, marp-span){display:block;overflow:hidden}div#\:\$p > svg > foreignObject > section :is(span, marp-span).frame>:is(span, marp-span){border:1px solid var(--borderColor-default);float:left;margin:13px 0 0;padding:7px;width:auto}div#\:\$p > svg > foreignObject > section :is(span, marp-span).frame :is(span, marp-span) img{display:block;float:left}div#\:\$p > svg > foreignObject > section :is(span, marp-span).frame :is(span, marp-span) :is(span, marp-span){clear:both;color:var(--fgColor-default);display:block;padding:5px 0 0}div#\:\$p > svg > foreignObject > section :is(span, marp-span).align-center{clear:both;display:block;overflow:hidden}div#\:\$p > svg > foreignObject > section :is(span, marp-span).align-center>:is(span, marp-span){display:block;margin:13px auto 0;overflow:hidden;text-align:center}div#\:\$p > svg > foreignObject > section :is(span, marp-span).align-center :is(span, marp-span) img{margin:0 auto;text-align:center}div#\:\$p > svg > foreignObject > section :is(span, marp-span).align-right{clear:both;display:block;overflow:hidden}div#\:\$p > svg > foreignObject > section :is(span, marp-span).align-right>:is(span, marp-span){display:block;margin:13px 0 0;overflow:hidden;text-align:right}div#\:\$p > svg > foreignObject > section :is(span, marp-span).align-right :is(span, marp-span) img{margin:0;text-align:right}div#\:\$p > svg > foreignObject > section :is(span, marp-span).float-left{display:block;float:left;margin-right:13px;overflow:hidden}div#\:\$p > svg > foreignObject > section :is(span, marp-span).float-left :is(span, marp-span){margin:13px 0 0}div#\:\$p > svg > foreignObject > section :is(span, marp-span).float-right{display:block;float:right;margin-left:13px;overflow:hidden}div#\:\$p > svg > foreignObject > section :is(span, marp-span).float-right>:is(span, marp-span){display:block;margin:13px auto 0;overflow:hidden;text-align:right}div#\:\$p > svg > foreignObject > section code,div#\:\$p > svg > foreignObject > section tt{background-color:var(--bgColor-neutral-muted);border-radius:6px;font-size:85%;margin:0;padding:.2em .4em;white-space:break-spaces}div#\:\$p > svg > foreignObject > section code br,div#\:\$p > svg > foreignObject > section tt br{display:none}div#\:\$p > svg > foreignObject > section del code{text-decoration:inherit}div#\:\$p > svg > foreignObject > section samp{font-size:85%}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) code{font-size:100%}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre)>code{background:transparent;border:0;margin:0;padding:0;white-space:pre;word-break:normal}div#\:\$p > svg > foreignObject > section .highlight{margin-bottom:var(--base-size-16)}div#\:\$p > svg > foreignObject > section .highlight :is(pre, marp-pre){margin-bottom:0;word-break:normal}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre){background-color:var(--bgColor-muted);border-radius:6px;color:var(--fgColor-default);font-size:85%;line-height:1.45;overflow:auto;padding:var(--base-size-16)}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) code,div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) tt{display:inline;line-height:inherit;margin:0;max-width:auto;overflow:visible;padding:0;word-wrap:normal;background-color:transparent;border:0}div#\:\$p > svg > foreignObject > section .csv-data td,div#\:\$p > svg > foreignObject > section .csv-data th{font-size:12px;line-height:1;overflow:hidden;padding:5px;text-align:left;white-space:nowrap}div#\:\$p > svg > foreignObject > section .csv-data .blob-num{background:var(--bgColor-default);border:0;padding:10px var(--base-size-8) 9px;text-align:right}div#\:\$p > svg > foreignObject > section .csv-data tr{border-top:0}div#\:\$p > svg > foreignObject > section .csv-data th{background:var(--bgColor-muted);border-top:0;font-weight:var(--base-text-weight-semibold, 600)}div#\:\$p > svg > foreignObject > section [data-footnote-ref]:before{content:"["}div#\:\$p > svg > foreignObject > section [data-footnote-ref]:after{content:"]"}div#\:\$p > svg > foreignObject > section .footnotes{border-top:1px solid var(--borderColor-default);color:var(--fgColor-muted);font-size:12px}div#\:\$p > svg > foreignObject > section div#\:\$p > svg > foreignObject > section section.footnotes{--marpit-root-font-size:12px;}div#\:\$p > svg > foreignObject > section .footnotes ol,div#\:\$p > svg > foreignObject > section .footnotes ol ul{padding-left:var(--base-size-16)}div#\:\$p > svg > foreignObject > section .footnotes ol ul{display:inline-block;margin-top:var(--base-size-16)}div#\:\$p > svg > foreignObject > section .footnotes li{position:relative}div#\:\$p > svg > foreignObject > section .footnotes li:target:before{border:2px solid var(--borderColor-accent-emphasis);border-radius:6px;bottom:calc(var(--base-size-8)*-1);content:"";left:calc(var(--base-size-24)*-1);pointer-events:none;position:absolute;right:calc(var(--base-size-8)*-1);top:calc(var(--base-size-8)*-1)}div#\:\$p > svg > foreignObject > section .footnotes li:target{color:var(--fgColor-default)}div#\:\$p > svg > foreignObject > section .footnotes .data-footnote-backref g-emoji{font-family:monospace}div#\:\$p > svg > foreignObject > section body:has(:modal){padding-right:var(--dialog-scrollgutter)!important}div#\:\$p > svg > foreignObject > section .pl-c{color:var(--color-prettylights-syntax-comment)}div#\:\$p > svg > foreignObject > section .pl-c1,div#\:\$p > svg > foreignObject > section .pl-s .pl-v{color:var(--color-prettylights-syntax-constant)}div#\:\$p > svg > foreignObject > section .pl-e,div#\:\$p > svg > foreignObject > section .pl-en{color:var(--color-prettylights-syntax-entity)}div#\:\$p > svg > foreignObject > section .pl-s .pl-s1,div#\:\$p > svg > foreignObject > section .pl-smi{color:var(--color-prettylights-syntax-storage-modifier-import)}div#\:\$p > svg > foreignObject > section .pl-ent{color:var(--color-prettylights-syntax-entity-tag)}div#\:\$p > svg > foreignObject > section .pl-k{color:var(--color-prettylights-syntax-keyword)}div#\:\$p > svg > foreignObject > section .pl-pds,div#\:\$p > svg > foreignObject > section .pl-s,div#\:\$p > svg > foreignObject > section .pl-s .pl-pse .pl-s1,div#\:\$p > svg > foreignObject > section .pl-sr,div#\:\$p > svg > foreignObject > section .pl-sr .pl-cce,div#\:\$p > svg > foreignObject > section .pl-sr .pl-sra,div#\:\$p > svg > foreignObject > section .pl-sr .pl-sre{color:var(--color-prettylights-syntax-string)}div#\:\$p > svg > foreignObject > section .pl-smw,div#\:\$p > svg > foreignObject > section .pl-v{color:var(--color-prettylights-syntax-variable)}div#\:\$p > svg > foreignObject > section .pl-bu{color:var(--color-prettylights-syntax-brackethighlighter-unmatched)}div#\:\$p > svg > foreignObject > section .pl-ii{background-color:var(--color-prettylights-syntax-invalid-illegal-bg);color:var(--color-prettylights-syntax-invalid-illegal-text)}div#\:\$p > svg > foreignObject > section .pl-c2{background-color:var(--color-prettylights-syntax-carriage-return-bg);color:var(--color-prettylights-syntax-carriage-return-text)}div#\:\$p > svg > foreignObject > section .pl-sr .pl-cce{color:var(--color-prettylights-syntax-string-regexp);font-weight:700}div#\:\$p > svg > foreignObject > section .pl-ml{color:var(--color-prettylights-syntax-markup-list)}div#\:\$p > svg > foreignObject > section .pl-mh,div#\:\$p > svg > foreignObject > section .pl-mh .pl-en,div#\:\$p > svg > foreignObject > section .pl-ms{color:var(--color-prettylights-syntax-markup-heading);font-weight:700}div#\:\$p > svg > foreignObject > section .pl-mi{color:var(--color-prettylights-syntax-markup-italic);font-style:italic}div#\:\$p > svg > foreignObject > section .pl-mb{color:var(--color-prettylights-syntax-markup-bold);font-weight:700}div#\:\$p > svg > foreignObject > section .pl-md{background-color:var(--color-prettylights-syntax-markup-deleted-bg);color:var(--color-prettylights-syntax-markup-deleted-text)}div#\:\$p > svg > foreignObject > section .pl-mi1{background-color:var(--color-prettylights-syntax-markup-inserted-bg);color:var(--color-prettylights-syntax-markup-inserted-text)}div#\:\$p > svg > foreignObject > section .pl-mc{background-color:var(--color-prettylights-syntax-markup-changed-bg);color:var(--color-prettylights-syntax-markup-changed-text)}div#\:\$p > svg > foreignObject > section .pl-mi2{background-color:var(--color-prettylights-syntax-markup-ignored-bg);color:var(--color-prettylights-syntax-markup-ignored-text)}div#\:\$p > svg > foreignObject > section .pl-mdr{color:var(--color-prettylights-syntax-meta-diff-range);font-weight:700}div#\:\$p > svg > foreignObject > section .pl-ba{color:var(--color-prettylights-syntax-brackethighlighter-angle)}div#\:\$p > svg > foreignObject > section .pl-sg{color:var(--color-prettylights-syntax-sublimelinter-gutter-mark)}div#\:\$p > svg > foreignObject > section .pl-corl{color:var(--color-prettylights-syntax-constant-other-reference-link);text-decoration:underline}div#\:\$p > svg > foreignObject > section [role=button]:focus:not(:focus-visible),div#\:\$p > svg > foreignObject > section [role=tabpanel][tabindex="0"]:focus:not(:focus-visible),div#\:\$p > svg > foreignObject > section a:focus:not(:focus-visible),div#\:\$p > svg > foreignObject > section button:focus:not(:focus-visible),div#\:\$p > svg > foreignObject > section summary:focus:not(:focus-visible){box-shadow:none;outline:none}div#\:\$p > svg > foreignObject > section [tabindex="0"]:focus:not(:focus-visible),div#\:\$p > svg > foreignObject > section details-dialog:focus:not(:focus-visible){outline:none}div#\:\$p > svg > foreignObject > section g-emoji{display:inline-block;font-family:Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;font-size:1em;font-style:normal!important;font-weight:var(--base-text-weight-normal, 400);line-height:1;min-width:1ch;vertical-align:-.075em}div#\:\$p > svg > foreignObject > section g-emoji img{height:1em;width:1em}div#\:\$p > svg > foreignObject > section .task-list-item{list-style-type:none}div#\:\$p > svg > foreignObject > section .task-list-item label{font-weight:var(--base-text-weight-normal, 400)}div#\:\$p > svg > foreignObject > section .task-list-item.enabled label{cursor:pointer}div#\:\$p > svg > foreignObject > section .task-list-item+.task-list-item{margin-top:var(--base-size-4)}div#\:\$p > svg > foreignObject > section .task-list-item .handle{display:none}div#\:\$p > svg > foreignObject > section .task-list-item-checkbox{margin:0 .2em .25em -1.4em;vertical-align:middle}div#\:\$p > svg > foreignObject > section ul:dir(rtl) .task-list-item-checkbox{margin:0 -1.6em .25em .2em}div#\:\$p > svg > foreignObject > section ol:dir(rtl) .task-list-item-checkbox{margin:0 -1.6em .25em .2em}div#\:\$p > svg > foreignObject > section .contains-task-list:focus-within .task-list-item-convert-container,div#\:\$p > svg > foreignObject > section .contains-task-list:hover .task-list-item-convert-container{display:block;height:24px;overflow:visible;width:auto;clip:auto}div#\:\$p > svg > foreignObject > section ::-webkit-calendar-picker-indicator{filter:invert(50%)}div#\:\$p > svg > foreignObject > section .markdown-alert{border-left:.25em solid var(--borderColor-default);color:inherit;margin-bottom:var(--base-size-16);padding:var(--base-size-8) var(--base-size-16)}div#\:\$p > svg > foreignObject > section .markdown-alert>:first-child{margin-top:0}div#\:\$p > svg > foreignObject > section .markdown-alert>:last-child{margin-bottom:0}div#\:\$p > svg > foreignObject > section .markdown-alert .markdown-alert-title{align-items:center;display:flex;font-weight:var(--base-text-weight-medium, 500);line-height:1}div#\:\$p > svg > foreignObject > section .markdown-alert.markdown-alert-note{border-left-color:var(--borderColor-accent-emphasis)}div#\:\$p > svg > foreignObject > section .markdown-alert.markdown-alert-note .markdown-alert-title{color:var(--fgColor-accent)}div#\:\$p > svg > foreignObject > section .markdown-alert.markdown-alert-important{border-left-color:var(--borderColor-done-emphasis)}div#\:\$p > svg > foreignObject > section .markdown-alert.markdown-alert-important .markdown-alert-title{color:var(--fgColor-done)}div#\:\$p > svg > foreignObject > section .markdown-alert.markdown-alert-warning{border-left-color:var(--borderColor-attention-emphasis)}div#\:\$p > svg > foreignObject > section .markdown-alert.markdown-alert-warning .markdown-alert-title{color:var(--fgColor-attention)}div#\:\$p > svg > foreignObject > section .markdown-alert.markdown-alert-tip{border-left-color:var(--borderColor-success-emphasis)}div#\:\$p > svg > foreignObject > section .markdown-alert.markdown-alert-tip .markdown-alert-title{color:var(--fgColor-success)}div#\:\$p > svg > foreignObject > section .markdown-alert.markdown-alert-caution{border-left-color:var(--borderColor-danger-emphasis)}div#\:\$p > svg > foreignObject > section .markdown-alert.markdown-alert-caution .markdown-alert-title{color:var(--fgColor-danger)}div#\:\$p > svg > foreignObject > section>:first-child>.heading-element:first-child{margin-top:0!important}div#\:\$p > svg > foreignObject > section .highlight :is(pre, marp-pre):has(+.zeroclipboard-container){min-height:52px}div#\:\$p > svg > foreignObject > section :is(h1, marp-h1){color:var(--h1-color);font-size:1.6em}div#\:\$p > svg > foreignObject > section :is(h1, marp-h1),div#\:\$p > svg > foreignObject > section :is(h2, marp-h2){border-bottom:none}div#\:\$p > svg > foreignObject > section :is(h2, marp-h2){font-size:1.3em}div#\:\$p > svg > foreignObject > section :is(h3, marp-h3){font-size:1.1em}div#\:\$p > svg > foreignObject > section :is(h4, marp-h4){font-size:1.05em}div#\:\$p > svg > foreignObject > section :is(h5, marp-h5){font-size:1em}div#\:\$p > svg > foreignObject > section :is(h6, marp-h6){font-size:.9em}div#\:\$p > svg > foreignObject > section :is(h1, marp-h1) strong,div#\:\$p > svg > foreignObject > section :is(h2, marp-h2) strong,div#\:\$p > svg > foreignObject > section :is(h3, marp-h3) strong,div#\:\$p > svg > foreignObject > section :is(h4, marp-h4) strong,div#\:\$p > svg > foreignObject > section :is(h5, marp-h5) strong,div#\:\$p > svg > foreignObject > section :is(h6, marp-h6) strong{color:var(--heading-strong-color);font-weight:inherit}div#\:\$p > svg > foreignObject > section :is(h1, marp-h1)::part(auto-scaling),div#\:\$p > svg > foreignObject > section :is(h2, marp-h2)::part(auto-scaling),div#\:\$p > svg > foreignObject > section :is(h3, marp-h3)::part(auto-scaling),div#\:\$p > svg > foreignObject > section :is(h4, marp-h4)::part(auto-scaling),div#\:\$p > svg > foreignObject > section :is(h5, marp-h5)::part(auto-scaling),div#\:\$p > svg > foreignObject > section :is(h6, marp-h6)::part(auto-scaling){max-height:563px}div#\:\$p > svg > foreignObject > section hr{height:0;padding-top:.25em}div#\:\$p > svg > foreignObject > section img{background-color:transparent}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre){border:1px solid var(--borderColor-default);line-height:1.15;overflow:visible}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre)::part(auto-scaling){max-height:529px}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs){color:var(--color-prettylights-syntax-storage-modifier-import)}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-doctag),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-keyword),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-meta .hljs-keyword),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-template-tag),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-template-variable),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-type),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-variable.language_){color:var(--color-prettylights-syntax-keyword)}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-title),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-title.class_),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-title.class_.inherited__),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-title.function_){color:var(--color-prettylights-syntax-entity)}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-attr),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-attribute),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-literal),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-meta),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-number),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-operator),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-selector-attr),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-selector-class),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-selector-id),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-variable){color:var(--color-prettylights-syntax-constant)}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-meta .hljs-string),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-regexp),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-string){color:var(--color-prettylights-syntax-string)}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-built_in),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-symbol){color:var(--color-prettylights-syntax-variable)}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-code),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-comment),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-formula){color:var(--color-prettylights-syntax-comment)}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-name),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-quote),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-selector-pseudo),div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-selector-tag){color:var(--color-prettylights-syntax-entity-tag)}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-subst){color:var(--color-prettylights-syntax-storage-modifier-import)}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-section){color:var(--color-prettylights-syntax-markup-heading);font-weight:700}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-bullet){color:var(--color-prettylights-syntax-markup-list)}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-emphasis){color:var(--color-prettylights-syntax-markup-italic);font-style:italic}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-strong){color:var(--color-prettylights-syntax-markup-bold);font-weight:700}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-addition){background-color:var(--color-prettylights-syntax-markup-inserted-bg);color:var(--color-prettylights-syntax-markup-inserted-text)}div#\:\$p > svg > foreignObject > section :is(pre, marp-pre) :where(.hljs-deletion){background-color:var(--color-prettylights-syntax-markup-deleted-bg);color:var(--color-prettylights-syntax-markup-deleted-text)}div#\:\$p > svg > foreignObject > section footer,div#\:\$p > svg > foreignObject > section header{color:var(--header-footer-color);font-size:18px;left:30px;margin:0;position:absolute}div#\:\$p > svg > foreignObject > section header{top:21px}div#\:\$p > svg > foreignObject > section footer{bottom:21px}div#\:\$p > svg > foreignObject > section{--h1-color:#246;--header-footer-color:hsla(0,0%,40%,.75);--heading-strong-color:#48c;--paginate-color:#777;--base-size-4:4px;--base-size-8:8px;--base-size-16:16px;--base-size-24:24px;--base-size-40:40px;align-items:stretch;display:block;flex-flow:column nowrap;font-size:29px;height:720px;padding:78.5px;place-content:safe center center;width:1280px}div#\:\$p > svg > foreignObject > section{--marpit-root-font-size:29px;}div#\:\$p > svg > foreignObject > section:where(.invert){--h1-color:#cee7ff;--header-footer-color:hsla(0,0%,60%,.75);--heading-strong-color:#7bf;--paginate-color:#999;}div#\:\$p > svg > foreignObject > section>:last-child,div#\:\$p > svg > foreignObject > section[data-footer]>:nth-last-child(2){margin-bottom:0}div#\:\$p > svg > foreignObject > section>:first-child,div#\:\$p > svg > foreignObject > section>header:first-child+*{margin-top:0}div#\:\$p > svg > foreignObject > section:after{bottom:21px;color:var(--paginate-color);font-size:24px;padding:0;position:absolute;right:30px}div#\:\$p > svg > foreignObject > section:after{--marpit-root-font-size:24px;}div#\:\$p > svg > foreignObject > section[data-color] :is(h1, marp-h1),div#\:\$p > svg > foreignObject > section[data-color] :is(h2, marp-h2),div#\:\$p > svg > foreignObject > section[data-color] :is(h3, marp-h3),div#\:\$p > svg > foreignObject > section[data-color] :is(h4, marp-h4),div#\:\$p > svg > foreignObject > section[data-color] :is(h5, marp-h5),div#\:\$p > svg > foreignObject > section[data-color] :is(h6, marp-h6){color:currentcolor}div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="background"]{columns:initial!important;display:block!important;padding:0!important}div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="background"]::before, div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="background"]::after, div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="content"]::before, div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="content"]::after{display:none!important}div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="background"] > div[data-marpit-advanced-background-container]{all:initial;display:flex;flex-direction:row;height:100%;overflow:hidden;width:100%}div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="background"] > div[data-marpit-advanced-background-container][data-marpit-advanced-background-direction="vertical"]{flex-direction:column}div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="background"][data-marpit-advanced-background-split] > div[data-marpit-advanced-background-container]{width:var(--marpit-advanced-background-split, 50%)}div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="background"][data-marpit-advanced-background-split="right"] > div[data-marpit-advanced-background-container]{margin-left:calc(100% - var(--marpit-advanced-background-split, 50%))}div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="background"] > div[data-marpit-advanced-background-container] > figure{all:initial;background-position:center;background-repeat:no-repeat;background-size:cover;flex:auto;margin:0}div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="background"] > div[data-marpit-advanced-background-container] > figure > figcaption{position:absolute;border:0;clip:rect(0, 0, 0, 0);height:1px;margin:-1px;overflow:hidden;padding:0;white-space:nowrap;width:1px}div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="content"], div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="pseudo"]{background:transparent!important}div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background="pseudo"], div#\:\$p > svg[data-marpit-svg] > foreignObject[data-marpit-advanced-background="pseudo"]{pointer-events:none!important}div#\:\$p > svg > foreignObject > section[data-marpit-advanced-background-split]{width:100%;height:100%}
+</style></head><body><div class="bespoke-marp-osc"><button data-bespoke-marp-osc="prev" tabindex="-1" title="Previous slide">Previous slide</button><span data-bespoke-marp-osc="page"></span><button data-bespoke-marp-osc="next" tabindex="-1" title="Next slide">Next slide</button><button data-bespoke-marp-osc="fullscreen" tabindex="-1" title="Toggle fullscreen (f)">Toggle fullscreen</button><button data-bespoke-marp-osc="presenter" tabindex="-1" title="Open presenter view (p)">Open presenter view</button></div><div id=":$p"><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="1" data-theme="default" lang="es-ES" style="--theme:default;">
+<h1 id="tema-1-introducci%C3%B3n-a-la-arquitectura-de-microservicios">TEMA 1. INTRODUCCIÓN A LA ARQUITECTURA DE MICROSERVICIOS</h1>
+<ul>
+<li><a href="#tema-1-introducci%C3%B3n-a-la-arquitectura-de-microservicios">TEMA 1. INTRODUCCIÓN A LA ARQUITECTURA DE<br />
+MICROSERVICIOS</a>
+<ul>
+<li><a href="#objetivos">Objetivos</a></li>
+<li><a href="#10-conceptos-previos">1.0 Conceptos Previos</a></li>
+<li><a href="#11-evoluci%C3%B3n-de-la-arquitectura-monol%C3%ADtica-hacia-los-microservicios">1.1 Evolución de la arquitectura monolítica hacia los<br />
+microservicios</a></li>
+<li><a href="#12-ventajas-y-desventajas-clave-de-los-microservicios">1.2 Ventajas y desventajas clave de los<br />
+microservicios</a></li>
+<li><a href="#13-principios-fundamentales-de-la-arquitectura-de-microservicios">1.3 Principios fundamentales de la arquitectura de<br />
+microservicios</a></li>
+<li><a href="#14-casos-de-uso-reales-donde-los-microservicios-aportan-valor">1.4 Casos de uso reales donde los microservicios aportan<br />
+valor</a></li>
+<li><a href="#15-distinci%C3%B3n-entre-microservicios-y-soa-service-oriented-architecture">1.5 Distinción entre microservicios y SOA (Service-Oriented<br />
+Architecture)</a></li>
+<li><a href="#16-la-importancia-del-dise%C3%B1o-orientado-a-dominio-ddd-en-este-contexto">1.6 La importancia del diseño orientado a dominio (DDD) en este<br />
+contexto</a></li>
+<li><a href="#17-bounded-context-y-separaci%C3%B3n-de-responsabilidades">1.7 Bounded context y separación de<br />
+responsabilidades</a></li>
+<li><a href="#18-distribuci%C3%B3n-de-los-equipos-en-torno-a-microservicios">1.8 Distribución de los equipos en torno a<br />
+microservicios</a></li>
+<li><a href="#19-evaluaci%C3%B3n-del-impacto-de-los-microservicios-en-la-gesti%C3%B3n-del-ciclo-de-vida-del-software">1.9 Evaluación del impacto de los microservicios en la gestión del<br />
+ciclo de vida del<br />
+software</a></li>
+<li><a href="#110-herramientas-modernas-para-la-gesti%C3%B3n-de-arquitecturas-distribuidas">1.10 Herramientas modernas para la gestión de arquitecturas<br />
+distribuidas</a></li>
+<li><a href="#111-introducci%C3%B3n-a-patrones-como-api-gateway-service-discovery-y-service-registry">1.11 Introducción a patrones como API Gateway, Service Discovery, y<br />
+Service<br />
+Registry</a>
+<ul>
+<li><a href="#api-gateway">API Gateway</a></li>
+<li><a href="#service-discovery-y-service-registry">Service Discovery y Service<br />
+Registry</a></li>
+</ul>
+</li>
+<li><a href="#referencias">Referencias</a></li>
+</ul>
+</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="2" data-theme="default" lang="es-ES" style="--theme:default;">
+<h2 id="objetivos">Objetivos</h2>
+<ul>
+<li>Entender la evolución de la arquitectura monolítica hacia los<br />
+microservicios</li>
+<li>Identificar las ventajas y desventajas clave de los microservicios</li>
+<li>Describir los principios fundamentales de la arquitectura de<br />
+microservicios</li>
+<li>Analizar casos de uso reales donde los microservicios aportan valor</li>
+<li>Distinguir entre microservicios y SOA (Service-Oriented Architecture)</li>
+<li>Comprender la importancia del diseño orientado a dominio en este<br />
+contexto</li>
+<li>Introducir los conceptos de bounded context y separación de<br />
+responsabilidades</li>
+<li>Explorar cómo se distribuyen los equipos en torno a microservicios</li>
+<li>Evaluar el impacto de los microservicios en la gestión del ciclo de<br />
+vida del software</li>
+<li>Conocer herramientas modernas para la gestión de arquitecturas<br />
+distribuidas</li>
+<li>Introducción a patrones como API Gateway, Service Discovery, y Service<br />
+Registry</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="3" data-theme="default" lang="es-ES" style="--theme:default;">
+<h2 id="10-conceptos-previos">1.0 Conceptos Previos</h2>
+<p><strong>Arquitectura de Software</strong></p>
+<p><img src="img/uber_sw_arq.png" alt="" /></p>
+<blockquote>
+<p><strong>Definición:</strong></p>
+</blockquote>
+<ul>
+<li>La arquitectura de software es &quot;la estructura o estructuras del sistema, que comprenden componentes de software, las propiedades externas visibles de esos componentes y las relaciones entre ellos&quot;.</li>
+</ul>
+
+<ul>
+<li>Es decir, la arquitectura define cómo se organiza un sistema software: qué partes tiene, cómo interactúan, qué restricciones existen y qué principios guían sus decisiones.</li>
+<li>No se trata solo del diseño técnico, sino también de cuestiones como escalabilidad, mantenibilidad, rendimiento o seguridad.</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="4" data-theme="default" lang="es-ES" style="--theme:default;">
+<p><strong>Patrón de Software</strong></p>
+<blockquote>
+<p><strong>Definición:</strong></p>
+</blockquote>
+<p>Un patrón de software es &quot;una solución reutilizable a un problema<br />
+recurrente dentro de un contexto determinado en el diseño de software&quot;.</p>
+<p>--- <em>Gamma, Helm, Johnson y Vlissides. &quot;Design Patterns: Elements of<br />
+Reusable Object-Oriented Software&quot; (1994)</em></p>
+<ul>
+<li>Es decir, un patrón no es código , sino una descripción general de cómo resolver un tipo de problema que aparece una y otra vez en la construcción de sistemas de software.</li>
+<li>Ejemplos famosos de patrones son Singleton , Observer o Factory .</li>
+</ul>
+
+<ul>
+<li>Gamma, E., Helm, R., Johnson, R., &amp; Vlissides, J. (1994). <em>Design<br />
+Patterns: Elements of Reusable Object-Oriented Software</em>.<br />
+Addison-Wesley.</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="5" data-theme="default" lang="es-ES" style="--theme:default;">
+<p><strong>Patrón de Arquitectura</strong></p>
+<blockquote>
+<p><strong>Definición:</strong></p>
+</blockquote>
+<ul>
+<li>Un patrón de arquitectura es una solución general, reutilizable y probada para un problema recurrente en la organización de sistemas de software a gran escala.</li>
+<li>Define cómo estructurar y coordinar componentes principales de una aplicación.</li>
+</ul>
+<p>--- <em>Bass, Clements y Kazman. &quot;Software Architecture in Practice&quot;, 3rd<br />
+ed. (2012)</em></p>
+<p>En otras palabras:</p>
+<ul>
+<li>Mientras un patrón de diseño (como Singleton) soluciona detalles de clases y objetos , un patrón de arquitectura ofrece una estructura global : cómo dividir el sistema, cómo se comunican las partes, cómo fluye la información.</li>
+</ul>
+
+<ul>
+<li>
+<p><strong>Modelo-Vista-Controlador (MVC)</strong> → separa datos, lógica y<br />
+presentación.</p>
+</li>
+<li>
+<ul>
+<li>Puertos-Adaptadores (Hexagonal): → Este patrón se centra en aislar la lógica de negocio del resto del sistema (infraestructura, interfaces de usuario, bases de datos) mediante el uso de puertos e interfaces.</li>
+<li>Los &quot;adaptadores&quot; se encargan de la comunicación entre la lógica de negocio y el mundo exterior a través de estos puertos.</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>Tubería y Filtros (Pipes and Filters): Este patrón estructura el sistema como una secuencia de componentes de procesamiento (filtros) conectados por canales de transmisión de datos (tuberías).</li>
+<li>Cada filtro realiza una transformación específica en los datos a medida que fluyen a través de la tubería.</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>Agente-Mensajero (Broker): Se utiliza en sistemas distribuidos para estructurar aplicaciones desacopladas.</li>
+<li>Un componente central (el broker) media la comunicación entre otros componentes (agentes).</li>
+</ul>
+</li>
+<li>
+<ul>
+<li>Microkernel (Plug-in Architecture): Este patrón separa la funcionalidad central de la aplicación (el microkernel) de la funcionalidad opcional (los plug-ins o extensiones).</li>
+<li>El microkernel proporciona los servicios esenciales, mientras que los plug-ins añaden funcionalidades específicas y se integran con el microkernel a través de interfaces bien definidas.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Referencia principal:</strong></p>
+<ul>
+<li>Bass, L., Clements, P., &amp; Kazman, R. (2012). <em>Software Architecture in<br />
+Practice</em> (3rd ed.). Addison-Wesley.</li>
+<li>Avgeriou, Paris; Uwe Zdun (2005). «Architectural patterns revisited:a<br />
+pattern language». 10th European Conference on Pattern Languages of<br />
+Programs (EuroPlop 2005), July (Irsee, Germany).</li>
+<li>Bass L., Clements P., Kazman R. (2005). Software Architecture in<br />
+Practice: Second Edition. Addison-Wesley.</li>
+</ul>
+<p><strong>Metodología de Diseño (en Software)</strong></p>
+<blockquote>
+<p><strong>Definición:</strong></p>
+</blockquote>
+<ul>
+<li>Una metodología de diseño es un conjunto organizado de principios, prácticas y procesos que guían cómo se modela, organiza y estructura el software para resolver problemas del dominio de manera efectiva.</li>
+</ul>
+<p>Se enfoca en <strong>cómo representar el problema real</strong> dentro del sistema<br />
+software.</p>
+<p><strong>En otras palabras:</strong></p>
+<ul>
+<li>Una metodología de diseño no te dice qué patrón de arquitectura usar, ni cómo desplegar tu aplicación, sino cómo pensar y construir los modelos y relaciones dentro de tu sistema, de manera coherente, sólida y alineada con el negocio.</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="6" data-theme="default" lang="es-ES" style="--theme:default;">
+<p><strong>Conceptos en Arquitectura de Software</strong></p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="7" data-theme="default" lang="es-ES" style="--theme:default;">
+<p>Concepto          Categoría         Qué define        Ejemplos</p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="8" data-theme="default" lang="es-ES" style="--theme:default;">
+<p>Arquitectura de   Organización      Cómo dividir y    Monolito,<br />
+Software          global del        desplegar todo el Microservicios,<br />
+sistema           sistema a gran    Serverless, SOA<br />
+escala.</p>
+<p>Patrón de         Organización      Cómo estructurar  Hexagonal, CQRS,<br />
+Arquitectura      interna           el interior de    MVC, Broker<br />
+cada parte del<br />
+sistema<br />
+(servicio,<br />
+módulo).</p>
+<p>Metodología de    Estrategia de     Cómo pensar y     Domain-Driven<br />
+Diseño            modelado          representar el    Design (DDD),<br />
+problema real en  Object-Oriented<br />
+el modelo de      Design (OOD)<br />
+software.</p>
+<h2 id="patr%C3%B3n-de-dise%C3%B1o-soluci%C3%B3n-local-de-c%C3%B3mo-resolver-singletondise%C3%B1o-problemas-comunes-factoryen-dise%C3%B1o-de-observerclases-y-objetos-strategy">Patrón de Diseño  Solución local de Cómo resolver     Singleton,<br />
+diseño            problemas comunes Factory,<br />
+en diseño de      Observer,<br />
+clases y objetos. Strategy</h2>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="9" data-theme="default" lang="es-ES" style="--theme:default;">
+<blockquote>
+<p>En resumen:</p>
+</blockquote>
+<ul>
+<li>
+<p><strong>Microservicios</strong> es <strong>Arquitectura de Software</strong> (macro nivel).</p>
+</li>
+<li>
+<p><strong>Hexagonal</strong> , <strong>CQRS</strong> , etc., son <strong>Patrones de Arquitectura</strong><br />
+(nivel interno de cada microservicio o componente).</p>
+</li>
+<li>
+<p><strong>DDD</strong> es una <strong>Metodología de Diseño</strong> (cómo modelas el negocio<br />
+dentro del sistema).</p>
+</li>
+<li>
+<p><strong>Singleton</strong> , <strong>Factory</strong> , etc., son <strong>Patrones de Diseño</strong><br />
+(resuelven problemas pequeños de estructura de clases/objetos).</p>
+</li>
+</ul>
+<blockquote>
+<p>Resumen en una frase:</p>
+</blockquote>
+<blockquote>
+<p>Microservicios <strong>es una forma de construir el sistema completo</strong> ,</p>
+</blockquote>
+<p><strong>y los patrones de arquitectura son herramientas</strong> para <strong>organizar<br />
+internamente</strong> cada microservicio.</p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="10" data-theme="default" lang="es-ES" style="--theme:default;">
+<h2 id="11-evoluci%C3%B3n-de-la-arquitectura-monol%C3%ADtica-hacia-los-microservicios">1.1 Evolución de la arquitectura monolítica hacia los microservicios</h2>
+<p>Lo primero que deberíamos conocer es la arquitectura monolítica o<br />
+monolito y la arquitectura de micorservicios o, simplemente,<br />
+microservicios.</p>
+<p><strong>El Monolito</strong></p>
+<p>Cuando se habla de monolito lo podemos hacer refiriéndonos a unidad de<br />
+despliegue. Es decir, <strong>toda la funcionalidad en un sistema tiene que<br />
+ser desplegada conjuntamente</strong>.</p>
+<p>El monolito puede ser: single-process, modular, distributed.</p>
+<p>No hay que confundir monolito con <em>legacy</em>. Una aplicación puede ser<br />
+<em>legacy</em> y tener una arquitectura microservicios. Podemos hacer una<br />
+aplicación en una Startup y que sea un monolito.</p>
+<p>Los beneficios de la arquitectura monolítica:</p>
+<ul>
+<li>
+<p><strong>Simple de desarrollar</strong>: los IDEs y otras herramientas de desarrollo<br />
+se centran en la creación de una única aplicación.</p>
+</li>
+<li>
+<p><strong>Fácil de realizar cambios radicales en la aplicación</strong>: puedes<br />
+modificar el código y el esquema de la base de datos, compilar e<br />
+implementar.</p>
+</li>
+<li>
+<p><strong>Directo de probar</strong>: los desarrolladores pueden escribir pruebas de<br />
+extremo a extremo que iniciaban la aplicación, invocaban la API REST y<br />
+probaban la interfaz de usuario con Selenium.</p>
+</li>
+<li>
+<p><strong>Directo de desplegar</strong>: todo lo que un desarrollador tenía que hacer<br />
+es copiar la estructura del proyecto a un servidor que tuviera un<br />
+webserver instalado.</p>
+</li>
+<li>
+<p><strong>Fácil de escalar</strong>: se ejecutan múltiples instancias de la<br />
+aplicación detrás de un balanceador de carga.</p>
+</li>
+</ul>
+
+<ul>
+<li>Por contraparte existen limitaciones en esta arquitectura sobretodo cuando la aplicación se va haciendo cada vez más compleja -&gt; (Monolitic Hell).</li>
+</ul>
+
+<ul>
+<li><strong>El desarrollo se vuelve lento por su complejidad</strong>.</li>
+<li><strong>El despliegue también es lento y arduo:</strong> por la complejidad del<br />
+código se hace más tedioso tanto el proceso de despligue como el<br />
+testeo del software.</li>
+<li><strong>El escalado se vuelve complicado:</strong> por ejemplo se puede necesitar<br />
+un tipo de sgbd relacional para cierto módulo y otro módulo necesitar<br />
+un sgbd en memoria.</li>
+<li><strong>Se está atado un stack tecnológico:</strong> se hace muy difícil adoptar<br />
+nuevos frameworks y se opta por seguir con tecnologías obsoletas.</li>
+</ul>
+<p><img src="img/monolitic_hell.png" alt="" /></p>
+<h2 id="12-ventajas-y-desventajas-clave-de-los-microservicios">1.2 Ventajas y desventajas clave de los microservicios</h2>
+<ul>
+<li>La arquitectura de microservicios se ha convertido en una de las estrategias más populares para el desarrollo de software distribuido.</li>
+<li>Sin embargo, no es una bala de plata.</li>
+</ul>
+<p><img src="img/mono_hexagonal.PNG" alt="" /></p>
+<p><img src="img/mono_to_ms.PNG" alt="" /></p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="11" data-theme="default" lang="es-ES" style="--theme:default;">
+<p><strong>Ventajas principales de los microservicios</strong></p>
+<ol>
+<li>
+<p><strong>Escalabilidad independiente</strong></p>
+<p>Cada microservicio se puede escalar de forma autónoma según su carga<br />
+específica, optimizando recursos y rendimiento (Dragoni et al.,<br />
+2017).</p>
+</li>
+<li>
+<p><strong>Despliegue continuo y rápido</strong></p>
+<p>Permite realizar despliegues independientes sin afectar a otros<br />
+servicios, facilitando el uso de pipelines CI/CD (Fowler, 2014;<br />
+Newman, 2021).</p>
+</li>
+<li>
+<p><strong>Alineación con los equipos de producto</strong></p>
+<p>Se facilita la organización de equipos autónomos en torno a dominios<br />
+de negocio, siguiendo principios de DDD y Team Topologies (Skelton &amp;<br />
+Pais, 2019).</p>
+</li>
+<li>
+<p><strong>Mayor tolerancia a fallos</strong></p>
+<p>Un fallo en un servicio no necesariamente impacta todo el sistema,<br />
+siempre que se apliquen patrones como circuit breakers o retries<br />
+(Microsoft, 2024).</p>
+</li>
+<li>
+<p><strong>Flexibilidad tecnológica</strong></p>
+<p>Cada equipo puede elegir el stack tecnológico más adecuado para su<br />
+servicio, manteniendo interoperabilidad mediante contratos bien<br />
+definidos (Newman, 2021).</p>
+</li>
+</ol>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="12" data-theme="default" lang="es-ES" style="--theme:default;">
+<p><strong>Desventajas clave de los microservicios</strong></p>
+<ol>
+<li>
+<p><strong>Complejidad operativa</strong></p>
+<p>Requiere una infraestructura madura para orquestación,<br />
+observabilidad, descubrimiento de servicios y despliegues<br />
+automatizados (AWS, 2023).</p>
+</li>
+<li>
+<p><strong>Mayor latencia y sobrecarga de red</strong></p>
+<p>La comunicación entre servicios vía HTTP o mensajería introduce<br />
+latencia y puede generar cuellos de botella (Google Cloud, 2022).</p>
+</li>
+<li>
+<p><strong>Pruebas más complejas</strong></p>
+<p>Las pruebas de integración y sistema se vuelven más difíciles y<br />
+costosas de mantener en entornos distribuidos (ThoughtWorks, 2023).</p>
+</li>
+<li>
+<p><strong>Gestión distribuida de datos</strong></p>
+<p>El patrón &quot;base de datos por servicio&quot; complica las transacciones,<br />
+la consistencia eventual y la sincronización de datos (Vernon,<br />
+2016).</p>
+</li>
+<li>
+<p><strong>Curva de aprendizaje y coste organizacional</strong></p>
+<p>Requiere conocimientos en DevOps, mensajería, observabilidad,<br />
+automatización, y diseño resiliente, lo cual eleva el umbral técnico<br />
+(NGINX, 2023).</p>
+</li>
+</ol>
+<h2 id="13-principios-fundamentales-de-la-arquitectura-de-microservicios">1.3 Principios fundamentales de la arquitectura de microservicios</h2>
+<ul>
+<li>La arquitectura de microservicios se basa en varios principios rectores que buscan maximizar la agilidad, la resiliencia y la escalabilidad de los sistemas distribuidos.</li>
+<li>Estos principios han sido definidos a partir de la experiencia de empresas pioneras como Netflix, Amazon y Google (Newman, 2021; NGINX, 2023).</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="13" data-theme="default" lang="es-ES" style="--theme:default;">
+<p><strong>Principios esenciales</strong></p>
+<ol>
+<li>
+<p><strong>Modelar alrededor de negocios y dominios</strong></p>
+<p>Los microservicios deben estructurarse en torno a los <em>Bounded<br />
+Contexts</em> del dominio de negocio, siguiendo los principios de<br />
+<em>Domain-Driven Design (DDD)</em> (Evans, 2003; Vernon, 2016).</p>
+<p><em>Ejemplo:</em> Un servicio para gestión de pagos, otro para inventario,<br />
+otro para facturación, etc.</p>
+</li>
+<li>
+<p><strong>Autonomía y despliegue independiente</strong></p>
+<p>Cada microservicio debe ser <strong>autónomo</strong> en su ciclo de vida:<br />
+desarrollo, despliegue y escalado, sin depender de la sincronización<br />
+con otros servicios (Newman, 2021).</p>
+</li>
+<li>
+<p><strong>Interfaces bien definidas y comunicación ligera</strong></p>
+<p>Los microservicios se comunican entre sí mediante APIs bien<br />
+definidas, preferiblemente usando protocolos ligeros como HTTP/REST,<br />
+gRPC o eventos asincrónicos (Google Cloud, 2022).</p>
+</li>
+<li>
+<p><strong>Descentralización del almacenamiento de datos</strong></p>
+<p>Cada servicio debe tener su propia base de datos o su propio esquema<br />
+de datos, para evitar dependencias directas y cuellos de botella<br />
+(Fowler, 2014).</p>
+<p><em>Patrón:</em> Database per Service.</p>
+</li>
+<li>
+<p><strong>Despliegue y entrega continua (CI/CD)</strong></p>
+<p>La automatización de pruebas, integración y despliegue es<br />
+fundamental para mantener la agilidad y calidad del software (AWS,<br />
+2023).</p>
+</li>
+<li>
+<p><strong>Resiliencia y tolerancia a fallos</strong></p>
+<ul>
+<li>Dado que los sistemas distribuidos fallan de forma inevitable, los microservicios deben diseñarse con patrones de resiliencia como circuit breakers, timeouts, bulkheads y reintentos (Microsoft, 2024).</li>
+</ul>
+</li>
+<li>
+<p><strong>Observabilidad desde el diseño</strong></p>
+<p>Es imprescindible integrar capacidades de logging distribuido,<br />
+métricas y tracing desde el primer momento para poder monitorear y<br />
+depurar sistemas de múltiples servicios (Honeycomb, 2023).</p>
+</li>
+<li>
+<p><strong>Organización de equipos alineada con servicios</strong></p>
+<p>Siguiendo la <em>Ley de Conway</em>, los equipos deben organizarse en torno<br />
+a los servicios que construyen y operan, no por tecnología (Skelton<br />
+&amp; Pais, 2019).</p>
+</li>
+</ol>
+<h2 id="14-casos-de-uso-reales-donde-los-microservicios-aportan-valor">1.4 Casos de uso reales donde los microservicios aportan valor</h2>
+<ul>
+<li>Aunque los microservicios no son una solución mágica para todos los sistemas, han demostrado ser extremadamente eficaces en escenarios de alta complejidad, escalabilidad y evolución continua (Newman, 2021; AWS, 2023).</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="14" data-theme="default" lang="es-ES" style="--theme:default;">
+<p><strong>Casos de uso principales y sus características</strong></p>
+<ol>
+<li>
+<p><strong>Plataformas de e-commerce a gran escala: Amazon</strong></p>
+<p>Amazon fue uno de los pioneros en reestructurar su gigantesco<br />
+monolito en cientos de microservicios (Vogels, 2006).</p>
+<p><em>Características clave:</em></p>
+<ul>
+<li>Cada equipo &quot;two-pizza&quot; gestiona un servicio específico (ej.<br />
+pagos, inventario, catálogo).</li>
+<li>Independencia total para desplegar nuevas versiones de servicios<br />
+sin coordinar despliegues globales.</li>
+<li>Escalabilidad horizontal precisa: solo escalan los servicios que<br />
+enfrentan picos de demanda (como el carrito en Black Friday).</li>
+</ul>
+</li>
+<li>
+<p><strong>Sistemas de streaming de contenidos: Netflix</strong></p>
+<p>Netflix migró su monolito a una arquitectura de microservicios<br />
+basada en la nube para soportar la transmisión global (Netflix Tech<br />
+Blog, 2022).</p>
+<p><em>Características clave:</em></p>
+<ul>
+<li>Uso extensivo de <em>Chaos Engineering</em> para probar la resiliencia de<br />
+los servicios frente a fallos de red y sistemas.</li>
+<li>Independencia total entre microservicios de recomendaciones,<br />
+streaming, autenticación, y facturación.</li>
+<li>Elasticidad automática basada en demanda utilizando<br />
+infraestructura en AWS.</li>
+</ul>
+</li>
+<li>
+<p><strong>Banca digital y fintech: Monzo y Revolut</strong></p>
+<p>En banca moderna, donde la confiabilidad y la innovación rápida son<br />
+críticas, Monzo y Revolut apostaron por arquitecturas de<br />
+microservicios (ThoughtWorks, 2023).</p>
+<p><em>Características clave:</em></p>
+<ul>
+<li>Cada producto bancario (cuentas, préstamos, transferencias) es un<br />
+microservicio independiente.</li>
+<li>Implementación fuerte de políticas de seguridad en cada servicio.</li>
+<li>Aislamiento de errores: una caída en el servicio de tarjetas no<br />
+afecta a las transferencias.</li>
+</ul>
+</li>
+<li>
+<p><strong>Aplicaciones de viajes y movilidad: Uber</strong></p>
+<p>Uber adoptó una arquitectura de microservicios para gestionar su<br />
+crecimiento global y expansión en múltiples servicios (Uber<br />
+Engineering, 2023).</p>
+<p><em>Características clave:</em></p>
+<ul>
+<li>Descomposición en más de 2.200 microservicios (según reportes de<br />
+2022).</li>
+<li>Balanceadores de carga y descubrimiento de servicios para dirigir<br />
+peticiones eficientemente.</li>
+<li>Resiliencia multi-región, con fallbacks entre zonas geográficas.</li>
+</ul>
+</li>
+<li>
+<p><strong>SaaS multi-tenant: Shopify</strong></p>
+<p>Shopify usa microservicios para dar servicio a millones de tiendas<br />
+en su plataforma (NGINX, 2023).</p>
+<p><em>Características clave:</em></p>
+<ul>
+<li>Aislamiento lógico de datos y procesamiento para cada tienda<br />
+(tenant).</li>
+<li>Despliegues graduales (canary deployments) y reversión rápida en<br />
+caso de fallo.</li>
+<li>Elasticidad para responder a eventos como Black Friday o<br />
+lanzamientos virales.</li>
+</ul>
+</li>
+</ol>
+<h2 id="15-distinci%C3%B3n-entre-microservicios-y-soa-service-oriented-architecture">1.5 Distinción entre microservicios y SOA (Service-Oriented Architecture)</h2>
+<p><strong>Qué es SOA</strong></p>
+<blockquote>
+<ul>
+<li>SOA (Service Oriented Architecture): es un paradigma de arquitectura de software que define un conjunto de principios para estructurar aplicaciones como un ensamblaje de servicios de negocio, autónomos, interoperables y descubribles.</li>
+</ul>
+</blockquote>
+<p>Estos servicios se comunican entre sí a través de interfaces bien<br />
+definidas y, a menudo, utilizando protocolos estándar de comunicación en<br />
+red.</p>
+<ul>
+<li>El objetivo principal de SOA es promover la reutilización, la flexibilidad, la escalabilidad y la agilidad en el desarrollo e integración de sistemas de información, alineando la tecnología con los procesos de negocio.</li>
+</ul>
+<p><a href="https://soa-manifesto.org/default_spanish.html">Manifiesto SOA</a></p>
+<center>
+`<img src="img/soa.png" width="400" height="300" />`{=html}
+</center>
+<p>Algunos críticos de la arquitectura de microservicios dicen que no es<br />
+algo nuevo sólo un rebranding de SOA.</p>
+<p>La Arquitectura de MS es similar a SOA. Ambos enfoques consisten en un<br />
+conjunto de servicios.</p>
+<ul>
+<li>Aunque los microservicios y la arquitectura orientada a servicios (SOA) comparten principios similares, como la separación de responsabilidades y la interoperabilidad, existen diferencias fundamentales que afectan su aplicación práctica (Newman, 2021; Richardson, 2018).</li>
+</ul>
+<p>Comprender estas diferencias ayuda a seleccionar el enfoque adecuado<br />
+para cada necesidad empresarial y técnica.</p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="15" data-theme="default" lang="es-ES" style="--theme:default;">
+<p><strong>Principales diferencias entre Microservicios y SOA</strong></p>
+<ol>
+<li>
+<p><strong>Granularidad</strong></p>
+<ul>
+<li><strong>Microservicios:</strong> Dividen la funcionalidad en componentes<br />
+pequeños y autónomos, orientados a tareas específicas de negocio<br />
+(Newman, 2021).</li>
+<li><strong>SOA:</strong> Agrupa funcionalidades en servicios más grandes y<br />
+complejos que abarcan múltiples funcionalidades relacionadas (Erl,<br />
+2005).</li>
+</ul>
+</li>
+<li>
+<p><strong>Comunicación</strong></p>
+<ul>
+<li><strong>Microservicios:</strong> Prefieren protocolos ligeros como HTTP/REST,<br />
+gRPC o mensajería asincrónica (Kafka, RabbitMQ) (Google Cloud,<br />
+2022).</li>
+<li><strong>SOA:</strong> Utiliza estándares más pesados como SOAP, WS-* y<br />
+Enterprise Service Bus (ESB) para la comunicación y orquestación<br />
+(NGINX, 2023).</li>
+</ul>
+</li>
+<li>
+<p><strong>Orquestación vs. Coreografía</strong></p>
+<ul>
+<li><strong>SOA:</strong> Suele centrarse en orquestación centralizada mediante un<br />
+ESB (Enterprise Service Bus) (Erl, 2005).</li>
+<li><strong>Microservicios:</strong> Favorecen la coreografía descentralizada,<br />
+donde los servicios interactúan directamente usando eventos o APIs<br />
+(Richardson, 2018).</li>
+</ul>
+</li>
+<li>
+<p><strong>Autonomía de despliegue</strong></p>
+<ul>
+<li><strong>Microservicios:</strong> Cada servicio puede ser desarrollado,<br />
+desplegado y escalado de manera independiente (Newman, 2021).</li>
+<li><strong>SOA:</strong> Los servicios tienden a depender de infraestructuras<br />
+compartidas, lo que puede dificultar despliegues independientes.</li>
+</ul>
+</li>
+<li>
+<p><strong>Gestión de datos</strong></p>
+<ul>
+<li><strong>Microservicios:</strong> Aplican el principio &quot;Database per Service&quot;<br />
+para maximizar la independencia (Fowler, 2014).</li>
+<li><strong>SOA:</strong> Es más habitual que los servicios compartan bases de<br />
+datos centrales, aumentando el acoplamiento.</li>
+</ul>
+</li>
+<li>
+<p><strong>Objetivo principal</strong></p>
+<ul>
+<li><strong>SOA:</strong> Buscaba integrar sistemas monolíticos ya existentes<br />
+(legacy integration).</li>
+<li><strong>Microservicios:</strong> Se diseñan típicamente para crear nuevas<br />
+aplicaciones nativas en la nube (<em>cloud-native</em>) (AWS, 2023).</li>
+</ul>
+</li>
+</ol>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="16" data-theme="default" lang="es-ES" style="--theme:default;">
+<p><strong>Tabla resumen de diferencias</strong></p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="17" data-theme="default" lang="es-ES" style="--theme:default;">
+<p>Aspecto            Microservicios             SOA</p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="18" data-theme="default" lang="es-ES" style="--theme:default;">
+<p>Granularidad       Muy fina (servicios        Más gruesa (servicios<br />
+pequeños)                  grandes)</p>
+<p>Comunicación       Protocolos ligeros (REST,  Protocolos pesados (SOAP,<br />
+gRPC)                      WS-*)</p>
+<p>Coordinación       Coreografía                Orquestación centralizada<br />
+descentralizada            (ESB)</p>
+<p>Despliegue         Independiente por servicio Generalmente coordinado</p>
+<p>Bases de datos     Base de datos por servicio Bases de datos compartidas</p>
+<h2 id="objetivo-principal-cloud-native-agilidad-integraci%C3%B3n-de-sistemasexistentes">Objetivo principal Cloud-native, agilidad     Integración de sistemas<br />
+existentes</h2>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="19" data-theme="default" lang="es-ES" style="--theme:default;">
+<h2 id="16-la-importancia-del-dise%C3%B1o-orientado-a-dominio-ddd-en-este-contexto">1.6 La importancia del diseño orientado a dominio (DDD) en este contexto</h2>
+<p><strong>Límites de los Microservicios y Diseño Guiado por el Dominio</strong></p>
+<p><strong>Descomposición de Sistemas en Microservicios</strong></p>
+<ul>
+<li>Cuando las empresas adoptan el enfoque de microservicios, comienzan a descomponer los componentes existentes en partes más pequeñas, con el objetivo de mejorar la calidad del servicio de forma más rápida, sin sacrificar la fiabilidad.</li>
+</ul>
+<p><strong>Patrones de Descomposición (Decomposition Pattern)</strong></p>
+<p>Existen varias formas de descomponer un sistema grande en subsistemas<br />
+más pequeños.<br />
+Una tentación común es <strong>basar la descomposición en la tecnología de<br />
+implementación</strong>.</p>
+<ul>
+<li>Ejemplos de descomposición por tecnología: * Servicios de alto procesamiento: desarrollados en C, Rust o Go (elige el lenguaje más adecuado).</li>
+<li>Forman un subsistema independiente.</li>
+</ul>
+<p><strong>Descomposición por Ubicación Geográfica</strong></p>
+<p>Otra forma de dividir un sistema es según la ubicación de los equipos:</p>
+<ul>
+<li>Un subsistema puede ser desarrollado en Estados Unidos.</li>
+<li>Otros subsistemas pueden ser desarrollados en África, Asia, Australia,<br />
+Europa o Sudamérica.</li>
+</ul>
+
+<ul>
+<li>Ventajas: * Tener a un solo equipo trabajando en un subsistema completo dentro de la misma región mejora la eficiencia.</li>
+<li>* Los equipos locales comprenden mejor los requisitos legales, comerciales y culturales de su mercado.</li>
+</ul>
+<p><strong>Ejemplo práctico:</strong> * No es lo mismo diseñar un software contable<br />
+para El Cairo que para Nueva York; un equipo local sabrá captar mejor<br />
+las necesidades específicas.</p>
+<p><strong>El Enfoque de Domain-Driven Design (DDD)</strong></p>
+<p>En su libro <em>Domain-Driven Design</em>, <strong>Eric Evans</strong> propone otra forma de<br />
+definir los límites de los subsistemas:</p>
+<ul>
+<li><strong>Basarse en modelos</strong>, no solo en tecnologías ni ubicaciones.</li>
+<li>Los modelos permiten <strong>representar el sistema de forma más clara</strong>,<br />
+enfocándose en lo que realmente importa.</li>
+<li><strong>Los modelos resaltan los aspectos críticos</strong> que necesitamos<br />
+entender o construir.</li>
+</ul>
+<p><strong>Modelos Múltiples en Sistemas Grandes</strong></p>
+<blockquote>
+<p>En su libro, Evans señala que la mayoría de los sistemas grandes <strong>no<br />
+tienen un único modelo</strong>.</p>
+</blockquote>
+<ul>
+<li>El modelo general de un sistema complejo está formado por <strong>muchos<br />
+modelos más pequeños</strong> que se entrelazan.</li>
+<li>Estos modelos <strong>son representaciones orgánicas</strong> de distintos<br />
+contextos de negocio.</li>
+<li>Cada modelo <strong>tiene sentido dentro de su propio contexto</strong> y es<br />
+<strong>intuitivo para los expertos</strong> de ese ámbito específico.</li>
+</ul>
+<p>Es importante señalar que el <em>Domain-Driven Design</em> (DDD) de Evans fue<br />
+introducido <strong>más de una década antes</strong> de que el término<br />
+&quot;microservicio&quot; se popularizara.</p>
+<ul>
+<li>Aun así, la cita anterior refleja una observación clave sobre la naturaleza del modelado: cuando se intenta depender de un único modelo (por ejemplo, un modelo canónico), el sistema se vuelve difícil de entender.</li>
+</ul>
+<p>El enfoque de microservicios busca <strong>dividir grandes componentes<br />
+(modelos) en unidades más pequeñas</strong>, con el objetivo de <strong>reducir la<br />
+confusión</strong> y <strong>aportar mayor claridad</strong> a cada parte del sistema.</p>
+<p>Por lo tanto, la <strong>arquitectura de microservicios</strong> es un <strong>estilo<br />
+arquitectónico altamente compatible con el enfoque de modelado de DDD</strong>.</p>
+<h2 id="17-bounded-context-y-separaci%C3%B3n-de-responsabilidades">1.7 Bounded context y separación de responsabilidades</h2>
+<p>Para facilitar la creación de componentes más pequeños y coherentes,<br />
+<strong>Evans introdujo el concepto de <em>Bounded Contexts</em> (Contextos<br />
+Delimitados)</strong>:</p>
+<ul>
+<li>Cada componente del sistema vive <strong>dentro de su propio contexto<br />
+delimitado</strong>.</li>
+<li><strong>El modelo de cada componente</strong> y <strong>los modelos de su contexto</strong><br />
+<strong>solo se utilizan dentro de su límite</strong>.</li>
+<li><strong>No se comparten modelos entre diferentes contextos delimitados</strong>.</li>
+</ul>
+<blockquote>
+<p><strong>Nota:</strong> Separar correctamente los contextos ayuda a mantener la<br />
+claridad y la autonomía de cada microservicio en sistemas grandes y<br />
+complejos.</p>
+</blockquote>
+<p><img src="img/domain_subdom_bc.PNG" alt="" /></p>
+<p><strong>Bounded Contexts y Límites de Microservicios</strong></p>
+<ul>
+<li>Se reconoce ampliamente que identificar correctamente los bounded contexts (contextos delimitados) en un sistema, usando técnicas de Domain-Driven Design (DDD), y dividir el sistema a lo largo de esos límites es una estrategia eficaz para definir los límites de microservicios.</li>
+</ul>
+<p>Sam Newman [<code>&lt;a href=&quot;#ref1&quot;&gt;</code>{=html}3<code>&lt;/a&gt;</code>{=html}] afirma:</p>
+<blockquote>
+<ul>
+<li>&quot;Si los límites de nuestros servicios están alineados con los bounded contexts de nuestro dominio, y nuestros microservicios representan esos contextos, estamos comenzando de manera excelente para garantizar que los microservicios estén débilmente acoplados y sean altamente cohesivos.</li>
+</ul>
+</blockquote>
+<p><strong>Puntos clave</strong></p>
+<ul>
+<li>Los <em>bounded contexts</em> representan <strong>dominios de negocio autónomos</strong>,<br />
+es decir, <strong>capacidades bien definidas</strong>.</li>
+<li>Son el <strong>punto de partida adecuado</strong> para identificar los límites<br />
+entre microservicios.</li>
+<li>Si se usan correctamente, <strong>reducen la necesidad de compartir modelos<br />
+y datos</strong> entre servicios.</li>
+<li>Esto permite que cada microservicio sea <strong>una unidad desplegable de<br />
+forma independiente</strong>.</li>
+<li><strong>El despliegue independiente</strong> permite aumentar la velocidad de<br />
+entrega <strong>sin perder estabilidad</strong>.</li>
+</ul>
+<p><strong>Un detalle importante</strong></p>
+<p>Aunque el uso de DDD y bounded contexts es muy útil, <strong>no garantiza por<br />
+sí solo componentes pequeños</strong>.</p>
+<p>Es posible diseñar bounded contexts demasiado grandes.</p>
+<blockquote>
+<p>En microservicios, no buscamos lo grande:<br />
+<strong>lo micro es lo que realmente importa</strong>.</p>
+</blockquote>
+<p><img class="emoji" draggable="false" alt="📌" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f4cc.svg" data-marp-twemoji=""/> <strong>Principio esencial:</strong> <strong>Más pequeño es mejor.</strong></p>
+<h2 id="18-distribuci%C3%B3n-de-los-equipos-en-torno-a-microservicios">1.8 Distribución de los equipos en torno a microservicios</h2>
+<p><strong>¿Cómo se organizan los equipos en una arquitectura de<br />
+microservicios?</strong></p>
+<ul>
+<li>En arquitecturas de microservicios, la estructura organizativa es un factor crítico para el éxito técnico.</li>
+<li>No basta con dividir el software: los equipos deben alinearse al diseño del software y a los objetivos de negocio.</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="20" data-theme="default" lang="es-ES" style="--theme:default;">
+<p><strong>1. Equipos Autónomos y Cross-funcionales</strong></p>
+<p>Cada equipo debe tener <strong>todas las habilidades necesarias</strong> para<br />
+diseñar, desarrollar, probar, desplegar y operar sus propios servicios<br />
+<em>(Skelton &amp; Pais, 2019)</em>:</p>
+<ul>
+<li>Backend</li>
+<li>Frontend (si aplica)</li>
+<li>DevOps / SRE</li>
+<li>QA / Testing</li>
+<li>Data / Analytics (si es necesario)</li>
+</ul>
+<p><em>Objetivo:</em> reducir dependencias entre equipos y minimizar cuellos de<br />
+botella.</p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="21" data-theme="default" lang="es-ES" style="--theme:default;">
+<p><strong>2. &quot;You Build It, You Run It&quot;</strong></p>
+<p>El principio de <strong>&quot;You Build It, You Run It&quot;</strong>, popularizado por <em>Werner<br />
+Vogels</em> (CTO de Amazon), establece que:</p>
+<blockquote>
+<p><em>Los mismos equipos que construyen los servicios son los que los<br />
+operan en producción</em> <em>(Vogels, 2006)</em>.</p>
+</blockquote>
+<p>Esto genera: - Alto sentido de <strong>propiedad</strong>. - Mayor <strong>calidad</strong> de<br />
+software. - <strong>Responsabilidad</strong> directa en operaciones.</p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="22" data-theme="default" lang="es-ES" style="--theme:default;">
+<p><strong>3. Alineación a Dominios de Negocio (DDD + Bounded Contexts)</strong></p>
+<p>Los equipos deben alinearse a <strong>dominios de negocio</strong> y no a tecnologías<br />
+específicas <em>(Vernon, 2016)</em>.</p>
+<ul>
+<li>Cada equipo maneja <strong>su propio modelo de datos</strong> y <strong>su propia<br />
+lógica</strong>.</li>
+<li>Se utilizan <strong>APIs</strong> o <strong>eventos</strong> para la integración entre equipos.</li>
+</ul>
+<p><em>Ejemplo:</em><br />
+&quot;Equipo de pagos&quot;, &quot;Equipo de pedidos&quot;, &quot;Equipo de catálogo&quot;.</p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="23" data-theme="default" lang="es-ES" style="--theme:default;">
+<p><strong>4. Tamaño de Equipos: &quot;Two-Pizza Rule&quot;</strong></p>
+<p>Siguiendo la filosofía de Amazon:</p>
+<ul>
+<li><strong>Equipos pequeños</strong>: idealmente entre <strong>2 y 9 personas</strong> <em>(Newman,<br />
+2021)</em>.</li>
+<li>Si un equipo crece demasiado, se divide.</li>
+</ul>
+<p>Ventajas: - Comunicación fluida - Agilidad - Decisiones rápidas</p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="24" data-theme="default" lang="es-ES" style="--theme:default;">
+<p><strong>5. Organización según &quot;Team Topologies&quot;</strong></p>
+<p><em>Team Topologies</em> <em>(Skelton &amp; Pais, 2019)</em> propone cuatro tipos de<br />
+equipos:</p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="25" data-theme="default" lang="es-ES" style="--theme:default;">
+<p>Tipo de Equipo                               Función Principal</p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="26" data-theme="default" lang="es-ES" style="--theme:default;">
+<p><strong>Stream-aligned Team</strong>                      Alineado a un flujo de<br />
+valor de negocio.</p>
+<p><strong>Complicated Subsystem Team</strong>               Encargado de subsistemas<br />
+de alta complejidad<br />
+técnica.</p>
+<p><strong>Enabling Team</strong>                            Facilita habilidades y<br />
+conocimiento a otros<br />
+equipos.</p>
+<h2 id="platform-team-proporciona-plataformas-desoporte-para-acelerar-alos-equipos-de-producto"><strong>Platform Team</strong>                            Proporciona plataformas de<br />
+soporte para acelerar a<br />
+los equipos de producto.</h2>
+<p>Los equipos deben ser <strong>autónomos</strong> pero cooperar mediante <strong>interfaces<br />
+bien definidas</strong>.</p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="27" data-theme="default" lang="es-ES" style="--theme:default;">
+<p><strong>6. Equipos de Plataforma (Internal Developer Platforms)</strong></p>
+<p>Para escalar una organización de microservicios, se requieren <strong>equipos<br />
+de plataforma</strong> <em>(Hewitt, 2020)</em>:</p>
+<ul>
+<li>Automatización de <strong>CI/CD</strong>.</li>
+<li>Observabilidad (<strong>logs, métricas, tracing distribuido</strong>).</li>
+<li>Seguridad de base (<strong>IAM, auditoría, escaneo de vulnerabilidades</strong>).</li>
+<li>Gestión de infraestructura (<strong>Kubernetes, cloud providers</strong>).</li>
+</ul>
+<p><em>Así los equipos de producto se enfocan en la lógica de negocio y no en<br />
+infraestructura.</em></p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="28" data-theme="default" lang="es-ES" style="--theme:default;">
+<p><img src="img/teams1.png" alt="" /></p>
+<p><img src="img/teams2.png" alt="" /></p>
+<p><strong>7. Comunicación Asíncrona</strong></p>
+<p>En microservicios:</p>
+<ul>
+<li>Se prioriza la <strong>comunicación asíncrona</strong> (Slack, PRs, documentación)<br />
+sobre reuniones constantes.</li>
+<li>La colaboración se basa en <strong>contratos de API</strong>, <strong>eventos</strong> y<br />
+<strong>Service Level Objectives (SLOs)</strong>.</li>
+</ul>
+<p><em>Esto disminuye la fricción organizacional.</em></p>
+<h2 id="19-evaluaci%C3%B3n-del-impacto-de-los-microservicios-en-la-gesti%C3%B3n-del-ciclo-de-vida-del-software">1.9 Evaluación del impacto de los microservicios en la gestión del ciclo de vida del software</h2>
+<ul>
+<li>La adopción de microservicios transforma profundamente la forma en que las organizaciones gestionan el ciclo de vida del software (SDLC: Software Development Life Cycle).</li>
+<li>Estos cambios afectan desde la planificación hasta el mantenimiento, ofreciendo tanto oportunidades como desafíos (Newman, 2021; AWS, 2023).</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="29" data-theme="default" lang="es-ES" style="--theme:default;">
+<p><strong>Impactos clave de los microservicios en el ciclo de vida del<br />
+software</strong></p>
+<ol>
+<li>
+<p><strong>Planificación y diseño</strong></p>
+<p>La planificación de sistemas basados en microservicios requiere<br />
+pensar en términos de <em>dominios de negocio</em>, <em>Bounded Contexts</em> y<br />
+<em>responsabilidad única</em> (Evans, 2003; Vernon, 2016).</p>
+<p><em>Características:</em></p>
+<ul>
+<li>Diseño modular basado en contextos específicos.</li>
+<li>Definición clara de contratos de servicio (API First).</li>
+<li>Decisiones anticipadas sobre tecnologías heterogéneas.</li>
+</ul>
+</li>
+<li>
+<p><strong>Desarrollo</strong></p>
+<p>La implementación de microservicios fomenta equipos pequeños y<br />
+autónomos, cada uno responsable de uno o varios servicios (Skelton &amp;<br />
+Pais, 2019).</p>
+<p><em>Características:</em></p>
+<ul>
+<li>Independencia en el stack tecnológico.</li>
+<li>Desarrollos concurrentes en paralelo.</li>
+<li>Necesidad de respetar acuerdos de integración (contratos de API,<br />
+eventos).</li>
+</ul>
+</li>
+<li>
+<p><strong>Testing</strong></p>
+<p>Las pruebas en entornos de microservicios se vuelven más complejas<br />
+(ThoughtWorks, 2023).</p>
+<p><em>Características:</em></p>
+<ul>
+<li>Importancia del testing de contratos (contract testing).</li>
+<li>Incremento del testing de integración distribuida.</li>
+<li>Necesidad de entornos de staging que emulen múltiples servicios.</li>
+</ul>
+</li>
+<li>
+<p><strong>Integración y despliegue</strong></p>
+<p>Los microservicios demandan pipelines CI/CD altamente automatizados<br />
+para construir, probar y desplegar servicios de manera independiente<br />
+(AWS, 2023).</p>
+<p><em>Características:</em></p>
+<ul>
+<li>Versionado independiente por servicio.</li>
+<li>Deploys canary, blue/green o rolling updates frecuentes.</li>
+<li>Observabilidad integrada en el proceso de despliegue.</li>
+</ul>
+</li>
+<li>
+<p><strong>Operaciones y monitoreo</strong></p>
+<p>Operar un sistema basado en microservicios implica adoptar prácticas<br />
+modernas de observabilidad y resiliencia (Honeycomb, 2023;<br />
+Microsoft, 2024).</p>
+<p><em>Características:</em></p>
+<ul>
+<li>Logging, métricas y tracing distribuido en todos los servicios.</li>
+<li>Monitoreo de interacciones entre servicios (mallas de servicios<br />
+como Istio).</li>
+<li>Implementación de patrones de resiliencia (<em>circuit breakers</em>,<br />
+<em>bulkheads</em>).</li>
+</ul>
+</li>
+<li>
+<p><strong>Mantenimiento y evolución</strong></p>
+<p>Los microservicios facilitan la evolución incremental del sistema:<br />
+se pueden reemplazar, reescribir o mejorar servicios individuales<br />
+sin impactar todo el sistema (Newman, 2021).</p>
+<p><em>Características:</em></p>
+<ul>
+<li>Facilita refactorizaciones sin despliegues masivos.</li>
+<li>Permite probar nuevas tecnologías en servicios aislados (<em>tech<br />
+spikes</em>).</li>
+<li>Minimiza los riesgos de migraciones tecnológicas.</li>
+</ul>
+</li>
+</ol>
+<h2 id="110-herramientas-modernas-para-la-gesti%C3%B3n-de-arquitecturas-distribuidas">1.10 Herramientas modernas para la gestión de arquitecturas distribuidas</h2>
+<ul>
+<li>La gestión de arquitecturas distribuidas basadas en microservicios necesita un conjunto especializado de herramientas modernas para orquestación, observabilidad, mensajería, seguridad y APIs (Newman, 2021; AWS Builders' Library, 2023).</li>
+</ul>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="30" data-theme="default" lang="es-ES" style="--theme:default;">
+<p><strong>1. Orquestación y despliegue</strong></p>
+<p>La gestión de cientos de contenedores sería inviable manualmente, por<br />
+eso usamos plataformas de orquestación (CNCF, 2023).</p>
+<ul>
+<li><strong><a href="https://kubernetes.io/">Kubernetes</a>:</strong> Orquestador de contenedores<br />
+que automatiza despliegues, escalado y recuperación.</li>
+<li><strong><a href="https://argo-cd.readthedocs.io/en/stable/">Argo CD</a>:</strong> Despliegue<br />
+GitOps de aplicaciones en Kubernetes.</li>
+<li><strong><a href="https://helm.sh/">Helm</a>:</strong> Gestor de paquetes que facilita instalar<br />
+y actualizar aplicaciones Kubernetes.</li>
+</ul>
+<p><em>Referencias: Newman, 2021; CNCF, 2023.</em></p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="31" data-theme="default" lang="es-ES" style="--theme:default;">
+<p><strong>2. Observabilidad (logs, métricas, tracing distribuido)</strong></p>
+<p>La observabilidad es esencial para diagnosticar problemas en sistemas<br />
+distribuidos (Prometheus Project, 2023; OpenTelemetry, 2023).</p>
+<ul>
+<li><strong><a href="https://prometheus.io/">Prometheus</a></strong> +<br />
+<strong><a href="https://grafana.com/">Grafana</a>:</strong> Stack de métricas y<br />
+visualización.</li>
+<li><strong><a href="https://opentelemetry.io/">OpenTelemetry</a>:</strong> Estándar de<br />
+recolección de logs, métricas y trazas.</li>
+<li><strong><a href="https://www.jaegertracing.io/">Jaeger</a>:</strong> Sistema de tracing<br />
+distribuido.</li>
+</ul>
+<p><em>Referencias: Prometheus Project, 2023; OpenTelemetry, 2023.</em></p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="32" data-theme="default" lang="es-ES" style="--theme:default;">
+<p><strong>3. Service Mesh</strong></p>
+<p>Gestionar la comunicación segura y resiliente entre servicios es tarea<br />
+de un service mesh (Istio Project, 2024).</p>
+<ul>
+<li><strong><a href="https://istio.io/">Istio</a>:</strong> Control de tráfico, resiliencia, mTLS<br />
+automático.</li>
+<li><strong><a href="https://linkerd.io/">Linkerd</a>:</strong> Alternativa ligera a Istio<br />
+enfocada en simplicidad.</li>
+</ul>
+<p><em>Referencias: Istio Project, 2024; Linkerd Project, 2024.</em></p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="33" data-theme="default" lang="es-ES" style="--theme:default;">
+<p><strong>4. Mensajería y comunicación asíncrona</strong></p>
+<p>Mensajería desacoplada aumenta la resiliencia y la escalabilidad<br />
+(Confluent, 2023).</p>
+<ul>
+<li><strong><a href="https://kafka.apache.org/">Apache Kafka</a>:</strong> Streaming distribuido<br />
+para eventos en tiempo real.</li>
+<li><strong><a href="https://www.rabbitmq.com/">RabbitMQ</a>:</strong> Sistema de colas de<br />
+mensajes tradicional.</li>
+</ul>
+<p><em>Referencias: Confluent, 2023; RabbitMQ, 2024.</em></p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="34" data-theme="default" lang="es-ES" style="--theme:default;">
+<p><strong>5. Seguridad y gestión de secretos</strong></p>
+<p>La gestión segura de secretos y políticas de acceso es crítica en<br />
+entornos distribuidos (HashiCorp, 2024; OPA Project, 2023).</p>
+<ul>
+<li><strong><a href="https://developer.hashicorp.com/vault">Vault</a>:</strong> Gestión de<br />
+secretos, cifrado y autenticación dinámica.</li>
+<li><strong><a href="https://www.openpolicyagent.org/">OPA (Open Policy Agent)</a>:</strong> Motor<br />
+de políticas para control de acceso.</li>
+</ul>
+<p><em>Referencias: HashiCorp, 2024; OPA Project, 2023.</em></p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="35" data-theme="default" lang="es-ES" style="--theme:default;">
+<p><strong>6. Gestión de APIs</strong></p>
+<p>El control y exposición de APIs debe hacerse de forma segura y eficiente<br />
+(Kong Inc., 2023; Google Cloud, 2023).</p>
+<ul>
+<li><strong><a href="https://konghq.com/">Kong</a>:</strong> API Gateway de código abierto.</li>
+<li><strong><a href="https://cloud.google.com/apigee">Apigee</a>:</strong> Plataforma empresarial<br />
+de gestión de APIs.</li>
+</ul>
+<p><em>Referencias: Kong Inc., 2023; Google Cloud, 2023.</em></p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="36" data-theme="default" lang="es-ES" style="--theme:default;">
+<p><strong>Tabla comparativa de herramientas</strong></p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="37" data-theme="default" lang="es-ES" style="--theme:default;">
+<p>Categoría        Herramienta                                      Propósito            Ventajas principales Cuándo usar</p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="38" data-theme="default" lang="es-ES" style="--theme:default;">
+<p>Orquestación     <a href="https://kubernetes.io/">Kubernetes</a>             Orquestar            Escalabilidad        Desde que tienes<br />
+contenedores         automática,          múltiples<br />
+recuperación ante    servicios<br />
+fallos</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code>               [Argo                                            GitOps para          Automatización de    Entornos con
+               CD](https://argo-cd.readthedocs.io/en/stable/)   Kubernetes           despliegues          despliegues
+                                                                                     declarativos         continuos
+
+               [Helm](https://helm.sh/)                         Gestión de paquetes  Instalación y        Aplicaciones
+                                                                en Kubernetes        upgrades simples     complejas en
+                                                                                                          Kubernetes
+</code></pre>
+<p>Observabilidad   <a href="https://prometheus.io/">Prometheus</a>,            Métricas y           Monitorización en    Desde el inicio de<br />
+<a href="https://grafana.com/">Grafana</a>                  visualización        tiempo real          producción</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code>               [OpenTelemetry](https://opentelemetry.io/)       Recolección de logs, Estándar abierto,    Instrumentar
+                                                                métricas, trazas     multilinguaje        nuevos servicios
+
+               [Jaeger](https://www.jaegertracing.io/)          Tracing distribuido  Análisis de latencia Sistemas con
+                                                                                     y dependencias       muchas
+                                                                                                          interacciones
+</code></pre>
+<p>Service Mesh     <a href="https://istio.io/">Istio</a>                       Control de tráfico,  Seguridad            Sistemas<br />
+seguridad            automática, control  medianos/grandes<br />
+granular</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code>               [Linkerd](https://linkerd.io/)                   Service Mesh ligero  Instalación fácil,   Proyectos más
+                                                                                     bajo consumo         pequeños o simples
+</code></pre>
+<p>Mensajería       <a href="https://kafka.apache.org/">Kafka</a>               Event streaming      Alta capacidad,      Procesamiento de<br />
+tolerancia a fallos  eventos masivos</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code>               [RabbitMQ](https://www.rabbitmq.com/)            Colas de mensajes    Simple, flexible     Comunicación
+                                                                                                          asíncrona simple
+</code></pre>
+<p>Seguridad y      <a href="https://developer.hashicorp.com/vault">Vault</a>   Gestión de secretos  Seguridad dinámica   Sistemas sensibles<br />
+secretos                                                                               de credenciales      o multiusuario</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code>               [OPA](https://www.openpolicyagent.org/)          Políticas de         Integración          Controlar acceso
+                                                                autorización         flexible, estándares en APIs y
+                                                                                     abiertos             servicios
+</code></pre>
+<p>Gestión de APIs  <a href="https://konghq.com/">Kong</a>                      API Gateway          Código abierto,      Exposición y<br />
+extensible           control de APIs<br />
+internas o<br />
+públicas</p>
+<pre is="marp-pre" data-auto-scaling="downscale-only"><code>               [Apigee](https://cloud.google.com/apigee)        Gestión de ciclo de  Alta escalabilidad,  Grandes
+                                                                vida de APIs         analíticas avanzadas plataformas B2B o
+                                                                                                          B2C
+</code></pre>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="39" data-theme="default" lang="es-ES" style="--theme:default;"></section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="40" data-theme="default" lang="es-ES" style="--theme:default;">
+<h2 id="111-introducci%C3%B3n-a-patrones-como-api-gateway-service-discovery-y-service-registry">1.11 Introducción a patrones como API Gateway, Service Discovery, y Service Registry</h2>
+<h3 id="api-gateway">API Gateway</h3>
+<ul>
+<li>Cuando eliges construir un conjunto de microservicios necesitas<br />
+decidir cómo quieres que tus aplicaciones interactúen con los<br />
+microservicios.</li>
+<li>En una arquitectura de microserivcios, cada servicio se expone como un<br />
+conjunto de endpoints.</li>
+</ul>
+<p>Imaginemos que desarrollamos una cliente móvil nativo para una<br />
+aplicación de compras. Es muy probable que tengas una vista detalle de<br />
+cada uno de los productos.</p>
+<p>Y, aunque sea un móvil, seguramente habrá un montón de detalles que<br />
+mostrarán mucha información. No sólo habrá nombre de producto,<br />
+descripción, precio, etc.</p>
+<p>Sino que habrá una serie de items como:</p>
+<ol>
+<li>Número de productos en el carrito de compras</li>
+<li>Opiniones de clientes</li>
+<li>Opciones de compra</li>
+<li>Recomendaciones de otros productos</li>
+<li>Varias opciones de compra.</li>
+<li>...</li>
+</ol>
+<p>En arquitectura monolítica, el cliente móvil trae los datos con una<br />
+simple llamada REST como:</p>
+<p><code>GET api.company.com/productdetails/productId</code></p>
+<p>El balanceador de carga enruta la petición hacia varias instancias<br />
+idénticas. Entonces se hacen varias <em>queries</em> a la base de datos y se<br />
+retorna la información.</p>
+<p>Pero, cuando usas <strong>arquitectura de microservicios</strong> los datos del<br />
+detalle de los productos son mostrados a través de múltiples<br />
+microservicios.</p>
+<p>Necesitamos saber cómo el cliente accede a esos servicios. Existen dos<br />
+patrones:</p>
+<ul>
+<li><strong>Direct Client-to-Microservice Communication</strong>: cada microservicio<br />
+tendrá un endpoint público.
+<ul>
+<li>Esto puede representar un problema porque en este ejemplo haríamos 7<br />
+llamadas. Pues por ejemplo, con Amazon, hay cientos de<br />
+microservicios involucrados en renderiza la página de un producto.</li>
+<li>Dificultad al refactorizar microservicios. Por ejemplo, habrá<br />
+servicios que habrá que dividir.</li>
+</ul>
+</li>
+<li>La otra forma será usando un <strong>API Gateway</strong>: es un servidor que tiene<br />
+un único punto de entrada al sistema. El AG encapsula la arquitectura<br />
+interna y encauza todas las peticiones a los endpoints para cada<br />
+microservicio. Tiene otras características como autenticación,<br />
+monitorización, balanceador de carga, etc.</li>
+</ul>
+<p>El <strong>API Gateway</strong> es responsable del <strong>enrutamiento de solicitudes</strong>,<br />
+la <strong>composición</strong> y la <strong>traducción de protocolos</strong>.</p>
+<p>Todas las peticiones de los clientes pasan primero por el API Gateway,<br />
+que luego las enruta al <strong>microservicio apropiado</strong>.</p>
+<ul>
+<li>A menudo, el API Gateway maneja una solicitud invocando múltiples microservicios y agregando los resultados.</li>
+<li>También puede traducir entre protocolos web como HTTP y WebSocket, y protocolos no orientados a la web que se usan internamente.</li>
+</ul>
+<p>El API Gateway también puede proporcionar a cada cliente una <strong>API<br />
+personalizada</strong>.<br />
+Normalmente expone una <strong>API de alto nivel</strong> (<em>coarse-grained</em>) para<br />
+clientes móviles.</p>
+<ul>
+<li>Por ejemplo, en el caso de mostrar los detalles de un producto, el API Gateway puede ofrecer un endpoint: (/productdetails?productid=xxx) que permita a un cliente móvil obtener todos los detalles del producto con una sola solicitud.</li>
+</ul>
+<p>El API Gateway maneja esta petición invocando diversos servicios<br />
+---<strong>información del producto</strong>, <strong>recomendaciones</strong>, <strong>reseñas</strong>,<br />
+etc.--- y <strong>combinando los resultados</strong>.</p>
+<p>Un gran ejemplo de API Gateway es <a href="https://medium.com/@pablo.matteo/did-you-know-that-netflixs-api-gateway-handles-over-700-000-requests-per-second-9a97bf5dc71b">Netflix API<br />
+Gateway</a></p>
+<p><img src="img/apigw_ms.png" alt="" /></p>
+<h3 id="service-discovery-y-service-registry">Service Discovery y Service Registry</h3>
+<p>El <strong>API Gateway</strong> necesita conocer la ubicación (dirección IP y puerto)<br />
+de cada microservicio con el que se comunica.</p>
+<ul>
+<li>En una aplicación tradicional, probablemente podrías codificar estas ubicaciones de forma estática.</li>
+<li>Pero en una aplicación moderna de microservicios basada en la nube, encontrar las ubicaciones necesarias no es un problema trivial.</li>
+</ul>
+<p>Los <strong>servicios de infraestructura</strong>, como un <strong>broker de mensajería</strong>,<br />
+suelen tener una ubicación estática, que puede especificarse mediante<br />
+<strong>variables de entorno</strong> del sistema operativo.</p>
+<p>Sin embargo, <strong>determinar la ubicación de un servicio de aplicación</strong> no<br />
+es tan sencillo.</p>
+<p>Los servicios de aplicación tienen ubicaciones <strong>asignadas<br />
+dinámicamente</strong>.</p>
+<p>Además, el conjunto de instancias de un servicio cambia dinámicamente<br />
+debido a <strong>escalado automático</strong> y <strong>actualizaciones</strong>.</p>
+<p>Como resultado, el API Gateway ---igual que cualquier otro cliente de<br />
+servicios en el sistema--- necesita utilizar el <strong>mecanismo de<br />
+descubrimiento de servicios</strong> del sistema, ya sea:</p>
+<ul>
+<li><strong>Descubrimiento del lado del servidor</strong> (<em>server-side discovery</em>), o</li>
+<li><strong>Descubrimiento del lado del cliente</strong> (<em>client-side discovery</em>).</li>
+</ul>
+
+<ul>
+<li>Por ahora, es importante señalar que si el sistema utiliza descubrimiento del lado del cliente, entonces el API Gateway debe ser capaz de consultar el registro de servicios, que es una base de datos con todas las instancias de microservicios y sus ubicaciones.</li>
+</ul>
+<p>El <strong>registro de servicios</strong> es una parte clave del <strong>descubrimiento de<br />
+servicios</strong>.</p>
+<p>Se trata de una <strong>base de datos que contiene las ubicaciones en red de<br />
+las instancias de servicio</strong>.</p>
+<ul>
+<li>Un registro de servicios debe ser altamente disponible y estar actualizado en todo momento.</li>
+<li>Los clientes pueden almacenar en caché las ubicaciones obtenidas del registro, pero esa información acaba desactualizándose, y los clientes podrían dejar de poder descubrir nuevas instancias.</li>
+</ul>
+<p>Por tanto, un registro de servicios está compuesto por un <strong>clúster de<br />
+servidores</strong> que utilizan un <strong>protocolo de replicación</strong> para mantener<br />
+la consistencia de los datos.</p>
+<p>Como se mencionó anteriormente, <strong>Netflix Eureka</strong> es un buen ejemplo de<br />
+registro de servicios.<br />
+Proporciona una <strong>API REST</strong> para registrar y consultar instancias de<br />
+servicio.</p>
+<ul>
+<li>Una instancia de servicio <strong>registra su ubicación de red</strong> mediante<br />
+una petición <code>POST</code>.</li>
+<li>Cada <strong>30 segundos</strong>, debe <strong>renovar su registro</strong> con una petición<br />
+<code>PUT</code>.</li>
+<li>Un registro puede eliminarse usando una petición <code>DELETE</code> o por<br />
+<strong>timeout</strong> si no se renueva a tiempo.</li>
+<li>Como es de esperar, un cliente puede obtener las instancias<br />
+registradas mediante una petición <code>GET</code>.</li>
+</ul>
+<p><img src="img/serv_reg_discov.png" alt="" /></p>
+<p>También podemos ver el diagrama junto al AG:</p>
+<p><img src="img/agw_srvreg_srvdisc.png" alt="" /></p>
+</section>
+</foreignObject></svg><svg data-marpit-svg="" viewBox="0 0 1280 720"><foreignObject width="1280" height="720"><section id="41" data-theme="default" lang="es-ES" style="--theme:default;">
+<h2 id="referencias">Referencias</h2>
+<ul>
+<li>[1] <code>&lt;a id=&quot;ref1&quot;&gt;</code>{=html}<code>&lt;/a&gt;</code>{=html}Bass, L., Clements, P., &amp;<br />
+Kazman, R. (2012). Software Architecture in Practice (3rd ed.).<br />
+Addison-Wesley.</li>
+<li>[2] <code>&lt;a id=&quot;ref2&quot;&gt;</code>{=html}<code>&lt;/a&gt;</code>{=html}Bass, Clements y Kazman.<br />
+&quot;Software Architecture in Practice&quot;, 3rd ed. (2012)*</li>
+<li>[3] <code>&lt;a id=&quot;ref3&quot;&gt;</code>{=html}<code>&lt;/a&gt;</code>{=html}Sam Newman. &quot;Building<br />
+Microservices&quot;, 3rd ed. (2012)*</li>
+<li>[4] <code>&lt;a id=&quot;ref4&quot;&gt;</code>{=html}<code>&lt;/a&gt;</code>{=html} Skelton, M., &amp; Pais, M.<br />
+(2019). Team Topologies: Organizing Business and Technology Teams for<br />
+Fast Flow. IT Revolution Press.</li>
+<li>[5] <code>&lt;a id=&quot;ref5&quot;&gt;</code>{=html}<code>&lt;/a&gt;</code>{=html} Vernon, V. (2016).<br />
+Domain-Driven Design Distilled. Addison-Wesley Professional.</li>
+<li>[6] <code>&lt;a id=&quot;ref6&quot;&gt;</code>{=html}<code>&lt;/a&gt;</code>{=html} Hewitt, E. (2020).<br />
+Architecting for Scale (2nd Edition). O'Reilly Media.</li>
+<li>[7] <code>&lt;a id=&quot;ref7&quot;&gt;</code>{=html}<code>&lt;/a&gt;</code>{=html}Vogels, W. (2006). You Build<br />
+It, You Run It. Public talks and blog posts.</li>
+</ul>
+</section>
+<script>!function(){"use strict";const t={h1:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"1"},style:"display: block; font-size: 2em; margin-block-start: 0.67em; margin-block-end: 0.67em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},h2:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"2"},style:"display: block; font-size: 1.5em; margin-block-start: 0.83em; margin-block-end: 0.83em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},h3:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"3"},style:"display: block; font-size: 1.17em; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},h4:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"4"},style:"display: block; margin-block-start: 1.33em; margin-block-end: 1.33em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},h5:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"5"},style:"display: block; font-size: 0.83em; margin-block-start: 1.67em; margin-block-end: 1.67em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},h6:{proto:()=>HTMLHeadingElement,attrs:{role:"heading","aria-level":"6"},style:"display: block; font-size: 0.67em; margin-block-start: 2.33em; margin-block-end: 2.33em; margin-inline-start: 0px; margin-inline-end: 0px; font-weight: bold;"},span:{proto:()=>HTMLSpanElement},pre:{proto:()=>HTMLElement,style:"display: block; font-family: monospace; white-space: pre; margin: 1em 0; --marp-auto-scaling-white-space: pre;"}},e="data-marp-auto-scaling-wrapper",i="data-marp-auto-scaling-svg",n="data-marp-auto-scaling-container";class s extends HTMLElement{container;containerSize;containerObserver;svg;svgComputedStyle;svgPreserveAspectRatio="xMinYMid meet";wrapper;wrapperSize;wrapperObserver;constructor(){super();const t=t=>([e])=>{const{width:i,height:n}=e.contentRect;this[t]={width:i,height:n},this.updateSVGRect()};this.attachShadow({mode:"open"}),this.containerObserver=new ResizeObserver(t("containerSize")),this.wrapperObserver=new ResizeObserver(((...e)=>{t("wrapperSize")(...e),this.flushSvgDisplay()}))}static get observedAttributes(){return["data-downscale-only"]}connectedCallback(){this.shadowRoot.innerHTML=`\n<style>\n  svg[${i}] { display: block; width: 100%; height: auto; vertical-align: top; }\n  span[${n}] { display: table; white-space: var(--marp-auto-scaling-white-space, nowrap); width: max-content; }\n</style>\n<div ${e}>\n  <svg part="svg" ${i}>\n    <foreignObject><span ${n}><slot></slot></span></foreignObject>\n  </svg>\n</div>\n    `.split(/\n\s*/).join(""),this.wrapper=this.shadowRoot.querySelector(`div[${e}]`)??void 0;const t=this.svg;this.svg=this.wrapper?.querySelector(`svg[${i}]`)??void 0,this.svg!==t&&(this.svgComputedStyle=this.svg?window.getComputedStyle(this.svg):void 0),this.container=this.svg?.querySelector(`span[${n}]`)??void 0,this.observe()}disconnectedCallback(){this.svg=void 0,this.svgComputedStyle=void 0,this.wrapper=void 0,this.container=void 0,this.observe()}attributeChangedCallback(){this.observe()}flushSvgDisplay(){const{svg:t}=this;t&&(t.style.display="inline",requestAnimationFrame((()=>{t.style.display=""})))}observe(){this.containerObserver.disconnect(),this.wrapperObserver.disconnect(),this.wrapper&&this.wrapperObserver.observe(this.wrapper),this.container&&this.containerObserver.observe(this.container),this.svgComputedStyle&&this.observeSVGStyle(this.svgComputedStyle)}observeSVGStyle(t){const e=()=>{const i=(()=>{const e=t.getPropertyValue("--preserve-aspect-ratio");if(e)return e.trim();return`x${(({textAlign:t,direction:e})=>{if(t.endsWith("left"))return"Min";if(t.endsWith("right"))return"Max";if("start"===t||"end"===t){let i="rtl"===e;return"end"===t&&(i=!i),i?"Max":"Min"}return"Mid"})(t)}YMid meet`})();i!==this.svgPreserveAspectRatio&&(this.svgPreserveAspectRatio=i,this.updateSVGRect()),t===this.svgComputedStyle&&requestAnimationFrame(e)};e()}updateSVGRect(){let t=Math.ceil(this.containerSize?.width??0);const e=Math.ceil(this.containerSize?.height??0);void 0!==this.dataset.downscaleOnly&&(t=Math.max(t,this.wrapperSize?.width??0));const i=this.svg?.querySelector(":scope > foreignObject");if(i?.setAttribute("width",`${t}`),i?.setAttribute("height",`${e}`),this.svg&&(this.svg.setAttribute("viewBox",`0 0 ${t} ${e}`),this.svg.setAttribute("preserveAspectRatio",this.svgPreserveAspectRatio),this.svg.style.height=t<=0||e<=0?"0":""),this.container){const t=this.svgPreserveAspectRatio.toLowerCase();this.container.style.marginLeft=t.startsWith("xmid")||t.startsWith("xmax")?"auto":"0",this.container.style.marginRight=t.startsWith("xmi")?"auto":"0"}}}const r=(t,{attrs:e={},style:i})=>class extends t{constructor(...t){super(...t);for(const[t,i]of Object.entries(e))this.hasAttribute(t)||this.setAttribute(t,i);this._shadow()}static get observedAttributes(){return["data-auto-scaling"]}connectedCallback(){this._update()}attributeChangedCallback(){this._update()}_shadow(){if(!this.shadowRoot)try{this.attachShadow({mode:"open"})}catch(t){if(!(t instanceof Error&&"NotSupportedError"===t.name))throw t}return this.shadowRoot}_update(){const t=this._shadow();if(t){const e=i?`<style>:host { ${i} }</style>`:"";let n="<slot></slot>";const{autoScaling:s}=this.dataset;if(void 0!==s){n=`<marp-auto-scaling exportparts="svg:auto-scaling" ${"downscale-only"===s?"data-downscale-only":""}>${n}</marp-auto-scaling>`}t.innerHTML=e+n}}};let o;const a=Symbol();let l;const c="marpitSVGPolyfill:setZoomFactor,",d=Symbol(),h=Symbol();const g=()=>{const t="Apple Computer, Inc."===navigator.vendor,e=t?[u]:[],i={then:e=>(t?(async()=>{if(void 0===l){const t=document.createElement("canvas");t.width=10,t.height=10;const e=t.getContext("2d"),i=new Image(10,10),n=new Promise((t=>{i.addEventListener("load",(()=>t()))}));i.crossOrigin="anonymous",i.src="data:image/svg+xml;charset=utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2210%22%20height%3D%2210%22%20viewBox%3D%220%200%201%201%22%3E%3CforeignObject%20width%3D%221%22%20height%3D%221%22%20requiredExtensions%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxhtml%22%3E%3Cdiv%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F1999%2Fxhtml%22%20style%3D%22width%3A%201px%3B%20height%3A%201px%3B%20background%3A%20red%3B%20position%3A%20relative%22%3E%3C%2Fdiv%3E%3C%2FforeignObject%3E%3C%2Fsvg%3E",await n,e.drawImage(i,0,0),l=e.getImageData(5,5,1,1).data[3]<128}return l})().then((t=>{null==e||e(t?[u]:[])})):null==e||e([]),i)};return Object.assign(e,i)};let p,m;function u(t){const e="object"==typeof t&&t.target||document,i="object"==typeof t?t.zoom:t;window[h]||(Object.defineProperty(window,h,{configurable:!0,value:!0}),document.body.style.zoom=1.0001,document.body.offsetHeight,document.body.style.zoom=1,window.addEventListener("message",(({data:t,origin:e})=>{if(e===window.origin)try{if(t&&"string"==typeof t&&t.startsWith(c)){const[,e]=t.split(","),i=Number.parseFloat(e);Number.isNaN(i)||(m=i)}}catch(t){console.error(t)}})));let n=!1;Array.from(e.querySelectorAll("svg[data-marpit-svg]"),(t=>{var e,s,r,o;t.style.transform||(t.style.transform="translateZ(0)");const a=i||m||t.currentScale||1;p!==a&&(p=a,n=a);const l=t.getBoundingClientRect(),{length:c}=t.children;for(let i=0;i<c;i+=1){const n=t.children[i];if(n.getScreenCTM){const t=n.getScreenCTM();if(t){const i=null!==(s=null===(e=n.x)||void 0===e?void 0:e.baseVal.value)&&void 0!==s?s:0,c=null!==(o=null===(r=n.y)||void 0===r?void 0:r.baseVal.value)&&void 0!==o?o:0,d=n.children.length;for(let e=0;e<d;e+=1){const s=n.children[e];if("SECTION"===s.tagName){const{style:e}=s;e.transformOrigin||(e.transformOrigin=`${-i}px ${-c}px`),e.transform=`scale(${a}) matrix(${t.a}, ${t.b}, ${t.c}, ${t.d}, ${t.e-l.left}, ${t.f-l.top}) translateZ(0.0001px)`;break}}}}}})),!1!==n&&Array.from(e.querySelectorAll("iframe"),(({contentWindow:t})=>{null==t||t.postMessage(`${c}${n}`,"null"===window.origin?"*":window.origin)}))}function v({once:t=!1,target:e=document}={}){const i=function(t=document){if(t[d])return t[d];let e=!0;const i=()=>{e=!1,delete t[d]};Object.defineProperty(t,d,{configurable:!0,value:i});let n=[],s=!1;(async()=>{try{n=await g()}finally{s=!0}})();const r=()=>{for(const e of n)e({target:t});s&&0===n.length||e&&window.requestAnimationFrame(r)};return r(),i}(e);return t?(i(),()=>{}):i}p=1,m=void 0;const w=Symbol(),b=(e=document)=>{if("undefined"==typeof window)throw new Error("Marp Core's browser script is valid only in browser context.");if(((e=document)=>{const i=window[a];i||customElements.define("marp-auto-scaling",s);for(const n of Object.keys(t)){const s=`marp-${n}`,a=t[n].proto();(o??(o=!!document.createElement("div",{is:"marp-auto-scaling"}).outerHTML.startsWith("<div is"),o))&&a!==HTMLElement?i||customElements.define(s,r(a,{style:t[n].style}),{extends:n}):(i||customElements.define(s,r(HTMLElement,t[n])),e.querySelectorAll(`${n}[is="${s}"]`).forEach((t=>{t.outerHTML=t.outerHTML.replace(new RegExp(`^<${n}`,"i"),`<${s}`).replace(new RegExp(`</${n}>$`,"i"),`</${s}>`)})))}window[a]=!0})(e),e[w])return e[w];const i=v({target:e}),n=()=>{i(),delete e[w]},l=Object.assign(n,{cleanup:n,update:()=>b(e)});return Object.defineProperty(e,w,{configurable:!0,value:l}),l},y=document.currentScript;b(y?y.getRootNode():document)}();
+</script></foreignObject></svg></div><div class="bespoke-marp-note" data-index="2" tabindex="0"><p></p></div><div class="bespoke-marp-note" data-index="3" tabindex="0"><p></p></div><div class="bespoke-marp-note" data-index="4" tabindex="0"><p></p></div><div class="bespoke-marp-note" data-index="9" tabindex="0"><p></p><p></p></div><div class="bespoke-marp-note" data-index="18" tabindex="0"><p></p></div><div class="bespoke-marp-note" data-index="39" tabindex="0"><p></p></div><script>/*!! License: https://unpkg.com/@marp-team/marp-cli@4.1.2/lib/bespoke.js.LICENSE.txt */
+!function(){"use strict";function e(e){return e&&e.__esModule&&Object.prototype.hasOwnProperty.call(e,"default")?e.default:e}var t,n,r=(n||(n=1,t={from:function(e,t){var n,r=1===(e.parent||e).nodeType?e.parent||e:document.querySelector(e.parent||e),o=[].filter.call("string"==typeof e.slides?r.querySelectorAll(e.slides):e.slides||r.children,(function(e){return"SCRIPT"!==e.nodeName})),a={},i=function(e,t){return(t=t||{}).index=o.indexOf(e),t.slide=e,t},s=function(e,t){a[e]=(a[e]||[]).filter((function(e){return e!==t}))},c=function(e,t){return(a[e]||[]).reduce((function(e,n){return e&&!1!==n(t)}),!0)},l=function(e,t){o[e]&&(n&&c("deactivate",i(n,t)),n=o[e],c("activate",i(n,t)))},d=function(e,t){var r=o.indexOf(n)+e;c(e>0?"next":"prev",i(n,t))&&l(r,t)},u={off:s,on:function(e,t){return(a[e]||(a[e]=[])).push(t),s.bind(null,e,t)},fire:c,slide:function(e,t){if(!arguments.length)return o.indexOf(n);c("slide",i(o[e],t))&&l(e,t)},next:d.bind(null,1),prev:d.bind(null,-1),parent:r,slides:o,destroy:function(e){c("destroy",i(n,e)),a={}}};return(t||[]).forEach((function(e){e(u)})),n||l(0),u}}),t),o=e(r);const a=document.body,i=(...e)=>history.replaceState(...e),s="",c="presenter",l="next",d=["",c,l],u="bespoke-marp-",f=`data-${u}`,m=(e,{protocol:t,host:n,pathname:r,hash:o}=location)=>{const a=e.toString();return`${t}//${n}${r}${a?"?":""}${a}${o}`},g=()=>a.dataset.bespokeView,p=e=>new URLSearchParams(location.search).get(e),v=(e,t={})=>{const n={location,setter:i,...t},r=new URLSearchParams(n.location.search);for(const t of Object.keys(e)){const n=e[t];"string"==typeof n?r.set(t,n):r.delete(t)}try{n.setter({...window.history.state??{}},"",m(r,n.location))}catch(e){console.error(e)}},h=(()=>{const e="bespoke-marp";try{return localStorage.setItem(e,e),localStorage.removeItem(e),!0}catch{return!1}})(),y=e=>{try{return localStorage.getItem(e)}catch{return null}},b=(e,t)=>{try{return localStorage.setItem(e,t),!0}catch{return!1}},w=e=>{try{return localStorage.removeItem(e),!0}catch{return!1}},x=(e,t)=>{const n="aria-hidden";t?e.setAttribute(n,"true"):e.removeAttribute(n)},k=e=>{e.parent.classList.add(`${u}parent`),e.slides.forEach((e=>e.classList.add(`${u}slide`))),e.on("activate",(t=>{const n=`${u}active`,r=t.slide,o=r.classList,a=!o.contains(n);if(e.slides.forEach((e=>{e.classList.remove(n),x(e,!0)})),o.add(n),x(r,!1),a){const e=`${n}-ready`;o.add(e),document.body.clientHeight,o.remove(e)}}))},$=e=>{let t=0,n=0;Object.defineProperty(e,"fragments",{enumerable:!0,value:e.slides.map((e=>[null,...e.querySelectorAll("[data-marpit-fragment]")]))});const r=r=>void 0!==e.fragments[t][n+r],o=(r,o)=>{t=r,n=o,e.fragments.forEach(((e,t)=>{e.forEach(((e,n)=>{if(null==e)return;const a=t<r||t===r&&n<=o;e.setAttribute(`${f}fragment`,(a?"":"in")+"active");const i=`${f}current-fragment`;t===r&&n===o?e.setAttribute(i,"current"):e.removeAttribute(i)}))})),e.fragmentIndex=o;const a={slide:e.slides[r],index:r,fragments:e.fragments[r],fragmentIndex:o};e.fire("fragment",a)};e.on("next",(({fragment:a=!0})=>{if(a){if(r(1))return o(t,n+1),!1;const a=t+1;e.fragments[a]&&o(a,0)}else{const r=e.fragments[t].length;if(n+1<r)return o(t,r-1),!1;const a=e.fragments[t+1];a&&o(t+1,a.length-1)}})),e.on("prev",(({fragment:a=!0})=>{if(r(-1)&&a)return o(t,n-1),!1;const i=t-1;e.fragments[i]&&o(i,e.fragments[i].length-1)})),e.on("slide",(({index:t,fragment:n})=>{let r=0;if(void 0!==n){const o=e.fragments[t];if(o){const{length:e}=o;r=-1===n?e-1:Math.min(Math.max(n,0),e-1)}}o(t,r)})),o(0,0)},E=document,L=()=>!(!E.fullscreenEnabled&&!E.webkitFullscreenEnabled),S=()=>!(!E.fullscreenElement&&!E.webkitFullscreenElement),P=e=>{e.fullscreen=()=>{L()&&(async()=>{S()?(E.exitFullscreen||E.webkitExitFullscreen)?.call(E):((e=E.body)=>{(e.requestFullscreen||e.webkitRequestFullscreen)?.call(e)})()})()},document.addEventListener("keydown",(t=>{"f"!==t.key&&"F11"!==t.key||t.altKey||t.ctrlKey||t.metaKey||!L()||(e.fullscreen(),t.preventDefault())}))},_=`${u}inactive`,T=(e=2e3)=>({parent:t,fire:n})=>{const r=t.classList,o=e=>n(`marp-${e?"":"in"}active`);let a;const i=()=>{a&&clearTimeout(a),a=setTimeout((()=>{r.add(_),o()}),e),r.contains(_)&&(r.remove(_),o(!0))};for(const e of["mousedown","mousemove","touchend"])document.addEventListener(e,i);setTimeout(i,0)},I=["AUDIO","BUTTON","INPUT","SELECT","TEXTAREA","VIDEO"],M=e=>{e.parent.addEventListener("keydown",(e=>{if(!e.target)return;const t=e.target;(I.includes(t.nodeName)||"true"===t.contentEditable)&&e.stopPropagation()}))},O=e=>{window.addEventListener("load",(()=>{for(const t of e.slides){const e=t.querySelector("marp-auto-scaling, [data-auto-scaling], [data-marp-fitting]");t.setAttribute(`${f}load`,e?"":"hideable")}}))},A=({interval:e=250}={})=>t=>{document.addEventListener("keydown",(e=>{if(" "===e.key&&e.shiftKey)t.prev();else if("ArrowLeft"===e.key||"ArrowUp"===e.key||"PageUp"===e.key)t.prev({fragment:!e.shiftKey});else if(" "!==e.key||e.shiftKey)if("ArrowRight"===e.key||"ArrowDown"===e.key||"PageDown"===e.key)t.next({fragment:!e.shiftKey});else if("End"===e.key)t.slide(t.slides.length-1,{fragment:-1});else{if("Home"!==e.key)return;t.slide(0)}else t.next();e.preventDefault()}));let n,r,o=0;t.parent.addEventListener("wheel",(a=>{let i=!1;const s=(e,t)=>{e&&(i=i||((e,t)=>((e,t)=>{const n="X"===t?"Width":"Height";return e[`client${n}`]<e[`scroll${n}`]})(e,t)&&((e,t)=>{const{overflow:n}=e,r=e[`overflow${t}`];return"auto"===n||"scroll"===n||"auto"===r||"scroll"===r})(getComputedStyle(e),t))(e,t)),e?.parentElement&&s(e.parentElement,t)};if(0!==a.deltaX&&s(a.target,"X"),0!==a.deltaY&&s(a.target,"Y"),i)return;a.preventDefault();const c=Math.sqrt(a.deltaX**2+a.deltaY**2);if(void 0!==a.wheelDelta){if(void 0===a.webkitForce&&Math.abs(a.wheelDelta)<40)return;if(a.deltaMode===a.DOM_DELTA_PIXEL&&c<4)return}else if(a.deltaMode===a.DOM_DELTA_PIXEL&&c<12)return;r&&clearTimeout(r),r=setTimeout((()=>{n=0}),e);const l=Date.now()-o<e,d=c<=n;if(n=c,l||d)return;let u;(a.deltaX>0||a.deltaY>0)&&(u="next"),(a.deltaX<0||a.deltaY<0)&&(u="prev"),u&&(t[u](),o=Date.now())}))},C=(e=`.${u}osc`)=>{const t=document.querySelector(e);if(!t)return()=>{};const n=(e,n)=>{t.querySelectorAll(`[${f}osc=${JSON.stringify(e)}]`).forEach(n)};return L()||n("fullscreen",(e=>e.style.display="none")),h||n("presenter",(e=>{e.disabled=!0,e.title="Presenter view is disabled due to restricted localStorage."})),e=>{t.addEventListener("click",(t=>{if(t.target instanceof HTMLElement){const{bespokeMarpOsc:n}=t.target.dataset;n&&t.target.blur();const r={fragment:!t.shiftKey};"next"===n?e.next(r):"prev"===n?e.prev(r):"fullscreen"===n?e?.fullscreen():"presenter"===n&&e.openPresenterView()}})),e.parent.appendChild(t),e.on("activate",(({index:t})=>{n("page",(n=>n.textContent=`Page ${t+1} of ${e.slides.length}`))})),e.on("fragment",(({index:t,fragments:r,fragmentIndex:o})=>{n("prev",(e=>e.disabled=0===t&&0===o)),n("next",(n=>n.disabled=t===e.slides.length-1&&o===r.length-1))})),e.on("marp-active",(()=>x(t,!1))),e.on("marp-inactive",(()=>x(t,!0))),L()&&(e=>{for(const t of["","webkit"])E.addEventListener(t+"fullscreenchange",e)})((()=>n("fullscreen",(e=>e.classList.toggle("exit",L()&&S())))))}},D=e=>{window.addEventListener("message",(t=>{if(t.origin!==window.origin)return;const[n,r]=t.data.split(":");if("navigate"===n){const[t,n]=r.split(",");let o=Number.parseInt(t,10),a=Number.parseInt(n,10)+1;a>=e.fragments[o].length&&(o+=1,a=0),e.slide(o,{fragment:a})}}))};var N,B,q,K,j,F,V,U={exports:{}},X=(N||(N=1,U.exports=(B=["area","base","br","col","command","embed","hr","img","input","keygen","link","meta","param","source","track","wbr"],q=function(e){return String(e).replace(/[&<>"']/g,(function(e){return"&"+K[e]+";"}))},K={"&":"amp","<":"lt",">":"gt",'"':"quot","'":"apos"},j="dangerouslySetInnerHTML",F={className:"class",htmlFor:"for"},V={},function(e,t){var n=[],r="";t=t||{};for(var o=arguments.length;o-- >2;)n.push(arguments[o]);if("function"==typeof e)return t.children=n.reverse(),e(t);if(e){if(r+="<"+e,t)for(var a in t)!1!==t[a]&&null!=t[a]&&a!==j&&(r+=" "+(F[a]?F[a]:q(a))+'="'+q(t[a])+'"');r+=">"}if(-1===B.indexOf(e)){if(t[j])r+=t[j].__html;else for(;n.length;){var i=n.pop();if(i)if(i.pop)for(var s=i.length;s--;)n.push(i[s]);else r+=!0===V[i]?i:q(i)}r+=e?"</"+e+">":""}return V[r]=!0,r})),U.exports),H=e(X);const R=({children:e})=>H(null,null,...e),W=`${u}presenter-`,J={container:`${W}container`,dragbar:`${W}dragbar-container`,next:`${W}next`,nextContainer:`${W}next-container`,noteContainer:`${W}note-container`,noteWrapper:`${W}note-wrapper`,noteButtons:`${W}note-buttons`,infoContainer:`${W}info-container`,infoPage:`${W}info-page`,infoPageText:`${W}info-page-text`,infoPagePrev:`${W}info-page-prev`,infoPageNext:`${W}info-page-next`,noteButtonsBigger:`${W}note-bigger`,noteButtonsSmaller:`${W}note-smaller`,infoTime:`${W}info-time`,infoTimer:`${W}info-timer`},Y=e=>{const{title:t}=document;document.title="[Presenter view]"+(t?` - ${t}`:"");const n={},r=e=>(n[e]=n[e]||document.querySelector(`.${e}`),n[e]);document.body.appendChild((e=>{const t=document.createElement("div");return t.className=J.container,t.appendChild(e),t.insertAdjacentHTML("beforeend",H(R,null,H("div",{class:J.nextContainer},H("iframe",{class:J.next,src:"?view=next"})),H("div",{class:J.dragbar}),H("div",{class:J.noteContainer},H("div",{class:J.noteWrapper}),H("div",{class:J.noteButtons},H("button",{class:J.noteButtonsSmaller,tabindex:"-1",title:"Smaller notes font size"},"Smaller notes font size"),H("button",{class:J.noteButtonsBigger,tabindex:"-1",title:"Bigger notes font size"},"Bigger notes font size"))),H("div",{class:J.infoContainer},H("div",{class:J.infoPage},H("button",{class:J.infoPagePrev,tabindex:"-1",title:"Previous"},"Previous"),H("span",{class:J.infoPageText}),H("button",{class:J.infoPageNext,tabindex:"-1",title:"Next"},"Next")),H("time",{class:J.infoTime,title:"Current time"}),H("time",{class:J.infoTimer,title:"Timer"})))),t})(e.parent)),(e=>{let t=!1;r(J.dragbar).addEventListener("mousedown",(()=>{t=!0,r(J.dragbar).classList.add("active")})),window.addEventListener("mouseup",(()=>{t=!1,r(J.dragbar).classList.remove("active")})),window.addEventListener("mousemove",(e=>{if(!t)return;const n=e.clientX/document.documentElement.clientWidth*100;r(J.container).style.setProperty("--bespoke-marp-presenter-split-ratio",`${Math.max(0,Math.min(100,n))}%`)})),r(J.nextContainer).addEventListener("click",(()=>e.next()));const n=r(J.next),o=(a=n,(e,t)=>a.contentWindow?.postMessage(`navigate:${e},${t}`,"null"===window.origin?"*":window.origin));var a;n.addEventListener("load",(()=>{r(J.nextContainer).classList.add("active"),o(e.slide(),e.fragmentIndex),e.on("fragment",(({index:e,fragmentIndex:t})=>o(e,t)))}));const i=document.querySelectorAll(".bespoke-marp-note");i.forEach((e=>{e.addEventListener("keydown",(e=>e.stopPropagation())),r(J.noteWrapper).appendChild(e)})),e.on("activate",(()=>i.forEach((t=>t.classList.toggle("active",t.dataset.index==e.slide())))));let s=0;const c=e=>{s=Math.max(-5,s+e),r(J.noteContainer).style.setProperty("--bespoke-marp-note-font-scale",(1.2**s).toFixed(4))},l=()=>c(1),d=()=>c(-1),u=r(J.noteButtonsBigger),f=r(J.noteButtonsSmaller);u.addEventListener("click",(()=>{u.blur(),l()})),f.addEventListener("click",(()=>{f.blur(),d()})),document.addEventListener("keydown",(e=>{"+"===e.key&&l(),"-"===e.key&&d()}),!0),e.on("activate",(({index:t})=>{r(J.infoPageText).textContent=`${t+1} / ${e.slides.length}`}));const m=r(J.infoPagePrev),g=r(J.infoPageNext);m.addEventListener("click",(t=>{m.blur(),e.prev({fragment:!t.shiftKey})})),g.addEventListener("click",(t=>{g.blur(),e.next({fragment:!t.shiftKey})})),e.on("fragment",(({index:t,fragments:n,fragmentIndex:r})=>{m.disabled=0===t&&0===r,g.disabled=t===e.slides.length-1&&r===n.length-1}));let p=new Date;const v=()=>{const e=new Date,t=e=>`${Math.floor(e)}`.padStart(2,"0"),n=e.getTime()-p.getTime(),o=t(n/1e3%60),a=t(n/1e3/60%60),i=t(n/36e5%24);r(J.infoTime).textContent=e.toLocaleTimeString(),r(J.infoTimer).textContent=`${i}:${a}:${o}`};v(),setInterval(v,250),r(J.infoTimer).addEventListener("click",(()=>{p=new Date}))})(e)},z=e=>{if(!(e=>e.syncKey&&"string"==typeof e.syncKey)(e))throw new Error("The current instance of Bespoke.js is invalid for Marp bespoke presenter plugin.");Object.defineProperties(e,{openPresenterView:{enumerable:!0,value:G},presenterUrl:{enumerable:!0,get:Q}}),h&&document.addEventListener("keydown",(t=>{"p"!==t.key||t.altKey||t.ctrlKey||t.metaKey||(t.preventDefault(),e.openPresenterView())}))};function G(){const{max:e,floor:t}=Math,n=e(t(.85*window.innerWidth),640),r=e(t(.85*window.innerHeight),360);return window.open(this.presenterUrl,W+this.syncKey,`width=${n},height=${r},menubar=no,toolbar=no`)}function Q(){const e=new URLSearchParams(location.search);return e.set("view","presenter"),e.set("sync",this.syncKey),m(e)}const Z=e=>{const t=g();return t===l&&e.appendChild(document.createElement("span")),{[s]:z,[c]:Y,[l]:D}[t]},ee=e=>{e.on("activate",(t=>{document.querySelectorAll(".bespoke-progress-parent > .bespoke-progress-bar").forEach((n=>{n.style.flexBasis=100*t.index/(e.slides.length-1)+"%"}))}))},te=e=>{const t=Number.parseInt(e,10);return Number.isNaN(t)?null:t},ne=(e={})=>{const t={history:!0,...e};return e=>{let n=!0;const r=e=>{const t=n;try{return n=!0,e()}finally{n=t}},o=(t={fragment:!0})=>{let n=t.fragment?te(p("f")||""):null;((t,n)=>{const{min:r,max:o}=Math,{fragments:a,slides:i}=e,s=o(0,r(t,i.length-1)),c=o(0,r(n||0,a[s].length-1));s===e.slide()&&c===e.fragmentIndex||e.slide(s,{fragment:c})})((()=>{if(location.hash){const[t]=location.hash.slice(1).split(":~:");if(/^\d+$/.test(t))return(te(t)??1)-1;const r=document.getElementById(t)||document.querySelector(`a[name="${CSS.escape(t)}"]`);if(r){const{length:t}=e.slides;for(let o=0;o<t;o+=1)if(e.slides[o].contains(r)){const t=e.fragments?.[o],a=r.closest("[data-marpit-fragment]");if(t&&a){const e=t.indexOf(a);e>=0&&(n=e)}return o}}}return 0})(),n)};e.on("fragment",(({index:e,fragmentIndex:r})=>{n||v({f:0===r||r.toString()},{location:{...location,hash:`#${e+1}`},setter:(...e)=>t.history?history.pushState(...e):history.replaceState(...e)})})),setTimeout((()=>{o(),window.addEventListener("hashchange",(()=>r((()=>{o({fragment:!1}),v({f:void 0})})))),window.addEventListener("popstate",(()=>{n||r((()=>o()))})),n=!1}),0)}},re=(e={})=>{const t=e.key||window.history.state?.marpBespokeSyncKey||Math.random().toString(36).slice(2),n=`bespoke-marp-sync-${t}`;var r;r={marpBespokeSyncKey:t},v({},{setter:(e,...t)=>i({...e,...r},...t)});const o=()=>{const e=y(n);return e?JSON.parse(e):Object.create(null)},a=e=>{const t=o(),r={...t,...e(t)};return b(n,JSON.stringify(r)),r},s=()=>{window.removeEventListener("pageshow",s),a((e=>({reference:(e.reference||0)+1})))};return e=>{s(),Object.defineProperty(e,"syncKey",{value:t,enumerable:!0});let r=!0;setTimeout((()=>{e.on("fragment",(e=>{r&&a((()=>({index:e.index,fragmentIndex:e.fragmentIndex})))}))}),0),window.addEventListener("storage",(t=>{if(t.key===n&&t.oldValue&&t.newValue){const n=JSON.parse(t.oldValue),o=JSON.parse(t.newValue);if(n.index!==o.index||n.fragmentIndex!==o.fragmentIndex)try{r=!1,e.slide(o.index,{fragment:o.fragmentIndex,forSync:!0})}finally{r=!0}}}));const i=()=>{const{reference:e}=o();void 0===e||e<=1?w(n):a((()=>({reference:e-1})))};window.addEventListener("pagehide",(e=>{e.persisted&&window.addEventListener("pageshow",s),i()})),e.on("destroy",i)}},{PI:oe,abs:ae,sqrt:ie,atan2:se}=Math,ce={passive:!0},le=({slope:e=-.7,swipeThreshold:t=30}={})=>n=>{let r;const o=n.parent,a=e=>{const t=o.getBoundingClientRect();return{x:e.pageX-(t.left+t.right)/2,y:e.pageY-(t.top+t.bottom)/2}};o.addEventListener("touchstart",(({touches:e})=>{r=1===e.length?a(e[0]):void 0}),ce),o.addEventListener("touchmove",(e=>{if(r)if(1===e.touches.length){e.preventDefault();const t=a(e.touches[0]),n=t.x-r.x,o=t.y-r.y;r.delta=ie(ae(n)**2+ae(o)**2),r.radian=se(n,o)}else r=void 0})),o.addEventListener("touchend",(o=>{if(r){if(r.delta&&r.delta>=t&&r.radian){const t=(r.radian-e+oe)%(2*oe)-oe;n[t<0?"next":"prev"](),o.stopPropagation()}r=void 0}}),ce)},de=new Map;de.clear(),de.set("none",{backward:{both:void 0,incoming:void 0,outgoing:void 0},forward:{both:void 0,incoming:void 0,outgoing:void 0}});const ue={both:"",outgoing:"outgoing-",incoming:"incoming-"},fe={forward:"",backward:"-backward"},me=e=>`--marp-bespoke-transition-animation-${e}`,ge=e=>`--marp-transition-${e}`,pe=me("name"),ve=me("duration"),he=e=>new Promise((t=>{const n={},r=document.createElement("div"),o=e=>{r.remove(),t(e)};r.addEventListener("animationstart",(()=>o(n))),Object.assign(r.style,{animationName:e,animationDuration:"1s",animationFillMode:"both",animationPlayState:"paused",position:"absolute",pointerEvents:"none"}),document.body.appendChild(r);const a=getComputedStyle(r).getPropertyValue(ge("duration"));a&&(n.defaultDuration=a),((e,t)=>{requestAnimationFrame((()=>{e.style.animationPlayState="running",requestAnimationFrame((()=>t(void 0)))}))})(r,o)})),ye=async e=>de.has(e)?de.get(e):(e=>{const t={},n=[];for(const[r,o]of Object.entries(ue))for(const[a,i]of Object.entries(fe)){const s=`marp-${o}transition${i}-${e}`;n.push(he(s).then((e=>{t[a]=t[a]||{},t[a][r]=e?{...e,name:s}:void 0})))}return Promise.all(n).then((()=>t))})(e).then((t=>(de.set(e,t),t))),be=e=>Object.values(e).flatMap(Object.values).every((e=>!e)),we=(e,{type:t,backward:n})=>{const r=e[n?"backward":"forward"],o=(()=>{const e=r[t],n=e=>({[pe]:e.name});if(e)return n(e);if(r.both){const e=n(r.both);return"incoming"===t&&(e[me("direction")]="reverse"),e}})();return!o&&n?we(e,{type:t,backward:!1}):o||{[pe]:"__bespoke_marp_transition_no_animation__"}},xe=e=>{if(e)try{const t=JSON.parse(e);if((e=>{if("object"!=typeof e)return!1;const t=e;return"string"==typeof t.name&&(void 0===t.duration||"string"==typeof t.duration)})(t))return t}catch{}},ke="_tSId",$e="_tA",Ee="bespoke-marp-transition-warming-up",Le=window.matchMedia("(prefers-reduced-motion: reduce)"),Se="__bespoke_marp_transition_reduced_outgoing__",Pe="__bespoke_marp_transition_reduced_incoming__",_e={forward:{both:void 0,incoming:{name:Pe},outgoing:{name:Se}},backward:{both:void 0,incoming:{name:Pe},outgoing:{name:Se}}},Te=e=>{if(!document.startViewTransition)return;const t=t=>(void 0!==t&&(e._tD=t),e._tD);let n;t(!1),((...e)=>{const t=[...new Set(e).values()];return Promise.all(t.map((e=>ye(e)))).then()})(...Array.from(document.querySelectorAll("section[data-transition], section[data-transition-back]")).flatMap((e=>[e.dataset.transition,e.dataset.transitionBack].flatMap((e=>{const t=xe(e);return[t?.name,t?.builtinFallback?`__builtin__${t.name}`:void 0]})).filter((e=>!!e))))).then((()=>{document.querySelectorAll("style").forEach((e=>{e.innerHTML=e.innerHTML.replace(/--marp-transition-duration:[^;}]*[;}]/g,(e=>e.slice(0,-1)+"!important"+e.slice(-1)))}))}));const r=(n,{back:r,cond:o})=>a=>{const i=t();if(i)return!!a[$e]||!("object"!=typeof i||(i.skipTransition(),!a.forSync));if(!o(a))return!0;const s=e.slides[e.slide()],c=()=>a.back??r,l="data-transition"+(c()?"-back":""),d=s.querySelector(`section[${l}]`);if(!d)return!0;const u=xe(d.getAttribute(l)??void 0);return!u||((async(e,{builtinFallback:t=!0}={})=>{let n=await ye(e);if(be(n)){if(!t)return;return n=await ye(`__builtin__${e}`),be(n)?void 0:n}return n})(u.name,{builtinFallback:u.builtinFallback}).then((e=>{if(!e){t(!0);try{n(a)}finally{t(!1)}return}let r=e;Le.matches&&(console.warn("Use a constant animation to transition because preferring reduced motion by viewer has detected."),r=_e);const o=document.getElementById(ke);o&&o.remove();const i=document.createElement("style");i.id=ke,document.head.appendChild(i),((e,t)=>{const n=[`:root{${ge("direction")}:${t.backward?-1:1};}`,":root:has(.bespoke-marp-inactive){cursor:none;}"],r=t=>{const n=e[t].both?.defaultDuration||e[t].outgoing?.defaultDuration||e[t].incoming?.defaultDuration;return"forward"===t?n:n||r("forward")},o=t.duration||r(t.backward?"backward":"forward");void 0!==o&&n.push(`::view-transition-group(*){${ve}:${o};}`);const a=e=>Object.entries(e).map((([e,t])=>`${e}:${t};`)).join("");return n.push(`::view-transition-old(root){${a(we(e,{...t,type:"outgoing"}))}}`,`::view-transition-new(root){${a(we(e,{...t,type:"incoming"}))}}`),n})(r,{backward:c(),duration:u.duration}).forEach((e=>i.sheet?.insertRule(e)));const s=document.documentElement.classList;s.add(Ee);let l=!1;const d=()=>{l||(n(a),l=!0,s.remove(Ee))},f=()=>{t(!1),i.remove(),s.remove(Ee)};try{t(!0);const e=document.startViewTransition(d);t(e),e.finished.finally(f)}catch(e){console.error(e),d(),f()}})),!1)};e.on("prev",r((t=>e.prev({...t,[$e]:!0})),{back:!0,cond:e=>e.index>0&&!((e.fragment??1)&&n.fragmentIndex>0)})),e.on("next",r((t=>e.next({...t,[$e]:!0})),{cond:t=>t.index+1<e.slides.length&&!(n.fragmentIndex+1<n.fragments.length)})),setTimeout((()=>{e.on("slide",r((t=>e.slide(t.index,{...t,[$e]:!0})),{cond:t=>{const n=e.slide();return t.index!==n&&(t.back=t.index<n,!0)}}))}),0),e.on("fragment",(e=>{n=e}))};let Ie;const Me=()=>(void 0===Ie&&(Ie="wakeLock"in navigator&&navigator.wakeLock),Ie),Oe=async()=>{const e=Me();if(e)try{return await e.request("screen")}catch(e){console.warn(e)}return null},Ae=async()=>{if(!Me())return;let e;const t=()=>{e&&"visible"===document.visibilityState&&Oe()};for(const e of["visibilitychange","fullscreenchange"])document.addEventListener(e,t);return e=await Oe(),e};((e=document.getElementById(":$p"))=>{(()=>{const e=p("view");a.dataset.bespokeView=e===l||e===c?e:""})();const t=(e=>{const t=p(e);return v({[e]:void 0}),t})("sync")||void 0;o.from(e,((...e)=>{const t=d.findIndex((e=>g()===e));return e.map((([e,n])=>e[t]&&n)).filter((e=>e))})([[1,1,0],re({key:t})],[[1,1,1],Z(e)],[[1,1,0],M],[[1,1,1],k],[[1,0,0],T()],[[1,1,1],O],[[1,1,1],ne({history:!1})],[[1,1,0],A()],[[1,1,0],P],[[1,0,0],ee],[[1,1,0],le()],[[1,0,0],C()],[[1,0,0],Te],[[1,1,1],$],[[1,1,0],Ae]))})()}();</script></body></html>
