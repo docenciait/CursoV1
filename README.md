@@ -55,9 +55,11 @@ Desarrolladores backend con experiencia en Python que quieran especializarseen m
 ---
 
 
-🔹 **Bloque 1: Fundamentos de Microservicios y DDD (Sesión 1)** 
-**Duración:**  3 horas
-**Contenidos:** 
+🔹 **Bloque 1: Fundamentos de Microservicios y DDD (Sesión 1 y 2)** 
+
+**Duración:**  7 horas
+
+**Contenidos: Temas 1, 2, 3, 4 y 5** 
  
 - Evolución del monolito a microservicios
  
@@ -78,9 +80,9 @@ Desarrolladores backend con experiencia en Python que quieran especializarseen m
 ---
 
 
-🔹 **Bloque 2: FastAPI y Arquitectura Base Hexagonal (Sesión 2)** 
+🔹 **Bloque 2: FastAPI y Arquitectura Base Hexagonal (Sesión 3)** 
 **Duración:**  4 horas
-**Contenidos:** 
+**Contenidos: Temas 6 y 7** 
  
 - FastAPI como framework para microservicios
  
@@ -92,14 +94,30 @@ Desarrolladores backend con experiencia en Python que quieran especializarseen m
  
 - Middlewares, dependencias, entornos, excepciones
 
-
+---
+🔹 **Bloque 3: DDD Aplicado + CQRS (Sesión 4)** 
+**Duración:**  4 horas
+**Contenidos: Tema 8** 
+ 
+- Implementación de Aggregates, Entities, Value Objects
+ 
+- Domain Services, Repositorios, Factories, Ubiquitous Language
+ 
+- Separación de comandos y queries (CQRS)
+ 
+- Command/Query Handlers, validación
+ 
+- Event sourcing básico, patrón outbox
+ 
+- Casos de uso y capa de aplicación
 
 ---
 
 
-🔹 **Bloque 3: Diseño de APIs REST, WebSockets y Seguridad (Sesión 3)** 
+🔹 **Bloque 3: Diseño de APIs REST, WebSockets y Seguridad (Sesión 5)** 
 **Duración:**  4 horas
-**Contenidos:** 
+**Contenidos: Temas 9, 10** 
+
  
 - Diseño de APIs RESTful: versiones, CORS, respuestas, validaciones
  
@@ -114,30 +132,9 @@ Desarrolladores backend con experiencia en Python que quieran especializarseen m
 ---
 
 
-🔹 **Bloque 4: DDD Aplicado + CQRS (Sesión 4)** 
+🔹 **Bloque 4: Comunicación entre microservicios + Event-Driven (Sesión 6)** 
 **Duración:**  4 horas
-**Contenidos:** 
- 
-- Implementación de Aggregates, Entities, Value Objects
- 
-- Domain Services, Repositorios, Factories, Ubiquitous Language
- 
-- Separación de comandos y queries (CQRS)
- 
-- Command/Query Handlers, validación
- 
-- Event sourcing básico, patrón outbox
- 
-- Casos de uso y capa de aplicación
-
-
-
----
-
-
-🔹 **Bloque 5: Comunicación entre microservicios + Event-Driven (Sesión 5)** 
-**Duración:**  4 horas
-**Contenidos:** 
+**Contenidos:  Tema 11** 
  
 - Comunicación síncrona (REST, gRPC)
  
@@ -154,8 +151,8 @@ Desarrolladores backend con experiencia en Python que quieran especializarseen m
 ---
 
 
-🔹 **Bloque 6: Infraestructura, Pruebas y CI/CD (Sesión 6)** 
-**Duración:**  3 horas
+🔹 **Bloque 4: Escalabilidad: Infraestructura, Pruebas y CI/CD (Sesión 7)** 
+**Duración:**  4 horas
 **Contenidos:** 
  
 - Testing con Pytest: unitarios, integración, E2E
@@ -173,8 +170,8 @@ Desarrolladores backend con experiencia en Python que quieran especializarseen m
 ---
 
 
-🔹 **Bloque 7: Proyecto Final Guiado (Sesiones 7 y 8)** 
-**Duración:**  4 horas + 4 horas
+🔹 **Bloque 7: Proyecto Final Guiado (Sesiones 8)** 
+**Duración:**  4 horas
 **Contenidos:** 
  
 - Definición del dominio y los microservicios (bounded contexts)
@@ -198,13 +195,14 @@ Desarrolladores backend con experiencia en Python que quieran especializarseen m
 | Sesión | Duración | Contenido | 
 | --- | --- | --- | 
 | 1 | 3h | Fundamentos de Microservicios y DDD | 
-| 2 | 4h | FastAPI y Arquitectura Base Hexagonal | 
-| 3 | 4h | APIs REST, WebSockets y Seguridad | 
-| 4 | 4h | DDD Aplicado + CQRS | 
-| 5 | 4h | Comunicación entre microservicios + Event-Driven | 
-| 6 | 3h | Testing, CI/CD, Docker y observabilidad | 
-| 7 | 4h | Proyecto Final: diseño, implementación parcial y pruebas | 
-| 8 | 4h | Proyecto Final: integración, despliegue, revisión y conclusiones | 
+| 2 | 4h | Fundamentos de Microservicios y DDD |
+| 3 | 4h | DDD Aplicado + CQRS | 
+| 4 | 4h | FastAPI y Arquitectura Base Hexagonal | 
+| 5 | 4h | APIs REST, WebSockets y Seguridad | 
+| 6 | 4h | Comunicación entre microservicios + Event-Driven | 
+| 7 | 3h | Testing, CI/CD, Docker y observabilidad | 
+| 8 | 4h | Proyecto Final | 
+ 
 
 
 
