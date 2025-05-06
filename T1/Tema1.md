@@ -15,6 +15,8 @@
   - [1.9 Evaluación del impacto de los microservicios en la gestión del ciclo de vida del software](#19-evaluación-del-impacto-de-los-microservicios-en-la-gestión-del-ciclo-de-vida-del-software)
   - [1.10 Herramientas modernas para la gestión de arquitecturas distribuidas](#110-herramientas-modernas-para-la-gestión-de-arquitecturas-distribuidas)
   - [1.11 Introducción a patrones como API Gateway, Service Discovery, y Service Registry](#111-introducción-a-patrones-como-api-gateway-service-discovery-y-service-registry)
+    - [API Gateway](#api-gateway)
+    - [Service Discovery y Service Registry](#service-discovery-y-service-registry)
   - [Referencias](#referencias)
 
 ---
@@ -39,14 +41,13 @@
 
 **Arquitectura de Software** 
 
-![](img/sw_arq.jpg)
+![](img/uber_sw_arq.png)
 
 > **Definición:** 
 
 La arquitectura de software es "la estructura o estructuras del sistema, que comprenden componentes de software, las propiedades externas visibles de esos componentes y las relaciones entre ellos". [<a href="#ref1">1</a>]
 
 Es decir, la arquitectura define **cómo**  se organiza un sistema software: qué partes tiene, cómo interactúan, qué restricciones existen y qué principios guían sus decisiones. No se trata solo del diseño técnico, sino también de cuestiones como escalabilidad, mantenibilidad, rendimiento o seguridad. [<a href="#ref2">2</a>]
-
 
 
 ---
@@ -84,15 +85,20 @@ Mientras un patrón de diseño (como Singleton) soluciona **detalles de clases y
  
 - **Modelo-Vista-Controlador (MVC)**  → separa datos, lógica y presentación.
  
-- **Arquitectura en Capas**  → organiza el sistema en capas jerárquicas (por ejemplo, presentación, lógica de negocio, datos).
+- **Puertos-Adaptadores (Hexagonal):**  → Este patrón se centra en aislar la lógica de negocio del resto del sistema (infraestructura, interfaces de usuario, bases de datos) mediante el uso de puertos e interfaces. Los "adaptadores" se encargan de la comunicación entre la lógica de negocio y el mundo exterior a través de estos puertos. Esto promueve la testabilidad y la independencia tecnológica.
  
-- **Microservicios**  → divide el sistema en pequeños servicios independientes que se comunican.
- 
-- **Event-Driven Architecture (EDA)**  → estructura el sistema alrededor de eventos y respuestas.
+- **Tubería y Filtros (Pipes and Filters):** Este patrón estructura el sistema como una secuencia de componentes de procesamiento (filtros) conectados por canales de transmisión de datos (tuberías). Cada filtro realiza una transformación específica en los datos a medida que fluyen a través de la tubería. Es útil para procesar flujos de datos.
+
+- **Agente-Mensajero (Broker)**: Se utiliza en sistemas distribuidos para estructurar aplicaciones desacopladas. Un componente central (el broker) media la comunicación entre otros componentes (agentes). Los agentes se comunican enviando mensajes al broker, quien luego los enruta a los destinatarios apropiados. Esto facilita la escalabilidad y la flexibilidad.
+
+- **Microkernel (Plug-in Architecture):** Este patrón separa la funcionalidad central de la aplicación (el microkernel) de la funcionalidad opcional (los plug-ins o extensiones). El microkernel proporciona los servicios esenciales, mientras que los plug-ins añaden funcionalidades específicas y se integran con el microkernel a través de interfaces bien definidas. Es útil para sistemas extensibles y personalizables. 
+
 
 **Referencia principal:** 
  
 - Bass, L., Clements, P., & Kazman, R. (2012). *Software Architecture in Practice* (3rd ed.). Addison-Wesley.
+- Avgeriou, Paris; Uwe Zdun (2005). «Architectural patterns revisited:a pattern language». 10th European Conference on Pattern Languages of Programs (EuroPlop 2005), July (Irsee, Germany).
+- Bass L., Clements P., Kazman R. (2005). Software Architecture in Practice: Second Edition. Addison-Wesley.
 
 
 **Metodología de Diseño (en Software)** 
@@ -114,7 +120,7 @@ Una metodología de diseño **no te dice**  qué patrón de arquitectura usar, *
 | Concepto | Categoría | Qué define | Ejemplos | 
 | --- | --- | --- | --- | 
 | Arquitectura de Software | Organización global del sistema | Cómo dividir y desplegar todo el sistema a gran escala. | Monolito, Microservicios, Serverless, SOA| 
-| Patrón de Arquitectura | Organización interna | Cómo estructurar el interior de cada parte del sistema (servicio, módulo). | Hexagonal, CQRS, MVC, Event-Driven, Clean Architecture | 
+| Patrón de Arquitectura | Organización interna | Cómo estructurar el interior de cada parte del sistema (servicio, módulo). | Hexagonal, CQRS, MVC, Broker | 
 | Metodología de Diseño | Estrategia de modelado | Cómo pensar y representar el problema real en el modelo de software. | Domain-Driven Design (DDD), Object-Oriented Design (OOD) | 
 | Patrón de Diseño | Solución local de diseño | Cómo resolver problemas comunes en diseño de clases y objetos. | Singleton, Factory, Observer, Strategy | 
 
@@ -160,14 +166,33 @@ No hay que confundir monolito con *legacy*. Una aplicación puede ser *legacy* y
 
 Los beneficios de la arquitectura monolítica:
 
-- Desarrollo simple: IDEs y otras herramientas se enfocan en construir una única aplicación.
 
-- Facilidad para realizar cambios grandes: se puede cambiar el código, el esquema de datos, se hace build y se despliega.
+- **Simple de desarrollar**: los IDEs y otras herramientas de desarrollo se centran en la creación de una única aplicación.
+  
+- **Fácil de realizar cambios radicales en la aplicación**: puedes modificar el código y el esquema de la base de datos, compilar e implementar.
+  
+- **Directo de probar**: los desarrolladores pueden escribir pruebas de extremo a extremo que iniciaban la aplicación, invocaban la API REST y probaban la interfaz de usuario con Selenium.
+  
+- **Directo de desplegar**: todo lo que un desarrollador tenía que hacer es copiar la estructura del proyecto a un servidor que tuviera un webserver instalado.
+  
+- **Fácil de escalar**: se ejecutan múltiples instancias de la aplicación detrás de un balanceador de carga.
 
+Por contraparte existen limitaciones en esta arquitectura sobretodo cuando la aplicación se va haciendo cada vez más compleja -> (**Monolitic Hell**). Los problemas que nos encontraremos se pueden resumir en:
+
+- **El desarrollo se vuelve lento por su complejidad**.
+- **El despliegue también es lento y arduo:** por la complejidad del código se hace más tedioso tanto el proceso de despligue como el testeo del software.
+- **El escalado se vuelve complicado:** por ejemplo se puede necesitar un tipo de sgbd relacional para cierto módulo y otro módulo necesitar un sgbd en memoria.
+- **Se está atado un stack tecnológico:** se hace muy difícil adoptar nuevos frameworks y se opta por seguir con tecnologías obsoletas.
+
+![](img/monolitic_hell.png)
 
 ## 1.2 Ventajas y desventajas clave de los microservicios
 
 La arquitectura de microservicios se ha convertido en una de las estrategias más populares para el desarrollo de software distribuido. Sin embargo, no es una bala de plata. Comprender sus ventajas y desventajas es esencial para decidir cuándo y cómo aplicarla correctamente (Newman, 2021; NGINX, 2023).
+
+![](img/mono_hexagonal.PNG)
+
+![](img/mono_to_ms.PNG)
 
 ---
 
@@ -315,26 +340,19 @@ Aunque los microservicios no son una solución mágica para todos los sistemas, 
    - Despliegues graduales (canary deployments) y reversión rápida en caso de fallo.
    - Elasticidad para responder a eventos como Black Friday o lanzamientos virales.
 
-6. **Sistemas de IoT y edge computing**
 
-   Microservicios permiten gestionar dispositivos de borde (edge) en tiempo real con actualizaciones ligeras y resilientes (Microsoft, 2024).
-
-   *Características clave:*
-   - Microservicios de control local en dispositivos inteligentes.
-   - Actualizaciones OTA (Over-the-Air) segmentadas por servicio.
-   - Análisis de datos en el borde para reducir latencias y optimizar el tráfico hacia la nube.
 
 ## 1.5 Distinción entre microservicios y SOA (Service-Oriented Architecture)
 
 **Qué es SOA**
 
-> **SOA (Service Oriented Architecture)**: es un paradigma de arquitectura de software que define un conjunto de principios para estructurar aplicaciones como un ensamblaje de servicios de negocio, autónomos, interoperables y descubribles. A
+> **SOA (Service Oriented Architecture)**: es un paradigma de arquitectura de software que define un conjunto de principios para estructurar aplicaciones como un ensamblaje de servicios de negocio, autónomos, interoperables y descubribles. 
 
 Estos servicios se comunican entre sí a través de interfaces bien definidas y, a menudo, utilizando protocolos estándar de comunicación en red. 
 
 El objetivo principal de SOA es promover la reutilización, la flexibilidad, la escalabilidad y la agilidad en el desarrollo e integración de sistemas de información, alineando la tecnología con los procesos de negocio.
 
-Además es un conjunto de [estándares](). 
+[Manifiesto SOA](https://soa-manifesto.org/default_spanish.html)
 
 <center><img src="img/soa.png" width="400" height="300"></center>
 
@@ -760,13 +778,14 @@ El control y exposición de APIs debe hacerse de forma segura y eficiente (Kong 
  
 ## 1.11 Introducción a patrones como API Gateway, Service Discovery, y Service Registry
 
-- Cuando eliges construir un conjunto de microservicios necesitas decidir cómo quieres que tus aplicaciones interactúen con los microservicios.
+### API Gateway
 
-- En una arquitectura de microserivcios, cada servicio se expone como un conjunto de endpoints.
+* Cuando eliges construir un conjunto de microservicios necesitas decidir cómo quieres que tus aplicaciones interactúen con los microservicios.
+* En una arquitectura de microserivcios, cada servicio se expone como un conjunto de endpoints.
 
 Imaginemos que desarrollamos una cliente móvil nativo para una aplicación de compras. Es muy probable que tengas una vista detalle de cada uno de los productos.
 
-Y, aunque sea un móvil, seguramente habrá un montón de detalles que mostrarán mucha información. No sólo habrá nombre de producto, descripción, precio, etc. 
+Y, aunque sea un móvil, seguramente habrá un montón de detalles que mostrarán mucha información. No sólo habrá nombre de producto, descripción, precio, etc.
 
 Sino que habrá una serie de items como:
 
@@ -777,15 +796,84 @@ Sino que habrá una serie de items como:
 5. Varias opciones de compra.
 6. ...
 
-En arquitectura monolítica, el cliente móvil trae los datos con una simple llamada REST como: 
+En arquitectura monolítica, el cliente móvil trae los datos con una simple llamada REST como:
 
-```GET api.company.com/productdetails/productId```
+`GET api.company.com/productdetails/productId`
 
 El balanceador de carga enruta la petición hacia varias instancias idénticas. Entonces se hacen varias *queries* a la base de datos y se retorna la información.
 
 Pero, cuando usas **arquitectura de microservicios** los datos del detalle de los productos son mostrados a través de múltiples microservicios.
 
+Necesitamos saber cómo el cliente accede a esos servicios. Existen dos patrones:
+
+* **Direct Client-to-Microservice Communication**: cada microservicio tendrá un endpoint público.
+  * Esto puede representar un problema porque en este ejemplo haríamos 7 llamadas. Pues por ejemplo, con Amazon, hay cientos de microservicios involucrados en renderiza la página de un producto.
+  * Dificultad al refactorizar microservicios. Por ejemplo, habrá servicios que habrá que dividir.
+* La otra forma será usando un **API Gateway**: es un servidor que tiene un único punto de entrada al sistema. El AG encapsula la arquitectura interna y encauza todas las peticiones a los endpoints para cada microservicio. Tiene otras características como autenticación, monitorización, balanceador de carga, etc.
+
+El **API Gateway** es responsable del **enrutamiento de solicitudes**, la **composición** y la **traducción de protocolos**.
+
+Todas las peticiones de los clientes pasan primero por el API Gateway, que luego las enruta al **microservicio apropiado**.
+
+A menudo, el API Gateway maneja una solicitud **invocando múltiples microservicios** y **agregando los resultados**.  
+También puede traducir entre **protocolos web** como `HTTP` y `WebSocket`, y protocolos **no orientados a la web** que se usan internamente.
+
+El API Gateway también puede proporcionar a cada cliente una **API personalizada**.  
+Normalmente expone una **API de alto nivel** (*coarse-grained*) para clientes móviles.
+
+Por ejemplo, en el caso de mostrar los detalles de un producto, el API Gateway puede ofrecer un **endpoint**: `(/productdetails?productid=xxx)`
+que permita a un cliente móvil obtener todos los detalles del producto con una sola solicitud.
+
+El API Gateway maneja esta petición invocando diversos servicios —**información del producto**, **recomendaciones**, **reseñas**, etc.— y **combinando los resultados**.
+
+Un gran ejemplo de API Gateway es [Netflix API Gateway](https://medium.com/@pablo.matteo/did-you-know-that-netflixs-api-gateway-handles-over-700-000-requests-per-second-9a97bf5dc71b)
+
 ![](img/apigw_ms.png)
+
+### Service Discovery y Service Registry
+
+El **API Gateway** necesita conocer la ubicación (dirección IP y puerto) de cada microservicio con el que se comunica.
+
+En una aplicación tradicional, probablemente podrías codificar estas ubicaciones de forma estática.  
+Pero en una aplicación moderna de microservicios basada en la nube, encontrar las ubicaciones necesarias **no es un problema trivial**.
+
+Los **servicios de infraestructura**, como un **broker de mensajería**, suelen tener una ubicación estática, que puede especificarse mediante **variables de entorno** del sistema operativo.
+
+Sin embargo, **determinar la ubicación de un servicio de aplicación** no es tan sencillo.
+
+Los servicios de aplicación tienen ubicaciones **asignadas dinámicamente**.
+
+Además, el conjunto de instancias de un servicio cambia dinámicamente debido a **escalado automático** y **actualizaciones**.
+
+Como resultado, el API Gateway —igual que cualquier otro cliente de servicios en el sistema— necesita utilizar el **mecanismo de descubrimiento de servicios** del sistema, ya sea:
+
+* **Descubrimiento del lado del servidor** (*server-side discovery*), o
+* **Descubrimiento del lado del cliente** (*client-side discovery*).
+
+Por ahora, es importante señalar que si el sistema utiliza **descubrimiento del lado del cliente**, entonces el API Gateway debe ser capaz de **consultar el registro de servicios**, que es una base de datos con todas las instancias de microservicios y sus ubicaciones.
+
+El **registro de servicios** es una parte clave del **descubrimiento de servicios**.
+
+Se trata de una **base de datos que contiene las ubicaciones en red de las instancias de servicio**.
+
+Un registro de servicios debe ser **altamente disponible** y estar **actualizado en todo momento**.  
+Los clientes pueden almacenar en caché las ubicaciones obtenidas del registro, pero esa información **acaba desactualizándose**, y los clientes podrían dejar de poder descubrir nuevas instancias.
+
+Por tanto, un registro de servicios está compuesto por un **clúster de servidores** que utilizan un **protocolo de replicación** para mantener la consistencia de los datos.
+
+Como se mencionó anteriormente, **Netflix Eureka** es un buen ejemplo de registro de servicios.  
+Proporciona una **API REST** para registrar y consultar instancias de servicio.
+
+* Una instancia de servicio **registra su ubicación de red** mediante una petición `POST`.
+* Cada **30 segundos**, debe **renovar su registro** con una petición `PUT`.
+* Un registro puede eliminarse usando una petición `DELETE` o por **timeout** si no se renueva a tiempo.
+* Como es de esperar, un cliente puede obtener las instancias registradas mediante una petición `GET`.
+
+![](img/serv_reg_discov.png)
+
+También podemos ver el diagrama junto al AG:
+
+![](img/agw_srvreg_srvdisc.png)
 
 ---
 
