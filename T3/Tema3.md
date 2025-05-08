@@ -1,10 +1,13 @@
-## 3 INTRODUCCIÓN A LA COMUNICACIÓN ENTRE MICROSERVICIOS SÍNCRONA Y ASÍNCRONA 
+# Tema 3. INTRODUCCIÓN A LA COMUNICACIÓN ENTRE MICROSERVICIOS SÍNCRONA Y ASÍNCRONA 
 
  
 
 ## Tabla de Contenidos
 
-- [3. INTRODUCCIÓN A LA COMUNICACIÓN ENTRE MICROSERVICIOS SÍNCRONA Y ASÍNCRONA](#3-introducción-a-la-comunicación-entre-microservicios-síncrona-y-asíncrona-1)
+- [Tema 3. INTRODUCCIÓN A LA COMUNICACIÓN ENTRE MICROSERVICIOS SÍNCRONA Y ASÍNCRONA](#tema-3-introducción-a-la-comunicación-entre-microservicios-síncrona-y-asíncrona)
+  - [Tabla de Contenidos](#tabla-de-contenidos)
+  - [3. Contenidos](#3-contenidos)
+- [3. INTRODUCCIÓN A LA COMUNICACIÓN ENTRE MICROSERVICIOS SÍNCRONA Y ASÍNCRONA](#3-introducción-a-la-comunicación-entre-microservicios-síncrona-y-asíncrona)
   - [3.1. Distinción entre comunicación síncrona y asíncrona](#31-distinción-entre-comunicación-síncrona-y-asíncrona)
   - [3.2. Análisis del uso de REST, gRPC o mensajería por eventos](#32-análisis-del-uso-de-rest-grpc-o-mensajería-por-eventos)
   - [3.3. Implementación de APIs REST entre microservicios con FastAPI](#33-implementación-de-apis-rest-entre-microservicios-con-fastapi)
