@@ -54,28 +54,13 @@ Desarrolladores backend con experiencia en Python que quieran especializarseen m
 ---
 
 
-**Fechas: 4, 5, 9, 10, 11, 12, 16 y 17 de junio (8 sesiones)**
-**Horarios: de 08:30 a 12:30 | 4 y 11 de junio: de 08:30 a 11:30**
-**Duración: 30.0 horas**
+- **Fechas: 4, 5, 9, 10, 11, 12, 16 y 17 de junio (8 sesiones)**
+- **Horarios: de 08:30 a 12:30 | 4 y 11 de junio: de 08:30 a 11:30**
+- **Duración: 30.0 horas**
 
 ---
 
 
-### 🗓️ Planificación del curso con bloques temáticos y fechas corregidas 
-
-| Sesión | Fecha | Día | Duración | Bloque temático | Temas tratados | 
-| --- | --- | --- | --- | --- | --- | 
-| 1️⃣ | 4 junio 2025 | Miércoles | 3h | Bloque 1 – Principios de Microservicios, Framework FastAPI y Arquitectura Base | Tema 1 y Tema 2 | 
-| 2️⃣ | 5 junio 2025 | Jueves | 4h | Bloque 1 – Principios de Microservicios, Framework FastAPI y Arquitectura Base | Tema 3, Tema 4 y Tema 5 | 
-| 3️⃣ | 9 junio 2025 | Lunes | 4h | Bloque 2 – Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio | Tema 6 | 
-| 4️⃣ | 10 junio 2025 | Martes | 4h | Bloque 2 – Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio | - Tema 7 y Tema 8 | 
-| 5️⃣ | 11 junio 2025 | Miércoles | 3h | Bloque 3 – Comunicación Asíncrona, Eventos, Pub/Sub y Mensajería Distribuida | - Tema 9 | 
-| 6️⃣ | 12 junio 2025 | Jueves | 4h | Bloque 3 – Comunicación Asíncrona, Eventos, Pub/Sub y Mensajería Distribuida | - Tema 10 y Tema 11| 
-| 7️⃣ | 16 junio 2025 | Lunes | 4h | Bloque 4 – Escalabilidad, Persistencia, Testing y Despliegue de Microservicios en Producción | Tema 12 y Tema 13 | 
-| 8️⃣ | 17 junio 2025 | Martes | 4h | Bloque 4 – Escalabilidad, Persistencia, Testing y Despliegue de Microservicios en Producción + Proyecto Final | Tema 14, Tema 15 y Tema 16 | 
-
-
----
 
 ## 📘 Resumen de Bloques, Temas y Contenidos 
 
@@ -226,3 +211,208 @@ Desarrolladores backend con experiencia en Python que quieran especializarseen m
 
 
 ---
+
+### 🗓️ Planificación del curso con bloques temáticos y fechas corregidas 
+
+| Sesión | Fecha | Día | Duración | Bloque temático | Temas tratados | 
+| --- | --- | --- | --- | --- | --- | 
+| 1️⃣ | 4 junio 2025 | Miércoles | 3h | Bloque 1 – Principios de Microservicios, Framework FastAPI y Arquitectura Base | Tema 1 y Tema 2 | 
+| 2️⃣ | 5 junio 2025 | Jueves | 4h | Bloque 1 – Principios de Microservicios, Framework FastAPI y Arquitectura Base | Tema 3, Tema 4 y Tema 5 | 
+| 3️⃣ | 9 junio 2025 | Lunes | 4h | Bloque 2 – Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio | Tema 6 | 
+| 4️⃣ | 10 junio 2025 | Martes | 4h | Bloque 2 – Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio | - Tema 7 y Tema 8 | 
+| 5️⃣ | 11 junio 2025 | Miércoles | 3h | Bloque 3 – Comunicación Asíncrona, Eventos, Pub/Sub y Mensajería Distribuida | - Tema 9 | 
+| 6️⃣ | 12 junio 2025 | Jueves | 4h | Bloque 3 – Comunicación Asíncrona, Eventos, Pub/Sub y Mensajería Distribuida | - Tema 10 y Tema 11| 
+| 7️⃣ | 16 junio 2025 | Lunes | 4h | Bloque 4 – Escalabilidad, Persistencia, Testing y Despliegue de Microservicios en Producción | Tema 12 y Tema 13 | 
+| 8️⃣ | 17 junio 2025 | Martes | 4h | Bloque 4 – Escalabilidad, Persistencia, Testing y Despliegue de Microservicios en Producción + Proyecto Final | Tema 14, Tema 15 y Tema 16 | 
+
+---
+
+# Metodología
+
+## 📐 Aplicación de la regla 70-20-10 
+
+| Proporción | Enfoque | Aplicación en tecnología | 
+| --- | --- | --- | 
+| 70% | Aprendizaje práctico (learning by doing) | Laboratorios, código real, refactorizaciones, debugging, retos | 
+| 20% | Aprendizaje social / por observación | Pair coding, discusiones, revisión de código ajeno, ejemplos guiados | 
+| 10% | Teoría / formación estructurada | Exposición de conceptos, presentación de patrones, lectura de estándares | 
+
+
+
+---
+
+
+🔍 ¿Cómo aplicar esta regla al **Bloque 1**  (Temas 1 a 5)?
+Dado que el Bloque 1 incluye teoría clave (microservicios, FastAPI, REST, errores, seguridad), el **peso de la teoría será ligeramente superior al 10%**  al principio, pero sin perder el enfoque activo.
+Aquí tienes cómo podrías distribuirlo en **Sesión 1 y 2** , tema por tema:
+
+
+---
+
+
+🧭 **Sesión 1 – Tema 1 y parte del 2** 
+| Tema | % Teoría | Qué hacer | 
+| --- | --- | --- | 
+| Tema 1 – Introducción a la arquitectura de microservicios | ~25% teoría | Mini-lecture de 20–25 min con esquema visual, casos reales, debate guiado. Expón los conceptos más críticos: coupling, bounded context, independencia de despliegue. No entres aún en patrones ni herramientas. | 
+| Tema 2 – FastAPI como framework... | ~15% teoría, 55% práctica | Muestra con live coding lo que FastAPI resuelve: asincronía, validación, documentación. Después, que el alumno monte su primer microservicio mínimo con Swagger y Pydantic. | 
+
+
+> **Nota:**  Esta sesión tiene más teoría porque el Tema 1 es fundacional. Pero el cierre debe ser práctico (laboratorio mínimo + monolito explorado).
+
+
+
+---
+
+
+🧭 **Sesión 2 – Tema 2 (continuación), 3, 4, inicio 5** 
+| Tema | % Teoría | Qué hacer | 
+| --- | --- | --- | 
+| Tema 2 (estructura avanzada) | ~10% | Expón estructura ideal: routers, servicios, settings, app factory. Luego, directo al laboratorio (auth-service). | 
+| Tema 3 – Comunicación síncrona/asíncrona | ~10% | Breve exposición con esquema REST vs gRPC vs colas. No implementes aún colas. Código solo con httpx. | 
+| Tema 4 – Manejo de errores | ~10% | Explica con 1–2 diapositivas la diferencia entre errores técnicos y de dominio. Luego crea y lanza excepciones personalizadas en código. | 
+| Tema 5 (JWT básico) | ~5% introducción | Expón sólo qué es un JWT, cómo se usa y qué problemas resuelve. El laboratorio vendrá luego. | 
+
+
+> Aquí ya estás mucho más cerca del **70% práctico** , con 3 microservicios en código y comunicación real entre ellos.
+
+
+---
+
+## 📘 Sesión 1 – 4 de junio (Miércoles) 
+
+**Duración:**  3 horas
+
+**Bloque:**  Principios de Microservicios, Framework FastAPI y Arquitectura Base
+
+**Temas:** 
+ 
+- Tema 1: Introducción a la arquitectura de microservicios
+ 
+- Inicio de Tema 2: FastAPI como framework para microservicios
+
+
+
+---
+
+
+
+### 🎯 Objetivos de aprendizaje 
+
+ 
+- Comprender el origen y motivación de los microservicios.
+ 
+- Comparar monolito vs microservicios vs SOA.
+ 
+- Identificar retos reales de escalado y despliegue.
+ 
+- Ejecutar y analizar un monolito (Foodly).
+ 
+- Introducir FastAPI como herramienta moderna y escalable.
+
+
+
+---
+
+
+
+### 🧭 Estructura de la sesión 
+
+| Tiempo | Actividad | 
+| --- | --- | 
+| 08:30 – 08:50 | ✅ Introducción al curso: objetivos, bloques, metodología, repositorios | 
+| 08:50 – 09:30 | 🧠 Exposición: evolución arquitectónica (monolito → microservicios), ventajas/desventajas, casos reales (Amazon, Netflix), nociones de SOA, ciclo de vida | 
+| 09:30 – 10:00 | 💻 Laboratorio 1: ejecutar el monolito foodly/monolith, explorar rutas (/auth, /orders, /products), entender acoplamientos y límites | 
+| 10:00 – 10:15 | 🔍 Discusión dirigida: ¿dónde romperías este monolito?, ¿qué problemas escalan mal? | 
+| 10:15 – 11:00 | 🎓 Exposición + demo: FastAPI como alternativa a Flask/Django, rendimiento, asincronía, tipado fuerte, documentación automática | 
+| 11:00 – 11:30 | 💻 Laboratorio 2: crear proyecto FastAPI mínimo con /ping, /status, usar Pydantic + settings + documentación Swagger | 
+
+
+
+---
+
+
+
+### 📂 Entregables al final de la sesión 
+
+ 
+- Monolito ejecutado y entendido
+ 
+- Primer microservicio FastAPI montado
+ 
+- Cuaderno de reflexión sobre el monolito (puede ser Markdown)
+
+
+
+---
+
+
+
+## 📘 Sesión 2 – 5 de junio (Jueves) 
+
+**Duración:**  4 horas
+
+**Bloque:**  Principios de Microservicios, Framework FastAPI y Arquitectura Base
+
+**Temas:** 
+ 
+- Final de Tema 2: FastAPI como framework para microservicios
+ 
+- Tema 3: Comunicación síncrona y asíncrona
+ 
+- Tema 4: Manejo de errores
+ 
+- Inicio de Tema 5: Seguridad básica con JWT
+
+
+
+---
+
+
+
+### 🎯 Objetivos de aprendizaje 
+
+ 
+- Consolidar arquitectura base de un microservicio FastAPI.
+ 
+- Aprender a usar httpx para comunicación entre servicios.
+ 
+- Controlar errores con `HTTPException` y handlers.
+ 
+- Aplicar BackgroundTasks.
+ 
+- Introducir autenticación con JWT.
+
+
+
+---
+
+
+
+### 🧭 Estructura de la sesión 
+
+| Tiempo | Actividad | 
+| --- | --- | 
+| 08:30 – 09:00 | ✅ Repaso y dudas de la sesión anterior. Discusión rápida de conceptos clave del monolito. | 
+| 09:00 – 09:30 | 🧠 Exposición: estructura profesional de microservicio (routers, settings, main, db, services, api), middlewares, logging | 
+| 09:30 – 10:30 | 💻 Laboratorio 3: construir auth-service real con endpoints /register, /login (sin JWT aún), usando MySQL, SQLAlchemy, settings, routers | 
+| 10:30 – 11:00 | 🧠 Exposición: comunicación entre microservicios con httpx, diferencia REST/gRPC, asincronía y latencia | 
+| 11:00 – 11:30 | 💻 Laboratorio 4: crear products-service, consultar productos desde orders-service usando httpx | 
+| 11:30 – 12:00 | 🧠 Errores controlados: HTTPException, custom handlers, errores de negocio vs técnicos | 
+| 12:00 – 12:30 | 💻 Laboratorio 5: integrar BackgroundTask (enviar email falso desde orders-service) + handler de error simulado | 
+
+
+
+---
+
+
+
+### 📂 Entregables al final de la sesión 
+
+ 
+- `auth-service` y `products-service` funcionando con base de datos propia
+ 
+- Comunicación REST entre servicios con `httpx`
+ 
+- Uso de BackgroundTask y control de errores con FastAPI
+
+
