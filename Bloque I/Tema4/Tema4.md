@@ -6,14 +6,14 @@
   - [Tabla de Contenidos](#tabla-de-contenidos)
   - [4.1 Diseño de estrategia global de manejo de errores](#41-diseño-de-estrategia-global-de-manejo-de-errores)
   - [4.2 Implementación de controladores de excepciones personalizados en FastAPI](#42-implementación-de-controladores-de-excepciones-personalizados-en-fastapi)
-  - [4.3 Definición de errores de negocio vs errores técnicos {#43-definición-de-errores-de-negocio-vs-errores-técnicos}](#43-definición-de-errores-de-negocio-vs-errores-técnicos-43-definición-de-errores-de-negocio-vs-errores-técnicos)
-    - [4.4 Aplicación del patrón Retry con backoff exponencial {#44-aplicación-del-patrón-retry-con-backoff-exponencial}](#44-aplicación-del-patrón-retry-con-backoff-exponencial-44-aplicación-del-patrón-retry-con-backoff-exponencial)
-  - [4.5 Introducción a patrones Circuit Breaker y Bulkhead {#45-introducción-a-patrones-circuit-breaker-y-bulkhead}](#45-introducción-a-patrones-circuit-breaker-y-bulkhead-45-introducción-a-patrones-circuit-breaker-y-bulkhead)
-    - [4.6 Implementación de circuit breakers con `pybreaker` {#46-implementación-de-circuit-breakers-con-pybreaker}](#46-implementación-de-circuit-breakers-con-pybreaker-46-implementación-de-circuit-breakers-con-pybreaker)
-  - [4.7 Diseño de endpoints resilientes a fallos de servicios externos {#47-diseño-de-endpoints-resilientes-a-fallos-de-servicios-externos}](#47-diseño-de-endpoints-resilientes-a-fallos-de-servicios-externos-47-diseño-de-endpoints-resilientes-a-fallos-de-servicios-externos)
-  - [4.8 Captura y log de trazas con contexto de peticiones {#48-captura-y-log-de-trazas-con-contexto-de-peticiones}](#48-captura-y-log-de-trazas-con-contexto-de-peticiones-48-captura-y-log-de-trazas-con-contexto-de-peticiones)
-  - [4.9 Visibilidad de errores mediante dashboards {#49-visibilidad-de-errores-mediante-dashboards}](#49-visibilidad-de-errores-mediante-dashboards-49-visibilidad-de-errores-mediante-dashboards)
-  - [4.10 Pruebas para simular fallos y degradación controlada {#410-pruebas-para-simular-fallos-y-degradación-controlada}](#410-pruebas-para-simular-fallos-y-degradación-controlada-410-pruebas-para-simular-fallos-y-degradación-controlada)
+  - [4.3 Definición de errores de negocio vs errores técnicos](#43-definición-de-errores-de-negocio-vs-errores-técnicos)
+    - [4.4 Aplicación del patrón Retry con backoff exponencial](#44-aplicación-del-patrón-retry-con-backoff-exponencial)
+  - [4.5 Introducción a patrones Circuit Breaker y Bulkhead](#45-introducción-a-patrones-circuit-breaker-y-bulkhead)
+    - [4.6 Implementación de circuit breakers con `pybreaker`](#46-implementación-de-circuit-breakers-con-pybreaker)
+  - [4.7 Diseño de endpoints resilientes a fallos de servicios externos](#47-diseño-de-endpoints-resilientes-a-fallos-de-servicios-externos)
+  - [4.8 Captura y log de trazas con contexto de peticiones](#48-captura-y-log-de-trazas-con-contexto-de-peticiones)
+  - [4.9 Visibilidad de errores mediante dashboards](#49-visibilidad-de-errores-mediante-dashboards)
+  - [4.10 Pruebas para simular fallos y degradación controlada](#410-pruebas-para-simular-fallos-y-degradación-controlada)
 
 
 
@@ -326,7 +326,7 @@ from fastapi import FastAPI, Request, status
     comparten lógica o datos (ej. todas heredan de
     `BusinessRuleViolationError`).
 
-## 4.3 Definición de errores de negocio vs errores técnicos {#43-definición-de-errores-de-negocio-vs-errores-técnicos}
+## 4.3 Definición de errores de negocio vs errores técnicos 
 
 Distinguir entre estos dos tipos de errores es crucial para la claridad,
 el manejo por parte del cliente y la monitorización.
@@ -463,7 +463,7 @@ el manejo por parte del cliente y la monitorización.
     representan fallos del sistema (que podrían mapear a 5xx) de las que
     representan condiciones de negocio (que mapearían a 4xx).
 
-### 4.4 Aplicación del patrón Retry con backoff exponencial {#44-aplicación-del-patrón-retry-con-backoff-exponencial}
+### 4.4 Aplicación del patrón Retry con backoff exponencial 
 
 El patrón Retry (Reintento) mejora la resiliencia de las interacciones
 con servicios remotos (otros microservicios, bases de datos, APIs de
@@ -744,7 +744,7 @@ async def fetch_data_resiliently(service_url: str = "http://localhost:9999/flaky
 :::
 
 ::: {.cell .markdown id="BGwOxBBT6evM"}
-## 4.5 Introducción a patrones Circuit Breaker y Bulkhead {#45-introducción-a-patrones-circuit-breaker-y-bulkhead}
+## 4.5 Introducción a patrones Circuit Breaker y Bulkhead 
 
 Estos patrones son fundamentales para construir sistemas distribuidos
 que puedan gracefully degradar su funcionalidad y aislar fallos, en
@@ -915,7 +915,7 @@ construir sistemas altamente resilientes:
 Esta combinación crea múltiples capas de defensa contra diferentes tipos
 y duraciones de fallos en las dependencias.
 
-### 4.6 Implementación de circuit breakers con `pybreaker` {#46-implementación-de-circuit-breakers-con-pybreaker}
+### 4.6 Implementación de circuit breakers con `pybreaker` 
 
 `pybreaker` es una biblioteca Python popular y sencilla que proporciona
 una implementación del patrón Circuit Breaker.
@@ -1142,7 +1142,7 @@ import pybreaker
     a través de un sistema de configuración centralizado o una interfaz
     administrativa.
 
-## 4.7 Diseño de endpoints resilientes a fallos de servicios externos {#47-diseño-de-endpoints-resilientes-a-fallos-de-servicios-externos}
+## 4.7 Diseño de endpoints resilientes a fallos de servicios externos 
 
 Un endpoint resiliente es aquel que puede continuar operando y
 proporcionando valor, aunque sea de forma degradada, cuando uno o más de
@@ -1335,7 +1335,7 @@ el fallo de una dependencia se convierta en un fallo total del endpoint.
         la solicitud. Añadir validaciones de negocio específicas antes
         de proceder con llamadas a dependencias.
 
-## 4.8 Captura y log de trazas con contexto de peticiones {#48-captura-y-log-de-trazas-con-contexto-de-peticiones}
+## 4.8 Captura y log de trazas con contexto de peticiones 
 
 En un sistema de microservicios, una sola solicitud del usuario puede
 desencadenar una cascada de llamadas a través de múltiples servicios.
@@ -1647,7 +1647,7 @@ hercúlea.
             contexto completo de un error, incluyendo los spans que lo
             precedieron en la traza.
 
-## 4.9 Visibilidad de errores mediante dashboards {#49-visibilidad-de-errores-mediante-dashboards}
+## 4.9 Visibilidad de errores mediante dashboards 
 
 Los logs y trazas son esenciales para la depuración detallada y el
 análisis forense, pero para una visión operativa, en tiempo real (o casi
@@ -1839,7 +1839,7 @@ logging estructurado, métricas y rastreo distribuido.
     (ej. despliegues, mantenimientos, incidentes conocidos) ayuda a
     correlacionar cambios en las métricas de error con esos eventos.
 
-## 4.10 Pruebas para simular fallos y degradación controlada {#410-pruebas-para-simular-fallos-y-degradación-controlada}
+## 4.10 Pruebas para simular fallos y degradación controlada 
 
 La resiliencia de un sistema no se puede asumir ni garantizar solo por
 diseño; debe ser probada de forma continua y rigurosa bajo condiciones
