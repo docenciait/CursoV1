@@ -1,44 +1,32 @@
-## Tema 5. INTRODUCCIÓN A LA COMUNICACIÓN ENTRE MICROSERVICIOS SÍNCRONA Y ASÍNCRONA 
-
- 
+# Tema 5. SEGURIDAD Y BUENAS PRÁCTICAS EN MICROSERVICIOS
 
 ## Tabla de Contenidos
 
-- [Objetivos](#objetivos)
-    - Distinguir comunicación síncrona vs asíncrona
-    
-    - Analizar cuándo usar REST, gRPC o mensajería por eventos
-    
-    - Implementar APIs REST entre microservicios con FastAPI
-    
-    - Utilizar gRPC como alternativa eficiente y tipada
-    
-    - Diseñar contratos API con Protobuf o JSON Schema
-    
-    - Introducir conceptos de Service Mesh (como Istio o Linkerd)
-    
-    - Manejar timeouts, retries y latencias en comunicación síncrona
-    
-    - Introducir colas como RabbitMQ y Kafka para integración asíncrona
-    
-    - Usar mecanismos de pub/sub para desacoplamiento extremo
-    
-    - Manejar el versionado de contratos en microservicios independientes
-- [Contenidos](#contenidos)
-    * 3.1. [Distinción entre comunicación síncrona y asíncrona](#31-distinción-entre-comunicación-síncrona-y-asíncrona)
-    * 3.2. [Análisis del uso de REST, gRPC o mensajería por eventos](#22-análisis-del-uso-de-rest-grpc-o-mensajería-por-eventos)
-    * 3.3. [Implementación de APIs REST entre microservicios con FastAPI](#23-implementación-de-apis-rest-entre-microservicios-con-fastapi)
-    * 3.4. [Utilización de gRPC como alternativa eficiente y tipada](#24-utilización-de-grpc-como-alternativa-eficiente-y-tipada)
-    * 3.5. [Diseño de contratos API con Protobuf o JSON Schema](#25-diseño-de-contratos-api-con-protobuf-o-json-schema)
-    * 3.6. [Introducción a conceptos de Service Mesh](#26-introducción-a-conceptos-de-service-mesh)
-    * 3.7. [Manejo de timeouts, retries y latencias en comunicación síncrona](#27-manejo-de-timeouts-retries-y-latencias-en-comunicación-síncrona)
-    * 3.8. [Introducción de colas para integración asíncrona](#28-introducción-de-colas-para-integración-asíncrona)
-    * 3.9. [Uso de mecanismos de pub/sub para desacoplamiento extremo](#29-uso-de-mecanismos-de-pubsub-para-desacoplamiento-extremo)
-    * 3.10. [Manejo del versionado de contratos en microservicios independientes](#210-manejo-del-versionado-de-contratos-en-microservicios-independientes)
+- [Tema 5. SEGURIDAD Y BUENAS PRÁCTICAS EN MICROSERVICIOS](#tema-5-seguridad-y-buenas-prácticas-en-microservicios)
+  - [Tabla de Contenidos](#tabla-de-contenidos)
+  - [5. Contenidos](#5-contenidos)
+    - [5.1 Autenticación basada en JWT con FastAPI](#51-autenticación-basada-en-jwt-con-fastapi)
+    - [5.2 Autorización por roles y scopes (RBAC)](#52-autorización-por-roles-y-scopes-rbac)
+    - [5.3 Comunicación segura con HTTPS y certificados](#53-comunicación-segura-con-https-y-certificados)
+    - [5.4 Validación de inputs y outputs](#54-validación-de-inputs-y-outputs)
+    - [5.5 Políticas de CORS estrictas](#55-políticas-de-cors-estrictas)
+    - [5.6 Protección de endpoints WebSocket y REST](#56-protección-de-endpoints-websocket-y-rest)
+    - [5.7 Rotación de claves y secretos](#57-rotación-de-claves-y-secretos)
+    - [5.8 Gestión de credenciales con Vault o AWS Secrets Manager](#58-gestión-de-credenciales-con-vault-o-aws-secrets-manager)
+    - [5.9 Análisis de vulnerabilidades OWASP](#59-análisis-de-vulnerabilidades-owasp)
+    - [5.10 Auditoría y trazabilidad de usuarios](#510-auditoría-y-trazabilidad-de-usuarios)
+    - [5.11 Configuración de rate limiting](#511-configuración-de-rate-limiting)
 
+## 5. Contenidos
 
-
-
-## 3. Contenidos
-
-### 3.1 Distinción entre comunicación síncrona y asíncrona
+### 5.1 Autenticación basada en JWT con FastAPI
+### 5.2 Autorización por roles y scopes (RBAC)
+### 5.3 Comunicación segura con HTTPS y certificados
+### 5.4 Validación de inputs y outputs
+### 5.5 Políticas de CORS estrictas
+### 5.6 Protección de endpoints WebSocket y REST
+### 5.7 Rotación de claves y secretos
+### 5.8 Gestión de credenciales con Vault o AWS Secrets Manager
+### 5.9 Análisis de vulnerabilidades OWASP
+### 5.10 Auditoría y trazabilidad de usuarios
+### 5.11 Configuración de rate limiting

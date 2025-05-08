@@ -1,44 +1,30 @@
-## Tema 7. INTRODUCCIÓN A LA COMUNICACIÓN ENTRE MICROSERVICIOS SÍNCRONA Y ASÍNCRONA 
-
- 
+# Tema 7. INTRODUCCIÓN A DOMAIN-DRIVEN DESIGN (DDD)
 
 ## Tabla de Contenidos
 
-- [Objetivos](#objetivos)
-    - Distinguir comunicación síncrona vs asíncrona
-    
-    - Analizar cuándo usar REST, gRPC o mensajería por eventos
-    
-    - Implementar APIs REST entre microservicios con FastAPI
-    
-    - Utilizar gRPC como alternativa eficiente y tipada
-    
-    - Diseñar contratos API con Protobuf o JSON Schema
-    
-    - Introducir conceptos de Service Mesh (como Istio o Linkerd)
-    
-    - Manejar timeouts, retries y latencias en comunicación síncrona
-    
-    - Introducir colas como RabbitMQ y Kafka para integración asíncrona
-    
-    - Usar mecanismos de pub/sub para desacoplamiento extremo
-    
-    - Manejar el versionado de contratos en microservicios independientes
-- [Contenidos](#contenidos)
-    * 3.1. [Distinción entre comunicación síncrona y asíncrona](#31-distinción-entre-comunicación-síncrona-y-asíncrona)
-    * 3.2. [Análisis del uso de REST, gRPC o mensajería por eventos](#22-análisis-del-uso-de-rest-grpc-o-mensajería-por-eventos)
-    * 3.3. [Implementación de APIs REST entre microservicios con FastAPI](#23-implementación-de-apis-rest-entre-microservicios-con-fastapi)
-    * 3.4. [Utilización de gRPC como alternativa eficiente y tipada](#24-utilización-de-grpc-como-alternativa-eficiente-y-tipada)
-    * 3.5. [Diseño de contratos API con Protobuf o JSON Schema](#25-diseño-de-contratos-api-con-protobuf-o-json-schema)
-    * 3.6. [Introducción a conceptos de Service Mesh](#26-introducción-a-conceptos-de-service-mesh)
-    * 3.7. [Manejo de timeouts, retries y latencias en comunicación síncrona](#27-manejo-de-timeouts-retries-y-latencias-en-comunicación-síncrona)
-    * 3.8. [Introducción de colas para integración asíncrona](#28-introducción-de-colas-para-integración-asíncrona)
-    * 3.9. [Uso de mecanismos de pub/sub para desacoplamiento extremo](#29-uso-de-mecanismos-de-pubsub-para-desacoplamiento-extremo)
-    * 3.10. [Manejo del versionado de contratos en microservicios independientes](#210-manejo-del-versionado-de-contratos-en-microservicios-independientes)
+- [Tema 7. INTRODUCCIÓN A DOMAIN-DRIVEN DESIGN (DDD)](#tema-7-introducción-a-domain-driven-design-ddd)
+  - [Tabla de Contenidos](#tabla-de-contenidos)
+  - [7. Contenidos](#7-contenidos)
+    - [7.1 Bloques tácticos y estratégicos del DDD](#71-bloques-tácticos-y-estratégicos-del-ddd)
+    - [7.2 Rol de Aggregates, Entities y Value Objects](#72-rol-de-aggregates-entities-y-value-objects)
+    - [7.3 Definición de Bounded Contexts y sus fronteras](#73-definición-de-bounded-contexts-y-sus-fronteras)
+    - [7.4 Diseño de Domain Services](#74-diseño-de-domain-services)
+    - [7.5 Repositorios como abstracción de persistencia](#75-repositorios-como-abstracción-de-persistencia)
+    - [7.6 Integración de DDD con FastAPI y Pydantic](#76-integración-de-ddd-con-fastapi-y-pydantic)
+    - [7.7 Creación de factories para entidades complejas](#77-creación-de-factories-para-entidades-complejas)
+    - [7.8 Desarrollo de Ubiquitous Language](#78-desarrollo-de-ubiquitous-language)
+    - [7.9 Capa de aplicación sobre la lógica de dominio](#79-capa-de-aplicación-sobre-la-lógica-de-dominio)
+    - [7.10 Refactorización de dominio en capas desacopladas](#710-refactorización-de-dominio-en-capas-desacopladas)
 
+## 7. Contenidos
 
-
-
-## 3. Contenidos
-
-### 3.1 Distinción entre comunicación síncrona y asíncrona
+### 7.1 Bloques tácticos y estratégicos del DDD
+### 7.2 Rol de Aggregates, Entities y Value Objects
+### 7.3 Definición de Bounded Contexts y sus fronteras
+### 7.4 Diseño de Domain Services
+### 7.5 Repositorios como abstracción de persistencia
+### 7.6 Integración de DDD con FastAPI y Pydantic
+### 7.7 Creación de factories para entidades complejas
+### 7.8 Desarrollo de Ubiquitous Language
+### 7.9 Capa de aplicación sobre la lógica de dominio
+### 7.10 Refactorización de dominio en capas desacopladas
