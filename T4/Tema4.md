@@ -1,44 +1,30 @@
-## Tema 4. MANEJO DE ERRORES Y CIRCUIT BREAKERS EN MICROSERVICIOS
-
- 
+# Tema 4. MANEJO DE ERRORES Y CIRCUIT BREAKERS EN MICROSERVICIOS
 
 ## Tabla de Contenidos
 
-- [Objetivos](#objetivos)
-    - Distinguir comunicación síncrona vs asíncrona
-    
-    - Analizar cuándo usar REST, gRPC o mensajería por eventos
-    
-    - Implementar APIs REST entre microservicios con FastAPI
-    
-    - Utilizar gRPC como alternativa eficiente y tipada
-    
-    - Diseñar contratos API con Protobuf o JSON Schema
-    
-    - Introducir conceptos de Service Mesh (como Istio o Linkerd)
-    
-    - Manejar timeouts, retries y latencias en comunicación síncrona
-    
-    - Introducir colas como RabbitMQ y Kafka para integración asíncrona
-    
-    - Usar mecanismos de pub/sub para desacoplamiento extremo
-    
-    - Manejar el versionado de contratos en microservicios independientes
-- [Contenidos](#contenidos)
-    * 3.1. [Distinción entre comunicación síncrona y asíncrona](#31-distinción-entre-comunicación-síncrona-y-asíncrona)
-    * 3.2. [Análisis del uso de REST, gRPC o mensajería por eventos](#22-análisis-del-uso-de-rest-grpc-o-mensajería-por-eventos)
-    * 3.3. [Implementación de APIs REST entre microservicios con FastAPI](#23-implementación-de-apis-rest-entre-microservicios-con-fastapi)
-    * 3.4. [Utilización de gRPC como alternativa eficiente y tipada](#24-utilización-de-grpc-como-alternativa-eficiente-y-tipada)
-    * 3.5. [Diseño de contratos API con Protobuf o JSON Schema](#25-diseño-de-contratos-api-con-protobuf-o-json-schema)
-    * 3.6. [Introducción a conceptos de Service Mesh](#26-introducción-a-conceptos-de-service-mesh)
-    * 3.7. [Manejo de timeouts, retries y latencias en comunicación síncrona](#27-manejo-de-timeouts-retries-y-latencias-en-comunicación-síncrona)
-    * 3.8. [Introducción de colas para integración asíncrona](#28-introducción-de-colas-para-integración-asíncrona)
-    * 3.9. [Uso de mecanismos de pub/sub para desacoplamiento extremo](#29-uso-de-mecanismos-de-pubsub-para-desacoplamiento-extremo)
-    * 3.10. [Manejo del versionado de contratos en microservicios independientes](#210-manejo-del-versionado-de-contratos-en-microservicios-independientes)
+- [Tema 4. MANEJO DE ERRORES Y CIRCUIT BREAKERS EN MICROSERVICIOS](#tema-4-manejo-de-errores-y-circuit-breakers-en-microservicios)
+  - [Tabla de Contenidos](#tabla-de-contenidos)
+  - [4. Contenidos](#4-contenidos)
+    - [4.1 Diseño de estrategia global de manejo de errores](#41-diseño-de-estrategia-global-de-manejo-de-errores)
+    - [4.2 Implementación de controladores de excepciones personalizados en FastAPI](#42-implementación-de-controladores-de-excepciones-personalizados-en-fastapi)
+    - [4.3 Definición de errores de negocio vs errores técnicos](#43-definición-de-errores-de-negocio-vs-errores-técnicos)
+    - [4.4 Aplicación del patrón Retry con backoff exponencial](#44-aplicación-del-patrón-retry-con-backoff-exponencial)
+    - [4.5 Introducción a patrones Circuit Breaker y Bulkhead](#45-introducción-a-patrones-circuit-breaker-y-bulkhead)
+    - [4.6 Implementación de circuit breakers con `pybreaker`](#46-implementación-de-circuit-breakers-con-pybreaker)
+    - [4.7 Diseño de endpoints resilientes a fallos de servicios externos](#47-diseño-de-endpoints-resilientes-a-fallos-de-servicios-externos)
+    - [4.8 Captura y log de trazas con contexto de peticiones](#48-captura-y-log-de-trazas-con-contexto-de-peticiones)
+    - [4.9 Visibilidad de errores mediante dashboards](#49-visibilidad-de-errores-mediante-dashboards)
+    - [4.10 Pruebas para simular fallos y degradación controlada](#410-pruebas-para-simular-fallos-y-degradación-controlada)
 
+## 4. Contenidos
 
-
-
-## 3. Contenidos
-
-### 3.1 Distinción entre comunicación síncrona y asíncrona
+### 4.1 Diseño de estrategia global de manejo de errores
+### 4.2 Implementación de controladores de excepciones personalizados en FastAPI
+### 4.3 Definición de errores de negocio vs errores técnicos
+### 4.4 Aplicación del patrón Retry con backoff exponencial
+### 4.5 Introducción a patrones Circuit Breaker y Bulkhead
+### 4.6 Implementación de circuit breakers con `pybreaker`
+### 4.7 Diseño de endpoints resilientes a fallos de servicios externos
+### 4.8 Captura y log de trazas con contexto de peticiones
+### 4.9 Visibilidad de errores mediante dashboards
+### 4.10 Pruebas para simular fallos y degradación controlada
