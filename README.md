@@ -51,158 +51,177 @@ Desarrolladores backend con experiencia en Python que quieran especializarseen m
 
 🔧 **Reorganización de Bloques**
 
+---
+
+
+**Fechas: 4, 5, 9, 10, 11, 12, 16 y 17 de junio (8 sesiones)**
+**Horarios: de 08:30 a 12:30 | 4 y 11 de junio: de 08:30 a 11:30**
+**Duración: 30.0 horas**
 
 ---
 
 
-🔹 **Bloque 1: Fundamentos de Microservicios y DDD (Sesión 1 y 2)** 
+### 🗓️ Planificación del curso con bloques temáticos y fechas corregidas 
 
-**Duración:**  7 horas
-
-**Contenidos: Temas 1, 2, 3, 4 y 5** 
- 
-- Evolución del monolito a microservicios
- 
-- Principios y patrones clave (API Gateway, Service Discovery)
- 
-- Bounded Contexts y diseño orientado a dominio
- 
-- Comparativa con SOA
- 
-- Introducción a DDD (estratégico y táctico)
- 
-- Relación entre DDD y microservicios
- 
-- Organización de equipos y ciclo de vida
-
+| Sesión | Fecha | Día | Duración | Bloque temático | Temas tratados | 
+| --- | --- | --- | --- | --- | --- | 
+| 1️⃣ | 4 junio 2025 | Miércoles | 3h | Bloque 1 – Principios de Microservicios, Framework FastAPI y Arquitectura Base | Tema 1 y Tema 2 | 
+| 2️⃣ | 5 junio 2025 | Jueves | 4h | Bloque 1 – Principios de Microservicios, Framework FastAPI y Arquitectura Base | Tema 3, Tema 4 y Tema 5 | 
+| 3️⃣ | 9 junio 2025 | Lunes | 4h | Bloque 2 – Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio | Tema 6 | 
+| 4️⃣ | 10 junio 2025 | Martes | 4h | Bloque 2 – Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio | - Tema 7 y Tema 8 | 
+| 5️⃣ | 11 junio 2025 | Miércoles | 3h | Bloque 3 – Comunicación Asíncrona, Eventos, Pub/Sub y Mensajería Distribuida | - Tema 9 | 
+| 6️⃣ | 12 junio 2025 | Jueves | 4h | Bloque 3 – Comunicación Asíncrona, Eventos, Pub/Sub y Mensajería Distribuida | - Tema 10 y Tema 11| 
+| 7️⃣ | 16 junio 2025 | Lunes | 4h | Bloque 4 – Escalabilidad, Persistencia, Testing y Despliegue de Microservicios en Producción | Tema 12 y Tema 13 | 
+| 8️⃣ | 17 junio 2025 | Martes | 4h | Bloque 4 – Escalabilidad, Persistencia, Testing y Despliegue de Microservicios en Producción + Proyecto Final | Tema 14, Tema 15 y Tema 16 | 
 
 
 ---
 
-
-🔹 **Bloque 2: FastAPI y Arquitectura Base Hexagonal (Sesión 3)** 
-**Duración:**  4 horas
-**Contenidos: Temas 6 y 7** 
- 
-- FastAPI como framework para microservicios
- 
-- Tipado, validación, configuración, documentación con OpenAPI
- 
-- Puertos y adaptadores: arquitectura hexagonal en la práctica
- 
-- Separación por capas: dominio, aplicación, infraestructura
- 
-- Middlewares, dependencias, entornos, excepciones
-
----
-🔹 **Bloque 3: DDD Aplicado + CQRS (Sesión 4)** 
-**Duración:**  4 horas
-**Contenidos: Tema 8** 
- 
-- Implementación de Aggregates, Entities, Value Objects
- 
-- Domain Services, Repositorios, Factories, Ubiquitous Language
- 
-- Separación de comandos y queries (CQRS)
- 
-- Command/Query Handlers, validación
- 
-- Event sourcing básico, patrón outbox
- 
-- Casos de uso y capa de aplicación
-
----
-
-
-🔹 **Bloque 3: Diseño de APIs REST, WebSockets y Seguridad (Sesión 5)** 
-**Duración:**  4 horas
-**Contenidos: Temas 9, 10** 
-
- 
-- Diseño de APIs RESTful: versiones, CORS, respuestas, validaciones
- 
-- Autenticación y autorización con JWT, OAuth2
- 
-- WebSockets con FastAPI: casos de uso, handlers, salas, seguridad
- 
-- Buenas prácticas de seguridad en microservicios (OWASP, HTTPS, Vault)
+## 📘 Resumen de Bloques, Temas y Contenidos 
 
 
 
 ---
 
 
-🔹 **Bloque 4: Comunicación entre microservicios + Event-Driven (Sesión 6)** 
-**Duración:**  4 horas
-**Contenidos:  Tema 11** 
+🔷 **Bloque 1 – Principios de Microservicios, Framework FastAPI y Arquitectura Base** 
+**Temas cubiertos:** 
  
-- Comunicación síncrona (REST, gRPC)
+- Tema 1: Introducción a la arquitectura de microservicios
  
-- Comunicación asíncrona (RabbitMQ, Kafka, Redis Pub/Sub)
+- Tema 2: FastAPI como framework para microservicios
  
-- Tiempos, retries, versionado de contratos
+- Tema 3: Comunicación entre microservicios síncrona y asíncrona
  
-- Patrones: Event Notification, Event Carried State Transfer
+- Tema 4: Manejo de errores y circuit breakers
  
-- Integración con FastAPI en arquitectura hexagonal
+- Tema 5: Seguridad y buenas prácticas en microservicios
+
+**Contenidos clave:** 
+ 
+- Evolución del monolito a microservicios, ventajas y riesgos
+ 
+- Comparación técnica entre SOA y microservicios
+ 
+- Uso avanzado de FastAPI: routers, dependencias, middlewares, settings
+ 
+- Documentación OpenAPI y ejecución asincrónica con BackgroundTasks
+ 
+- Estrategias de comunicación: REST, gRPC, eventos
+ 
+- Gestión de errores, patrones resilientes (Retry, Circuit Breaker)
+ 
+- Autenticación JWT, CORS, seguridad en endpoints RESTful
 
 
 
 ---
 
 
-🔹 **Bloque 4: Escalabilidad: Infraestructura, Pruebas y CI/CD (Sesión 7)** 
-**Duración:**  4 horas
-**Contenidos:** 
+🧩 **Bloque 2 – Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio** 
+**Temas cubiertos:** 
  
-- Testing con Pytest: unitarios, integración, E2E
+- Tema 6: Arquitectura hexagonal y aplicación de DDD
  
-- Simulación de colas, base de datos temporal
+- Tema 7: Introducción a Domain-Driven Design (DDD)
  
-- Docker y Docker Compose para desarrollo local
+- Tema 8: Patrón CQRS en microservicios
+
+**Contenidos clave:** 
  
-- CI/CD con GitHub Actions, despliegue en Kubernetes
+- Diseño por capas: dominio, aplicación, infraestructura
  
-- Observabilidad: logs, métricas, Prometheus, Grafana, ELK
+- Puertos y adaptadores aplicados a FastAPI
+ 
+- Interfaces desacopladas, inyección de dependencias
+ 
+- Bloques tácticos de DDD: entidades, value objects, aggregates
+ 
+- Separación entre modelos de lectura y escritura (CQRS)
+ 
+- Implementación de comandos, queries y validadores
+ 
+- Event sourcing (introducción)
 
 
 
 ---
 
 
-🔹 **Bloque 7: Proyecto Final Guiado (Sesiones 8)** 
-**Duración:**  4 horas
-**Contenidos:** 
+🔀 **Bloque 3 – Comunicación Asíncrona, Eventos, Pub/Sub y Mensajería Distribuida** 
+**Temas cubiertos:** 
  
-- Definición del dominio y los microservicios (bounded contexts)
+- Tema 9: Introducción a la mensajería con Kafka, RabbitMQ
  
-- Arquitectura hexagonal + DDD + CQRS
+- Tema 10: WebSockets y Pub/Sub en sistemas distribuidos
  
-- Contratos REST, eventos y gRPC
+- Tema 11: Diseño de APIs REST y WebSockets en FastAPI
+
+**Contenidos clave:** 
  
-- Seguridad, pruebas, WebSockets
+- Brokers de eventos: diferencias entre RabbitMQ y Kafka
  
-- Despliegue completo y documentación
+- Tópicos, colas, exchanges, bindings
  
-- Revisión y evaluación por pares
+- Patrones de eventos: notificación, estado transportado, idempotencia
+ 
+- FastAPI con WebSockets: salas, gestión de conexiones, canales seguros
+ 
+- Integración de pub/sub con Redis o Kafka
+ 
+- Versionado y buenas prácticas en APIs REST
+ 
+- Documentación automática, validación compleja con Pydantic
 
 
 
 ---
 
 
-🗓 **Distribución por Sesiones** 
-| Sesión | Duración | Contenido | 
-| --- | --- | --- | 
-| 1 | 3h | Fundamentos de Microservicios y DDD | 
-| 2 | 4h | Fundamentos de Microservicios y DDD |
-| 3 | 4h | DDD Aplicado + CQRS | 
-| 4 | 4h | FastAPI y Arquitectura Base Hexagonal | 
-| 5 | 4h | APIs REST, WebSockets y Seguridad | 
-| 6 | 4h | Comunicación entre microservicios + Event-Driven | 
-| 7 | 3h | Testing, CI/CD, Docker y observabilidad | 
-| 8 | 4h | Proyecto Final | 
+⚙️ **Bloque 4 – Escalabilidad, Persistencia, Testing y Despliegue de Microservicios** 
+**Temas cubiertos:** 
  
+- Tema 12: Escalabilidad y optimización de microservicios
+ 
+- Tema 13: Persistencia de datos en microservicios
+ 
+- Tema 14: Testing con Pytest
+ 
+- Tema 15: CI/CD y monitorización
+
+**Contenidos clave:** 
+ 
+- Escalado horizontal/vertical, caching con Redis, balanceadores (Traefik, NGINX)
+ 
+- SQLAlchemy y MongoDB en microservicios independientes
+ 
+- Transacciones distribuidas, patrón saga y outbox
+ 
+- Testing unitario, integración y E2E con Pytest y TestClient
+ 
+- Automatización de despliegues con Docker Compose, GitHub Actions
+ 
+- Logging estructurado (Loguru, structlog), métricas con Prometheus/Grafana
+
+
+
+---
+
+
+🎯 **Proyecto Final – Aplicación completa basada en microservicios con FastAPI** 
+**Tema cubierto:** 
+ 
+- Tema 16: Proyecto final
+
+**Contenidos clave:** 
+ 
+- Desarrollo completo de un sistema distribuido con microservicios FastAPI
+ 
+- Aplicación de todos los patrones y técnicas vistas en el curso
+ 
+- Integración de seguridad, eventos, API Gateway, bases de datos, pruebas y despliegue automatizado
+ 
+- Documentación del sistema y entrega en repositorio
 
 
 
