@@ -1,9 +1,6 @@
 # TEMA 2. FASTAPI COMO FRAMEWORK PARA MICROSERVICIOS
 
-## Tabla de Contenidos
-
 - [TEMA 2. FASTAPI COMO FRAMEWORK PARA MICROSERVICIOS](#tema-2-fastapi-como-framework-para-microservicios)
-  - [Tabla de Contenidos](#tabla-de-contenidos)
   - [Objetivos](#objetivos)
   - [Contenidos](#contenidos)
   - [2.1. **Presentación de FastAPI y sus ventajas**](#21-presentación-de-fastapi-y-sus-ventajas)
