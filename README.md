@@ -276,8 +276,8 @@ Esta sería la distribución en las sesiones **Sesión 1 y 2** , tema por tema:
 🧭 **Sesión 1 – Tema 1 y parte del 2** 
 | Tema | % Teoría | Qué hacer | 
 | --- | --- | --- | 
-| Tema 1 – Introducción a la arquitectura de microservicios | ~25% teoría | Mini-lecture de 20–25 min con esquema visual, casos reales, debate guiado. Expón los conceptos más críticos: coupling, bounded context, independencia de despliegue. No entres aún en patrones ni herramientas. | 
-| Tema 2 – FastAPI como framework... | ~15% teoría, 55% práctica | Muestra con live coding lo que FastAPI resuelve: asincronía, validación, documentación. Después, que el alumno monte su primer microservicio mínimo con Swagger y Pydantic. | 
+| Tema 1 – Introducción a la arquitectura de microservicios | ~25% teoría | Mini-lecture de 20–25 min con esquema visual, casos reales, debate guiado. Exposición los conceptos más críticos: coupling, bounded context, independencia de despliegue. No entres aún en patrones ni herramientas. | 
+| Tema 2 – FastAPI como framework... | ~15% teoría | Mostrar con live coding lo que FastAPI resuelve: asincronía, validación, documentación. Después, que el alumno monte su primer microservicio mínimo con Swagger y Pydantic. | 
 
 
 > **Nota:**  Esta sesión tiene más teoría porque el Tema 1 es fundacional. Pero el cierre debe ser práctico (laboratorio mínimo + monolito explorado).
@@ -290,13 +290,13 @@ Esta sería la distribución en las sesiones **Sesión 1 y 2** , tema por tema:
 🧭 **Sesión 2 – Tema 2 (continuación), 3, 4, inicio 5** 
 | Tema | % Teoría | Qué hacer | 
 | --- | --- | --- | 
-| Tema 2 (estructura avanzada) | ~10% | Expón estructura ideal: routers, servicios, settings, app factory. Luego, directo al laboratorio (auth-service). | 
+| Tema 2 (estructura avanzada) | ~10% | Exposición estructura ideal: routers, servicios, settings, app factory. Luego, directo al laboratorio (auth-service). | 
 | Tema 3 – Comunicación síncrona/asíncrona | ~10% | Breve exposición con esquema REST vs gRPC vs colas. No implementes aún colas. Código solo con httpx. | 
-| Tema 4 – Manejo de errores | ~10% | Explica con 1–2 diapositivas la diferencia entre errores técnicos y de dominio. Luego crea y lanza excepciones personalizadas en código. | 
-| Tema 5 (JWT básico) | ~5% introducción | Expón sólo qué es un JWT, cómo se usa y qué problemas resuelve. El laboratorio vendrá luego. | 
+| Tema 4 – Manejo de errores | ~10% | Explicación con 1–2 diapositivas la diferencia entre errores técnicos y de dominio. Luego crea y lanza excepciones personalizadas en código. | 
+| Tema 5 (JWT básico) | ~5% introducción | Exposición sólo qué es un JWT, cómo se usa y qué problemas resuelve. El laboratorio vendrá luego. | 
 
 
-> Aquí ya estás mucho más cerca del **70% práctico** , con 3 microservicios en código y comunicación real entre ellos.
+> Aquí se está mucho más cerca del **70% práctico** , con 3 microservicios en código y comunicación real entre ellos.
 
 
 ---
