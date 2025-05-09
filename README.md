@@ -276,7 +276,7 @@ Esta sería la distribución en las sesiones **Sesión 1 y 2** , tema por tema:
 🧭 **Sesión 1 – Tema 1 y parte del 2** 
 | Tema | % Teoría | Qué hacer | 
 | --- | --- | --- | 
-| Tema 1 – Introducción a la arquitectura de microservicios | ~25% teoría | Mini-lecture de 20–25 min con esquema visual, casos reales, debate guiado. Exposición los conceptos más críticos: coupling, bounded context, independencia de despliegue. No entres aún en patrones ni herramientas. | 
+| Tema 1 – Introducción a la arquitectura de microservicios | ~25% teoría | Mini-lecture de 20–25 min con esquema visual, casos reales, debate guiado. Exposición los conceptos más críticos: coupling, bounded context, independencia de despliegue. Sin entrar aún en patrones ni herramientas. | 
 | Tema 2 – FastAPI como framework... | ~15% teoría | Mostrar con live coding lo que FastAPI resuelve: asincronía, validación, documentación. Después, que el alumno monte su primer microservicio mínimo con Swagger y Pydantic. | 
 
 

@@ -462,9 +462,7 @@ from fastapi.security import OAuth2PasswordBearer, SecurityScopes
     # ):
     #     return {"message": "You have items:read scope!"}
 ```
-:::
 
-::: {.cell .markdown id="7nXFIk-P_ymj"}
 ### 5.3 Comunicación segura con HTTPS y certificados {#53-comunicación-segura-con-https-y-certificados}
 
 La comunicación en tránsito entre clientes y microservicios, y entre los
@@ -660,9 +658,7 @@ de vulnerabilidades y errores.
             lanza automáticamente una `RequestValidationError` y
             devuelve una respuesta HTTP `422 Unprocessable Entity` con
             detalles de los errores.
-:::
 
-::: {.cell .code id="LyG6zPqC_ymj"}
 ``` python
 from fastapi import FastAPI
         from pydantic import BaseModel, Field, EmailStr
@@ -680,16 +676,12 @@ from fastapi import FastAPI
             # Si llegamos aquí, 'user' es una instancia válida de UserCreate
             return {"message": "User created successfully", "user_data": user}
 ```
-:::
 
-::: {.cell .markdown id="WnOrkAXV_ymj"}
 1.  **Parámetros de Ruta (Path Parameters) y Consulta (Query
     Parameters):** \* También se pueden anotar con tipos y usar
     validaciones de Pydantic (a través de `Query`, `Path` de FastAPI,
     que usan `Field` de Pydantic internamente).
-:::
 
-::: {.cell .code id="NkwzZNAl_ymj"}
 ``` python
 from fastapi import FastAPI, Query, Path
 
@@ -706,14 +698,10 @@ from fastapi import FastAPI, Query, Path
         ):
             return {"item_id": item_id}
 ```
-:::
 
-::: {.cell .markdown id="56u-pzn__ymj"}
 1.  **Cabeceras (Headers):** \* Similar a Query y Path, se pueden
     validar cabeceras con `Header`.
-:::
 
-::: {.cell .code id="K8c_f_EI_ymj"}
 ``` python
 from fastapi import FastAPI, Header
 
@@ -721,16 +709,12 @@ from fastapi import FastAPI, Header
         async def read_headers(user_agent: str | None = Header(None, description="User agent string")):
             return {"User-Agent": user_agent}
 ```
-:::
 
-::: {.cell .markdown id="s-darS1r_ymk"}
 1.  **Validadores Personalizados en Pydantic:** \* Para lógica de
     validación más compleja que no cubren las restricciones estándar,
     Pydantic permite definir validadores personalizados a nivel de campo
     o de modelo.
-:::
 
-::: {.cell .code id="vGOQHu8I_ymk"}
 ``` python
 from pydantic import BaseModel, field_validator, validator # field_validator para Pydantic v2, validator para v1
 
@@ -754,9 +738,7 @@ from pydantic import BaseModel, field_validator, validator # field_validator par
             #         raise ValueError("End date must be after start date")
             #     return v
 ```
-:::
 
-::: {.cell .markdown id="DSo5Li8h_ymk"}
 1.  **Sanitización vs. Validación:** \* **Validación:** Rechazar datos
     que no cumplen los criterios. Es la estrategia preferida. \*
     **Sanitización:** Intentar \"limpiar\" o transformar datos de
@@ -785,9 +767,7 @@ from pydantic import BaseModel, field_validator, validator # field_validator par
             default/es opcional), FastAPI lanzará un error en el
             servidor (ya que es un problema del código del servidor, no
             del cliente).
-:::
 
-::: {.cell .code id="x0mcrMWQ_ymk"}
 ``` python
 from pydantic import BaseModel
 
@@ -812,9 +792,7 @@ from pydantic import BaseModel
             # FastAPI/Pydantic automáticamente filtrará los campos según UserPublic
             return user_from_db_dict # O return UserInDB(**user_from_db_dict)
 ```
-:::
 
-::: {.cell .markdown id="nIAi58q0_ymk"}
 -   **Validar Datos de Otros Servicios:**
     -   Incluso si un servicio interno es \"de confianza\", es una buena
         práctica validar los datos recibidos de él, especialmente si ese
@@ -846,9 +824,7 @@ origen diferente. Es una relajación controlada de la Same-Origin Policy
         autenticado envíe solicitudes a tu API y leer las respuestas.
 -   **Configuración de CORS Middleware en FastAPI:** FastAPI proporciona
     `CORSMiddleware` para configurar fácilmente las cabeceras CORS.
-:::
 
-::: {.cell .code id="2kgMgJYI_ymk"}
 ``` python
 from fastapi import FastAPI
     from fastapi.middleware.cors import CORSMiddleware
@@ -879,9 +855,7 @@ from fastapi import FastAPI
     async def main():
         return {"message": "Hello with CORS"}
 ```
-:::
 
-::: {.cell .markdown id="_wRyZJpB_ymk"}
 -   **Buenas Prácticas para Políticas CORS Estrictas:**
     1.  **`allow_origins`:**
         -   **Sé Específico:** En lugar de `["*"]`, lista explícitamente
@@ -1028,9 +1002,7 @@ diferencias.
         -   **FastAPI y Autenticación WebSocket:** Se puede usar una
             dependencia en la función de endpoint WebSocket para manejar
             la autenticación.
-:::
 
-::: {.cell .code id="xvNlCcHu_yml"}
 ``` python
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Depends, status, HTTPException
             # from .auth import get_current_user_from_token_in_query_or_cookie # Función de autenticación adaptada
@@ -1082,9 +1054,7 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Depends, status, HT
                     print(f"Error in websocket for user {username}: {e}")
                     await websocket.close(code=status.WS_1011_INTERNAL_ERROR, reason=f"Server error: {type(e).__name__}")
 ```
-:::
 
-::: {.cell .markdown id="1BWwRvIw_yml"}
 1.  **Autorización:** \* Una vez autenticado, aplicar lógica de RBAC o
     scopes para las acciones que el usuario intenta realizar a través
     del WebSocket. \* El payload del usuario (con roles/scopes) obtenido
@@ -1359,9 +1329,7 @@ Management Systems) proporcionan una solución centralizada y segura.
         inyectarlos como variables de entorno en los contenedores de la
         aplicación. La aplicación FastAPI luego lee estos archivos o
         variables de entorno. Esta es una abstracción común.
-:::
 
-::: {.cell .code id="V5RpdJq2_yml"}
 ``` python
 # Ejemplo conceptual de carga de secretos al inicio en FastAPI (usando variables de entorno que podrían ser inyectadas por un sistema de secretos)
     import os
@@ -1397,9 +1365,7 @@ Management Systems) proporcionan una solución centralizada y segura.
             "jwt_secret_loaded": bool(settings.jwt_secret_key)
         }
 ```
-:::
 
-::: {.cell .markdown id="zz_ithMp_yml"}
 ### 5.9 Análisis de vulnerabilidades OWASP {#59-análisis-de-vulnerabilidades-owasp}
 
 El Open Web Application Security Project (OWASP) es una comunidad online
@@ -1739,9 +1705,7 @@ registro cronológico y seguro de eventos.
     4.  **Hooks de Eventos de Framework/ORM:** Si se usa un ORM como
         SQLAlchemy, se pueden usar sus hooks de eventos para auditar
         cambios en los datos a nivel de base de datos.
-:::
 
-::: {.cell .code id="voUgXusV_yml"}
 ``` python
 # Ejemplo conceptual de logging de auditoría en FastAPI
     import logging
@@ -1832,9 +1796,7 @@ registro cronológico y seguro de eventos.
         log_audit_event(actor, "ACCESS_ADMIN_ACTION", status="SUCCESS", request=request)
         return {"message": f"Admin action performed by {actor}"}
 ```
-:::
 
-::: {.cell .markdown id="teRBgPn8_ymm"}
 ### 5.11 Configuración de rate limiting {#511-configuración-de-rate-limiting}
 
 El Rate Limiting (limitación de tasa o frecuencia) es una técnica de
@@ -1935,9 +1897,7 @@ dentro de un período de tiempo específico.
         -   `slowapi` permite definir límites basados en diferentes
             criterios (IP, ruta, etc.) y usa un almacén (en memoria o
             Redis) para los contadores.
-:::
 
-::: {.cell .code id="KQ7lNQU9_ymm"}
 ``` python
 from fastapi import FastAPI, Request, HTTPException
         from slowapi import Limiter, _rate_limit_exceeded_handler # _rate_limit_exceeded_handler para manejar la excepción
@@ -1995,9 +1955,7 @@ from fastapi import FastAPI, Request, HTTPException
         #     # ...
         #     return {"message": "Action performed."}
 ```
-:::
 
-::: {.cell .markdown id="9ZBwfIYV_ymm"}
 **Nota:** `slowapi` usa `request.state` para adjuntar información.
 Asegúrate de que tu aplicación FastAPI esté configurada para permitir
 esto si usas otros middlewares que también interactúan con
