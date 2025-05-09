@@ -88,8 +88,7 @@ flowchart LR
 ---
 
 
-🔷 **Bloque 1 – Principios de Microservicios, Framework FastAPI y Arquitectura Base** 
-**Temas cubiertos:** 
+🔷 **Bloque 1 – Principios de Microservicios, Framework FastAPI y Arquitectura Base:**
  
 - Tema 1: Introducción a la arquitectura de microservicios
  
@@ -123,14 +122,15 @@ flowchart LR
 ---
 
 
-🧩 **Bloque 2 – Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio** 
-**Temas cubiertos:** 
+🧩 **Bloque 2 – Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio:** 
+
  
 - Tema 6: Arquitectura hexagonal y aplicación de DDD
  
 - Tema 7: Introducción a Domain-Driven Design (DDD)
  
 - Tema 8: Patrón CQRS en microservicios
+  
 
 **Contenidos clave:** 
  
@@ -153,8 +153,8 @@ flowchart LR
 ---
 
 
-🔀 **Bloque 3 – Comunicación Asíncrona, Eventos, Pub/Sub y Mensajería Distribuida** 
-**Temas cubiertos:** 
+🔀 **Bloque 3 – Comunicación Asíncrona, Eventos, Pub/Sub y Mensajería Distribuida:** 
+
  
 - Tema 9: Introducción a la mensajería con Kafka, RabbitMQ
  
@@ -184,8 +184,8 @@ flowchart LR
 ---
 
 
-⚙️ **Bloque 4 – Escalabilidad, Persistencia, Testing y Despliegue de Microservicios** 
-**Temas cubiertos:** 
+⚙️ **Bloque 4 – Escalabilidad, Persistencia, Testing y Despliegue de Microservicios:** 
+
  
 - Tema 12: Escalabilidad y optimización de microservicios
  
@@ -215,8 +215,8 @@ flowchart LR
 ---
 
 
-🎯 **Proyecto Final – Aplicación completa basada en microservicios con FastAPI** 
-**Tema cubierto:** 
+🎯 **Proyecto Final – Aplicación completa basada en microservicios con FastAPI:** 
+
  
 - Tema 16: Proyecto final
 
