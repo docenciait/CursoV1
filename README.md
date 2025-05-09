@@ -6,7 +6,7 @@
 
 # Introducción
 
-Domina la arquitectura de microservicios con FastAPI, aprendiendo a diseñarAPIs REST eficientes, implementar DDD y CQRS, gestionar comunicación síncrona y asíncrona con RabbitMQ y Kafka, aplicar seguridad con OAuth2 yJWT, y desplegar microservicios con Docker, Kubernetes y CI/CD. Un cursopráctico para desarrolladores backend que buscan construir sistemas escalables y resilientes.
+Domina la arquitectura de microservicios con FastAPI, aprendiendo a diseñar APIs REST eficientes, implementar DDD y CQRS, gestionar comunicación síncrona y asíncrona con RabbitMQ y Kafka, aplicar seguridad con OAuth2 y JWT, y desplegar microservicios con Docker, Kubernetes y CI/CD. Un curso práctico para desarrolladores backend que buscan construir sistemas escalables y resilientes.
 
 # ¿A quién va dirigido?
 
@@ -14,7 +14,7 @@ Desarrolladores backend con experiencia en Python que quieran especializarseen m
 
 # Objetivos
 
-- Desarrollar microservicios escalables con FastAPI, aplicando arquitecturahexagonal, DDD y CQRS.
+- Desarrollar microservicios escalables con FastAPI, aplicando arquitectura hexagonal, DDD y CQRS.
 - Implementar APIs REST y WebSockets eficientes, con autenticación seguramediante OAuth2 y JWT.
 - Gestionar comunicación entre microservicios con RabbitMQ, Kafka y Pub/Sub para sistemas distribuidos.
 - Optimizar el rendimiento y la escalabilidad, utilizando caching, balanceo decarga y transacciones distribuidas.
@@ -23,9 +23,9 @@ Desarrolladores backend con experiencia en Python que quieran especializarseen m
 # Requisitos
 
 - Experiencia previa desarrollando con Python (v3 o superior) y Web Apis con FastAPI.
-- Instalados y configurados: Visual Studio Code, Python (v3.11+), GIT, DockerDesktop, Redis 7.0+ o Memcached, Graphviz, Pormetheus, Grafana yPostman. Además de acceso a un clúster Kubernetes o MiniKube.
-- Tener RabbitMQ, Kafka, PostgreSQL y Mongo instalados en contenedorDocker.
-- Tener permisos de instalación, conexión estable a Internet, mínimo 16GB deRAM, 60GB de espacio libre en disco, procesador Intel Core (i5 o superior)o AMD Ryzen 5 y Unidad SSD.
+- Instalados y configurados: Visual Studio Code, Python (v3.11+), GIT, Docker Desktop, Redis 7.0+ o Memcached, Graphviz, Pormetheus, Grafana y Postman. Además de acceso a un clúster Kubernetes o MiniKube.
+- Tener RabbitMQ, Kafka, PostgreSQL y Mongo instalados en contenedor Docker.
+- Tener permisos de instalación, conexión estable a Internet, mínimo 16GB deRAM, 60GB de espacio libre en disco, procesador Intel Core (i5 o superior) o AMD Ryzen 5 y Unidad SSD.
 - Tener Zoom Desktop instalado y configurados: auriculares, micrófono, cámara y 2 pantallas para seguir las sesiones en directo.
 
 # Tabla de Contenidos
