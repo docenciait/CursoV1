@@ -266,7 +266,8 @@ flowchart LR
 
 ## 🔍 ¿Cómo aplicar esta regla al **Bloque 1**  (Temas 1 a 5)?
 Dado que el Bloque 1 incluye teoría clave (microservicios, FastAPI, REST, errores, seguridad), el **peso de la teoría será ligeramente superior al 10%**  al principio, pero sin perder el enfoque activo.
-Aquí tienes cómo podrías distribuirlo en **Sesión 1 y 2** , tema por tema:
+
+Esta sería la distribución en las sesiones **Sesión 1 y 2** , tema por tema:
 
 
 ---
