@@ -66,24 +66,22 @@ Desarrolladores backend con experiencia en Python que quieran especializarseen m
 
 ```mermaid
 flowchart LR
-    subgraph Bloque1 ["🔷 Bloque 1 – Principios de Microservicios, Framework FastAPI y Arquitectura Base<br/>1. Introducción a la arquitectura de microservicios<br/>2. FastAPI como framework para microservicios<br/>3. Comunicación síncrona y asíncrona<br/>4. Manejo de errores y circuit breakers<br/>5. Seguridad y buenas prácticas en microservicios"]
+    subgraph Bloque1 ["🔷 Bloque 1 – Principios de Microservicios, Framework FastAPI y Arquitectura Base<br/>Tema 1<br/>Tema 2<br/>Tema 3<br/>Tema 4<br/>Tema 5"]
     end
 
-    subgraph Bloque2 ["🧩 Bloque 2 – Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio<br/>6. Arquitectura hexagonal y aplicación de DDD<br/>7. Introducción a Domain-Driven Design (DDD)<br/>8. Patrón CQRS en microservicios"]
+    subgraph Bloque2 ["🧩 Bloque 2 – Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio<br/>Tema 6<br/>Tema 7<br/>Tema 8"]
     end
 
-    subgraph Bloque3 ["🔀 Bloque 3 – Comunicación Asíncrona, Eventos, Pub/Sub y Mensajería Distribuida<br/>9. Introducción a la mensajería con Kafka y RabbitMQ<br/>10. WebSockets y Pub/Sub en sistemas distribuidos<br/>11. Diseño de APIs REST y WebSockets en FastAPI"]
+    subgraph Bloque3 ["🔀 Bloque 3 – Comunicación Asíncrona, Eventos, Pub/Sub y Mensajería Distribuida<br/>Tema 9<br/>Tema 10<br/>Tema 11"]
     end
 
-    subgraph Bloque4 ["⚙️ Bloque 4 – Escalabilidad, Persistencia, Testing y Despliegue de Microservicios<br/>12. Escalabilidad y optimización de microservicios<br/>13. Persistencia de datos en microservicios<br/>14. Testing con Pytest<br/>15. CI/CD y monitorización"]
+    subgraph Bloque4 ["⚙️ Bloque 4 – Escalabilidad, Persistencia, Testing y Despliegue de Microservicios<br/>Tema 12<br/>Tema 13<br/>Tema 14<br/>Tema 15"]
     end
 
-    subgraph ProyectoFinal ["🎯 Proyecto Final – Aplicación completa basada en microservicios con FastAPI<br/>16. Proyecto final"]
+    subgraph ProyectoFinal ["🎯 Proyecto Final – Aplicación completa basada en microservicios con FastAPI<br/>Tema 16"]
     end
 
     Bloque1 --> Bloque2 --> Bloque3 --> Bloque4 --> ProyectoFinal
-
-
 
 ```
 
