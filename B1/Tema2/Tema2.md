@@ -6,8 +6,6 @@
   - [2.1. **Presentación de FastAPI y sus ventajas**](#21-presentación-de-fastapi-y-sus-ventajas)
   - [**Tabla Comparativa de Frameworks API**](#tabla-comparativa-de-frameworks-api)
   - [**Benchmarking de Frameworks API (TechEmpower)**](#benchmarking-de-frameworks-api-techempower)
-  - [**Referencias Bibliográficas y Recursos de Internet**](#referencias-bibliográficas-y-recursos-de-internet)
-  - [Al consultar estos recursos, especialmente la documentación oficial y los benchmarks de TechEmpower, podrás obtener una comprensión profunda y actualizada de FastAPI y su posición en el ecosistema de desarrollo de APIs.](#al-consultar-estos-recursos-especialmente-la-documentación-oficial-y-los-benchmarks-de-techempower-podrás-obtener-una-comprensión-profunda-y-actualizada-de-fastapi-y-su-posición-en-el-ecosistema-de-desarrollo-de-apis)
   - [2.2. **Entendimiento del uso de Pydantic**](#22-entendimiento-del-uso-de-pydantic)
   - [2.3. **Creación de una estructura base escalable**](#23-creación-de-una-estructura-base-escalable)
   - [2.3. Estructura de Proyecto Escalable con FastAPI](#23-estructura-de-proyecto-escalable-con-fastapi)
@@ -25,13 +23,7 @@
     - [3. Modelo de Respuesta (`response_model`)](#3-modelo-de-respuesta-response_model)
     - [4. Inyección de Dependencias (`Depends`)](#4-inyección-de-dependencias-depends)
     - [5. Diseño de Controladores RESTful (Buenas Prácticas)](#5-diseño-de-controladores-restful-buenas-prácticas)
-  - [2.5. **Implementación de middlewares personalizados**](#25-implementación-de-middlewares-personalizados)
-  - [2.6. **Aplicación de dependencias e inyecciones**](#26-aplicación-de-dependencias-e-inyecciones)
-  - [2.7. **Integración automática de OpenAPI**](#27-integración-automática-de-openapi)
-  - [2.8. **Utilización de BackgroundTasks**](#28-utilización-de-backgroundtasks)
-  - [2.9. **Manejo de excepciones personalizadas**](#29-manejo-de-excepciones-personalizadas)
-  - [2.10. **Configuración de entornos y variables**](#210-configuración-de-entornos-y-variables)
-  - [2.11. **Preparación de servicios para producción**](#211-preparación-de-servicios-para-producción)
+  - [**Referencias Bibliográficas y Recursos de Internet**](#referencias-bibliográficas-y-recursos-de-internet)
 
 ---
 
@@ -145,43 +137,7 @@ Resultados Numéricos Representativos de TechEmpower (RPS \- Requests Per Second
 * **No es la Única Métrica:** La velocidad de desarrollo, la madurez del ecosistema, la disponibilidad de talento y las características específicas del framework son tan importantes como el rendimiento crudo.  
 * **Para Datos Precisos:** Visita [TechEmpower Framework Benchmarks](https://www.techempower.com/benchmarks/) para ver los resultados completos de la última ronda. Podrás filtrar por tipo de prueba, lenguaje, framework, etc.
 
-## **Referencias Bibliográficas y Recursos de Internet**
 
-**FastAPI:**
-
-1. [Documentación Oficial de FastAPI](https://fastapi.tiangolo.com/) \- La fuente más completa y actualizada. Creada por Sebastián Ramírez (Tiangolo).  
-2. [Repositorio GitHub de FastAPI](https://github.com/tiangolo/fastapi) \- Código fuente, issues y discusiones.  
-3. **Tutoriales y Artículos de Tiangolo:** El blog y las charlas del creador suelen ofrecer insights valiosos.  
-4. [TestDriven.io \- FastAPI Courses & Tutorials](https://testdriven.io/blog/topics/fastapi/) \- Artículos y tutoriales de buena calidad sobre FastAPI.  
-5. [Real Python](https://realpython.com/) \- Buscar "FastAPI" en Real Python suele arrojar tutoriales detallados y prácticos.
-
-**Otros Frameworks y Tecnologías (Documentación Oficial):**
-
-* [Django REST framework](https://www.django-rest-framework.org/)  
-* [Flask](https://flask.palletsprojects.com/)  
-* [Quart](https://pgjones.gitlab.io/quart/)  
-* [Django Ninja](https://django-ninja.rest-framework.com/)  
-* [Express.js](https://expressjs.com/)  
-* [NestJS](https://nestjs.com/)  
-* [ASP.NET Core](https://docs.microsoft.com/aspnet/core/)  
-* [Spring Boot](https://spring.io/projects/spring-boot)  
-* [Pydantic](https://pydantic-docs.helpmanual.io/) \- Fundamental para FastAPI.  
-* [Starlette](https://www.starlette.io/) \- El framework ASGI sobre el que se construye FastAPI.  
-* [Uvicorn](https://www.uvicorn.org/) \- El servidor ASGI recomendado para FastAPI.
-
-**Benchmarking:**
-
-* [TechEmpower Framework Benchmarks](https://www.techempower.com/benchmarks/) \- La fuente principal para datos de rendimiento comparativo de frameworks web.  
-  * [Resultados de la Ronda 22 (Ejemplo)](https://www.techempower.com/benchmarks/#section=data-r22) \- *Siempre verifica la última ronda disponible.* (Nota: En el momento de esta actualización, la Ronda 22 es una referencia común, pero nuevas rondas pueden estar disponibles).
-
-**Comunidades y Discusión:**
-
-* **Stack Overflow:** Etiquetar preguntas con fastapi, python, y los nombres de otros frameworks relevantes.  
-* **Reddit:** Subreddits como r/Python, r/FastAPI, r/django, r/flask, r/node, r/csharp, r/java.  
-* **Gitter/Discord de FastAPI:** Canales de chat oficiales para FastAPI donde la comunidad y a veces el propio creador participan. (Buscar enlaces en la documentación oficial).
-
-Al consultar estos recursos, especialmente la documentación oficial y los benchmarks de TechEmpower, podrás obtener una comprensión profunda y actualizada de FastAPI y su posición en el ecosistema de desarrollo de APIs.
----
 
 ## 2.2. **Entendimiento del uso de Pydantic**
 
@@ -1385,21 +1341,43 @@ En una estructura orientada a servicios, las clases de servicio se pueden inyect
 
 FastAPI ofrece un conjunto de herramientas muy completo y bien diseñado para la gestión de rutas y la creación de controladores RESTful. Al combinar `APIRouter` para la modularidad, modelos Pydantic para la validación y serialización, y el sistema de inyección de dependencias, puedes construir APIs limpias, robustas, bien documentadas y fáciles de mantener, siguiendo las mejores prácticas RESTful.
 
----
-
-## 2.5. **Implementación de middlewares personalizados**
-## 2.6. **Aplicación de dependencias e inyecciones**
-## 2.7. **Integración automática de OpenAPI**
-## 2.8. **Utilización de BackgroundTasks**
-## 2.9. **Manejo de excepciones personalizadas**
-## 2.10. **Configuración de entornos y variables**
-## 2.11. **Preparación de servicios para producción**
-
 
 ---
 
+## **Referencias Bibliográficas y Recursos de Internet**
 
----
+**FastAPI:**
+
+1. [Documentación Oficial de FastAPI](https://fastapi.tiangolo.com/) \- La fuente más completa y actualizada. Creada por Sebastián Ramírez (Tiangolo).  
+2. [Repositorio GitHub de FastAPI](https://github.com/tiangolo/fastapi) \- Código fuente, issues y discusiones.  
+3. **Tutoriales y Artículos de Tiangolo:** El blog y las charlas del creador suelen ofrecer insights valiosos.  
+4. [TestDriven.io \- FastAPI Courses & Tutorials](https://testdriven.io/blog/topics/fastapi/) \- Artículos y tutoriales de buena calidad sobre FastAPI.  
+5. [Real Python](https://realpython.com/) \- Buscar "FastAPI" en Real Python suele arrojar tutoriales detallados y prácticos.
+
+**Otros Frameworks y Tecnologías (Documentación Oficial):**
+
+* [Django REST framework](https://www.django-rest-framework.org/)  
+* [Flask](https://flask.palletsprojects.com/)  
+* [Quart](https://pgjones.gitlab.io/quart/)  
+* [Django Ninja](https://django-ninja.rest-framework.com/)  
+* [Express.js](https://expressjs.com/)  
+* [NestJS](https://nestjs.com/)  
+* [ASP.NET Core](https://docs.microsoft.com/aspnet/core/)  
+* [Spring Boot](https://spring.io/projects/spring-boot)  
+* [Pydantic](https://pydantic-docs.helpmanual.io/) \- Fundamental para FastAPI.  
+* [Starlette](https://www.starlette.io/) \- El framework ASGI sobre el que se construye FastAPI.  
+* [Uvicorn](https://www.uvicorn.org/) \- El servidor ASGI recomendado para FastAPI.
+
+**Benchmarking:**
+
+* [TechEmpower Framework Benchmarks](https://www.techempower.com/benchmarks/) \- La fuente principal para datos de rendimiento comparativo de frameworks web.  
+  * [Resultados de la Ronda 22 (Ejemplo)](https://www.techempower.com/benchmarks/#section=data-r22) \- *Siempre verifica la última ronda disponible.* (Nota: En el momento de esta actualización, la Ronda 22 es una referencia común, pero nuevas rondas pueden estar disponibles).
+
+**Comunidades y Discusión:**
+
+* **Stack Overflow:** Etiquetar preguntas con fastapi, python, y los nombres de otros frameworks relevantes.  
+* **Reddit:** Subreddits como r/Python, r/FastAPI, r/django, r/flask, r/node, r/csharp, r/java.  
+* **Gitter/Discord de FastAPI:** Canales de chat oficiales para FastAPI donde la comunidad y a veces el propio creador participan. (Buscar enlaces en la documentación oficial).
 
 * **Código Mermaid:**
   
