@@ -1,4 +1,4 @@
-![](T1/img/portada.PNG)
+![](B1/Tema1/img/portada.PNG)
 
 # CURSO: Arquitectura de Microservicios, Hexagonal, DDD y CQRS en FastAPI  
 
