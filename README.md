@@ -238,14 +238,14 @@ flowchart LR
 
 | Sesión | Fecha | Día | Duración | Bloque temático | Temas tratados | 
 | --- | --- | --- | --- | --- | --- | 
-| 1️⃣ | 4 junio 2025 | Miércoles | 3h | Bloque 1 – Principios de Microservicios, Framework FastAPI y Arquitectura Base | Tema 1 y Tema 2 | 
-| 2️⃣ | 5 junio 2025 | Jueves | 4h | Bloque 1 – Principios de Microservicios, Framework FastAPI y Arquitectura Base | Tema 3, Tema 4 y Tema 5 | 
-| 3️⃣ | 9 junio 2025 | Lunes | 4h | Bloque 2 – Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio | Tema 6 | 
-| 4️⃣ | 10 junio 2025 | Martes | 4h | Bloque 2 – Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio | - Tema 7 y Tema 8 | 
-| 5️⃣ | 11 junio 2025 | Miércoles | 3h | Bloque 3 – Comunicación Asíncrona, Eventos, Pub/Sub y Mensajería Distribuida | - Tema 9 | 
-| 6️⃣ | 12 junio 2025 | Jueves | 4h | Bloque 3 – Comunicación Asíncrona, Eventos, Pub/Sub y Mensajería Distribuida | - Tema 10 y Tema 11| 
-| 7️⃣ | 16 junio 2025 | Lunes | 4h | Bloque 4 – Escalabilidad, Persistencia, Testing y Despliegue de Microservicios en Producción | Tema 12 y Tema 13 | 
-| 8️⃣ | 17 junio 2025 | Martes | 4h | Bloque 4 – Escalabilidad, Persistencia, Testing y Despliegue de Microservicios en Producción + Proyecto Final | Tema 14, Tema 15 y Tema 16 | 
+| 1️⃣ | 4 junio 2025 | Miércoles | 3h | Bloque 1  | Tema 1 y Tema 2 | 
+| 2️⃣ | 5 junio 2025 | Jueves | 4h | Bloque 1 | Tema 3, Tema 4 y Tema 5 | 
+| 3️⃣ | 9 junio 2025 | Lunes | 4h | Bloque 2 | Tema 6 | 
+| 4️⃣ | 10 junio 2025 | Martes | 4h | Bloque 2 | - Tema 7 y Tema 8 | 
+| 5️⃣ | 11 junio 2025 | Miércoles | 3h | Bloque 3 | - Tema 9 | 
+| 6️⃣ | 12 junio 2025 | Jueves | 4h | Bloque 3 | - Tema 10 y Tema 11| 
+| 7️⃣ | 16 junio 2025 | Lunes | 4h | Bloque 4 | Tema 12 y Tema 13 | 
+| 8️⃣ | 17 junio 2025 | Martes | 4h | Bloque 4 + Proyecto Final | Tema 14, Tema 15 y Tema 16 | 
 
 ---
 
@@ -361,7 +361,7 @@ Aquí tienes cómo podrías distribuirlo en **Sesión 1 y 2** , tema por tema:
  
 - Primer microservicio FastAPI montado
  
-- Cuaderno de reflexión sobre el monolito (puede ser Markdown)
+- Cuestionario de Autoevaluación
 
 
 
