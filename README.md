@@ -422,6 +422,7 @@ Esta sería la distribución en las sesiones **Sesión 1 y 2** , tema por tema:
 | 11:00 – 11:30 | 💻 Laboratorio 4: crear products-service, consultar productos desde orders-service usando httpx | 
 | 11:30 – 12:00 | 🧠 Errores controlados: HTTPException, custom handlers, errores de negocio vs técnicos | 
 | 12:00 – 12:30 | 💻 Laboratorio 5: integrar BackgroundTask (enviar email falso desde orders-service) + handler de error simulado | 
+| --------------| Comienzo de Proyecto Final |
 
 
 
