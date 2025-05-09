@@ -6,7 +6,7 @@
 
 # Introducción
 
-Domina la arquitectura de microservicios con FastAPI, aprendiendo a diseñarAPIs REST eficientes, implementar DDD y CQRS, gestionar comunicaciónsíncrona y asíncrona con RabbitMQ y Kafka, aplicar seguridad con OAuth2 yJWT, y desplegar microservicios con Docker, Kubernetes y CI/CD. Un cursopráctico para desarrolladores backend que buscan construir sistemasescalables y resilientes.
+Domina la arquitectura de microservicios con FastAPI, aprendiendo a diseñarAPIs REST eficientes, implementar DDD y CQRS, gestionar comunicación síncrona y asíncrona con RabbitMQ y Kafka, aplicar seguridad con OAuth2 yJWT, y desplegar microservicios con Docker, Kubernetes y CI/CD. Un cursopráctico para desarrolladores backend que buscan construir sistemas escalables y resilientes.
 
 # ¿A quién va dirigido?
 
@@ -16,17 +16,17 @@ Desarrolladores backend con experiencia en Python que quieran especializarseen m
 
 - Desarrollar microservicios escalables con FastAPI, aplicando arquitecturahexagonal, DDD y CQRS.
 - Implementar APIs REST y WebSockets eficientes, con autenticación seguramediante OAuth2 y JWT.
-- Gestionar comunicación entre microservicios con RabbitMQ, Kafka yPub/Sub para sistemas distribuidos.
+- Gestionar comunicación entre microservicios con RabbitMQ, Kafka y Pub/Sub para sistemas distribuidos.
 - Optimizar el rendimiento y la escalabilidad, utilizando caching, balanceo decarga y transacciones distribuidas.
-- Automatizar despliegues en Docker y Kubernetes, asegurando CI/CD,monitoreo con Prometheus y logs centralizados.
+- Automatizar despliegues en Docker y Kubernetes, asegurando CI/CD, monitoreo con Prometheus y logs centralizados.
 
 # Requisitos
 
-- Experiencia previa desarrollando con Python (v3 o superior) y Web Apiscon FastAPI.
+- Experiencia previa desarrollando con Python (v3 o superior) y Web Apis con FastAPI.
 - Instalados y configurados: Visual Studio Code, Python (v3.11+), GIT, DockerDesktop, Redis 7.0+ o Memcached, Graphviz, Pormetheus, Grafana yPostman. Además de acceso a un clúster Kubernetes o MiniKube.
 - Tener RabbitMQ, Kafka, PostgreSQL y Mongo instalados en contenedorDocker.
 - Tener permisos de instalación, conexión estable a Internet, mínimo 16GB deRAM, 60GB de espacio libre en disco, procesador Intel Core (i5 o superior)o AMD Ryzen 5 y Unidad SSD.
-- Tener Zoom Desktop instalado y configurados: auriculares, micrófono,cámara y 2 pantallas para seguir las sesiones en directo.
+- Tener Zoom Desktop instalado y configurados: auriculares, micrófono, cámara y 2 pantallas para seguir las sesiones en directo.
 
 # Tabla de Contenidos
 
@@ -64,7 +64,30 @@ Desarrolladores backend con experiencia en Python que quieran especializarseen m
 
 ## 📘 Resumen de Bloques, Temas y Contenidos 
 
+```mermaid
+flowchart LR
+    subgraph Bloque1 ["🔷 Bloque 1 – Principios de Microservicios, Framework FastAPI y Arquitectura Base<br/>1. Introducción a la arquitectura de microservicios<br/>2. FastAPI como framework para microservicios<br/>3. Comunicación síncrona y asíncrona<br/>4. Manejo de errores y circuit breakers<br/>5. Seguridad y buenas prácticas en microservicios"]
+    end
 
+    subgraph Bloque2 ["🧩 Bloque 2 – Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio<br/>6. Arquitectura hexagonal y aplicación de DDD<br/>7. Introducción a Domain-Driven Design (DDD)<br/>8. Patrón CQRS en microservicios"]
+    end
+
+    subgraph Bloque3 ["🔀 Bloque 3 – Comunicación Asíncrona, Eventos, Pub/Sub y Mensajería Distribuida<br/>9. Introducción a la mensajería con Kafka y RabbitMQ<br/>10. WebSockets y Pub/Sub en sistemas distribuidos<br/>11. Diseño de APIs REST y WebSockets en FastAPI"]
+    end
+
+    subgraph Bloque4 ["⚙️ Bloque 4 – Escalabilidad, Persistencia, Testing y Despliegue de Microservicios<br/>12. Escalabilidad y optimización de microservicios<br/>13. Persistencia de datos en microservicios<br/>14. Testing con Pytest<br/>15. CI/CD y monitorización"]
+    end
+
+    subgraph ProyectoFinal ["🎯 Proyecto Final – Aplicación completa basada en microservicios con FastAPI<br/>16. Proyecto final"]
+    end
+
+    Bloque1 --> Bloque2 --> Bloque3 --> Bloque4 --> ProyectoFinal
+
+
+
+
+
+```
 
 ---
 
@@ -81,6 +104,7 @@ Desarrolladores backend con experiencia en Python que quieran especializarseen m
 - Tema 4: Manejo de errores y circuit breakers
  
 - Tema 5: Seguridad y buenas prácticas en microservicios
+  
 
 **Contenidos clave:** 
  
@@ -141,6 +165,7 @@ Desarrolladores backend con experiencia en Python que quieran especializarseen m
 - Tema 10: WebSockets y Pub/Sub en sistemas distribuidos
  
 - Tema 11: Diseño de APIs REST y WebSockets en FastAPI
+  
 
 **Contenidos clave:** 
  
@@ -173,6 +198,7 @@ Desarrolladores backend con experiencia en Python que quieran especializarseen m
 - Tema 14: Testing con Pytest
  
 - Tema 15: CI/CD y monitorización
+  
 
 **Contenidos clave:** 
  
