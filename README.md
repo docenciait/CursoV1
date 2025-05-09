@@ -86,6 +86,8 @@ flowchart LR
 ```
 
 
+---
+
 
 🔷 **Bloque 1 – Principios de Microservicios, Framework FastAPI y Arquitectura Base** 
 **Temas cubiertos:** 
