@@ -5,11 +5,44 @@
 - [**Tema 6. ARQUITECTURA HEXAGONAL Y APLICACIÓN DE DDD**](#tema-6-arquitectura-hexagonal-y-aplicación-de-ddd)
   - [Tabla de Contenidos](#tabla-de-contenidos)
   - [**6.1 Comprender el patrón de puertos y adaptadores**](#61-comprender-el-patrón-de-puertos-y-adaptadores)
+    - [¿Cómo lo logramos?](#cómo-lo-logramos)
+    - [1. El Hexágono (La Aplicación):](#1-el-hexágono-la-aplicación)
+    - [Gráfico 1: El Hexágono Conceptual](#gráfico-1-el-hexágono-conceptual)
+    - [2. Puertos (Ports):](#2-puertos-ports)
+    - [Gráfico 2: Puertos de Entrada y Salida](#gráfico-2-puertos-de-entrada-y-salida)
+- [Diagrama ASCII](#diagrama-ascii)
+    - [3. Adaptadores (Adapters):](#3-adaptadores-adapters)
+    - [¿Por qué este patrón es tan poderoso?](#por-qué-este-patrón-es-tan-poderoso)
+    - [Relación con DDD (Domain-Driven Design):](#relación-con-ddd-domain-driven-design)
+    - [Interacción Dinámica (¡Pensemos Juntos!):](#interacción-dinámica-pensemos-juntos)
+    - [Gráfico 3: Flujo de una Petición en Arquitectura Hexagonal](#gráfico-3-flujo-de-una-petición-en-arquitectura-hexagonal)
+- [Diagrama ASCII](#diagrama-ascii-1)
+    - [Puntos Clave a Recordar:](#puntos-clave-a-recordar)
   - [**6.2 Identificar las capas: dominio, aplicación, infraestructura, interfaces**](#62-identificar-las-capas-dominio-aplicación-infraestructura-interfaces)
   - [**6.3 Diseñar interfaces para cada puerto (entrada y salida)**](#63-diseñar-interfaces-para-cada-puerto-entrada-y-salida)
+    - [¿Por qué son tan importantes las interfaces para los puertos?](#por-qué-son-tan-importantes-las-interfaces-para-los-puertos)
+    - [A. Diseñando Interfaces para Puertos de Entrada (Driving Ports / Input Ports)](#a-diseñando-interfaces-para-puertos-de-entrada-driving-ports--input-ports)
+    - [B. Diseñando Interfaces para Puertos de Salida (Driven Ports / Output Ports)](#b-diseñando-interfaces-para-puertos-de-salida-driven-ports--output-ports)
+    - [C. Ubicación de las Interfaces de los Puertos](#c-ubicación-de-las-interfaces-de-los-puertos)
+    - [D. Consideraciones Clave Adicionales al Diseñar Interfaces de Puertos:](#d-consideraciones-clave-adicionales-al-diseñar-interfaces-de-puertos)
   - [**6.4 Implementar adaptadores HTTP como controladores REST o WebSocket**](#64-implementar-adaptadores-http-como-controladores-rest-o-websocket)
+    - [El Papel del Adaptador HTTP](#el-papel-del-adaptador-http)
+    - [Implementando un Controlador REST con FastAPI](#implementando-un-controlador-rest-con-fastapi)
+    - [Adaptadores WebSocket con FastAPI](#adaptadores-websocket-con-fastapi)
+    - [Consideraciones Clave para Adaptadores HTTP:](#consideraciones-clave-para-adaptadores-http)
   - [**6.5 Separar repositorios del dominio usando interfaces**](#65-separar-repositorios-del-dominio-usando-interfaces)
+    - [El Papel Clave de las Interfaces de Repositorio](#el-papel-clave-de-las-interfaces-de-repositorio)
+    - [Beneficios de esta Separación](#beneficios-de-esta-separación)
+    - [Diseñando Interfaces de Repositorio Efectivas](#diseñando-interfaces-de-repositorio-efectivas)
+    - [Relación con la Capa de Dominio](#relación-con-la-capa-de-dominio)
+    - [La Implementación del Adaptador (Siguiente Paso)](#la-implementación-del-adaptador-siguiente-paso)
   - [**6.6 Diseñar pruebas para el núcleo sin depender de infraestructuras**](#66-diseñar-pruebas-para-el-núcleo-sin-depender-de-infraestructuras)
+    - [1. Probando la Capa de Dominio](#1-probando-la-capa-de-dominio)
+    - [2. Probando la Capa de Aplicación (Servicios de Aplicación / Casos de Uso)](#2-probando-la-capa-de-aplicación-servicios-de-aplicación--casos-de-uso)
+    - [3. Tipos de Dobles de Prueba Comunes](#3-tipos-de-dobles-de-prueba-comunes)
+    - [4. Estructura de las Pruebas](#4-estructura-de-las-pruebas)
+    - [Beneficios de esta Estrategia de Pruebas para el Núcleo](#beneficios-de-esta-estrategia-de-pruebas-para-el-núcleo)
+    - [¿Qué NO se Prueba Aquí?](#qué-no-se-prueba-aquí)
   - [**6.7 Integrar eventos de dominio desde la capa interna**](#67-integrar-eventos-de-dominio-desde-la-capa-interna)
   - [**6.8 Implementar casos de uso en la capa de aplicación**](#68-implementar-casos-de-uso-en-la-capa-de-aplicación)
   - [**6.9 Configurar inyecciones de dependencia de adaptadores externos**](#69-configurar-inyecciones-de-dependencia-de-adaptadores-externos)
@@ -31,35 +64,155 @@
 ## **6.1 Comprender el patrón de puertos y adaptadores**
 
 
+¡Bienvenido/a al núcleo de la Arquitectura Hexagonal! Este patrón, también conocido como "Puertos y Adaptadores" (Ports and Adapters), fue concebido por Alistair Cockburn y su objetivo principal es **proteger el corazón de tu aplicación (el dominio) de las dependencias externas y la tecnología.**
+
+Imagina tu aplicación como una ciudadela medieval. El tesoro más valioso, el **Dominio** (donde reside la lógica de negocio pura), está en el centro, bien protegido. No queremos que las preocupaciones sobre cómo se muestran los datos (interfaz de usuario), cómo se almacenan (base de datos) o cómo se comunican con otros sistemas (servicios externos) contaminen o compliquen este núcleo.
+
+### ¿Cómo lo logramos?
+
+Aquí es donde entran en juego los "Puertos" y los "Adaptadores".
+
+### 1. El Hexágono (La Aplicación):
+
 |!["figure"](img/image.png )|
 |:--:|
 | *Figura 1. Arquitectura Hexagonal* |
 
+Piensa en tu aplicación no como una estructura en capas tradicional (presentación, lógica, datos), sino como un hexágono (la forma es solo una metáfora para indicar que hay múltiples puntos de entrada y salida, no necesariamente seis).
+
+* **Interior del Hexágono (Dominio y Lógica de Aplicación):** Aquí reside la lógica de negocio y las reglas que son independientes de cualquier tecnología o interfaz externa. Es el "qué" hace tu aplicación.
+* **Exterior del Hexágono:** Todo lo que interactúa con tu aplicación desde el exterior: interfaces de usuario, bases de datos, sistemas de mensajería, APIs de terceros, pruebas automatizadas, etc.
+
+### Gráfico 1: El Hexágono Conceptual
 
 
-La Arquitectura Hexagonal, también conocida como "Puertos y Adaptadores", tiene como objetivo principal proteger el núcleo de la aplicación (la lógica de negocio o dominio) de las dependencias externas (frameworks, bases de datos, UI, etc.).
+```
+      +-----------------------+
+      |     Infraestructura   | (Adaptadores: UI, DB, APIs Externas, Tests)
+      |       (Exterior)      |
+      +-----------+-----------+
+                  |
+                  | (Puertos)
+                  |
+      +-----------+-----------+
+      |  Dominio y Lógica de  |
+      |  Aplicación (Núcleo)  |
+      |       (Interior)      |
+      +-----------------------+
+```
 
-*   **El Hexágono (Núcleo):** Contiene la lógica de negocio pura. No sabe nada sobre el mundo exterior (HTTP, bases de datos específicas, etc.).
-*   **Puertos:** Son las interfaces definidas por el hexágono. Representan los puntos de interacción.
-    *   **Puertos de Entrada (Driving Ports):** APIs que el núcleo expone para ser "conducido" por el mundo exterior (ej. un servicio de aplicación que maneja un caso de uso).
-    *   **Puertos de Salida (Driven Ports):** Interfaces que el núcleo necesita para obtener datos o realizar acciones en el mundo exterior (ej. una interfaz de repositorio para persistir datos).
-*   **Adaptadores:** Son las implementaciones concretas de los puertos. Se encuentran fuera del hexágono.
-    *   **Adaptadores de Entrada (Driving Adapters):** Convierten las solicitudes externas (ej. HTTP, CLI, gRPC) en llamadas a los puertos de entrada del núcleo (ej. un controlador FastAPI).
-    *   **Adaptadores de Salida (Driven Adapters):** Implementan los puertos de salida, interactuando con herramientas externas (ej. un repositorio SQLAlchemy para MariaDB, un cliente HTTP para un servicio externo).
+### 2. Puertos (Ports):
 
-**Beneficios Clave:**
-*   **Aislamiento del Dominio:** La lógica de negocio es independiente de la tecnología.
-*   **Testabilidad:** El núcleo se puede probar de forma aislada, sin frameworks ni bases de datos.
-*   **Intercambiabilidad:** Es más fácil cambiar de base de datos, framework web o cualquier otra dependencia externa sin afectar el núcleo.
-*   **Mantenibilidad:** El código está mejor organizado y es más fácil de entender.
+Los puertos son la **especificación** de cómo el exterior puede interactuar con el interior de la aplicación, o cómo la aplicación puede interactuar con el exterior. Son como los enchufes en una pared: definen una interfaz, pero no la implementación.
+
+* **Puertos de Entrada (Driving/Input Ports):** Definen cómo los actores externos (usuarios, otros sistemas) pueden *invocar* la lógica de la aplicación. Piensa en ellos como las APIs del núcleo de tu aplicación. Generalmente, se definen mediante interfaces que los casos de uso de la capa de aplicación implementarán.
+    * *Ejemplo:* Una interfaz `ServicioDePedidos` con un método `crearPedido(datosDelPedido)`.
+
+* **Puertos de Salida (Driven/Output Ports):** Definen cómo la aplicación se comunica con los servicios externos que necesita para realizar su trabajo (por ejemplo, persistencia de datos, envío de notificaciones, obtención de información de otros servicios). Son interfaces que la aplicación *espera* que el mundo exterior implemente.
+    * *Ejemplo:* Una interfaz `RepositorioDePedidos` con métodos como `guardar(pedido)` o `buscarPorId(idPedido)`.
+
+### Gráfico 2: Puertos de Entrada y Salida
+
+# Diagrama ASCII
+```
+      +-----------------------------------------------------+
+      |                     Adaptador UI                    |
+      |                  (Ej: FastAPI Endpoint)             |
+      +-------------------------+---------------------------+
+                                | (Llama a)
+                                v
+      +-----------------------------------------------------+
+      |      Puerto de Entrada (Interfaz ServicioPedido)    |
+      |-----------------------------------------------------|
+      |                 LÓGICA DE APLICACIÓN                |  <-- NÚCLEO DEL
+      |                    (Caso de Uso)                    |      HEXÁGONO
+      |-----------------------------------------------------|
+      |      Puerto de Salida (Interfaz RepositorioPedido)  |
+      +-------------------------+---------------------------+
+                                | (Es implementado por)
+                                v
+      +-----------------------------------------------------+
+      |                  Adaptador de Persistencia          |
+      |                   (Ej: SQLAlchemy con PostgreSQL)   |
+      +-----------------------------------------------------+
+```
+
+### 3. Adaptadores (Adapters):
+
+Los adaptadores son la **implementación** concreta de los puertos. Son los puentes que conectan el mundo exterior con los puertos de la aplicación. Traducen las señales del mundo exterior al lenguaje que entiende el puerto y viceversa.
+
+* **Adaptadores de Entrada (Driving Adapters):** Toman la entrada de un actor externo y la dirigen hacia un puerto de entrada.
+    * *Ejemplo:* Un controlador REST de FastAPI que recibe una petición HTTP, extrae los datos y llama al método `crearPedido` del `ServicioDePedidos`. Otros ejemplos podrían ser un manejador de eventos de WebSocket, un cliente de línea de comandos (CLI) o incluso pruebas de aceptación.
+
+* **Adaptadores de Salida (Driven Adapters):** Implementan los puertos de salida para interactuar con herramientas o servicios externos específicos.
+    * *Ejemplo:* Una clase `RepositorioDePedidosPostgreSQL` que implementa la interfaz `RepositorioDePedidos` y utiliza SQLAlchemy para guardar y recuperar pedidos de una base de datos PostgreSQL. Otro adaptador podría ser `RepositorioDePedidosEnMemoria` para pruebas, o un `ServicioDeNotificacionesEmail` que implemente una interfaz `PuertoDeNotificaciones`.
+
+### ¿Por qué este patrón es tan poderoso?
+
+1.  **Aislamiento del Dominio:** La lógica de negocio permanece pura y no se contamina con detalles tecnológicos. Esto facilita la comprensión y la evolución del dominio.
+2.  **Testeabilidad:**
+    * El núcleo de la aplicación (dominio y lógica de aplicación) se puede probar de forma aislada, sin necesidad de levantar bases de datos, servidores web o servicios externos. Puedes usar "mocks" o adaptadores falsos para los puertos de salida.
+    * Los adaptadores también se pueden probar de forma independiente.
+3.  **Flexibilidad Tecnológica:** Puedes cambiar de base de datos, de framework web, o de proveedor de servicios de mensajería sin (idealmente) tocar el núcleo de tu aplicación. Solo necesitas escribir un nuevo adaptador.
+    * *Ejemplo:* Si empiezas con MongoDB y luego decides migrar a PostgreSQL, solo cambias el adaptador de persistencia. La lógica de tu aplicación no se entera.
+4.  **Mantenibilidad:** El código está mejor organizado, con responsabilidades claras. Es más fácil entender dónde realizar cambios y cuál será su impacto.
+5.  **Desarrollo Paralelo:** Diferentes equipos pueden trabajar en diferentes adaptadores (por ejemplo, un equipo en la interfaz web y otro en la integración con un servicio de pagos) una vez que los puertos están definidos.
+6.  **Aplazamiento de Decisiones Técnicas:** Puedes empezar a desarrollar la lógica de negocio sin haber decidido aún qué base de datos o framework de mensajería usarás. Puedes empezar con adaptadores en memoria para pruebas y desarrollo temprano.
+
+### Relación con DDD (Domain-Driven Design):
+
+La Arquitectura Hexagonal es un excelente habilitador para DDD.
+
+* El **Dominio** de DDD reside en el corazón del hexágono.
+* Los **Servicios de Aplicación** (Application Services) de DDD a menudo implementan los puertos de entrada, orquestando los objetos de dominio para cumplir con los casos de uso.
+* Los **Repositorios** de DDD son un ejemplo clásico de puertos de salida, definiendo cómo se persiste y recupera la información del dominio, siendo los adaptadores las implementaciones concretas para una base de datos específica.
+* Permite proteger el Modelo de Dominio de las complejidades de la infraestructura.
+
+### Interacción Dinámica (¡Pensemos Juntos!):
+
+* **Pregunta para ti:** Imagina que estás construyendo un sistema de gestión de biblioteca con FastAPI. ¿Cuáles podrían ser algunos puertos de entrada y salida? ¿Y ejemplos de adaptadores para ellos?
+    * *Pista (Entrada):* ¿Cómo un usuario podría añadir un nuevo libro? ¿O buscar libros?
+    * *Pista (Salida):* ¿Dónde se guardarán los datos de los libros? ¿Cómo se podría notificar a un usuario si un libro que reservó está disponible?
+
+* **Escenario:** Decides que tu API FastAPI es un adaptador de entrada. El usuario hace una petición `POST /libros` para crear un nuevo libro.
+    1.  ¿Qué puerto de entrada invocaría este adaptador?
+    2.  Dentro de la lógica de aplicación que implementa ese puerto, supongamos que necesitas guardar el libro. ¿Qué puerto de salida se utilizaría?
+    3.  ¿Qué adaptador concreto podría implementar ese puerto de salida si usas PostgreSQL?
+
+### Gráfico 3: Flujo de una Petición en Arquitectura Hexagonal
+
+# Diagrama ASCII
+
+```
++----------+     +-----------------+     +----------------------+     +-------------------+     +---------------------+
+|  Usuario | --> | Adaptador HTTP  | --> | Puerto de Entrada    | --> | Lógica de         | --> | Puerto de Salida    |
+| (Navegador|     | (FastAPI        |     | (Interfaz Caso de Uso|     | Aplicación        |     | (Interfaz          |
+| o Cliente)|     | Controller)     |     | CrearLibro)          |     | (ServicioLibros)  |     | RepositorioLibros)  |
++----------+     +-----------------+     +----------------------+     +-------------------+     +----------+----------+
+                                                                                                           |
+                                                                                                           | (Implementado por)
+                                                                                                           v
+                                                                                                +---------------------+
+                                                                                                | Adaptador de        |
+                                                                                                | Persistencia        |
+                                                                                                | (SQLAlchemy +       |
+                                                                                                |  PostgreSQL)        |
+                                                                                                +---------------------+
+```
+
+### Puntos Clave a Recordar:
+
+* **Dependencias hacia adentro:** Las dependencias siempre apuntan hacia el interior del hexágono. El dominio no sabe nada sobre los adaptadores. Los adaptadores conocen los puertos (interfaces) del dominio/aplicación. Esto se logra a menudo con el **Principio de Inversión de Dependencias (DIP)** de SOLID.
+* **Abstracciones (Puertos):** Los puertos son la clave. Definen contratos, no implementaciones.
+* **Concreciones (Adaptadores):** Los adaptadores son los que se "ensucian las manos" con la tecnología específica.
 
 ---
 
 ## **6.2 Identificar las capas: dominio, aplicación, infraestructura, interfaces**
 
-![alt text](image.png)
-
 Aunque la Arquitectura Hexagonal no prescribe capas estrictas como la arquitectura en capas tradicional, conceptualmente podemos identificar estas áreas:
+
+![alt text](image.png)
 
 1.  **Dominio (El Corazón del Hexágono):**
     *   Contiene la lógica de negocio, las reglas y el estado.
@@ -105,557 +258,1031 @@ Aunque la Arquitectura Hexagonal no prescribe capas estrictas como la arquitectu
 
 ## **6.3 Diseñar interfaces para cada puerto (entrada y salida)**
 
-Usaremos clases base abstractas (`abc.ABC`) de Python para definir nuestros puertos.
+Una vez que hemos comprendido el concepto de Puertos y Adaptadores (Sección 6.1) e idealmente identificado las capas principales de nuestra aplicación (Sección 6.2), el siguiente paso crucial es **diseñar las interfaces para nuestros puertos**. Estas interfaces son los contratos formales que definen cómo el núcleo de la aplicación interactúa con el mundo exterior y viceversa.
 
-**Ejemplo:**
+### ¿Por qué son tan importantes las interfaces para los puertos?
+
+Las interfaces son fundamentales en la Arquitectura Hexagonal por varias razones:
+
+  * **Definen Contratos Claros:** Especifican qué métodos están disponibles, qué parámetros esperan y qué resultados devuelven. Esto elimina la ambigüedad y establece expectativas claras para cualquier implementación.
+  * **Habilitan el Principio de Inversión de Dependencias (DIP):** El núcleo de la aplicación (que contiene los puertos) no depende de los detalles de la infraestructura (adaptadores), sino de estas abstracciones (interfaces). Son los adaptadores los que dependen de las interfaces definidas por el núcleo. Esto invierte la dirección tradicional de las dependencias hacia las capas de infraestructura.
+  * **Facilitan la Testeabilidad:** Podemos crear fácilmente "mocks" o dobles de prueba que implementen estas interfaces para probar el núcleo de la aplicación de forma aislada, sin necesidad de infraestructura real (bases de datos, servicios externos, etc.).
+  * **Permiten la Intercambiabilidad de Adaptadores:** Si la interfaz está bien definida, podemos cambiar una implementación de un adaptador (por ejemplo, cambiar de una base de datos MySQL a PostgreSQL, o de un servicio de envío de emails a otro) sin modificar el núcleo de la aplicación. Solo necesitamos un nuevo adaptador que cumpla con el contrato de la interfaz.
+  * **Desacoplamiento:** Son la clave para lograr el desacoplamiento entre la lógica de negocio y las preocupaciones tecnológicas (frameworks, bibliotecas específicas, etc.).
+
+En Python, estas interfaces se definen comúnmente usando Clases Base Abstractas (`ABC` del módulo `abc`), lo que permite definir métodos abstractos que las clases concretas (adaptadores) deberán implementar.
+
+### A. Diseñando Interfaces para Puertos de Entrada (Driving Ports / Input Ports)
+
+Los puertos de entrada definen cómo los actores externos (como controladores HTTP de FastAPI, consumidores de mensajes, scripts CLI, o incluso pruebas de aceptación) pueden invocar la lógica de la aplicación. Generalmente, estos puertos son implementados por los **Casos de Uso** o **Servicios de Aplicación** (Application Services en terminología DDD).
+
+**Consideraciones al diseñar interfaces de puertos de entrada:**
+
+1.  **Orientados a Casos de Uso:** Cada interfaz de puerto de entrada suele corresponder a un caso de uso específico o a un conjunto cohesionado de operaciones que un actor puede realizar con la aplicación. El nombre del puerto o de la interfaz a menudo refleja este caso de uso.
+
+      * *Ejemplo:* `IGestionInventarioInputPort` (o `GestionInventarioUseCase`), `IProcesamientoPedidosInputPort`.
+
+2.  **Nombres de Métodos Claros e Intencionales:** Los métodos dentro de la interfaz deben reflejar la acción específica que el actor quiere realizar, utilizando el Lenguaje Ubicuo del dominio.
+
+      * *Ejemplo:* `registrar_nuevo_producto()`, `actualizar_stock_producto()`, `crear_pedido_cliente()`.
+
+3.  **Data Transfer Objects (DTOs) o Comandos para la Entrada:** Para pasar datos al puerto, es una buena práctica usar objetos simples de transferencia de datos (DTOs) o "Comandos". Estos son objetos inmutables (o casi) que encapsulan los datos necesarios para ejecutar la operación. Esto desacopla el puerto de los detalles específicos del adaptador de entrada (ej. no pasar directamente el objeto `Request` de FastAPI o un diccionario genérico). Pydantic es excelente para definir estos DTOs en el contexto de FastAPI.
+
+      * *Ejemplo de DTO de entrada con Pydantic:*
+  
+```python
+class ProductoCreadoDTO(BaseModel):
+            id_producto: UUID
+            nombre: str
+            precio_con_iva: float # Ejemplo de lógica que podría aplicar el caso de uso
+            mensaje_confirmacion: str = "Producto registrado exitosamente."
+```
+
+**Ejemplo de Interfaz de Puerto de Entrada (Python):**
+
+Imaginemos un caso de uso para registrar un nuevo producto en nuestro sistema.
 
 ```python
-# app/domain/ports/product_repository.py
 from abc import ABC, abstractmethod
-from typing import List, Optional
-from ..entities.product import Product # Asumiendo que Product es una entidad
+from uuid import UUID
+from typing import Optional # Usado más adelante
 
-class ProductRepositoryPort(ABC): # Puerto de Salida
+# Suponiendo que DatosNuevoProductoDTO y ProductoCreadoDTO están definidos como arriba
+# (o importados desde el módulo correspondiente)
+
+class IGestionInventarioInputPort(ABC): # "I" es una convención común para Interfaces
+    """
+    Puerto de entrada para gestionar el inventario.
+    Estos métodos serían implementados por un Servicio de Aplicación (Caso de Uso).
+    """
 
     @abstractmethod
-    async def get_by_id(self, product_id: str) -> Optional[Product]:
+    async def registrar_nuevo_producto(self, datos_producto: DatosNuevoProductoDTO) -> ProductoCreadoDTO:
+        """
+        Registra un nuevo producto en el sistema según los datos proporcionados.
+        Devuelve información del producto creado, incluyendo su ID asignado.
+        Puede lanzar excepciones específicas del dominio o aplicación en caso de error de validación de negocio.
+        """
         pass
 
     @abstractmethod
-    async def get_all(self) -> List[Product]:
+    async def actualizar_stock(self, id_producto: UUID, cantidad_ajuste: int) -> None:
+        """
+        Actualiza el stock de un producto existente.
+        'cantidad_ajuste' puede ser positivo (añadir) o negativo (reducir).
+        No devuelve nada si la operación es exitosa.
+        Puede lanzar excepciones si el producto no existe o si las reglas de negocio no se cumplen (ej. stock negativo no permitido).
+        """
         pass
 
-    @abstractmethod
-    async def save(self, product: Product) -> Product:
-        pass
+    # Podríamos tener un DTO específico para ProductoDetalleDTO
+    class ProductoDetalleDTO(BaseModel): # Ejemplo anidado o definido externamente
+        id_producto: UUID
+        nombre: str
+        descripcion: Optional[str]
+        precio: float
+        stock_actual: int
 
     @abstractmethod
-    async def delete(self, product_id: str) -> bool:
-        pass
-
-# app/application/ports/product_service.py
-from abc import ABC, abstractmethod
-from typing import List, Optional
-from ..dtos.product_dto import ProductCreateDTO, ProductDTO # DTOs para la comunicación
-
-class ProductServicePort(ABC): # Puerto de Entrada (para la capa de aplicación)
-
-    @abstractmethod
-    async def create_product(self, product_data: ProductCreateDTO) -> ProductDTO:
-        pass
-
-    @abstractmethod
-    async def get_product(self, product_id: str) -> Optional[ProductDTO]:
+    async def obtener_detalles_producto(self, id_producto: UUID) -> Optional[ProductoDetalleDTO]:
+        """
+        Obtiene los detalles de un producto específico por su ID.
+        Devuelve un DTO con los detalles del producto o None si no se encuentra.
+        """
         pass
 ```
 
+*Nota: Los DTOs (`DatosNuevoProductoDTO`, `ProductoCreadoDTO`, `ProductoDetalleDTO`) son parte integral del "contrato" del puerto y deben estar bien definidos. Se recomienda definirlos en un módulo accesible tanto por la capa de aplicación como por los adaptadores de entrada.*
+
+### B. Diseñando Interfaces para Puertos de Salida (Driven Ports / Output Ports)
+
+Los puertos de salida definen cómo la aplicación interactúa con herramientas y servicios externos que *ella necesita* para funcionar. La aplicación define la interfaz (el "qué necesita"), y la infraestructura proporciona la implementación concreta (el "cómo se obtiene/hace"). Ejemplos comunes incluyen repositorios de persistencia, servicios de mensajería, gateways de pago, APIs de terceros, etc.
+
+**Consideraciones al diseñar interfaces de puertos de salida:**
+
+1.  **Perspectiva de la Necesidad de la Aplicación (Application's Need):** La interfaz se define según lo que la aplicación *necesita* de la herramienta externa, no según todas las capacidades que la herramienta podría ofrecer. La aplicación "manda" y dicta el contrato.
+
+      * *Ejemplo:* Si la aplicación solo necesita guardar y buscar pedidos por ID, la interfaz `IRepositorioPedidos` solo tendrá esos métodos (`guardar(pedido: Pedido)` y `buscar_por_id(id_pedido: UUID) -> Optional[Pedido]`), incluso si la base de datos subyacente (implementada por el adaptador) puede realizar búsquedas por otros criterios o realizar operaciones más complejas.
+
+2.  **Abstracción de la Tecnología:** Los nombres de los puertos y sus métodos deben ser agnósticos a la tecnología específica que los implementará. El objetivo es abstraer los detalles de la infraestructura.
+
+      * *Incorrecto (acoplado a la tecnología):* `GuardarPedidoEnMongoDB()`, `ConsultarUsuarioEnTablaSQL()`.
+      * *Correcto (abstracto):* `guardar_pedido(pedido: Pedido)`, `buscar_usuario_por_email(email: str)`. El adaptador luego se encargará de la lógica específica de MongoDB o SQL.
+
+3.  **Uso de Objetos del Dominio:** Generalmente, los puertos de salida (especialmente los Repositorios en DDD) trabajan directamente con los objetos del dominio (Entidades, Agregados, Objetos de Valor). Esto mantiene el Lenguaje Ubicuo del dominio consistente a través de la capa de aplicación y facilita que la lógica de negocio opere con sus propios artefactos.
+
+      * *Ejemplo:* Un método `guardar_pedido(pedido: Pedido)` donde `Pedido` es una entidad del dominio, rica en comportamiento y reglas.
+
+4.  **Granularidad Adecuada (Principio de Segregación de Interfaces - ISP de SOLID):** Es preferible tener interfaces más pequeñas y específicas para las necesidades de un cliente (en este caso, un caso de uso de la aplicación) que una interfaz grande y genérica. Si un caso de uso solo necesita leer datos de productos, no debería depender de una interfaz que también incluye métodos para escribir o eliminar productos si no los usa.
+
+      * *Ejemplo:* Podrías tener `IProductoQueryRepository` (solo métodos de lectura) y `IProductoCommandRepository` (métodos de escritura), aunque a menudo se agrupan en una única interfaz de repositorio si la cohesión es alta y los casos de uso suelen necesitar ambas capacidades para una entidad dada.
+
+**Ejemplo de Interfaz de Puerto de Salida (Python):**
+
+Imaginemos un puerto de salida para persistir y recuperar entidades `Producto` (que sería una entidad del dominio).
+
+```python
+from abc import ABC, abstractmethod
+from typing import Optional, List # List es usado más abajo
+from uuid import UUID
+
+# Suponemos que existe una entidad de dominio llamada "Producto"
+# Esta entidad viviría en la capa de Dominio.
+# class Producto:
+#     id: UUID
+#     nombre: str
+#     descripcion: Optional[str]
+#     precio: float
+#     stock: int
+#     # ... más lógica de dominio, reglas de negocio y métodos
+#     def cambiar_precio(self, nuevo_precio: float) -> None:
+#         if nuevo_precio <= 0:
+#             raise ValueError("El precio debe ser positivo.")
+#         self.precio = nuevo_precio
+#     def ajustar_stock(self, cantidad: int) -> None:
+#         if self.stock + cantidad < 0:
+#             raise ValueError("El stock no puede ser negativo.")
+#         self.stock += cantidad
+
+# Para simular la entidad de dominio Producto en este contexto:
+class Producto:
+    def __init__(self, id_producto: UUID, nombre: str, precio: float, stock: int, descripcion: Optional[str] = None):
+        self.id: UUID = id_producto
+        self.nombre: str = nombre
+        self.descripcion: Optional[str] = descripcion
+        if precio <= 0:
+            raise ValueError("El precio debe ser positivo.")
+        self.precio: float = precio
+        if stock < 0:
+            raise ValueError("El stock no puede ser negativo.")
+        self.stock: int = stock
+
+    def __repr__(self):
+        return f"<Producto id={self.id} nombre='{self.nombre}' stock={self.stock}>"
+
+
+class IRepositorioProductos(ABC): # Output Port
+    """
+    Puerto de salida para la persistencia de la entidad Producto.
+    Esta interfaz será implementada por un adaptador en la capa de infraestructura
+    (ej. AdaptadorSQLAlchemyProductoRepository, AdaptadorEnMemoriaProductoRepository).
+    Define las operaciones de persistencia que la aplicación necesita para los productos.
+    """
+
+    @abstractmethod
+    async def guardar(self, producto: Producto) -> None:
+        """
+        Guarda un producto (ya sea uno nuevo o actualiza uno existente).
+        La lógica para determinar si es nuevo o existente puede residir en el adaptador
+        o ser una expectativa sobre el estado del objeto Producto.
+        """
+        pass
+
+    @abstractmethod
+    async def obtener_por_id(self, id_producto: UUID) -> Optional[Producto]:
+        """
+        Obtiene un producto por su ID.
+        Devuelve la entidad Producto si se encuentra, o None si no existe.
+        """
+        pass
+
+    @abstractmethod
+    async def obtener_todos(self, limite: int = 100, offset: int = 0) -> List[Producto]:
+        """
+        Obtiene una lista de todos los productos, con paginación opcional.
+        """
+        pass
+
+    @abstractmethod
+    async def eliminar(self, id_producto: UUID) -> bool:
+        """
+        Elimina un producto por su ID.
+        Devuelve True si el producto fue encontrado y eliminado, False en caso contrario.
+        """
+        pass
+
+# Otro ejemplo: Puerto de salida para enviar notificaciones
+class INotificador(ABC): # Output Port
+    """
+    Puerto de salida para enviar notificaciones a los usuarios u otros sistemas.
+    Abstrae el mecanismo de notificación (email, SMS, push notification, etc.).
+    """
+    @abstractmethod
+    async def enviar_notificacion(self, destinatario: str, mensaje: str, asunto: Optional[str] = None) -> None:
+        """
+        Envía una notificación al destinatario especificado.
+        'asunto' es opcional y puede ser relevante para notificaciones tipo email.
+        """
+        pass
+```
+### C. Ubicación de las Interfaces de los Puertos
+
+En una estructura de proyecto típica de Arquitectura Hexagonal, la ubicación de estas interfaces es importante para mantener la dirección correcta de las dependencias:
+
+  * **Interfaces de Puertos de Entrada:** Generalmente residen dentro de la **capa de Aplicación**. Definen los casos de uso y son, en efecto, el "API" del núcleo de la aplicación.
+  * **Interfaces de Puertos de Salida:** También residen dentro de la **capa de Aplicación** (o a veces en la **capa de Dominio** si son muy genéricas y estrechamente ligadas a las necesidades fundamentales del dominio, como suelen ser las interfaces de Repositorio en DDD). Lo crucial es que el núcleo (Dominio y/o Aplicación) define estas interfaces, y la capa de Infraestructura las implementa.
+
+Una estructura de directorios conceptual podría verse así:
+
+```
+mi_proyecto/
+├── aplicacion/  <-- Capa de Aplicación (Casos de Uso, DTOs, Interfaces de Puertos)
+│   ├── __init__.py
+│   ├── puertos/
+│   │   ├── __init__.py
+│   │   ├── entrada/
+│   │   │   ├── __init__.py
+│   │   │   └── igestion_inventario_input_port.py  # Contiene IGestionInventarioInputPort
+│   │   └── salida/
+│   │       ├── __init__.py
+│   │       └── irepositorio_productos.py          # Contiene IRepositorioProductos
+│   │       └── inotificador.py                    # Contiene INotificador
+│   ├── servicios/                                 # O casos_de_uso/
+│   │   ├── __init__.py
+│   │   └── servicio_gestion_inventario.py         # Implementa IGestionInventarioInputPort
+│   │                                              # y USA IRepositorioProductos, INotificador
+│   └── dtos.py                                    # Contiene DatosNuevoProductoDTO, etc.
+│
+├── dominio/     <-- Capa de Dominio (Entidades, Objetos de Valor, Servicios de Dominio)
+│   ├── __init__.py
+│   └── modelos/
+│       ├── __init__.py
+│       └── producto.py                            # Definición de la entidad Producto
+│
+├── infraestructura/ <-- Capa de Infraestructura (Adaptadores que implementan/usan puertos)
+│   ├── __init__.py
+│   ├── adaptadores_entrada/                       # O http_api/, cli_app/
+│   │   └── __init__.py
+│   │   └── api_fastapi/
+│   │       └── __init__.py
+│   │       └── routers_productos.py               # Adaptador que USA IGestionInventarioInputPort
+│   └── adaptadores_salida/                        # O persistencia/, mensajeria/
+│       ├── __init__.py
+│       ├── persistencia_sqlalchemy/
+│       │   ├── __init__.py
+│       │   └── repositorio_productos_impl.py      # Adaptador que IMPLEMENTA IRepositorioProductos
+│       └── notificacion_email/
+│           └── __init__.py
+│           └── servicio_email_impl.py             # Adaptador que IMPLEMENTA INotificador
+│
+└── main.py # Punto de entrada, configuración y orquestación de la inyección de dependencias
+```
+
+*(Nota: La estructura de directorios es solo un ejemplo y puede variar según las convenciones del equipo y el tamaño del proyecto.)*
+
+### D. Consideraciones Clave Adicionales al Diseñar Interfaces de Puertos:
+
+  * **Lenguaje Ubicuo (Ubiquitous Language):** Los nombres de las interfaces, sus métodos y los DTOs que utilizan deben reflejar el lenguaje del dominio de tu problema. Esto es un pilar de DDD y ayuda a la comunicación y comprensión.
+  * **Contratos, no Implementaciones:** Recuerda que las interfaces definen el *qué* (qué operaciones se pueden realizar y qué datos se intercambian), no el *cómo* (cómo se implementan esas operaciones). El *cómo* es responsabilidad de los adaptadores en la capa de infraestructura.
+  * **Evitar Fugas de Abstracción:** Ten cuidado de no incluir detalles específicos de la infraestructura (nombres de tablas SQL, endpoints de API externas concretas, formatos de datos de bibliotecas específicas) en las definiciones de los puertos. La interfaz debe ser una abstracción pura.
+  * **Simplicidad (YAGNI - You Ain't Gonna Need It):** Diseña interfaces que sean lo más simples posible para cumplir su propósito actual. No añadas métodos o complejidad previendo necesidades futuras que quizás nunca se materialicen. Es más fácil añadir a una interfaz que quitar.
+  * **Estabilidad de la Interfaz:** Una vez definida y en uso, cambiar una interfaz de puerto puede tener un impacto significativo, ya que todos sus adaptadores (implementaciones) y clientes (casos de uso o adaptadores de entrada) podrían necesitar cambios. Por ello, es importante pensarlas bien.
+
+
+> Diseñar interfaces efectivas para tus puertos es un arte que se refina con la práctica y la comprensión profunda del dominio. Son la base para un sistema modular, testeable, flexible y mantenible bajo la Arquitectura Hexagonal, permitiendo que tu lógica de negocio evolucione independientemente de las tecnologías externas.
 ---
 
 ## **6.4 Implementar adaptadores HTTP como controladores REST o WebSocket**
 
-Estos adaptadores reciben peticiones externas y las traducen a llamadas a los servicios de aplicación.
+Una vez que hemos definido las interfaces para nuestros puertos de entrada (Sección 6.3), necesitamos implementar los **Adaptadores de Entrada** (Driving Adapters) que permitirán al mundo exterior interactuar con el núcleo de nuestra aplicación. En aplicaciones web modernas, los adaptadores HTTP son omnipresentes, manifestándose comúnmente como controladores RESTful o, para comunicación bidireccional en tiempo real, como manejadores de WebSocket.
 
-**Ejemplo (Controlador REST con FastAPI):**
+Estos adaptadores actúan como la capa más externa que recibe las solicitudes de los clientes (navegadores, aplicaciones móviles, otros servicios) y las traduce en llamadas a los casos de uso (Servicios de Aplicación) definidos por nuestros puertos de entrada.
+
+### El Papel del Adaptador HTTP
+
+Un adaptador HTTP, en el contexto de la Arquitectura Hexagonal, tiene las siguientes responsabilidades principales:
+
+1.  **Recepción y Enrutamiento de Peticiones:** Escuchar en rutas (endpoints) específicas y para métodos HTTP concretos (GET, POST, PUT, DELETE, etc.). FastAPI maneja esto de forma muy eficiente con sus decoradores de ruta.
+2.  **Deserialización y Validación de la Entrada:** Convertir los datos crudos de la petición HTTP (ej. JSON del cuerpo, parámetros de consulta, variables de ruta) en los objetos de transferencia de datos (DTOs) o comandos que espera el puerto de entrada correspondiente. FastAPI, con su integración con Pydantic, automatiza gran parte de esta tarea, incluyendo la validación de tipos y restricciones.
+3.  **Invocación del Puerto de Entrada (Caso de Uso):** Una vez que la entrada es válida y está en el formato correcto (DTO), el adaptador llama al método apropiado del Servicio de Aplicación (que implementa el puerto de entrada). Esto se logra a menudo mediante inyección de dependencias.
+4.  **Serialización de la Salida:** Tomar el resultado devuelto por el Servicio de Aplicación (generalmente otro DTO o nada) y transformarlo en una respuesta HTTP adecuada (ej. un cuerpo JSON, un código de estado HTTP). FastAPI también facilita esto con los `response_model`.
+5.  **Manejo de Errores y Excepciones:** Capturar excepciones lanzadas por las capas de aplicación o dominio (ej. `ProductoNoEncontradoError`, `ValidacionReglaDeNegocioError`) y traducirlas en respuestas HTTP con códigos de estado apropiados (ej. 404 Not Found, 400 Bad Request, 409 Conflict, 500 Internal Server Error). FastAPI permite definir manejadores de excepciones personalizados.
+6.  **Gestión de la Sesión HTTP:** Aspectos como cabeceras, cookies, códigos de estado, etc.
+
+Es crucial que el adaptador HTTP se mantenga "delgado". Su función es la de un traductor y orquestador de la comunicación HTTP, **no debe contener lógica de negocio**. La lógica de negocio reside en la capa de aplicación y, fundamentalmente, en la capa de dominio.
+
+### Implementando un Controlador REST con FastAPI
+
+FastAPI es un framework excelente para implementar adaptadores HTTP en una Arquitectura Hexagonal debido a su uso de type hints, Pydantic para validación y serialización, y su sistema de inyección de dependencias.
+
+Continuemos con el ejemplo de `IGestionInventarioInputPort` y los DTOs que definimos en la sección 6.3 (`DatosNuevoProductoDTO`, `ProductoCreadoDTO`, `ProductoDetalleDTO`).
+
+**1. Estructura del Adaptador (Router de FastAPI):**
+
+Normalmente, organizarás tus endpoints en `APIRouter`s.
+
 
 ```python
-# app/interfaces/api/product_routes.py
+# En infraestructura/adaptadores_entrada/api_fastapi/routers_productos.py
+
 from fastapi import APIRouter, Depends, HTTPException, status
-from typing import List
+from uuid import UUID
+from typing import List # Si tuviéramos un endpoint para listar productos
 
-from app.application.ports.product_service import ProductServicePort
-from app.application.dtos.product_dto import ProductCreateDTO, ProductDTO
-from .dependencies import get_product_service # Asumimos un inyector de dependencias
+# Importaciones de la capa de aplicación (puertos y DTOs)
+# Estas rutas muestran cómo el adaptador DEPENDE de las abstracciones de la aplicación
+from aplicacion.puertos.entrada.igestion_inventario_input_port import IGestionInventarioInputPort
+from aplicacion.dtos import DatosNuevoProductoDTO, ProductoCreadoDTO # Suponiendo que ProductoDetalleDTO también está aquí
+# Para el ejemplo, si ProductoDetalleDTO fue definido anidado, se importaría de donde esté.
+# from aplicacion.puertos.entrada.igestion_inventario_input_port import ProductoDetalleDTO
 
-router = APIRouter(prefix="/products", tags=["Products"])
+# Importación para la inyección de dependencias (se verá en detalle en la sección 6.9)
+# Por ahora, asumimos una función que provee la instancia del servicio
+from mi_proyecto.main import obtener_servicio_gestion_inventario # Esto es un placeholder
 
-@router.post("/", response_model=ProductDTO, status_code=status.HTTP_201_CREATED)
-async def create_product_endpoint(
-    product_data: ProductCreateDTO,
-    product_service: ProductServicePort = Depends(get_product_service) # Inyecta el servicio de aplicación
+router = APIRouter(
+    prefix="/api/v1/productos",
+    tags=["Productos"]
+)
+
+# Placeholder para los DTOs si no están en aplicacion.dtos
+# from pydantic import BaseModel
+# class ProductoDetalleDTO(BaseModel):
+#     id_producto: UUID
+#     nombre: str
+#     # ... otros campos
+
+@router.post(
+    "/",
+    response_model=ProductoCreadoDTO,
+    status_code=status.HTTP_201_CREATED,
+    summary="Registrar un nuevo producto",
+    description="Crea un nuevo producto en el inventario con los datos proporcionados."
+)
+async def registrar_producto_endpoint(
+    datos_producto_api: DatosNuevoProductoDTO, # FastAPI usa esto para validar el cuerpo de la petición
+    servicio_inventario: IGestionInventarioInputPort = Depends(obtener_servicio_gestion_inventario) # Inyección de dependencia
 ):
-    return await product_service.create_product(product_data)
+    """
+    Endpoint para registrar un nuevo producto.
+    - Recibe: Datos del nuevo producto en el cuerpo de la petición.
+    - Llama: Al servicio de aplicación para registrar el producto.
+    - Devuelve: Los datos del producto creado.
+    """
+    try:
+        # El adaptador llama al puerto de entrada (Servicio de Aplicación)
+        producto_creado_dto = await servicio_inventario.registrar_nuevo_producto(
+            datos_producto=datos_producto_api # El DTO ya validado por FastAPI
+        )
+        return producto_creado_dto
+    except ValueError as ve: # Ejemplo de excepción de validación de negocio
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(ve)
+        )
+    except Exception as e: # Captura genérica para otros errores inesperados
+        # En un sistema real, querrías logging más específico y quizás tipos de error personalizados
+        # provenientes de la capa de aplicación/dominio con mapeos a códigos HTTP.
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Ocurrió un error inesperado: {str(e)}"
+        )
 
-@router.get("/{product_id}", response_model=ProductDTO)
-async def get_product_endpoint(
-    product_id: str,
-    product_service: ProductServicePort = Depends(get_product_service)
+@router.get(
+    "/{producto_id}",
+    response_model=ProductoDetalleDTO, # Asumiendo que ProductoDetalleDTO está definido e importado
+    summary="Obtener detalles de un producto",
+    description="Recupera los detalles de un producto específico por su ID."
+)
+async def obtener_producto_endpoint(
+    producto_id: UUID, # FastAPI extrae y valida el path parameter
+    servicio_inventario: IGestionInventarioInputPort = Depends(obtener_servicio_gestion_inventario)
 ):
-    product = await product_service.get_product(product_id)
-    if not product:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
-    return product
+    """
+    Endpoint para obtener los detalles de un producto.
+    - Recibe: ID del producto como path parameter.
+    - Llama: Al servicio de aplicación para obtener el producto.
+    - Devuelve: Los detalles del producto o un error 404 si no se encuentra.
+    """
+    try:
+        producto_dto = await servicio_inventario.obtener_detalles_producto(id_producto=producto_id)
+        if producto_dto is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Producto con ID '{producto_id}' no encontrado."
+            )
+        return producto_dto
+    except HTTPException: # Re-lanzar HTTPExceptions para que FastAPI las maneje
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Ocurrió un error inesperado al obtener el producto: {str(e)}"
+        )
 
-# ... otros endpoints
+# Aquí podrían ir otros endpoints: PUT para actualizar, DELETE para eliminar, GET para listar, etc.
+# Cada uno seguiría un patrón similar:
+# 1. Definir la ruta y el método HTTP.
+# 2. Especificar los DTOs de entrada (FastAPI los usa para el cuerpo, parámetros, etc.) y salida (response_model).
+# 3. Inyectar y usar el puerto de entrada (Servicio de Aplicación).
+# 4. Manejar los resultados y las excepciones, traduciéndolos a respuestas HTTP.
 ```
 
+**2. Inyección de Dependencias (Adelanto de la Sección 6.9):**
+
+La línea `servicio_inventario: IGestionInventarioInputPort = Depends(obtener_servicio_gestion_inventario)` es clave. `Depends` es el mecanismo de FastAPI para la inyección de dependencias. La función `obtener_servicio_gestion_inventario` sería responsable de construir (o recuperar de un contenedor) la instancia concreta del servicio de aplicación que implementa `IGestionInventarioInputPort`. Esta instancia, a su vez, tendrá sus propias dependencias (como los repositorios) inyectadas.
+
+**3. Manejo de Errores Específicos:**
+
+En lugar de `ValueError` genérico, la capa de aplicación podría lanzar excepciones más específicas como `ReglaDeNegocioVioladaError` o `ProductoConNombreDuplicadoError`. El adaptador HTTP podría tener manejadores de excepciones globales de FastAPI para mapear estas excepciones personalizadas a respuestas HTTP específicas.
+
+```python
+# En main.py o un módulo de configuración de la app FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
+
+class ProductoNoEncontradoErrorAplicacion(Exception):
+    def __init__(self, producto_id: UUID):
+        self.producto_id = producto_id
+        super().__init__(f"Producto con ID {producto_id} no encontrado.")
+
+def configurar_manejadores_excepcion(app: FastAPI):
+    @app.exception_handler(ProductoNoEncontradoErrorAplicacion)
+    async def handle_producto_no_encontrado_error(request: Request, exc: ProductoNoEncontradoErrorAplicacion):
+        return JSONResponse(
+            status_code=status.HTTP_404_NOT_FOUND,
+            content={"message": str(exc)}
+        )
+    # ... otros manejadores
+```
+### Adaptadores WebSocket con FastAPI
+
+Si tu aplicación requiere comunicación bidireccional persistente (ej. notificaciones en tiempo real, chats, juegos), puedes implementar adaptadores WebSocket. Los principios son similares:
+
+1.  **Establecimiento de la Conexión:** FastAPI maneja la negociación del handshake WebSocket.
+2.  **Recepción de Mensajes:** El adaptador recibe mensajes del cliente a través de la conexión WebSocket.
+3.  **Traducción e Invocación:** El mensaje se traduce a un comando o consulta para un puerto de entrada. Se invoca el servicio de aplicación.
+4.  **Envío de Respuestas/Broadcasts:** El resultado del servicio de aplicación (o eventos generados) se envía de vuelta al cliente o a múltiples clientes a través de sus conexiones WebSocket.
+
+<!-- end list -->
+
+```python
+# Ejemplo conceptual de un endpoint WebSocket en FastAPI
+# from fastapi import WebSocket, WebSocketDisconnect
+
+@router.websocket("/ws/inventario_updates/{client_id}")
+async def websocket_endpoint_inventario(
+    websocket: WebSocket,
+    client_id: str,
+    servicio_notificaciones_inventario: IServicioNotificacionesInventario = Depends(...) # Puerto de entrada para manejar lógica de WS
+):
+    await websocket.accept()
+    await servicio_notificaciones_inventario.conectar_cliente(client_id, websocket) # Registrar el cliente
+    try:
+        while True:
+            data = await websocket.receive_text() # O receive_json()
+            # Aquí, 'data' podría ser un comando como "SUSCRIBIR_PRODUCTO_X"
+            # O un mensaje que el servicio de aplicación debe procesar.
+            await servicio_notificaciones_inventario.procesar_mensaje_cliente(client_id, data)
+    except WebSocketDisconnect:
+        await servicio_notificaciones_inventario.desconectar_cliente(client_id)
+    except Exception as e:
+        # Manejar otros errores, quizás enviar un mensaje de error por WS antes de cerrar.
+        await websocket.close(code=status.WS_1011_INTERNAL_ERROR)
+
+# El IServicioNotificacionesInventario sería un puerto de entrada específico para la lógica de WebSocket,
+# que a su vez podría usar otros servicios de aplicación o puertos de salida para obtener datos o enviar notificaciones.
+```
+### Consideraciones Clave para Adaptadores HTTP:
+
+  * **Mantenerlos "Delgados" (Thin Adapters):** Reitero, la lógica de negocio no va aquí. Su responsabilidad es la adaptación del protocolo HTTP a las llamadas de los casos de uso.
+  * **Contrato API Explícito:** FastAPI genera automáticamente una especificación OpenAPI (Swagger UI / ReDoc), lo cual es una gran ventaja. Asegúrate de que tus DTOs (modelos Pydantic) y `response_model` reflejen fielmente el contrato deseado.
+  * **Seguridad (Autenticación y Autorización):** FastAPI ofrece mecanismos robustos (`Security` con `Depends`) para integrar la autenticación (quién eres) y la autorización (qué tienes permitido hacer). Estas verificaciones suelen realizarse en el adaptador o en middleware antes de invocar el servicio de aplicación. La identidad del usuario verificado puede pasarse al servicio de aplicación si es necesaria para la lógica de negocio.
+  * **Versión de API:** Si necesitas versionar tu API (ej. `/api/v1/productos`, `/api/v2/productos`), los `APIRouter` de FastAPI facilitan esta organización.
+  * **No Acoplarse a Detalles del Dominio:** El adaptador conoce los DTOs definidos por la capa de aplicación, pero no debería necesitar conocer los detalles internos de las entidades del dominio. La transformación (si es necesaria) entre entidades del dominio y DTOs de respuesta ocurre en la capa de aplicación o en el límite entre esta y el adaptador.
+
+> Implementar adaptadores HTTP correctamente es fundamental para exponer las capacidades del núcleo de tu aplicación de una manera estándar, segura y fácil de usar para los clientes. FastAPI proporciona herramientas poderosas para construir estos adaptadores de forma eficiente y alineada con los principios de la Arquitectura Hexagonal.
 ---
 
 ## **6.5 Separar repositorios del dominio usando interfaces**
 
-Ya definimos `ProductRepositoryPort` en el dominio. Ahora, una implementación concreta en la capa de infraestructura.
+Un aspecto fundamental de la Arquitectura Hexagonal, especialmente cuando se combina con Domain-Driven Design (DDD), es la gestión de la persistencia de datos. El patrón **Repository** de DDD nos ofrece una abstracción crucial para esto: una interfaz similar a una colección para acceder a los objetos de nuestro dominio (Entidades y Raíces de Agregados). En la Arquitectura Hexagonal, estas interfaces de repositorio actúan como **Puertos de Salida** (Driven Ports).
 
-**Ejemplo (Implementación con SQLAlchemy para MariaDB):**
+El objetivo principal de separar los repositorios del dominio mediante interfaces es **aislar la lógica de negocio y de aplicación de las preocupaciones y tecnologías específicas de la persistencia de datos**. El dominio y la capa de aplicación no deben "saber" si los datos se guardan en una base de datos PostgreSQL, MongoDB, un archivo local o en memoria. Solo deben conocer el contrato (la interfaz del repositorio) que necesitan para obtener y guardar sus objetos.
+
+### El Papel Clave de las Interfaces de Repositorio
+
+Las interfaces de repositorio son el pilar de esta separación:
+
+1.  **Definen el Contrato de Persistencia:** La interfaz especifica *qué* operaciones de persistencia necesita la aplicación o el dominio. Estas operaciones se expresan en términos del modelo de dominio.
+
+      * *Ejemplos de métodos:* `obtener_por_id(id: UUID) -> Optional[Producto]`, `guardar(producto: Producto) -> None`, `buscar_por_nombre(nombre: str) -> List[Producto]`.
+
+2.  **Pertenecen a la Capa de Aplicación/Dominio:** Este es un punto crucial para lograr la Inversión de Dependencias (la 'D' en SOLID). Las interfaces de los repositorios son definidas por las capas internas (aplicación o incluso dominio si son muy genéricas y fundamentales para la entidad). La capa de infraestructura (donde residen las implementaciones concretas de los repositorios) *depende* de estas interfaces, no al revés.
+
+      * *Ubicación típica:* `aplicacion/puertos/salida/` o `dominio/puertos/` (si la interfaz es considerada parte intrínseca de las necesidades del dominio para gestionar sus agregados).
+
+3.  **Son Agnósticas a la Tecnología:** Las firmas de los métodos en la interfaz utilizan objetos del dominio (Entidades, Raíces de Agregados, Objetos de Valor) y tipos de datos primitivos o DTOs genéricos si es necesario, pero nunca exponen detalles de la tecnología de base de datos subyacente (como objetos de conexión SQL, cursores, o tipos específicos de un ORM en la propia firma de la interfaz).
+
+4.  **Enfocadas en Raíces de Agregados (DDD):** Según los principios de DDD, los repositorios se diseñan típicamente para gestionar Raíces de Agregados. Esto significa que obtienes y guardas el agregado completo a través de su raíz, asegurando la consistencia interna del agregado.
+
+### Beneficios de esta Separación
+
+Utilizar interfaces para desacoplar los repositorios del dominio y la aplicación ofrece ventajas significativas:
+
+  * **Testeabilidad Mejorada:**
+
+      * Los Servicios de Aplicación (casos de uso) pueden ser probados unitaria o funcionalmente de forma aislada, inyectando implementaciones "falsas" o "en memoria" (mocks/stubs) de las interfaces de repositorio. Esto elimina la necesidad de una base de datos real para muchas pruebas, haciéndolas más rápidas y fiables.
+      * La lógica de las entidades del dominio puede ser probada sin ninguna consideración de cómo se persisten.
+
+  * **Flexibilidad y Mantenibilidad Tecnológica:**
+
+      * Puedes cambiar la tecnología de base de datos subyacente (ej. de SQLite a PostgreSQL, o de un ORM a otro) sin modificar el código del dominio o de la capa de aplicación. Solo necesitas escribir una nueva clase de adaptador que implemente la interfaz del repositorio existente.
+      * Facilita la evolución de la capa de persistencia (ej. optimizar consultas, cambiar esquemas) con un impacto mínimo en el resto del sistema.
+
+  * **Clara Separación de Responsabilidades:**
+
+      * Se establece un límite explícito y fuerte entre la lógica de negocio/aplicación y la lógica de acceso a datos. Esto hace que el sistema sea más fácil de entender, razonar y mantener.
+
+  * **Desarrollo Paralelo:**
+
+      * Una vez que las interfaces de repositorio están definidas, los equipos pueden trabajar en paralelo: un equipo en la lógica de negocio y de aplicación, y otro en la implementación de la persistencia.
+
+### Diseñando Interfaces de Repositorio Efectivas
+
+Al diseñar estas interfaces, considera lo siguiente:
+
+1.  **Nomenclatura:** Utiliza nombres claros y descriptivos que reflejen la entidad o agregado que gestionan. Es común usar el prefijo `I` (para Interfaz) o el sufijo `Repository`.
+
+      * *Ejemplo:* `IProductoRepository`, `IPedidoRepository`, `ClienteRepository` (si la convención es no usar prefijos/sufijos explícitos para interfaces en Python y confiar en la type hinting).
+
+2.  **Métodos Significativos:**
+
+      * Incluye métodos para las operaciones CRUD básicas si son necesarias (`guardar`, `obtener_por_id`, `eliminar`). Nota: `guardar` a menudo maneja tanto la creación como la actualización.
+      * Añade métodos de consulta (finders) que reflejen las necesidades específicas de los casos de uso de tu aplicación. Estos métodos deben devolver entidades del dominio o colecciones de ellas.
+          * *Ejemplo:* `buscar_pedidos_por_cliente_y_estado(cliente_id: UUID, estado: EstadoPedido) -> List[Pedido]`.
+      * Las firmas de los métodos deben usar objetos y tipos del dominio.
+          * *Correcto:* `async def guardar(self, producto: Producto) -> None:`
+          * *Evitar:* `async def guardar(self, datos_producto: dict) -> None:` (Esto introduce acoplamiento a una estructura de datos genérica en lugar del tipo de dominio).
+
+3.  **Abstracción de la Unidad de Trabajo (Unit of Work):**
+
+      * En algunos casos, especialmente con ORMs como SQLAlchemy, el concepto de "unidad de trabajo" (manejo de sesiones y transacciones) es importante. La interfaz del repositorio generalmente no expone directamente la sesión del ORM. La gestión de la transacción suele ser responsabilidad del Servicio de Aplicación (o un decorador/middleware que envuelve al caso de uso) que coordina uno o más repositorios. El repositorio opera dentro de la transacción que le proporciona el contexto de la aplicación.
+
+**Ejemplo de Interfaz de Repositorio en Python:**
+
+Revisitemos y afinemos la interfaz `IRepositorioProductos` que vimos anteriormente, asumiendo que tenemos una entidad `Producto` en nuestro dominio.
+
 
 ```python
-# app/infrastructure/repositories/mariadb_product_repository.py
+# En dominio/modelos/producto.py (o similar)
+from uuid import UUID, uuid4
+from typing import Optional
+
+class Producto: # Entidad del Dominio
+    def __init__(self, nombre: str, precio: float, stock: int, descripcion: Optional[str] = None, id_producto: Optional[UUID] = None):
+        self.id: UUID = id_producto or uuid4()
+        self.nombre: str = nombre # Podría tener validaciones
+        self.descripcion: Optional[str] = descripcion
+        
+        if precio <= 0:
+            raise ValueError("El precio debe ser positivo.")
+        self.precio: float = precio
+        
+        if stock < 0:
+            raise ValueError("El stock no puede ser negativo.")
+        self.stock: int = stock
+
+    def cambiar_precio(self, nuevo_precio: float) -> None:
+        if nuevo_precio <= 0:
+            raise ValueError("El precio debe ser positivo.")
+        self.precio = nuevo_precio
+
+    def ajustar_stock(self, cantidad: int) -> None:
+        nuevo_stock = self.stock + cantidad
+        if nuevo_stock < 0:
+            # Dependiendo de las reglas de negocio, esto podría lanzar un error o ser manejado de otra forma.
+            raise ValueError("El ajuste de stock no puede resultar en stock negativo.")
+        self.stock = nuevo_stock
+    
+    def __eq__(self, other):
+        if not isinstance(other, Producto):
+            return NotImplemented
+        return self.id == other.id
+
+    def __hash__(self):
+        return hash(self.id)
+
+# ---------------------------------------------------------------------------
+# En aplicacion/puertos/salida/irepositorio_productos.py (o dominio/puertos/)
+from abc import ABC, abstractmethod
 from typing import List, Optional
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
-from sqlalchemy.orm import selectinload # Si hay relaciones
+from uuid import UUID
+from dominio.modelos.producto import Producto # Importa la entidad del dominio
 
-from app.domain.entities.product import Product as DomainProduct
-from app.domain.ports.product_repository import ProductRepositoryPort
-from ..db_models.product_model import Product as DBProduct # Modelo SQLAlchemy
+class IRepositorioProductos(ABC): # Puerto de Salida
+    """
+    Interfaz que define las operaciones de persistencia necesarias para la entidad Producto.
+    Esta interfaz es implementada por adaptadores en la capa de infraestructura.
+    """
 
-class MariaDBProductRepository(ProductRepositoryPort):
-    def __init__(self, session: AsyncSession):
-        self.session = session
+    @abstractmethod
+    async def guardar(self, producto: Producto) -> None:
+        """
+        Persiste un objeto Producto. Si el producto ya tiene un ID,
+        se asume una actualización; si no, o si el ID no existe en la persistencia,
+        se asume una creación. La lógica exacta puede depender de la implementación.
+        """
+        pass
 
-    async def _map_to_domain(self, db_product: DBProduct) -> DomainProduct:
-        # Mapeo de modelo de DB a entidad de dominio
-        return DomainProduct(
-            id=str(db_product.id), # Asumimos que el id en DB es int y en dominio str/UUID
-            name=db_product.name,
-            description=db_product.description,
-            price=db_product.price
-        )
+    @abstractmethod
+    async def obtener_por_id(self, id_producto: UUID) -> Optional[Producto]:
+        """
+        Recupera un Producto por su identificador único.
+        Devuelve el Producto si se encuentra, o None en caso contrario.
+        """
+        pass
 
-    async def _map_to_db_model(self, domain_product: DomainProduct) -> DBProduct:
-        # Mapeo de entidad de dominio a modelo de DB (para creación/actualización)
-        data = {
-            "name": domain_product.name,
-            "description": domain_product.description,
-            "price": domain_product.price
-        }
-        if domain_product.id and domain_product.id != "new": # Asumiendo un placeholder para nuevos
-             # Para SQLAlchemy, si el ID es autoincremental, no lo pasamos al crear
-             # Si es un UUID generado en el dominio, sí lo pasamos
-             # Esto depende de cómo se manejen los IDs
-            try:
-                data["id"] = int(domain_product.id) # Si el ID de la DB es int
-            except ValueError: # Si el ID es un UUID o string generado
-                pass # No lo mapeamos directamente si la DB lo genera
-        return DBProduct(**data)
+    @abstractmethod
+    async def obtener_todos(self, limite: int = 100, offset: int = 0) -> List[Producto]:
+        """
+        Recupera una lista de todos los Productos, con paginación opcional.
+        """
+        pass
 
+    @abstractmethod
+    async def eliminar(self, id_producto: UUID) -> bool:
+        """
+        Elimina un Producto de la persistencia por su ID.
+        Devuelve True si el producto fue encontrado y eliminado, False en caso contrario.
+        """
+        pass
 
-    async def get_by_id(self, product_id: str) -> Optional[DomainProduct]:
-        # Asumiendo que el ID en la DB es un entero para este ejemplo
-        try:
-            db_id = int(product_id)
-        except ValueError:
-            return None # o manejar error de ID inválido
-
-        result = await self.session.execute(select(DBProduct).filter(DBProduct.id == db_id))
-        db_product = result.scalars().first()
-        return await self._map_to_domain(db_product) if db_product else None
-
-    async def get_all(self) -> List[DomainProduct]:
-        result = await self.session.execute(select(DBProduct))
-        db_products = result.scalars().all()
-        return [await self._map_to_domain(p) for p in db_products]
-
-    async def save(self, product: DomainProduct) -> DomainProduct:
-        if product.id and product.id != "new": # Actualización
-            try:
-                db_id = int(product.id)
-                db_product_to_update = await self.session.get(DBProduct, db_id)
-                if db_product_to_update:
-                    db_product_to_update.name = product.name
-                    db_product_to_update.description = product.description
-                    db_product_to_update.price = product.price
-                    self.session.add(db_product_to_update)
-                    await self.session.commit()
-                    await self.session.refresh(db_product_to_update)
-                    return await self._map_to_domain(db_product_to_update)
-                else: # No encontrado para actualizar, podría ser un error o crear uno nuevo
-                    raise ValueError(f"Product with id {product.id} not found for update.")
-            except ValueError: # ID no es un entero válido para la DB
-                 raise ValueError(f"Invalid product ID format for database: {product.id}")
-
-        else: # Creación
-            db_product = await self._map_to_db_model(product)
-            self.session.add(db_product)
-            await self.session.commit()
-            await self.session.refresh(db_product) # Para obtener el ID generado por la DB
-            # Actualizar el id del objeto de dominio con el id generado
-            product.id = str(db_product.id)
-            return product # Devolver el objeto de dominio actualizado o el mapeado
-
-
-    async def delete(self, product_id: str) -> bool:
-        try:
-            db_id = int(product_id)
-        except ValueError:
-            return False
-
-        db_product = await self.session.get(DBProduct, db_id)
-        if db_product:
-            await self.session.delete(db_product)
-            await self.session.commit()
-            return True
-        return False
-
+    @abstractmethod
+    async def buscar_por_nombre(self, nombre_parcial: str) -> List[Producto]:
+        """
+        Busca productos cuyo nombre contenga la cadena 'nombre_parcial'.
+        Este es un ejemplo de un método de búsqueda más específico.
+        """
+        pass
 ```
-**Nota:** El mapeo entre entidades de dominio y modelos de base de datos es crucial. A veces, se usan herramientas de automapeo, pero para control fino, el mapeo manual es común. Los IDs pueden ser un punto de atención (UUIDs generados en el dominio vs. autoincrementales en la DB).
 
+### Relación con la Capa de Dominio
+
+Es vital que las entidades y objetos de valor de la capa de dominio permanezcan puros y no tengan dependencias directas de las interfaces de repositorio para su lógica interna. Las entidades gestionan su estado y aplican sus reglas de negocio. Son los **Servicios de Aplicación** (casos de uso) los que utilizan las interfaces de repositorio para obtener estas entidades, invocar sus métodos de negocio y luego usar nuevamente los repositorios para persistir los cambios de estado.
+
+En escenarios muy específicos, un **Servicio de Dominio** podría necesitar usar una interfaz de repositorio (por ejemplo, para verificar una invariante que cruza agregados, como la unicidad de un nombre de usuario antes de crear uno nuevo). Sin embargo, esto debe manejarse con cuidado para no diluir la cohesión de los agregados o introducir demasiadas dependencias en el dominio.
+
+### La Implementación del Adaptador (Siguiente Paso)
+
+Esta sección se ha centrado en *definir la interfaz* del repositorio para lograr la separación. La implementación concreta de esta interfaz (por ejemplo, `SQLAlchemyProductoRepository` o `MongoDBProductoRepository`) es un **adaptador** que reside en la capa de infraestructura. Este adaptador contendrá el código específico para interactuar con la base de datos elegida, traduciendo las llamadas a los métodos de la interfaz en operaciones de base de datos.
+
+> Al separar el *qué* (la interfaz del repositorio definida por las necesidades de la aplicación/dominio) del *cómo* (la implementación del adaptador en la infraestructura), ganamos una enorme flexibilidad y mantenemos nuestro núcleo de negocio limpio y desacoplado de las preocupaciones tecnológicas de la persistencia.
 ---
 
 ## **6.6 Diseñar pruebas para el núcleo sin depender de infraestructuras**
 
-Gracias al desacoplamiento, podemos probar el dominio y los servicios de aplicación usando mocks o fakes para los repositorios.
+Una de las ventajas más significativas de la Arquitectura Hexagonal es su inherente **testeabilidad**. Al desacoplar el núcleo de la aplicación (la lógica de dominio y de aplicación) de las preocupaciones de la infraestructura (bases de datos, APIs externas, frameworks web), podemos diseñar pruebas robustas, rápidas y fiables para este núcleo sin necesidad de levantar entornos complejos o depender de componentes externos.
 
-**Ejemplo (Prueba de un servicio de aplicación usando `pytest` y `unittest.mock`):**
+El "núcleo" en este contexto se refiere a:
+
+  * **Capa de Dominio:** Entidades, Objetos de Valor, Raíces de Agregados, Servicios de Dominio y Eventos de Dominio. Aquí reside la lógica de negocio pura.
+  * **Capa de Aplicación:** Servicios de Aplicación (o Casos de Uso) que orquestan la lógica de dominio para cumplir con las solicitudes de los usuarios o sistemas externos. Estos servicios implementan los puertos de entrada y utilizan los puertos de salida.
+
+Probar "sin depender de infraestructuras" significa que nuestras pruebas para estas capas no requerirán una base de datos activa, no harán llamadas HTTP reales a servicios externos, no interactuarán con un bus de mensajes, ni necesitarán un servidor web en ejecución.
+
+### 1\. Probando la Capa de Dominio
+
+La capa de dominio, al ser (idealmente) Python puro sin referencias a frameworks o tecnologías externas, es la más sencilla de probar unitariamente.
+
+  * **Enfoque:** Verificar la lógica de negocio intrínseca, las transiciones de estado de las entidades, las reglas de validación dentro de las entidades y los Objetos de Valor, y el comportamiento de los Servicios de Dominio.
+  * **Características de las Pruebas de Dominio:**
+      * Son **pruebas unitarias** en su forma más pura.
+      * Generalmente no requieren *mocks* o *stubs* para dependencias externas, ya que el dominio no debería tenerlas (salvo, quizás, abstracciones muy simples como un proveedor de fecha/hora actual, que también se puede falsear fácilmente).
+      * Son extremadamente rápidas de ejecutar.
+      * Proporcionan una alta confianza en la corrección de las reglas de negocio.
+
+**Ejemplo (usando `pytest` y la entidad `Producto` de secciones anteriores):**
 
 ```python
-# tests/application/test_product_service.py
+# En tests/dominio/test_producto.py
+
 import pytest
-from unittest.mock import AsyncMock # Para mocks de funciones async
+from uuid import uuid4, UUID
+from dominio.modelos.producto import Producto # Asumiendo la entidad Producto definida previamente
 
-from app.domain.entities.product import Product
-from app.domain.ports.product_repository import ProductRepositoryPort
-from app.application.services.product_app_service import ProductApplicationService # Implementación del servicio
-from app.application.dtos.product_dto import ProductCreateDTO, ProductDTO
+class TestProducto:
 
-@pytest.fixture
-def mock_product_repository() -> AsyncMock:
-    return AsyncMock(spec=ProductRepositoryPort)
+    def test_crear_producto_exitosamente(self):
+        id_producto = uuid4()
+        producto = Producto(
+            id_producto=id_producto,
+            nombre="Laptop Gamer",
+            descripcion="Laptop con tarjeta gráfica dedicada",
+            precio=1200.50,
+            stock=10
+        )
+        assert producto.id == id_producto
+        assert producto.nombre == "Laptop Gamer"
+        assert producto.precio == 1200.50
+        assert producto.stock == 10
 
-@pytest.fixture
-def product_service(mock_product_repository: AsyncMock) -> ProductApplicationService:
-    return ProductApplicationService(product_repository=mock_product_repository)
+    def test_crear_producto_precio_invalido_lanza_excepcion(self):
+        with pytest.raises(ValueError, match="El precio debe ser positivo."):
+            Producto(nombre="Teclado", precio=0, stock=5)
 
-@pytest.mark.asyncio
-async def test_create_product(product_service: ProductApplicationService, mock_product_repository: AsyncMock):
-    product_data = ProductCreateDTO(name="Test Product", description="A testable product", price=99.99)
-    
-    # Mock del método save del repositorio
-    # Asumimos que save devuelve la entidad Product con un ID asignado
-    mock_saved_product = Product(id="prod_123", name=product_data.name, description=product_data.description, price=product_data.price)
-    mock_product_repository.save.return_value = mock_saved_product
+    def test_crear_producto_stock_invalido_lanza_excepcion(self):
+        with pytest.raises(ValueError, match="El stock no puede ser negativo."):
+            Producto(nombre="Mouse", precio=25.00, stock=-1)
 
-    created_product_dto = await product_service.create_product(product_data)
+    def test_cambiar_precio_exitosamente(self):
+        producto = Producto(nombre="Monitor", precio=300.00, stock=5)
+        producto.cambiar_precio(275.00)
+        assert producto.precio == 275.00
 
-    # Verificar que el repositorio fue llamado correctamente
-    # La aserción exacta aquí dependerá de cómo `ProductApplicationService` crea la entidad `Product`
-    # Por simplicidad, asumimos que llama a save con un objeto Product que tiene los mismos atributos
-    # que product_data, excepto el id que es asignado por el repositorio.
-    # mock_product_repository.save.assert_called_once()
-    # args, _ = mock_product_repository.save.call_args
-    # called_with_product = args[0]
-    # assert called_with_product.name == product_data.name
-    # assert called_with_product.price == product_data.price
-    
-    # Versión simplificada de la aserción:
-    assert mock_product_repository.save.call_count == 1
-    saved_arg = mock_product_repository.save.call_args[0][0]
-    assert isinstance(saved_arg, Product)
-    assert saved_arg.name == product_data.name
-    assert saved_arg.price == product_data.price
+    def test_cambiar_precio_invalido_lanza_excepcion(self):
+        producto = Producto(nombre="Monitor", precio=300.00, stock=5)
+        with pytest.raises(ValueError, match="El precio debe ser positivo."):
+            producto.cambiar_precio(-50.00)
 
+    def test_ajustar_stock_exitosamente(self):
+        producto = Producto(nombre="SSD 1TB", precio=100.00, stock=20)
+        
+        producto.ajustar_stock(5) # Añadir stock
+        assert producto.stock == 25
+        
+        producto.ajustar_stock(-10) # Quitar stock
+        assert producto.stock == 15
 
-    # Verificar el DTO devuelto
-    assert isinstance(created_product_dto, ProductDTO)
-    assert created_product_dto.id == "prod_123"
-    assert created_product_dto.name == "Test Product"
+    def test_ajustar_stock_resulta_en_negativo_lanza_excepcion(self):
+        producto = Producto(nombre="RAM 16GB", precio=80.00, stock=5)
+        with pytest.raises(ValueError, match="El ajuste de stock no puede resultar en stock negativo."):
+            producto.ajustar_stock(-10)
 
-@pytest.mark.asyncio
-async def test_get_product_found(product_service: ProductApplicationService, mock_product_repository: AsyncMock):
-    product_id = "prod_123"
-    mock_domain_product = Product(id=product_id, name="Existing Product", description="Desc", price=50.0)
-    mock_product_repository.get_by_id.return_value = mock_domain_product
+    def test_productos_con_mismo_id_son_iguales(self):
+        id_comun = uuid4()
+        p1 = Producto(id_producto=id_comun, nombre="Prod A", precio=10, stock=1)
+        p2 = Producto(id_producto=id_comun, nombre="Prod B", precio=20, stock=2) # Mismo ID, diferente data
+        assert p1 == p2 # Basado en la implementación de __eq__ por ID
+        assert hash(p1) == hash(p2)
 
-    product_dto = await product_service.get_product(product_id)
-
-    mock_product_repository.get_by_id.assert_called_once_with(product_id)
-    assert product_dto is not None
-    assert product_dto.id == product_id
-    assert product_dto.name == "Existing Product"
-
-@pytest.mark.asyncio
-async def test_get_product_not_found(product_service: ProductApplicationService, mock_product_repository: AsyncMock):
-    product_id = "non_existent_id"
-    mock_product_repository.get_by_id.return_value = None
-
-    product_dto = await product_service.get_product(product_id)
-
-    mock_product_repository.get_by_id.assert_called_once_with(product_id)
-    assert product_dto is None
+    def test_productos_con_diferente_id_no_son_iguales(self):
+        p1 = Producto(id_producto=uuid4(), nombre="Prod", precio=10, stock=1)
+        p2 = Producto(id_producto=uuid4(), nombre="Prod", precio=10, stock=1)
+        assert p1 != p2
 ```
+
+### 2\. Probando la Capa de Aplicación (Servicios de Aplicación / Casos de Uso)
+
+Los Servicios de Aplicación orquestan la lógica de dominio y coordinan la interacción con los puertos de salida (repositorios, notificadores, etc.). Probarlos sin infraestructura implica reemplazar las implementaciones reales de estos puertos de salida con **dobles de prueba** (test doubles).
+
+  * **Enfoque:** Verificar que el servicio de aplicación maneja correctamente los datos de entrada (DTOs/Comandos), interactúa apropiadamente con los puertos de salida (llamando a los métodos correctos con los argumentos correctos) y produce el resultado esperado (DTOs de salida o excepciones).
+  * **Técnica Clave: Mocking/Stubbing de Puertos de Salida:**
+      * Se utilizan bibliotecas como `unittest.mock` de Python (o `pytest-mock`) para crear versiones simuladas (mocks o stubs) de las interfaces de los puertos de salida.
+      * Estos mocks permiten controlar el comportamiento de las dependencias externas (ej. simular que un repositorio devuelve un producto específico o `None`) y verificar que el servicio de aplicación interactúa con ellas como se espera.
+
+**Ejemplo (probando un `ServicioGestionInventario` que usa `IRepositorioProductos` e `INotificador`):**
+
+Primero, definamos conceptualmente un servicio de aplicación y los DTOs/interfaces que usa (algunos ya los hemos visto):
+
+```python
+# --- En aplicacion/dtos.py ---
+from pydantic import BaseModel, Field
+from uuid import UUID
+
+class DatosNuevoProductoDTO(BaseModel):
+    nombre: str = Field(..., min_length=3)
+    descripcion: str | None = None
+    precio: float = Field(..., gt=0)
+    stock_inicial: int = Field(..., ge=0)
+
+class ProductoCreadoDTO(BaseModel):
+    id_producto: UUID
+    nombre: str
+    mensaje_bienvenida: str | None = None
+
+
+# --- En aplicacion/puertos/entrada/igestion_inventario_input_port.py ---
+# (Ya definida en 6.3, la incluimos para contexto)
+# from abc import ABC, abstractmethod
+# class IGestionInventarioInputPort(ABC):
+#     @abstractmethod
+#     async def registrar_nuevo_producto(self, datos_producto: DatosNuevoProductoDTO) -> ProductoCreadoDTO:
+#         pass
+
+
+# --- En aplicacion/puertos/salida/irepositorio_productos.py --- (ya definida)
+# --- En aplicacion/puertos/salida/inotificador.py --- (ya definida)
+
+
+# --- En aplicacion/servicios/servicio_gestion_inventario.py ---
+from dominio.modelos.producto import Producto
+from aplicacion.puertos.entrada.igestion_inventario_input_port import IGestionInventarioInputPort # Asumimos que la interfaz se define así
+from aplicacion.puertos.salida.irepositorio_productos import IRepositorioProductos
+from aplicacion.puertos.salida.inotificador import INotificador
+from aplicacion.dtos import DatosNuevoProductoDTO, ProductoCreadoDTO
+from uuid import UUID
+
+class NombreProductoDuplicadoError(Exception): # Excepción personalizada de la capa de aplicación
+    pass
+
+class ServicioGestionInventario(IGestionInventarioInputPort):
+    def __init__(self, repositorio_productos: IRepositorioProductos, notificador: INotificador):
+        self.repositorio_productos = repositorio_productos
+        self.notificador = notificador
+
+    async def registrar_nuevo_producto(self, datos_producto: DatosNuevoProductoDTO) -> ProductoCreadoDTO:
+        # Simular verificación de nombre duplicado
+        productos_existentes = await self.repositorio_productos.buscar_por_nombre(datos_producto.nombre)
+        if any(p.nombre.lower() == datos_producto.nombre.lower() for p in productos_existentes):
+            raise NombreProductoDuplicadoError(f"Ya existe un producto con el nombre '{datos_producto.nombre}'.")
+
+        nuevo_producto = Producto(
+            nombre=datos_producto.nombre,
+            descripcion=datos_producto.descripcion,
+            precio=datos_producto.precio,
+            stock=datos_producto.stock_inicial
+            # El ID se autogenera en la entidad Producto si no se pasa
+        )
+        
+        await self.repositorio_productos.guardar(nuevo_producto)
+        
+        mensaje_notificacion = f"¡Nuevo producto '{nuevo_producto.nombre}' registrado con ID {nuevo_producto.id}!"
+        await self.notificador.enviar_notificacion(
+            destinatario="admin@example.com", # Destinatario de ejemplo
+            mensaje=mensaje_notificacion,
+            asunto="Nuevo Producto Registrado"
+        )
+        
+        return ProductoCreadoDTO(
+            id_producto=nuevo_producto.id,
+            nombre=nuevo_producto.nombre,
+            mensaje_bienvenida="Producto registrado con éxito y notificación enviada."
+        )
+```
+
+Ahora, las pruebas para `ServicioGestionInventario` usando `pytest` y `unittest.mock`:
+
+```python
+# En tests/aplicacion/test_servicio_gestion_inventario.py
+
+import pytest
+from unittest.mock import Mock, AsyncMock # AsyncMock para métodos de corutina
+from uuid import uuid4
+
+from aplicacion.servicios.servicio_gestion_inventario import ServicioGestionInventario, NombreProductoDuplicadoError
+from aplicacion.dtos import DatosNuevoProductoDTO, ProductoCreadoDTO
+from aplicacion.puertos.salida.irepositorio_productos import IRepositorioProductos # Para type hinting del mock
+from aplicacion.puertos.salida.inotificador import INotificador # Para type hinting del mock
+from dominio.modelos.producto import Producto
+
+
+@pytest.fixture
+def mock_repositorio_productos() -> Mock:
+    # Creamos un mock que simula la interfaz IRepositorioProductos
+    # Para métodos async, usamos AsyncMock como el mock en sí o para `return_value` o `side_effect`
+    mock = Mock(spec=IRepositorioProductos)
+    mock.guardar = AsyncMock() # Especificamos que 'guardar' es una corutina mockeada
+    mock.buscar_por_nombre = AsyncMock(return_value=[]) # Por defecto no encuentra duplicados
+    return mock
+
+@pytest.fixture
+def mock_notificador() -> Mock:
+    mock = Mock(spec=INotificador)
+    mock.enviar_notificacion = AsyncMock() # 'enviar_notificacion' es una corutina mockeada
+    return mock
+
+@pytest.fixture
+def servicio_inventario(mock_repositorio_productos: Mock, mock_notificador: Mock) -> ServicioGestionInventario:
+    # Inyectamos los mocks en el servicio
+    return ServicioGestionInventario(
+        repositorio_productos=mock_repositorio_productos,
+        notificador=mock_notificador
+    )
+
+@pytest.mark.asyncio # Necesario para probar funciones async con pytest
+async def test_registrar_nuevo_producto_exitosamente(
+    servicio_inventario: ServicioGestionInventario,
+    mock_repositorio_productos: Mock,
+    mock_notificador: Mock
+):
+    # Arrange (Preparar)
+    datos_entrada = DatosNuevoProductoDTO(
+        nombre="Nuevo Teclado Mecánico",
+        descripcion="Teclado con switches Cherry MX",
+        precio=150.75,
+        stock_inicial=25
+    )
+    # Configuramos el mock del repositorio para la búsqueda de duplicados
+    mock_repositorio_productos.buscar_por_nombre.return_value = []
+
+
+    # Act (Actuar)
+    resultado_dto = await servicio_inventario.registrar_nuevo_producto(datos_entrada)
+
+    # Assert (Verificar)
+    # 1. Verificar que el repositorio fue llamado para guardar
+    mock_repositorio_productos.guardar.assert_called_once()
+    producto_guardado_args = mock_repositorio_productos.guardar.call_args[0][0] # El primer argumento posicional
+    
+    assert isinstance(producto_guardado_args, Producto)
+    assert producto_guardado_args.nombre == datos_entrada.nombre
+    assert producto_guardado_args.precio == datos_entrada.precio
+    assert producto_guardado_args.stock == datos_entrada.stock_inicial
+
+    # 2. Verificar que el notificador fue llamado
+    mock_notificador.enviar_notificacion.assert_called_once()
+    args_notificacion, _ = mock_notificador.enviar_notificacion.call_args
+    assert args_notificacion[0] == "admin@example.com" # destinatario
+    assert datos_entrada.nombre in args_notificacion[1] # mensaje
+    assert "Nuevo Producto Registrado" in args_notificacion[2] # asunto
+
+
+    # 3. Verificar el DTO de respuesta
+    assert isinstance(resultado_dto, ProductoCreadoDTO)
+    assert resultado_dto.id_producto is not None # Se debe haber generado un ID
+    assert resultado_dto.nombre == datos_entrada.nombre
+    assert "éxito" in resultado_dto.mensaje_bienvenida.lower()
+
+@pytest.mark.asyncio
+async def test_registrar_nuevo_producto_nombre_duplicado_lanza_excepcion(
+    servicio_inventario: ServicioGestionInventario,
+    mock_repositorio_productos: Mock,
+    mock_notificador: Mock
+):
+    # Arrange
+    nombre_existente = "Producto Existente"
+    datos_entrada = DatosNuevoProductoDTO(
+        nombre=nombre_existente, # Nombre que ya existe
+        precio=100.00,
+        stock_inicial=10
+    )
+    # Simulamos que el repositorio encuentra un producto con el mismo nombre
+    producto_mock_existente = Producto(id_producto=uuid4(), nombre=nombre_existente, precio=90.00, stock=5)
+    mock_repositorio_productos.buscar_por_nombre.return_value = [producto_mock_existente]
+    
+    # Act & Assert
+    with pytest.raises(NombreProductoDuplicadoError, match=f"Ya existe un producto con el nombre '{nombre_existente}'."):
+        await servicio_inventario.registrar_nuevo_producto(datos_entrada)
+    
+    # Verificar que no se intentó guardar ni notificar
+    mock_repositorio_productos.guardar.assert_not_called()
+    mock_notificador.enviar_notificacion.assert_not_called()
+```
+
+### 3\. Tipos de Dobles de Prueba Comunes
+
+  * **Mocks (Simulacros):** Se centran en la verificación de interacciones. Se configuran con expectativas sobre qué métodos serán llamados, cuántas veces y con qué argumentos (como en `assert_called_once()`).
+  * **Stubs (Retornos Fijos):** Proveen respuestas predefinidas a las llamadas. Por ejemplo, un stub de repositorio podría devolver siempre una lista específica de productos cuando se llama a `obtener_todos()`. `mock_repositorio_productos.buscar_por_nombre.return_value = []` es un ejemplo de configuración de un stub.
+  * **Fakes (Falsificaciones):** Tienen implementaciones funcionales, pero simplificadas y no aptas para producción. Un ejemplo clásico es un repositorio en memoria (una lista o diccionario Python) que implementa la interfaz del repositorio. Los Fakes pueden ser muy útiles para pruebas de integración más complejas de la capa de aplicación sin la sobrecarga de una base de datos real.
+
+### 4\. Estructura de las Pruebas
+
+Es una buena práctica organizar las pruebas en un directorio `tests/` en la raíz del proyecto, con una estructura interna que refleje la de tu código fuente:
+
+```
+mi_proyecto/
+├── aplicacion/
+├── dominio/
+├── infraestructura/
+└── tests/
+    ├── __init__.py
+    ├── dominio/
+    │   ├── __init__.py
+    │   └── test_producto.py
+    │   └── test_otro_objeto_dominio.py
+    ├── aplicacion/
+    │   ├── __init__.py
+    │   └── test_servicio_gestion_inventario.py
+    └── conftest.py  # Para fixtures globales de pytest
+```
+
+Adopta un patrón como **Arrange-Act-Assert** (AAA) o **Given-When-Then** (GWT) para estructurar cada caso de prueba, haciéndolos más legibles.
+
+### Beneficios de esta Estrategia de Pruebas para el Núcleo
+
+  * **Ciclo de Retroalimentación Rápido:** Las pruebas se ejecutan en milisegundos o segundos, ya que no hay operaciones lentas de E/S ni configuración de sistemas externos.
+  * **Fiabilidad:** Las pruebas son deterministas y menos propensas a fallos esporádicos ("flakiness") causados por problemas de red, estado de bases de datos, etc.
+  * **Localización Precisa de Errores:** Cuando una prueba del núcleo falla, indica un problema directamente en la lógica de negocio o de aplicación, no en una capa de infraestructura.
+  * **Confianza para Refactorizar:** Un conjunto sólido de pruebas para el núcleo permite refactorizar con mayor seguridad tanto el propio núcleo como las implementaciones de los adaptadores.
+  * **Documentación Viva:** Las pruebas sirven como ejemplos ejecutables de cómo se espera que funcione y se utilice el dominio y los servicios de aplicación.
+
+### ¿Qué NO se Prueba Aquí?
+
+Este enfoque se centra en probar el núcleo *aislado*. Las siguientes pruebas son distintas y también importantes, pero se abordan de otra manera:
+
+  * **Pruebas de los Adaptadores:** Por ejemplo, probar que un adaptador de repositorio SQLAlchemy realmente interactúa correctamente con una base de datos (esto sería una prueba de integración más lenta).
+  * **Pruebas de Integración Completas (End-to-End):** Probar el flujo completo desde una petición HTTP hasta la base de datos y viceversa.
+
+Al diseñar pruebas para el núcleo sin depender de infraestructuras, estás invirtiendo en la calidad y mantenibilidad a largo plazo de tu software, asegurando que la lógica más crítica de tu aplicación sea robusta y correcta.
 
 ---
 
 ## **6.7 Integrar eventos de dominio desde la capa interna**
 
-Los eventos de dominio comunican que algo importante ha sucedido. Pueden ser usados para desacoplar partes del sistema.
 
-1.  **Definir el Evento (Dominio):**
-    ```python
-    # app/domain/events/product_events.py
-    from dataclasses import dataclass
-    from datetime import datetime
-
-    @dataclass(frozen=True)
-    class DomainEvent:
-        timestamp: datetime = field(default_factory=datetime.utcnow)
-
-    @dataclass(frozen=True)
-    class ProductCreatedEvent(DomainEvent):
-        product_id: str
-        name: str
-        price: float
-    ```
-
-2.  **Publicar Eventos (Dominio o Aplicación):**
-    Las entidades pueden registrar eventos, y el servicio de aplicación (o un repositorio) los despacha.
-    Una forma simple es tener una lista de eventos en la entidad raíz del agregado.
-
-    ```python
-    # app/domain/entities/product.py (modificado)
-    from typing import List, Any
-    from dataclasses import dataclass, field
-    from ..events.product_events import ProductCreatedEvent, DomainEvent # Importar Eventos
-
-    @dataclass
-    class Product:
-        id: str
-        name: str
-        description: Optional[str]
-        price: float
-        _events: List[DomainEvent] = field(default_factory=list, repr=False) # Lista para registrar eventos
-
-        # ... otros métodos ...
-
-        @classmethod
-        def create(cls, name: str, description: Optional[str], price: float, product_id: str = "new") -> "Product":
-            product = cls(id=product_id, name=name, description=description, price=price)
-            # No registramos el evento aquí, sino cuando se confirma la creación (ej. al guardar)
-            return product
-        
-        def register_creation_event(self):
-            # Este método se llamaría después de que el producto se haya guardado y tenga un ID final
-            if self.id and self.id != "new":
-                self._events.append(ProductCreatedEvent(product_id=self.id, name=self.name, price=self.price))
-
-        def pull_domain_events(self) -> List[DomainEvent]:
-            """Devuelve y limpia los eventos de dominio registrados."""
-            events = list(self._events)
-            self._events.clear()
-            return events
-    ```
-
-3.  **Despachador de Eventos (Infraestructura):**
-    Un componente que toma los eventos y los envía a los manejadores.
-    ```python
-    # app/infrastructure/event_dispatcher.py
-    from typing import List, Callable, Dict, Type
-    from app.domain.events.product_events import DomainEvent
-
-    Handler = Callable[[DomainEvent], None] # o Callable[[DomainEvent], Awaitable[None]] para async
-
-    class EventDispatcher:
-        def __init__(self):
-            self._handlers: Dict[Type[DomainEvent], List[Handler]] = {}
-
-        def register(self, event_type: Type[DomainEvent], handler: Handler):
-            if event_type not in self._handlers:
-                self._handlers[event_type] = []
-            self._handlers[event_type].append(handler)
-
-        async def dispatch(self, event: DomainEvent):
-            print(f"Dispatching event: {event}") # Para depuración
-            for handler in self._handlers.get(type(event), []):
-                # Podría ser async si los handlers son async
-                # await handler(event)
-                handler(event) # Para handlers síncronos
-
-        async def dispatch_batch(self, events: List[DomainEvent]):
-            for event in events:
-                await self.dispatch(event)
-    
-    # Crear una instancia global o inyectable del dispatcher
-    event_dispatcher = EventDispatcher()
-    ```
-
-4.  **Manejadores de Eventos (Infraestructura o Aplicación):**
-    ```python
-    # app/infrastructure/event_handlers.py
-    from app.domain.events.product_events import ProductCreatedEvent, DomainEvent
-
-    def send_product_creation_notification(event: ProductCreatedEvent):
-        # Lógica para enviar una notificación (email, Slack, etc.)
-        # Este es un adaptador de salida implícito.
-        print(f"HANDLED ProductCreatedEvent: New product created - ID: {event.product_id}, Name: {event.name}")
-
-    # Registrar el handler en el dispatcher (esto se haría en la inicialización de la app)
-    # from .event_dispatcher import event_dispatcher
-    # event_dispatcher.register(ProductCreatedEvent, send_product_creation_notification)
-    ```
-
-5.  **Usar en el Servicio de Aplicación:**
-    ```python
-    # app/application/services/product_app_service.py (modificado)
-    # ...
-    from app.infrastructure.event_dispatcher import EventDispatcher # o inyectar
-    # ...
-
-    class ProductApplicationService(ProductServicePort):
-        def __init__(self, product_repository: ProductRepositoryPort, event_dispatcher: EventDispatcher):
-            self.product_repository = product_repository
-            self.event_dispatcher = event_dispatcher # Inyectar dispatcher
-
-        async def create_product(self, product_data: ProductCreateDTO) -> ProductDTO:
-            product = DomainProduct.create(
-                name=product_data.name,
-                description=product_data.description,
-                price=product_data.price
-            )
-            # Guardar en el repositorio (que asignará el ID si es nuevo)
-            saved_product = await self.product_repository.save(product)
-            
-            # Registrar y despachar el evento DESPUÉS de que se haya guardado
-            saved_product.register_creation_event() 
-            domain_events = saved_product.pull_domain_events()
-            await self.event_dispatcher.dispatch_batch(domain_events)
-
-            return ProductDTO.from_domain(saved_product) # Asumiendo un método from_domain en DTO
-    ```
 
 ---
 
 ## **6.8 Implementar casos de uso en la capa de aplicación**
 
-Los servicios de aplicación implementan los casos de uso. Orquestan las entidades de dominio y usan los repositorios.
 
-**Ejemplo (`ProductApplicationService`):**
-Ya lo hemos visto en acción. Es la clase que implementa `ProductServicePort`.
-
-```python
-# app/application/services/product_app_service.py
-from typing import List, Optional
-
-from ..ports.product_service import ProductServicePort
-from ..dtos.product_dto import ProductCreateDTO, ProductDTO
-from app.domain.ports.product_repository import ProductRepositoryPort
-from app.domain.entities.product import Product as DomainProduct
-from app.infrastructure.event_dispatcher import EventDispatcher # Asumiendo que está disponible o inyectado
-
-class ProductApplicationService(ProductServicePort):
-    def __init__(self, product_repository: ProductRepositoryPort, event_dispatcher: EventDispatcher):
-        self.product_repository: ProductRepositoryPort = product_repository
-        self.event_dispatcher: EventDispatcher = event_dispatcher
-
-    async def create_product(self, product_data: ProductCreateDTO) -> ProductDTO:
-        # Validaciones de aplicación (si las hay, las de dominio están en la entidad)
-        
-        product_entity = DomainProduct.create(
-            name=product_data.name,
-            description=product_data.description,
-            price=product_data.price
-            # El ID se manejará internamente o por el repositorio al guardar
-        )
-        
-        saved_product = await self.product_repository.save(product_entity)
-        
-        # Registrar y despachar evento después de guardar y tener el ID final
-        saved_product.register_creation_event()
-        domain_events = saved_product.pull_domain_events()
-        if domain_events: # Solo despachar si hay eventos
-            await self.event_dispatcher.dispatch_batch(domain_events)
-            
-        return ProductDTO.from_domain(saved_product) # Asumiendo DTO tiene un constructor from_domain
-
-    async def get_product(self, product_id: str) -> Optional[ProductDTO]:
-        product_entity = await self.product_repository.get_by_id(product_id)
-        if product_entity:
-            return ProductDTO.from_domain(product_entity)
-        return None
-
-    # ... otros métodos para get_all_products, update_product, delete_product
-```
 
 ---
 
 ## **6.9 Configurar inyecciones de dependencia de adaptadores externos**
 
-FastAPI facilita esto con su sistema de dependencias (`Depends`).
 
-1.  **Crear factorías para los servicios y repositorios:**
-    ```python
-    # app/interfaces/api/dependencies.py
-    from fastapi import Depends
-    from sqlalchemy.ext.asyncio import AsyncSession
-
-    from app.infrastructure.database import get_db_session # Función para obtener sesión de DB
-    from app.domain.ports.product_repository import ProductRepositoryPort
-    from app.infrastructure.repositories.mariadb_product_repository import MariaDBProductRepository
-    from app.application.ports.product_service import ProductServicePort
-    from app.application.services.product_app_service import ProductApplicationService
-    from app.infrastructure.event_dispatcher import event_dispatcher, EventDispatcher # Instancia global o factoría
-
-    # Factoría para el EventDispatcher (si no es global)
-    def get_event_dispatcher() -> EventDispatcher:
-        # Aquí podrías inicializarlo y configurarlo si fuera necesario
-        return event_dispatcher # Usando la instancia global por simplicidad
-
-    # Factoría para el repositorio
-    def get_product_repository(session: AsyncSession = Depends(get_db_session)) -> ProductRepositoryPort:
-        return MariaDBProductRepository(session=session)
-
-    # Factoría para el servicio de aplicación
-    def get_product_service(
-        repository: ProductRepositoryPort = Depends(get_product_repository),
-        dispatcher: EventDispatcher = Depends(get_event_dispatcher)
-    ) -> ProductServicePort:
-        return ProductApplicationService(product_repository=repository, event_dispatcher=dispatcher)
-    ```
-
-2.  **Usar en los endpoints (como ya se mostró en 6.4):**
-    ```python
-    # app/interfaces/api/product_routes.py
-    # ...
-    # product_service: ProductServicePort = Depends(get_product_service)
-    # ...
-    ```
-
-3.  **Configuración de la sesión de base de datos (`get_db_session`):**
-    ```python
-    # app/infrastructure/database.py
-    from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-    from sqlalchemy.orm import sessionmaker, declarative_base
-    import os
-
-    DATABASE_URL = os.getenv("DATABASE_URL", "mysql+aiomysql://user:password@mariadb_container/mydatabase")
-    # Ejemplo: "mysql+aiomysql://testuser:testpass@localhost:3307/testdb"
-
-    async_engine = create_async_engine(DATABASE_URL, echo=True)
-    AsyncSessionLocal = sessionmaker(
-        bind=async_engine,
-        class_=AsyncSession,
-        expire_on_commit=False,
-        autoflush=False,
-        autocommit=False
-    )
-
-    Base = declarative_base() # Para los modelos SQLAlchemy
-
-    async def create_tables():
-        async with async_engine.begin() as conn:
-            # await conn.run_sync(Base.metadata.drop_all) # Opcional: para limpiar en desarrollo
-            await conn.run_sync(Base.metadata.create_all)
-
-    async def get_db_session() -> AsyncSession:
-        async with AsyncSessionLocal() as session:
-            try:
-                yield session
-                await session.commit() # Commit al final si todo fue bien
-            except Exception:
-                await session.rollback() # Rollback en caso de error
-                raise
-            finally:
-                await session.close()
-    ```
-
----
 
 ## **6.10 Ejemplo de microservicio hexagonal completo con FastAPI**
 
