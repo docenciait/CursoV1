@@ -21,6 +21,10 @@
       - [Bounded Contexts y su Aplicación con FastAPI y Microservicios](#bounded-contexts-y-su-aplicación-con-fastapi-y-microservicios)
     - [7.4 Diseño de Domain Services](#74-diseño-de-domain-services)
     - [7.5 Repositorios como abstracción de persistencia](#75-repositorios-como-abstracción-de-persistencia)
+      - [¿Qué es un Repositorio en DDD?](#qué-es-un-repositorio-en-ddd)
+      - [Principios Clave de Diseño de los Repositorios](#principios-clave-de-diseño-de-los-repositorios)
+      - [Repositorios en el Contexto de FastAPI](#repositorios-en-el-contexto-de-fastapi)
+      - [Lo que NO son los Repositorios (Distinciones Importantes)](#lo-que-no-son-los-repositorios-distinciones-importantes)
     - [7.6 Integración de DDD con FastAPI y Pydantic](#76-integración-de-ddd-con-fastapi-y-pydantic)
     - [7.7 Creación de factories para entidades complejas](#77-creación-de-factories-para-entidades-complejas)
     - [7.8 Desarrollo de Ubiquitous Language](#78-desarrollo-de-ubiquitous-language)
@@ -620,6 +624,139 @@ La definición clara de Bounded Contexts y sus fronteras os permitirá diseñar 
 
 ### 7.4 Diseño de Domain Services
 ### 7.5 Repositorios como abstracción de persistencia
+
+Dentro de los patrones tácticos de Domain-Driven Design, el **Repositorio (Repository)** juega un papel crucial al actuar como una capa de abstracción entre la lógica de dominio y los mecanismos de persistencia de datos. Su correcta implementación es vital para construir aplicaciones (como las que desarrollaréis con FastAPI) que sean robustas, mantenibles y fáciles de probar, al desacoplar el "qué" del dominio del "cómo" de la infraestructura de datos.
+
+-----
+
+#### ¿Qué es un Repositorio en DDD?
+
+Un Repositorio es un objeto que **media entre el dominio y las capas de mapeo de datos**, utilizando una interfaz similar a una colección para acceder a los objetos de dominio (específicamente, a las Raíces de Agregado o *Aggregate Roots*).
+
+Imagina un Repositorio como una colección de objetos de dominio que reside en memoria. Desde la perspectiva del código cliente (como un Servicio de Aplicación), no importa si estos objetos provienen de una base de datos SQL, un almacén NoSQL, un archivo o incluso un servicio externo. El Repositorio oculta estos detalles.
+
+**Propósito Fundamental:**
+
+  * **Desacoplar el Dominio de la Infraestructura de Persistencia:** Permite que el modelo de dominio sea ignorante de la tecnología de almacenamiento de datos utilizada. Esto significa que podrías cambiar de PostgreSQL a MongoDB (o viceversa) con un impacto mínimo en tu lógica de negocio principal.
+  * **Simplificar el Acceso a Datos para el Cliente:** Proporciona métodos claros y con intención (ej: `findById`, `save`, `findByCriteria`) que devuelven Agregados completamente constituidos.
+  * **Centralizar la Lógica de Acceso a Datos:** Las consultas y la lógica de mapeo entre el modelo de dominio y el esquema de la base de datos se encapsulan dentro de la implementación del Repositorio.
+  * **Mejorar la Testeabilidad:** Puedes fácilmente sustituir la implementación real del Repositorio por un *mock* o *fake* en tus pruebas unitarias o de integración, permitiendo probar la lógica de dominio y de aplicación de forma aislada.
+
+-----
+
+#### Principios Clave de Diseño de los Repositorios
+
+1.  **Un Repositorio por Raíz de Agregado (Aggregate Root):**
+
+      * Los Repositorios se definen para gestionar Agregados completos. La Raíz del Agregado es el único miembro del Agregado al que los objetos externos (como los Repositorios) pueden hacer referencia directamente.
+      * Por ejemplo, si tienes un Agregado `Pedido` (con `LineaDePedido` como entidad interna), tendrás un `IPedidoRepository`, no un `ILineaDePedidoRepository`. Las líneas de pedido se gestionan a través del Agregado `Pedido`.
+
+2.  **La Interfaz en el Dominio, la Implementación en la Infraestructura:**
+
+      * La **interfaz** del Repositorio (ej: `IPedidoRepository`) se define en la capa de Dominio. Esto es porque la interfaz define el contrato de cómo el dominio espera recuperar y persistir sus Agregados. Forma parte del vocabulario del dominio.
+      * La **implementación concreta** (ej: `PedidoSQLAlchemyRepository` o `PedidoMongoRepository`) reside en la capa de Infraestructura. Esta implementación contiene el código específico para interactuar con la base de datos (SQLAlchemy, PyMongo, etc.).
+      * Esto sigue el Principio de Inversión de Dependencias (DIP): las capas de alto nivel (Dominio) no deben depender de las capas de bajo nivel (Infraestructura); ambas deben depender de abstracciones (la interfaz del Repositorio).
+
+    <!-- end list -->
+
+    ```mermaid
+    graph TD
+        subgraph "Capa de Aplicación (Application Layer)"
+            direction LR
+            AppService["ServicioAplicacionPedido"]
+        end
+
+        subgraph "Capa de Dominio (Domain Layer)"
+            direction LR
+            AggregateRoot[("Pedido (Aggregate Root)")]
+            RepoInterface[/"IPedidoRepository (Interfaz)"/]
+        end
+
+        subgraph "Capa de Infraestructura (Infrastructure Layer)"
+            direction LR
+            RepoImpl["PedidoSQLAlchemyRepository (Impl.)"]
+            ORM["SQLAlchemy ORM"]
+            DB[(Base de Datos<br>(PostgreSQL, MySQL, etc.))]
+        end
+
+        AppService -- "1. Usa (depende de)" --> RepoInterface
+        RepoInterface -- "2. Define contrato para recuperar/guardar" --> AggregateRoot
+        RepoImpl -- "3. Implementa" --> RepoInterface
+        RepoImpl -- "4. Usa" --> ORM
+        ORM -- "5. Mapea a/desde" --> DB
+        RepoImpl -- "6. Construye/Deconstruye" --- AggregateRoot
+
+
+        classDef app fill:#E9D8FD,stroke:#9B59B6,stroke-width:2px;
+        classDef domain fill:#D5F5E3,stroke:#2ECC71,stroke-width:2px;
+        classDef infra fill:#FDEDEC,stroke:#E74C3C,stroke-width:2px;
+
+        class AppService app;
+        class AggregateRoot,RepoInterface domain;
+        class RepoImpl,ORM,DB infra;
+
+        style AppService_Content fill:#f0f8ff
+    ```
+
+    *Este diagrama ilustra cómo el Servicio de Aplicación depende de la interfaz del Repositorio definida en el Dominio, mientras que la implementación concreta reside en la Infraestructura, interactuando con la base de datos (a menudo mediante un ORM).*
+
+3.  **Interfaz Similar a una Colección (Collection-like Interface):**
+
+      * Los métodos comunes incluyen:
+          * `add(aggregate: AggregateRoot)`: Añade un nuevo Agregado.
+          * `save(aggregate: AggregateRoot)`: Guarda los cambios de un Agregado existente (o lo añade si es nuevo, a veces se distingue de `update`).
+          * `findById(id: AggregateId) -> Optional[AggregateRoot]`: Busca un Agregado por su identificador único.
+          * `remove(aggregate: AggregateRoot)` o `removeById(id: AggregateId)`: Elimina un Agregado.
+          * Métodos de consulta específicos del dominio: `findByClienteId(cliente_id: ClienteId) -> List[AggregateRoot]`, `findPedidosPendientes() -> List[AggregateRoot]`.
+      * **Importante:** Las consultas deben devolver Agregados completos y consistentes, listos para ser utilizados por el dominio. No deben devolver DTOs parciales o datos "crudos" de la base de datos directamente a la capa de dominio.
+
+4.  **Gestión de Transacciones:**
+
+      * Un método del Repositorio (como `save`) a menudo implica una transacción para asegurar la atomicidad al persistir un Agregado.
+      * Para operaciones que involucran múltiples Agregados o requieren coordinación transaccional más amplia, se suele utilizar un patrón como **Unit of Work**, que a menudo es gestionado por el Servicio de Aplicación. El Unit of Work rastrea los cambios en los Agregados y los consolida en una única transacción al final de la operación de negocio.
+
+-----
+
+#### Repositorios en el Contexto de FastAPI
+
+Cuando desarrollas aplicaciones con FastAPI, los Repositorios son tus aliados para mantener tu código organizado y limpio:
+
+  * **Servicios de Aplicación y Endpoints:** Tus *endpoints* de FastAPI (definidos con `@app.get`, `@app.post`, etc.) normalmente invocarán a Servicios de Aplicación. Estos servicios, a su vez, utilizarán las interfaces de los Repositorios para obtener o guardar los Agregados necesarios para cumplir con la solicitud.
+
+```python
+# Ejemplo conceptual en un servicio de aplicación
+    class PedidoService:
+        def __init__(self, pedido_repository: IPedidoRepository):
+            self.pedido_repository = pedido_repository
+
+        def crear_nuevo_pedido(self, datos_pedido: PedidoCreateSchema) -> Pedido:
+            # ... lógica para crear el Agregado Pedido ...
+            nuevo_pedido = Pedido(**datos_pedido.dict()) # Asumiendo Pydantic y creación de Agregado
+            self.pedido_repository.add(nuevo_pedido)
+            # Podría haber un UnitOfWork.commit() aquí o al final del endpoint
+            return nuevo_pedido
+
+        def obtener_pedido(self, pedido_id: UUID) -> Optional[Pedido]:
+            return self.pedido_repository.findById(pedido_id)
+```
+
+* **Inyección de Dependencias:** En FastAPI, puedes usar el sistema de inyección de dependencias (ej. `Depends`) para proporcionar la implementación concreta del Repositorio a tus Servicios de Aplicación o directamente a tus *path operation functions* si el servicio es muy simple.
+  * **Manteniendo los Endpoints Limpios:** Los *endpoints* se centran en la lógica HTTP (validación de entrada, serialización de salida, códigos de estado) y delegan la lógica de negocio y el acceso a datos a los servicios y repositorios.
+
+-----
+
+#### Lo que NO son los Repositorios (Distinciones Importantes)
+
+  * **No son DAOs Genéricos (Data Access Objects):** Aunque ambos patrones tratan con el acceso a datos, los DAOs tradicionales suelen ser más granulares, a menudo mapeando uno a uno con tablas de base de datos o documentos, y pueden devolver datos sin formato o DTOs simples. Los Repositorios operan a nivel de Agregados y devuelven objetos de dominio ricos y completamente constituidos.
+  * **No son una Simple Fachada sobre un O/RM:** Si bien un O/RM (como SQLAlchemy) es una herramienta común para *implementar* un Repositorio, el Repositorio no debe exponer directamente las capacidades genéricas del O/RM (como un constructor de consultas genérico) a la capa de dominio. La interfaz del Repositorio debe ser específica del dominio y sus necesidades de consulta sobre los Agregados.
+
+
+**Conclusión:**
+
+El patrón Repositorio es una piedra angular en DDD para lograr un diseño desacoplado y centrado en el dominio. Al abstraer los detalles de la persistencia, facilita la evolución del sistema, mejora la testeabilidad y permite que la lógica de dominio se mantenga pura y enfocada en las reglas de negocio, lo cual es esencial al construir aplicaciones FastAPI complejas y de alta calidad.
+
+-----
+
 ### 7.6 Integración de DDD con FastAPI y Pydantic
 ### 7.7 Creación de factories para entidades complejas
 ### 7.8 Desarrollo de Ubiquitous Language
