@@ -44,8 +44,28 @@
     - [Beneficios de esta Estrategia de Pruebas para el Núcleo](#beneficios-de-esta-estrategia-de-pruebas-para-el-núcleo)
     - [¿Qué NO se Prueba Aquí?](#qué-no-se-prueba-aquí)
   - [**6.7 Integrar eventos de dominio desde la capa interna**](#67-integrar-eventos-de-dominio-desde-la-capa-interna)
+    - [La Anatomía de un Evento: ¿Qué lleva la "Noticia"?](#la-anatomía-de-un-evento-qué-lleva-la-noticia)
+    - [¿Quién Grita "¡Noticia!"? - Originando Eventos desde el Corazón del Dominio](#quién-grita-noticia---originando-eventos-desde-el-corazón-del-dominio)
+    - [El Cartero de Eventos: Despachando las Noticias](#el-cartero-de-eventos-despachando-las-noticias)
+    - [Los Oídos Atentos: Manejadores de Eventos (Event Handlers)](#los-oídos-atentos-manejadores-de-eventos-event-handlers)
+- [En aplicacion/manejadores\_eventos/producto\_handlers.py](#en-aplicacionmanejadores_eventosproducto_handlerspy)
+    - [¿Por Qué Tanta "Ceremonia" con los Eventos? ¡Los Beneficios!](#por-qué-tanta-ceremonia-con-los-eventos-los-beneficios)
+    - [Algunas Consideraciones Avanzadas (Para los Curiosos)](#algunas-consideraciones-avanzadas-para-los-curiosos)
+    - [¡Tu Turno de Nuevo! Integrando el Conocimiento interactivity](#tu-turno-de-nuevo-integrando-el-conocimiento-interactivity)
+  - [¡Y eso es un vistazo dinámico a los eventos de dominio! Son una pieza clave para construir aplicaciones que no solo funcionan, sino que también son adaptables, resilientes y cuentan la historia de tu negocio de manera efectiva.](#y-eso-es-un-vistazo-dinámico-a-los-eventos-de-dominio-son-una-pieza-clave-para-construir-aplicaciones-que-no-solo-funcionan-sino-que-también-son-adaptables-resilientes-y-cuentan-la-historia-de-tu-negocio-de-manera-efectiva)
   - [**6.8 Implementar casos de uso en la capa de aplicación**](#68-implementar-casos-de-uso-en-la-capa-de-aplicación)
+    - [¿Qué es un Servicio de Aplicación (o Caso de Uso)?](#qué-es-un-servicio-de-aplicación-o-caso-de-uso)
+    - [Responsabilidades Clave de un Servicio de Aplicación](#responsabilidades-clave-de-un-servicio-de-aplicación)
+    - [Estructura Típica de un Servicio de Aplicación](#estructura-típica-de-un-servicio-de-aplicación)
+    - [Ejemplo de Implementación (Continuando con `ServicioGestionInventario`)](#ejemplo-de-implementación-continuando-con-serviciogestioninventario)
+    - [Principios Clave para Implementar Servicios de Aplicación](#principios-clave-para-implementar-servicios-de-aplicación)
+    - [¿Cómo Encaja Todo?](#cómo-encaja-todo)
+  - [Implementar correctamente los casos de uso en la capa de aplicación es fundamental para tener un sistema bien estructurado, fácil de probar, mantener y evolucionar, donde la lógica de negocio está bien protegida y orquestada de manera clara.](#implementar-correctamente-los-casos-de-uso-en-la-capa-de-aplicación-es-fundamental-para-tener-un-sistema-bien-estructurado-fácil-de-probar-mantener-y-evolucionar-donde-la-lógica-de-negocio-está-bien-protegida-y-orquestada-de-manera-clara)
   - [**6.9 Configurar inyecciones de dependencia de adaptadores externos**](#69-configurar-inyecciones-de-dependencia-de-adaptadores-externos)
+    - [**Acto 1: ¿Por Qué Inyectar Dependencias de Adaptadores Externos? El Poder del "Desacople Maestro"**](#acto-1-por-qué-inyectar-dependencias-de-adaptadores-externos-el-poder-del-desacople-maestro)
+    - [**Acto 2: FastAPI al Rescate con `Depends` - ¡Tu Ayudante de Cocina Personal!**](#acto-2-fastapi-al-rescate-con-depends---tu-ayudante-de-cocina-personal)
+    - [**Acto 4: Configuraciones Avanzadas y Mejores Prácticas**](#acto-4-configuraciones-avanzadas-y-mejores-prácticas)
+    - [**Acto 5: El Momento "¡Ajá!" - Por Qué Esto es Oro Puro para tu Hexágono**](#acto-5-el-momento-ajá---por-qué-esto-es-oro-puro-para-tu-hexágono)
   - [**6.10 Ejemplo de microservicio hexagonal completo con FastAPI**](#610-ejemplo-de-microservicio-hexagonal-completo-con-fastapi)
 
 
@@ -1270,19 +1290,925 @@ Al diseñar pruebas para el núcleo sin depender de infraestructuras, estás inv
 
 ## **6.7 Integrar eventos de dominio desde la capa interna**
 
+Imagina que el núcleo de tu aplicación (tu capa de Dominio y Aplicación) no es solo un ejecutor de tareas, sino un narrador de historias. Cada vez que ocurre algo importante, algo que cambia el estado del negocio, tu aplicación "anuncia" esa noticia. Esas "noticias" son los **Eventos de Dominio**.
 
+**¿Qué es un Evento de Dominio, en cristiano?**
 
+Piensa en ello como una notificación de un hecho consumado, algo relevante para el negocio que acaba de suceder.
+
+  * Se nombran en **tiempo pasado**: `ProductoCreado`, `PedidoConfirmado`, `StockAjustado`.
+  * Son **inmutables**: Lo que pasó, pasó. No se puede cambiar el evento.
+  * Llevan **información útil**: Los datos necesarios para entender qué sucedió (ej. el ID del producto, la nueva cantidad de stock, la fecha).
+
+**Gráfico Conceptual 1: El Flujo Básico de un Evento**
+
+```
++-------------------+      +---------------------+      +----------------------+
+| Algo Significativo|----->| Se genera un EVENTO |----->| Alguien (o algo)     |
+| Sucede en el      |      | (La "Noticia")      |      | Reacciona al Evento  |
+| Dominio           |      +---------------------+      +----------------------+
++-------------------+
+  (Ej: Se crea un
+   nuevo producto)
+```
+
+**Pausa para Reflexionar (¡Tu Turno\!):** interactivity
+
+> En tu aplicación FastAPI (quizás la tienda online que estamos imaginando), si un usuario finaliza una compra:
+>
+>   * ¿Qué "noticia importante" (Evento de Dominio) crees que se generaría inmediatamente después de que el pago se confirma y el pedido se marca como "Pagado"?
+>   * ¿Qué información mínima necesitaría llevar ese evento?
+
+-----
+
+### La Anatomía de un Evento: ¿Qué lleva la "Noticia"?
+
+Para que un evento sea útil, debe contener la información esencial sobre lo que ocurrió. Siguiendo con Python, una `dataclass` (idealmente `frozen=True` para inmutabilidad) o un modelo Pydantic son perfectos para esto.
+
+**Ejemplo: `ProductoRegistradoEvento`**
+
+```python
+from dataclasses import dataclass, field
+from uuid import UUID, uuid4
+from datetime import datetime, timezone
+
+# Una clase base opcional para metadatos comunes a todos los eventos
+@dataclass(frozen=True)
+class EventoBase:
+    id_evento: UUID = field(default_factory=uuid4)
+    fecha_ocurrencia: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
+
+@dataclass(frozen=True)
+class ProductoRegistradoEvento(EventoBase):
+    id_producto: UUID
+    nombre_producto: str
+    precio_inicial: float
+    stock_inicial: int
+    categoria_id: UUID | None # Podríamos añadir más detalles relevantes
+```
+**Gráfico Conceptual 2: Estructura de nuestro `ProductoRegistradoEvento`**
+
+```
++----------------------------------+
+| ProductoRegistradoEvento         |
++----------------------------------+
+| - id_evento: UUID                |  <-- Heredado de EventoBase
+| - fecha_ocurrencia: datetime     |  <-- Heredado de EventoBase
+|----------------------------------|
+| - id_producto: UUID              |  <-- Datos específicos del evento
+| - nombre_producto: str           |
+| - precio_inicial: float          |
+| - stock_inicial: int             |
+| - categoria_id: UUID | None     |
++----------------------------------+
+```
+
+**¡Manos a la Obra\! (Pequeño Reto):** interactivity
+
+> Si tuvieras un evento `UsuarioCambioEmailEvento`, ¿qué campos cruciales debería tener, además de los heredados de `EventoBase`? Piénsalo un momento.
+>
+> *Pista: Necesitarás saber de quién es el email, cuál era el antiguo (quizás) y cuál es el nuevo.*
+
+-----
+
+### ¿Quién Grita "¡Noticia\!"? - Originando Eventos desde el Corazón del Dominio
+
+Los eventos no surgen de la nada. Nacen en el momento en que una Entidad (especialmente una Raíz de Agregado) o un Servicio de Dominio realiza una acción que cambia el estado de una manera significativa.
+
+**El Proceso dentro del Agregado:**
+
+1.  Un Agregado (ej. `Producto`) recibe una orden (ej. `ajustar_stock()`).
+2.  Realiza su lógica interna y valida las reglas de negocio.
+3.  Cambia su propio estado (ej. actualiza la cantidad de `self.stock`).
+4.  **Y aquí está la magia:** El Agregado crea una instancia del evento correspondiente (ej. `StockProductoAjustadoEvento`) y lo *registra* en una lista interna de "eventos pendientes".
+
+**Gráfico Conceptual 3: El Agregado Colecciona sus Propias Noticias**
+
+```
+                      Comando: "Ajustar stock en -5 unidades"
+                                     |
+                                     v
++------------------------------------------------------------------+
+| Agregado: Producto (ID: XYZ, Stock Actual: 20)                   |
+|------------------------------------------------------------------|
+| metodo: ajustar_stock(cantidad: -5, motivo: "Venta ABC")         |
+|   1. Validar (stock - 5 >= 0) -> OK                              |
+|   2. self.stock = 15                                             |
+|   3. evento = StockProductoAjustadoEvento(id_producto=XYZ,        |
+|                                       nuevo_stock=15,        |
+|                                       cambio=-5,             |
+|                                       motivo="Venta ABC")     |
+|   4. self._eventos_pendientes.append(evento)                     |  <-- ¡Aquí!
+|                                                                  |
++------------------------------------------------------------------+
+      |
+      v
+  (El estado del producto ha cambiado Y un evento ha sido registrado internamente)
+```
+
+**Punto Clave para Debatir:** interactivity
+
+> El Agregado *colecciona* sus eventos, pero **no los envía directamente** al exterior (no llama a un servicio de email, no publica en Kafka). ¿Por qué crees que se hace esta separación?
+>
+> *Pista: Piensa en la responsabilidad única del Agregado y en la consistencia transaccional (¿qué pasa si guardar en la BBDD falla después de enviar el email?).*
+
+-----
+
+### El Cartero de Eventos: Despachando las Noticias
+
+Si el Agregado solo guarda las "noticias" en su mochila, ¿quién se encarga de repartirlas? ¡El **Servicio de Aplicación** (o Caso de Uso)\!
+
+**El Flujo Típico con el Servicio de Aplicación:**
+
+1.  El Servicio de Aplicación recibe un comando (ej. desde un controlador FastAPI).
+2.  Utiliza un Repositorio (Puerto de Salida) para cargar el Agregado necesario.
+3.  Llama al método de negocio del Agregado (ej. `producto.ajustar_stock(...)`). *Este es el momento en que el Agregado registra internamente sus eventos.*
+4.  Utiliza el Repositorio para persistir los cambios en el Agregado. ¡Este paso es crucial que ocurra **antes** de despachar los eventos\!
+5.  **¡Ahora sí\!** El Servicio de Aplicación le pide al Agregado su lista de `_eventos_pendientes`.
+6.  Entrega estos eventos a un componente llamado **Despachador de Eventos** (Event Dispatcher).
+
+**Gráfico Conceptual 4: El Viaje del Evento desde el Agregado hasta el Despachador**
+
+```
+                                     +-------------------------+
+                                     |     FastAPI Controller  |
+                                     +------------+------------+
+                                                  | (1. Comando)
+                                                  v
++---------------------------------------------------------------------------------------------+
+| Servicio de Aplicación (ej. `ServicioInventario.ajustar_stock_producto`)                    |
+|---------------------------------------------------------------------------------------------|
+| 1. producto = self.repo_productos.obtener_por_id(id_producto)  <---- (2. Carga Agregado) ---+---> Repositorio
+| 2. producto.ajustar_stock(cantidad, motivo)  <------------------- (3. Lógica de Dominio, Agregado registra evento)
+| 3. self.repo_productos.guardar(producto) <----------------------- (4. Persiste Agregado) ---+---> Repositorio
+| 4. eventos_ocurridos = producto.obtener_eventos_pendientes()                                |
+| 5. self.despachador_eventos.despachar_todos(eventos_ocurridos) ---- (5. Despacha!) ---------> Despachador
++---------------------------------------------------------------------------------------------+  de Eventos
+```
+
+**El Despachador de Eventos (Event Dispatcher / Mediator):**
+
+Este es un componente (puede ser una simple clase en tu capa de aplicación) cuya responsabilidad es:
+
+  * Recibir eventos.
+  * Saber quiénes están interesados en cada tipo de evento (los "Manejadores" o "Subscriptores").
+  * Entregar cada evento a todos sus manejadores correspondientes.
+
+**Pregunta para la Audiencia (¡Tú\!):** interactivity
+
+> Siguiendo el Gráfico 4, ¿qué problemas podríamos tener si el paso `self.repo_productos.guardar(producto)` falla por alguna razón (ej. la base de datos está caída), pero *antes* ya hubiéramos intentado despachar los eventos? ¿Cómo ayuda el orden mostrado a la consistencia?
+
+-----
+
+### Los Oídos Atentos: Manejadores de Eventos (Event Handlers)
+
+Cuando el "cartero" (Despachador) entrega la "noticia" (Evento), alguien tiene que estar escuchando. Esos son los **Manejadores de Eventos** (Event Handlers o Subscribers).
+
+Un Manejador es una pieza de código que:
+
+  * Se suscribe a uno o más tipos de eventos.
+  * Ejecuta una lógica específica cuando recibe un evento del tipo al que está suscrito.
+
+**Gráfico Conceptual 5: El Despachador y sus Manejadores**
+
+```
++-----------------------+
+| Despachador de Eventos|
++-----------+-----------+
+            |
+            +---- Evento: ProductoRegistradoEvento ----+
+            |                                          |
+            v                                          v
++-------------------------+              +-----------------------------+
+| ManejadorA:             |              | ManejadorB:                 |
+| NotificarAdminSistema   |              | ActualizarCacheDeProductos  |
+| (Usa INotificadorPort)  |              | (Usa ICachePort)            |
++-------------------------+              +-----------------------------+
+
+            +---- Evento: PedidoConfirmadoEvento ------+
+            |                                          |
+            v                                          v
++-------------------------+              +-----------------------------+
+| ManejadorC:             |              | ManejadorD:                 |
+| EnviarEmailConfirmacion |              | ReservarStockEnInventario   |
+| (Usa IEmailPort)        |              | (Usa IServicioInventario)   |
++-------------------------+              +-----------------------------+
+```
+
+**¿Dónde viven estos Manejadores?**
+
+  * **En la Capa de Aplicación:** Si la reacción al evento es una lógica que pertenece al mismo sistema/contexto delimitado.
+      * Ejemplo: Cuando se crea un `ProductoRegistradoEvento`, un manejador podría enviar un email de notificación al administrador (usando un puerto de salida `INotificadorPort`).
+      * Otro manejador podría actualizar una caché de productos populares.
+  * **En la Capa de Infraestructura (como Adaptadores):** Si la reacción implica comunicarse con un sistema externo.
+      * Ejemplo: Cuando ocurre un `PedidoPagadoEvento`, un manejador (que es un adaptador) podría publicar este evento en un bus de mensajes como Kafka o RabbitMQ para que otros microservicios lo consuman.
+
+**Ejemplo Interactivo de Diseño:** interactivity
+
+> Para nuestro `ProductoRegistradoEvento`, imaginemos que queremos dos reacciones:
+>
+> 1.  **Notificar al equipo de marketing** para que preparen material promocional.
+> 2.  **Añadir el producto a un índice de búsqueda** para que los clientes lo encuentren.
+>
+> ¿Cómo llamarías a estos dos manejadores? ¿Qué puertos de salida (abstracciones de infraestructura) necesitaría cada uno aproximadamente?
+
+**Un Vistazo a un Manejador (Python Conceptual):**
+
+# En aplicacion/manejadores_eventos/producto_handlers.py
+from dominio.eventos.producto_eventos import ProductoRegistradoEvento # El evento que nos interesa
+from aplicacion.puertos.salida.inotificador import INotificador # Puerto para enviar emails/slack, etc.
+
+```python
+class NotificarMarketingSobreNuevoProductoHandler:
+    def __init__(self, notificador: INotificador, destinatario_marketing: str):
+        self._notificador = notificador
+        self._destinatario_marketing = destinatario_marketing
+
+    async def __call__(self, evento: ProductoRegistradoEvento) -> None:
+        # El despachador llamará a este método cuando ocurra un ProductoRegistradoEvento
+        mensaje = (
+            f"¡Atención Marketing! Nuevo producto para promocionar:\n"
+            f"ID: {evento.id_producto}\n"
+            f"Nombre: {evento.nombre_producto}\n"
+            f"Precio: {evento.precio_inicial}"
+        )
+        print(f"[HANDLER DEBUG] Preparando notificación para marketing: {evento.nombre_producto}")
+        await self._notificador.enviar_notificacion(
+            destinatario=self._destinatario_marketing,
+            mensaje=mensaje,
+            asunto=f"Nuevo Producto Disponible: {evento.nombre_producto}"
+        )
+```
+
+*(Este manejador se "registraría" en el Despachador de Eventos durante la inicialización de la aplicación).*
+
+-----
+
+### ¿Por Qué Tanta "Ceremonia" con los Eventos? ¡Los Beneficios\!
+
+Usar eventos de dominio puede parecer que añade más piezas al puzzle, ¡pero los beneficios suelen merecer la pena\!
+
+1.  **DESACOPLAMIENTO MÁXIMO:** Esta es la joya de la corona.
+
+      * El código que registra un producto **no necesita saber** quién o cuántos están interesados en ese hecho. No llama directamente al servicio de email, ni al de caché, ni al de búsqueda.
+      * ¡Imagina que mañana quieres enviar un SMS además de un email\! El código original del registro de producto **no se toca**. Solo añades un nuevo `ManejadorEnviarSmsNuevoProducto`.
+
+2.  **MAYOR FLEXIBILIDAD Y EXTENSIBILIDAD:**
+
+      * Añadir nuevas reacciones a eventos existentes es fácil: creas un nuevo manejador y lo registras. ¡Listo\!
+      * El sistema puede crecer orgánicamente añadiendo comportamientos sin modificar el código central probado.
+
+3.  **TRAZABILIDAD Y AUDITORÍA:**
+
+      * Los eventos son un registro natural de las cosas importantes que han sucedido. Puedes guardarlos para auditoría, análisis de negocio o depuración.
+
+4.  **COMUNICACIÓN ENTRE MÓDULOS O MICROSERVICIOS:**
+
+      * Los eventos son una forma excelente de comunicar cambios entre diferentes partes de un sistema grande o entre microservicios (generalmente a través de un bus de mensajes).
+
+**Momento de Revelación:** interactivity
+
+> Piensa en una funcionalidad que hayas implementado recientemente o que tengas en mente para tu proyecto. Si la hubieras diseñado con eventos de dominio, ¿qué parte del código se habría simplificado o habría sido más fácil de extender después?
+
+-----
+
+### Algunas Consideraciones Avanzadas (Para los Curiosos)
+
+A medida que te adentras en los eventos de dominio, surgen algunos temas más profundos:
+
+  * **Atomicidad (Consistencia Fuerte):** ¿Cómo te aseguras de que el cambio de estado del Agregado Y la publicación (o al menos el encolamiento seguro) de sus eventos ocurren como una unidad atómica (todo o nada)?
+      * **Patrón Outbox:** Una técnica común es guardar los eventos en una tabla especial de la misma base de datos que tus agregados, dentro de la misma transacción. Un proceso separado luego lee de esta "bandeja de salida" y los publica de forma fiable.
+  * **Manejo Síncrono vs. Asíncrono:**
+      * **Síncrono:** El servicio de aplicación espera a que todos los manejadores (in-process) terminen antes de devolver la respuesta al cliente. Simple, pero puede afectar la latencia si los manejadores son lentos.
+      * **Asíncrono:** El servicio de aplicación despacha el evento y continúa. Los manejadores se ejecutan en segundo plano (ej. en un `asyncio.Task`, o encolados para un worker). Mejor para la latencia, pero añade complejidad (manejo de errores, reintentos).
+  * **Idempotencia de los Manejadores:** Especialmente en sistemas distribuidos o con manejo asíncrono, un evento podría ser entregado a un manejador más de una vez. El manejador debería ser **idempotente**, es decir, procesar el mismo evento múltiples veces debería tener el mismo resultado final que procesarlo una sola vez.
+
+-----
+
+### ¡Tu Turno de Nuevo\! Integrando el Conocimiento interactivity
+
+Imagina el siguiente escenario en tu aplicación: **Un usuario cancela su suscripción (`SuscripcionCanceladaEvento`).**
+
+1.  **¿Quién origina este evento?** (¿Una entidad `Suscripcion`? ¿Un servicio de aplicación directamente?)
+2.  **¿Qué información llevaría `SuscripcionCanceladaEvento`?**
+3.  **¿Qué manejadores podrían estar interesados en este evento?** Piensa en al menos dos.
+      * *Ejemplo 1:* Enviar un email de "Lamentamos verte ir" con una encuesta.
+      * *Ejemplo 2:* Revocar el acceso del usuario a funcionalidades premium.
+      * *Ejemplo 3:* Notificar al equipo de retención de clientes.
+4.  **Para cada manejador que pensaste, ¿sería parte de la capa de aplicación o un adaptador de infraestructura? ¿Qué puertos de salida necesitaría?**
+
+Intenta dibujar (mentalmente o en papel) el flujo completo, desde que el usuario hace clic en "Cancelar Suscripción" en la interfaz, pasando por el adaptador de entrada, el servicio de aplicación, la entidad, el despachador de eventos, y finalmente llegando a los manejadores.
+
+-----
+
+¡Y eso es un vistazo dinámico a los eventos de dominio\! Son una pieza clave para construir aplicaciones que no solo funcionan, sino que también son adaptables, resilientes y cuentan la historia de tu negocio de manera efectiva.
 ---
 
 ## **6.8 Implementar casos de uso en la capa de aplicación**
 
+Ya hemos hablado de los puertos de entrada (nuestras APIs del núcleo) y de cómo los adaptadores HTTP (como los controladores FastAPI) los invocan. Pero, ¿quién implementa realmente la lógica detrás de estos puertos de entrada? ¡Bienvenidos a la **Capa de Aplicación** y a sus protagonistas: los **Servicios de Aplicación** o **Manejadores de Casos de Uso**\!
+
+Si la Capa de Dominio es el cerebro con las reglas de negocio puras, la Capa de Aplicación es como el director de orquesta. No toca los instrumentos (esa es tarea del dominio y de los adaptadores de infraestructura), pero se asegura de que todos trabajen juntos en armonía para producir una melodía coherente: el cumplimiento de un caso de uso específico del usuario.
+
+### ¿Qué es un Servicio de Aplicación (o Caso de Uso)?
+
+Un Servicio de Aplicación:
+
+1.  **Implementa un Puerto de Entrada:** Es la materialización concreta de una interfaz de puerto de entrada. Si el puerto define `async def crear_pedido(self, datos_pedido: PedidoDTO) -> ConfirmacionPedidoDTO:`, el servicio de aplicación tendrá un método con esa firma.
+2.  **Orquesta el Flujo:** Coordina los diferentes componentes para realizar una tarea. Esto implica:
+      * Recibir datos de entrada (generalmente DTOs o Comandos).
+      * Utilizar Puertos de Salida (como Repositorios) para obtener o persistir Entidades del Dominio.
+      * Invocar lógica en las Entidades del Dominio o en Servicios de Dominio.
+      * Utilizar otros Puertos de Salida para efectos colaterales (ej. enviar notificaciones, publicar eventos).
+      * Despachar Eventos de Dominio que hayan sido generados por los agregados.
+      * Devolver un resultado (generalmente un DTO) o nada si es un comando puro.
+3.  **Es Cliente del Dominio y de los Puertos de Salida:** Depende de las abstracciones del dominio y de las interfaces de los puertos de salida, no de implementaciones concretas de infraestructura.
+4.  **Mantiene la Lógica de Aplicación, no de Negocio Pura:** La lógica de negocio fundamental (reglas que siempre aplican a una entidad, invariantes) debe estar en el Dominio. El servicio de aplicación contiene la lógica de *flujo de trabajo* o *coordinación* específica de un caso de uso. Intenta mantenerlos delgados ("thin services").
+
+### Responsabilidades Clave de un Servicio de Aplicación
+
+Vamos a desglosar lo que hace un servicio de aplicación típico:
+
+1.  **Recepción de Datos de Entrada:** A través de los métodos definidos por el puerto de entrada que implementa, recibe DTOs (Data Transfer Objects) o Comandos.
+
+      * *Ejemplo:* `async def registrar_nuevo_producto(self, datos_producto: DatosNuevoProductoDTO) -> ProductoCreadoDTO:`
+
+2.  **Validación a Nivel de Aplicación (Opcional):** Aunque la validación de formato de los DTOs la puede hacer el adaptador (FastAPI con Pydantic es genial para esto), el servicio de aplicación podría realizar validaciones más específicas del caso de uso que no encajan ni en el dominio ni en el adaptador. Por ejemplo, verificar permisos si no se delega a un middleware, o una regla que cruce múltiples agregados si es parte del flujo del caso de uso (con cuidado).
+
+3.  **Recuperación de Objetos de Dominio:** Usa las interfaces de los Repositorios (Puertos de Salida) para cargar las Entidades o Raíces de Agregados necesarios desde la persistencia.
+
+      * *Ejemplo:* `producto_existente = await self.repositorio_productos.obtener_por_id(id_producto)`
+
+4.  **Orquestación de la Lógica de Dominio:** Llama a métodos en las Entidades, Agregados o Servicios de Dominio para ejecutar las reglas de negocio.
+
+      * *Ejemplo:* `producto_existente.ajustar_stock(cantidad, motivo_ajuste)`
+      * `resultado_calculo = self.servicio_calculo_impuestos_dominio.calcular_para(pedido)`
+
+5.  **Persistencia de Cambios:** Después de que los objetos de dominio han sido modificados, utiliza los Repositorios para guardar estos cambios.
+
+      * *Ejemplo:* `await self.repositorio_productos.guardar(producto_modificado)`
+
+6.  **Coordinación de Otros Puertos de Salida:** Si el caso de uso requiere enviar una notificación, interactuar con un sistema externo, etc., el servicio de aplicación utilizará la interfaz del puerto de salida correspondiente.
+
+      * *Ejemplo:* (Aunque a menudo esto se delega a manejadores de eventos) `await self.notificador.enviar_confirmacion_pedido(datos_confirmacion)`
+
+7.  **Gestión de Transacciones (Conceptual):** El servicio de aplicación es, conceptualmente, el límite de una transacción. Todas las operaciones dentro de un método de caso de uso (leer, modificar dominio, guardar, despachar eventos in-process) deberían idealmente ejecutarse como una unidad atómica (o todo tiene éxito, o todo se revierte). La implementación técnica de esto (ej. un decorador de transacción, middleware) puede estar fuera del propio servicio, pero el servicio define el alcance.
+
+8.  **Despacho de Eventos de Dominio:** Después de persistir los cambios (¡importante el orden\!), obtiene los eventos de dominio acumulados por los agregados y los pasa a un Despachador de Eventos.
+
+      * *Ejemplo:* `eventos = producto_modificado.obtener_eventos_pendientes()`
+      * `await self.despachador_eventos.despachar_multiples(eventos)`
+
+9.  **Devolución de Resultados:** Retorna un DTO con la información de salida relevante para el invocador, o `None` si la operación no produce datos de respuesta.
+
+      * *Ejemplo:* `return ProductoActualizadoDTO(id=producto_modificado.id, stock_nuevo=producto_modificado.stock)`
+
+### Estructura Típica de un Servicio de Aplicación
+
+Generalmente, se implementan como clases.
+
+  * **Constructor:** Recibe sus dependencias (implementaciones de puertos de salida, despachador de eventos) a través de inyección de dependencias. Estas dependencias son siempre **interfaces**, no clases concretas de infraestructura.
+  * **Métodos:** Implementan las operaciones definidas en una o más interfaces de puerto de entrada. Cada método representa un caso de uso o una acción específica.
+  * **Asincronía:** Si los puertos de salida (repositorios, etc.) son asíncronos (común en Python con I/O), los métodos del servicio de aplicación también serán `async`.
+
+### Ejemplo de Implementación (Continuando con `ServicioGestionInventario`)
+
+Vamos a expandir nuestro `ServicioGestionInventario` para ilustrar estos puntos. Asumiremos que tenemos las interfaces `IRepositorioProductos`, `INotificador`, `IDespachadorEventos` y los DTOs y Eventos definidos en secciones anteriores.
+
+```python
+# En aplicacion/servicios/servicio_gestion_inventario.py
+
+from uuid import UUID, uuid4
+
+# Entidades y Eventos del Dominio
+from dominio.modelos.producto import Producto
+# (Se asume que Producto.py ahora puede registrar ProductoCreadoEvento y StockProductoActualizadoEvento)
+# from dominio.eventos.producto_eventos import ProductoCreadoEvento, StockProductoActualizadoEvento
+
+# Puertos de Entrada y Salida, DTOs
+from aplicacion.puertos.entrada.igestion_inventario_input_port import IGestionInventarioInputPort
+from aplicacion.puertos.salida.irepositorio_productos import IRepositorioProductos
+# from aplicacion.puertos.salida.inotificador import INotificador # Podría usarse aquí o vía manejador de evento
+from aplicacion.despachadores.despachador_eventos_simple import DespachadorEventosSimple # O la interfaz IDespachadorEventos
+from aplicacion.dtos import (
+    DatosNuevoProductoDTO, ProductoCreadoDTO, 
+    DatosAjusteStockDTO, ProductoStockActualizadoDTO # Nuevos DTOs para el ejemplo
+)
+
+# Excepciones personalizadas de la capa de aplicación
+class ProductoNoEncontradoError(Exception):
+    def __init__(self, id_producto: UUID):
+        self.id_producto = id_producto
+        super().__init__(f"Producto con ID '{id_producto}' no encontrado.")
+
+class NombreProductoDuplicadoError(Exception):
+    def __init__(self, nombre: str):
+        self.nombre = nombre
+        super().__init__(f"Ya existe un producto con el nombre '{nombre}'.")
+
+class StockInsuficienteError(ValueError): # Hereda de ValueError para semántica
+    pass
 
 
+class ServicioGestionInventario(IGestionInventarioInputPort):
+    def __init__(
+        self,
+        repositorio_productos: IRepositorioProductos,
+        despachador_eventos: DespachadorEventosSimple # Idealmente una interfaz IDespachadorEventos
+        # notificador: INotificador # Opcional, si se notifica directamente y no vía evento
+    ):
+        self.repositorio_productos = repositorio_productos
+        self.despachador_eventos = despachador_eventos
+        # self.notificador = notificador
+
+    async def registrar_nuevo_producto(self, datos_producto: DatosNuevoProductoDTO) -> ProductoCreadoDTO:
+        # 1. Validación a nivel de aplicación (ejemplo: unicidad del nombre)
+        #    (Esta lógica podría estar también en un Servicio de Dominio si es una regla de negocio invariante)
+        productos_existentes = await self.repositorio_productos.buscar_por_nombre(datos_producto.nombre)
+        if any(p.nombre.lower() == datos_producto.nombre.lower() for p in productos_existentes):
+            raise NombreProductoDuplicadoError(nombre=datos_producto.nombre)
+
+        # 2. Orquestación de lógica de dominio (creación de la entidad)
+        #    La entidad Producto se encarga de sus validaciones internas (precio > 0, stock >= 0)
+        #    y de registrar el ProductoCreadoEvento internamente.
+        try:
+            nuevo_producto = Producto(
+                nombre=datos_producto.nombre,
+                descripcion=datos_producto.descripcion,
+                precio=datos_producto.precio,
+                stock=datos_producto.stock_inicial
+                # El ID se autogenera en la entidad Producto si no se pasa
+            )
+        except ValueError as e: # Capturar errores de validación de la entidad
+            raise # O envolverla en una excepción de aplicación si se quiere más control
+
+        # 3. Persistencia de cambios
+        await self.repositorio_productos.guardar(nuevo_producto)
+
+        # 4. Despacho de Eventos de Dominio
+        eventos_dominio = nuevo_producto.obtener_eventos_pendientes()
+        await self.despachador_eventos.despachar_multiples(eventos_dominio)
+        
+        # 5. Devolución de resultado (DTO)
+        #    Podríamos añadir más lógica aquí si el DTO de salida necesita más info que la del evento
+        return ProductoCreadoDTO(
+            id_producto=nuevo_producto.id,
+            nombre=nuevo_producto.nombre,
+            # mensaje_bienvenida se podría formar aquí o ser añadido por un manejador de evento
+            mensaje_bienvenida=f"Producto '{nuevo_producto.nombre}' registrado exitosamente."
+        )
+
+    async def ajustar_stock_producto(self, datos_ajuste: DatosAjusteStockDTO) -> ProductoStockActualizadoDTO:
+        # 1. Recuperación del objeto de dominio
+        producto = await self.repositorio_productos.obtener_por_id(datos_ajuste.id_producto)
+        if not producto:
+            raise ProductoNoEncontradoError(id_producto=datos_ajuste.id_producto)
+
+        # 2. Orquestación de lógica de dominio
+        #    El método 'ajustar_stock' de la entidad Producto valida y registra el evento.
+        id_operacion_ficticio = uuid4() # En un caso real, esto vendría del comando o contexto
+        try:
+            producto.ajustar_stock(datos_ajuste.cantidad_ajuste, id_operacion=id_operacion_ficticio)
+        except ValueError as e: # Capturar error de stock insuficiente de la entidad
+            raise StockInsuficienteError(str(e))
+
+
+        # 3. Persistencia de cambios
+        await self.repositorio_productos.guardar(producto)
+
+        # 4. Despacho de Eventos de Dominio
+        eventos_dominio = producto.obtener_eventos_pendientes()
+        await self.despachador_eventos.despachar_multiples(eventos_dominio)
+        
+        # 5. Devolución de resultado (DTO)
+        return ProductoStockActualizadoDTO(
+            id_producto=producto.id,
+            nombre_producto=producto.nombre,
+            stock_actual=producto.stock,
+            ajuste_realizado=datos_ajuste.cantidad_ajuste,
+            mensaje="Stock actualizado correctamente."
+        )
+
+# --- DTOs adicionales para el ejemplo de ajustar_stock_producto ---
+# (Normalmente en aplicacion/dtos.py)
+# from pydantic import BaseModel
+# from uuid import UUID
+
+# class DatosAjusteStockDTO(BaseModel):
+#     id_producto: UUID
+#     cantidad_ajuste: int # Positivo para añadir, negativo para quitar
+#     motivo: str | None = None
+
+# class ProductoStockActualizadoDTO(BaseModel):
+#     id_producto: UUID
+#     nombre_producto: str
+#     stock_actual: int
+#     ajuste_realizado: int
+#     mensaje: str
+```
+
+### Principios Clave para Implementar Servicios de Aplicación
+
+  * **Servicios Delgados, Dominio Rico:** La mayor parte de las reglas de negocio complejas deben residir en el Dominio (Entidades, VOs, Servicios de Dominio). Los servicios de aplicación actúan como coordinadores.
+  * **Depender de Abstracciones:** Siempre depender de las interfaces de los puertos (entrada y salida), no de implementaciones concretas. Esto es clave para la testeabilidad y flexibilidad.
+  * **Una Responsabilidad (por método):** Cada método público del servicio de aplicación debería idealmente corresponder a un único caso de uso o una acción atómica del usuario/sistema.
+  * **Sin Lógica de Presentación:** Los servicios de aplicación no deben saber nada sobre HTTP, JSON, HTML, etc. Reciben y devuelven DTOs o tipos de datos simples/del dominio. La "traducción" a formatos de presentación es tarea de los adaptadores de entrada.
+  * **Manejo de Errores Específico:** Pueden capturar excepciones del dominio y, si es necesario, envolverlas en excepciones más específicas de la capa de aplicación para que los adaptadores las interpreten y conviertan en respuestas adecuadas (ej. códigos de estado HTTP).
+
+### ¿Cómo Encaja Todo?
+
+```
++-------------------+      +---------------------+      +-------------------------+
+| Adaptador de      | --1--> | Puerto de Entrada   | --2--> | Servicio de Aplicación  |
+| Entrada (FastAPI) |      | (Interfaz)          |      | (Implementa Puerto Ent.)|
++-------------------+      +---------------------+      +------------+------------+
+                                                                     | 3. Usa
+                                                                     v
+                                                 +-------------------+   +----------------------+
+                                                 | Dominio (Entidades,|   | Puertos de Salida    |
+                                                 | Agregados, S.Dom) |   | (Interfaces Repo,   |
+                                                 +-------------------+   | Notificador, etc.)   |
+                                                      ^       ^          +----------------------+
+                                                      |       | 4. Usa             | 5. Implementado por
+                                                      +-------+--------------------+
+                                                               (para persistir,    (en Infraestructura)
+                                                                notificar, etc.)
+```
+
+1.  El Adaptador de Entrada (ej. controlador FastAPI) recibe una petición, la valida y convierte en un DTO.
+2.  Llama al método correspondiente del Servicio de Aplicación (que implementa el Puerto de Entrada), pasándole el DTO.
+3.  El Servicio de Aplicación utiliza objetos del Dominio y...
+4.  ...Puertos de Salida (interfaces) para realizar el trabajo.
+5.  Las implementaciones concretas de los Puertos de Salida están en la Infraestructura, pero el Servicio de Aplicación no las conoce directamente.
+
+Implementar correctamente los casos de uso en la capa de aplicación es fundamental para tener un sistema bien estructurado, fácil de probar, mantener y evolucionar, donde la lógica de negocio está bien protegida y orquestada de manera clara.
 ---
 
 ## **6.9 Configurar inyecciones de dependencia de adaptadores externos**
 
+**Imaginemos nuestro hexágono...**
 
+Recordemos rápidamente:
+
+  * **Núcleo (Dominio y Aplicación):** Lógica pura, reglas de negocio, casos de uso. ¡El corazón de nuestra aplicación\!
+  * **Exterior (Infraestructura):** Todo lo que interactúa con el mundo exterior: bases de datos, APIs de terceros, sistemas de mensajería, y también ¡nuestra API HTTP con FastAPI\!
+
+Los **adaptadores externos** son esos componentes en la capa de infraestructura que implementan los **puertos** definidos por nuestro núcleo para comunicarse con herramientas específicas (la base de datos PostgreSQL, una API de pagos, un servicio de envío de correos, etc.).
+
+**(Piensa 🤔):** Si nuestro `ServicioDePedidos` (en la capa de aplicación) necesita guardar un pedido, ¿debería saber si se guarda en PostgreSQL, MongoDB o un archivo CSV? ¡Claro que no\! Solo debe conocer una interfaz, un "contrato" (el puerto `RepositorioDePedidos`).
+
+Ahí es donde la **Inyección de Dependencias (DI)** se convierte en nuestra mejor aliada.
+
+-----
+
+### **Acto 1: ¿Por Qué Inyectar Dependencias de Adaptadores Externos? El Poder del "Desacople Maestro"**
+
+La Inyección de Dependencias es un patrón de diseño en el que un objeto recibe sus dependencias (otros objetos con los que trabaja) desde una fuente externa, en lugar de crearlas internamente.
+
+**Analogía Dinámica: ¡El Chef Estrella y sus Utensilios\!** 🍳🔪
+
+  * **Chef Estrella (Nuestro Caso de Uso / Servicio de Aplicación):** Sabe la receta (lógica de negocio) a la perfección. Necesita ciertos utensilios para cocinar (ej: una sartén antiadherente, un horno de convección).
+  * **Utensilios Específicos (Adaptadores Externos):** La sartén "SuperCook 3000" (nuestro `AdaptadorPostgreSQL`) o el horno "MegaBake Pro" (nuestro `AdaptadorServicioEmail`).
+  * **Ayudante de Cocina Inteligente (Sistema de Inyección de Dependencias de FastAPI):** En lugar de que el Chef vaya a la tienda a comprar o construya cada utensilio específico (acoplamiento fuerte), el Ayudante le proporciona el utensilio exacto que cumple con la especificación ("necesito algo para saltear", "necesito algo para hornear a 200°C") justo cuando lo necesita.
+
+**Ventajas Clave para Nuestros Adaptadores Externos:**
+
+1.  **Desacoplamiento PURO:**
+
+      * Nuestro núcleo (Dominio/Aplicación) solo depende de abstracciones (interfaces/puertos). ¡No sabe nada de PostgreSQL, Kafka o AWS S3\!
+      * Los adaptadores externos dependen del núcleo (para implementar los puertos), pero el núcleo NO depende de los adaptadores. ¡Esta es la inversión de dependencia en acción\!
+
+2.  **Testabilidad Suprema:**
+
+      * ¿Queremos probar un servicio de aplicación sin tocar la base de datos real? ¡Fácil\! Inyectamos un adaptador "falso" (un mock o un `InMemoryRepository`) que cumpla el mismo contrato (puerto). ¡Tests unitarios y de integración más rápidos y fiables\!
+
+3.  **Flexibilidad y Mantenibilidad:**
+
+      * ¿Migramos de PostgreSQL a MySQL? ¿Cambiamos de proveedor de servicio de email?
+          * Creamos un nuevo adaptador (`AdaptadorMySQL`, `AdaptadorSendgrid`).
+          * Cambiamos la "configuración" de la inyección de dependencias para que ahora proporcione el nuevo adaptador.
+          * ¡El núcleo de la aplicación ni se entera\! ✨
+
+-----
+
+### **Acto 2: FastAPI al Rescate con `Depends` - ¡Tu Ayudante de Cocina Personal\!**
+
+Ya conocéis `Depends` de FastAPI. Es ese sistema elegante y potente que nos permite declarar dependencias para nuestros path operations, y FastAPI se encarga de resolverlas y proporcionarlas.
+
+```python
+# src/domain/ports/user_repository_port.py
+from abc import ABC, abstractmethod
+from typing import Optional
+from src.domain.entities.user import User # Asumiendo una entidad User
+
+class UserRepositoryPort(ABC):
+    @abstractmethod
+    async def get_by_id(self, user_id: str) -> Optional[User]:
+        raise NotImplementedError
+
+    @abstractmethod
+    async def save(self, user: User) -> User:
+        raise NotImplementedError
+```
+
+**(Pregunta para vosotros 🤔):** ¿Por qué `ABC` y `@abstractmethod` son tan importantes aquí para la Arquitectura Hexagonal? *(Respuesta: Definen el contrato estricto que cualquier adaptador DEBE cumplir, garantizando la intercambiabilidad).*
+
+**Paso 2: El Adaptador (Implementación Concreta) en Infraestructura (¡También\!)**
+
+Este adaptador necesitará, por ejemplo, una sesión de base de datos para funcionar.
+
+```python
+# src/infrastructure/adapters/postgres_user_repository_adapter.py
+from typing import Optional
+from sqlalchemy.ext.asyncio import AsyncSession # Ejemplo con SQLAlchemy
+from src.domain.entities.user import User
+from src.domain.ports.user_repository_port import UserRepositoryPort
+
+class PostgresUserRepositoryAdapter(UserRepositoryPort):
+    def __init__(self, db_session: AsyncSession): # ¡Dependencia de una sesión de BD!
+        self._db_session = db_session
+
+    async def get_by_id(self, user_id: str) -> Optional[User]:
+        # Lógica para buscar en PostgreSQL con self._db_session
+        # ...ejemplo: user_db = await self._db_session.get(UserModel, user_id)
+        print(f"ADAPTADOR POSTGRES: Buscando usuario {user_id}")
+        if user_id == "1": # Simulación
+            return User(id="1", email="user@example.com", name="Usuario Real de BD")
+        return None
+
+    async def save(self, user: User) -> User:
+        # Lógica para guardar/actualizar en PostgreSQL con self._db_session
+        print(f"ADAPTADOR POSTGRES: Guardando usuario {user.name}")
+        # ...ejemplo: self._db_session.add(user_model); await self._db_session.commit()
+        return user
+```
+**Paso 3: El "Cableado" Mágico - Los Proveedores de Dependencias en Infraestructura** 🔌
+
+Aquí es donde le decimos a FastAPI: "Oye, cuando alguien pida un `UserRepositoryPort`, quiero que le des una instancia de `PostgresUserRepositoryAdapter`, y para construirla, necesitarás una `AsyncSession`".
+
+Primero, necesitamos un proveedor para la sesión de base de datos (esto es estándar en FastAPI con BBDD):
+
+```python
+# src/infrastructure/database/db_config.py
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import sessionmaker
+
+DATABASE_URL = "postgresql+asyncpg://user:password@host:port/db" # ¡Configuración!
+
+async_engine = create_async_engine(DATABASE_URL, echo=True)
+AsyncSessionFactory = sessionmaker(bind=async_engine, class_=AsyncSession, expire_on_commit=False)
+
+async def get_db_session() -> AsyncSession: # Este es un proveedor de dependencia
+    async with AsyncSessionFactory() as session:
+        try:
+            yield session
+            await session.commit() # Opcional, depende de tu estrategia de commit
+        except Exception:
+            await session.rollback()
+            raise
+        finally:
+            await session.close()
+```
+
+Ahora, el proveedor para nuestro repositorio:
+
+```python
+# src/infrastructure/dependencies/repository_providers.py
+from fastapi import Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.domain.ports.user_repository_port import UserRepositoryPort
+from src.infrastructure.adapters.postgres_user_repository_adapter import PostgresUserRepositoryAdapter
+from src.infrastructure.database.db_config import get_db_session # Importamos el proveedor de sesión
+
+# ¡Este es el proveedor clave para nuestro adaptador!
+def get_user_repository(
+    db_session: AsyncSession = Depends(get_db_session) # FastAPI inyectará la sesión aquí
+) -> UserRepositoryPort: # ¡Retorna el tipo del PUERTO!
+    return PostgresUserRepositoryAdapter(db_session=db_session)
+```
+
+**¡Observad la belleza\!**
+
+  * `get_user_repository` depende de `get_db_session`.
+  * Retorna `UserRepositoryPort` (la abstracción), pero internamente instancia `PostgresUserRepositoryAdapter` (la concreción).
+
+**Paso 4: Usando el Puerto Inyectado en un Caso de Uso (Capa de Aplicación)**
+
+Nuestros servicios de aplicación deben depender de la abstracción (el puerto).
+
+
+```python
+# src/application/use_cases/user_service.py
+from typing import Optional
+from fastapi import Depends # Para inyectar el puerto en el servicio
+
+from src.domain.entities.user import User
+from src.domain.ports.user_repository_port import UserRepositoryPort
+# ¡IMPORTANTE! El servicio de aplicación no debería importar directamente get_user_repository
+# La inyección se configurará más arriba, al definir el servicio o al usarlo en un endpoint.
+
+class UserService:
+    def __init__(self, user_repo: UserRepositoryPort): # Depende de la ABSTRACCIÓN
+        self._user_repo = user_repo
+
+    async def find_user_by_id(self, user_id: str) -> Optional[User]:
+        # Lógica del caso de uso...
+        return await self._user_repo.get_by_id(user_id)
+
+    async def register_new_user(self, name: str, email: str) -> User:
+        # ... más lógica, validaciones ...
+        new_user = User(id="generated_id", name=name, email=email) # La generación de ID podría ser otro servicio/puerto
+        return await self._user_repo.save(new_user)
+
+# ¿Cómo proporcionamos UserService con su dependencia?
+# Opción A: El servicio se construye con su dependencia inyectada directamente en el router.
+# Opción B (más encapsulada): Creamos un proveedor para el propio servicio.
+
+# src/infrastructure/dependencies/service_providers.py
+from src.application.use_cases.user_service import UserService
+from src.domain.ports.user_repository_port import UserRepositoryPort
+from .repository_providers import get_user_repository # El proveedor de repo que definimos antes
+
+def get_user_service(
+    user_repo: UserRepositoryPort = Depends(get_user_repository) # Inyecta la implementación del repo
+) -> UserService:
+    return UserService(user_repo=user_repo)
+```
+
+**Paso 5: Inyección Final en los Endpoints de FastAPI (Capa de Interfaces)**
+
+Nuestros controladores/routers en la capa de interfaces pedirán el servicio de aplicación, y FastAPI, a través de los proveedores, ensamblará todo.
+
+```python
+# src/interfaces/http/user_controller.py
+from fastapi import APIRouter, Depends, HTTPException
+from typing import Optional
+
+from src.application.use_cases.user_service import UserService
+from src.domain.entities.user import User as UserEntity # Para el response_model
+from src.infrastructure.dependencies.service_providers import get_user_service # Proveedor del servicio
+
+router = APIRouter(prefix="/users", tags=["Users"])
+
+@router.get("/{user_id}", response_model=Optional[UserEntity])
+async def get_user_endpoint(
+    user_id: str,
+    user_service: UserService = Depends(get_user_service) # ¡Aquí ocurre la magia!
+):
+    user = await user_service.find_user_by_id(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
+# ... otros endpoints ...
+```
+**Visualicemos el Flujo de Inyección para `get_user_endpoint`:**
+
+1.  Llega una petición a `/users/{user_id}`.
+2.  FastAPI ve que `get_user_endpoint` necesita `UserService` vía `Depends(get_user_service)`.
+3.  Ejecuta `get_user_service()`:
+      * Este a su vez necesita `UserRepositoryPort` vía `Depends(get_user_repository)`.
+4.  Ejecuta `get_user_repository()`:
+      * Este necesita `AsyncSession` vía `Depends(get_db_session)`.
+5.  Ejecuta `get_db_session()`:
+      * Crea y proporciona una `AsyncSession`.
+6.  La `AsyncSession` se inyecta en `get_user_repository()`, que crea y retorna un `PostgresUserRepositoryAdapter`.
+7.  El `PostgresUserRepositoryAdapter` se inyecta en `get_user_service()`, que crea y retorna un `UserService`.
+8.  El `UserService` se inyecta en `get_user_endpoint`.
+9.  ¡El endpoint se ejecuta con todas sus dependencias listas\!
+
+**(¡Momento Didáctico\! 🤯):** ¿Veis cómo el `user_controller` y `user_service` son completamente ajenos a `Postgres` o `SQLAlchemy`? Solo conocen `UserRepositoryPort` y `UserService`. ¡Pura Arquitectura Hexagonal\!
+
+-----
+
+### **Acto 4: Configuraciones Avanzadas y Mejores Prácticas**
+
+  * **Cambiando Implementaciones (ej. para Pruebas): `app.dependency_overrides`**
+
+    Una de las joyas de FastAPI para la testabilidad en arquitecturas como esta. En tus tests (ej. con `pytest`), puedes sobreescribir un proveedor de dependencia por otro.
+
+    Imagina un `InMemoryUserRepositoryAdapter` para no tocar la BD en los tests:
+
+
+```python
+# src/infrastructure/adapters/in_memory_user_repository_adapter.py (simplificado)
+    from src.domain.ports.user_repository_port import UserRepositoryPort
+    # ...
+    class InMemoryUserRepositoryAdapter(UserRepositoryPort):
+        _users: dict[str, User] = {}
+        async def get_by_id(self, user_id: str) -> Optional[User]: return self._users.get(user_id)
+        async def save(self, user: User) -> User: self._users[user.id] = user; return user
+```
+En tu `conftest.py` o fichero de setup de tests:
+
+```python
+# tests/conftest.py
+    import pytest
+    from fastapi.testclient import TestClient
+    from src.main import app # Tu aplicación FastAPI
+    from src.domain.ports.user_repository_port import UserRepositoryPort
+    from src.infrastructure.adapters.in_memory_user_repository_adapter import InMemoryUserRepositoryAdapter
+    from src.infrastructure.dependencies.repository_providers import get_user_repository # El proveedor original
+
+    @pytest.fixture(scope="function")
+    def client_with_in_memory_repo():
+        # Proveedor "override"
+        def get_override_in_memory_user_repository() -> UserRepositoryPort:
+            return InMemoryUserRepositoryAdapter()
+
+        # ¡La magia!
+        app.dependency_overrides[get_user_repository] = get_override_in_memory_user_repository
+        
+        with TestClient(app) as c:
+            yield c
+        
+        app.dependency_overrides.clear() # Limpiar para otros tests
+```
+Ahora, cualquier test que use el fixture `client_with_in_memory_repo` usará el repositorio en memoria sin cambiar una línea del código de aplicación o de los controladores.
+
+  * **Organización de los Proveedores:**
+
+      * Crear un directorio `src/infrastructure/dependencies/` es una buena práctica.
+      * Dentro, puedes tener ficheros como `repository_providers.py`, `service_providers.py`, `external_api_providers.py`, etc.
+      * Esto mantiene el "pegamento" de la infraestructura bien organizado.
+
+  * **¿Dependencias de Configuración?**
+    Si un adaptador necesita, por ejemplo, una API key de una variable de entorno:
+
+```python
+# src/config.py
+    from pydantic_settings import BaseSettings
+    class Settings(BaseSettings):
+        external_service_api_key: str = "DEFAULT_KEY"
+        # ... otras configuraciones ...
+        class Config:
+            env_file = ".env"
+    settings = Settings()
+
+    # src/infrastructure/adapters/some_external_service_adapter.py
+    class SomeExternalServiceAdapter:
+        def __init__(self, api_key: str):
+            self.api_key = api_key
+        async def do_something(self): print(f"Using API key: {self.api_key}")
+
+    # src/infrastructure/dependencies/external_api_providers.py
+    from src.config import settings
+    def get_external_service_adapter() -> SomeExternalServiceAdapter:
+        return SomeExternalServiceAdapter(api_key=settings.external_service_api_key)
+```
+
+FastAPI puede inyectar `Settings` también si lo necesitas, pero a menudo es más simple acceder a un objeto `settings` global como el de Pydantic.
+
+-----
+
+### **Acto 5: El Momento "¡Ajá\!" - Por Qué Esto es Oro Puro para tu Hexágono**
+
+Configurar la Inyección de Dependencias de esta manera:
+
+1.  **Refuerza los Límites del Hexágono:** El núcleo se mantiene agnóstico a la infraestructura. Los detalles de implementación de los adaptadores están encapsulados y son intercambiables.
+
+2.  **Habilita la "Conectividad Flexible":** Cambiar una base de datos, un servicio de mensajería, o la forma en que te comunicas con una API externa, se convierte en:
+
+      * Implementar un nuevo adaptador que cumpla el puerto existente.
+      * Actualizar la función proveedora en `infrastructure/dependencies` para que devuelva la nueva implementación.
+      * ¡Y ya está\! El dominio y la aplicación no se tocan.
+
+3.  **Simplifica la Evolución del Sistema:** A medida que tu aplicación crece o cambian los requisitos tecnológicos, esta separación y configuración explícita de dependencias te ahorrará incontables dolores de cabeza.
+
+-----
+
+**🚀 Desafío Dinámico para el Equipo:**
+
+Imaginad que necesitamos integrar un **servicio de notificaciones**.
+
+1.  **Puerto:** `NotificationServicePort` (en `domain/ports`) con un método `send_notification(user_id: str, message: str)`.
+2.  **Adaptador:** `EmailNotificationAdapter` (en `infrastructure/adapters`) que usa una (hipotética) librería `cool_email_sender`.
+3.  **Preguntas:**
+      * ¿Qué dependencias podría tener `EmailNotificationAdapter` en su `__init__` (ej. un API key, una URL de servicio SMTP)?
+      * ¿Cómo crearíais el proveedor `get_notification_service()` en `infrastructure/dependencies/notification_providers.py`?
+      * Si vuestro `UserService` necesita enviar una notificación tras registrar un usuario, ¿cómo le inyectaríais `NotificationServicePort`?
+
+¡Discutidlo en grupos pequeños y presentad vuestra solución de "cableado"\!
+
+-----
+
+**Conclusión y Próximos Pasos:**
+
+Dominar la inyección de dependencias con FastAPI no es solo una técnica de FastAPI; es la forma de dar vida real y pragmática a los principios de la Arquitectura Hexagonal. Permite que el núcleo de tu aplicación sea robusto, testable e independiente de los detalles cambiantes del mundo exterior.
+
+Recuerda: **Abstracciones en el núcleo, concreciones en la infraestructura, y FastAPI `Depends` como el maestro de ceremonias que los une elegantemente.**
+
+**Referencias Bibliográficas y Lecturas Recomendadas:**
+
+  * **FastAPI Dependency Injection:** [https://fastapi.tiangolo.com/tutorial/dependencies/](https://fastapi.tiangolo.com/tutorial/dependencies/) (¡La fuente oficial\!)
+  * **Alistair Cockburn - Hexagonal Architecture:** [https://alistair.cockburn.us/hexagonal-architecture/](https://alistair.cockburn.us/hexagonal-architecture/) (El origen)
+  * **Martin Fowler - Dependency Injection:** [https://martinfowler.com/articles/injection.html](https://martinfowler.com/articles/injection.html) (Conceptos clave)
+  * **Robert C. Martin (Uncle Bob) - Clean Architecture:** Aunque no es Hexagonal per se, comparte muchos principios sobre la inversión de dependencias. (Libro "Clean Architecture: A Craftsman's Guide to Software Structure and Design")
+
+En la próxima sesión, pondremos todo esto aún más en práctica al diseñar pruebas para el núcleo sin depender de infraestructuras (¡ya hemos visto un adelanto con `dependency_overrides`\!).
+
+¡Gracias y a seguir construyendo hexágonos sólidos\!
 
 ## **6.10 Ejemplo de microservicio hexagonal completo con FastAPI**
 
