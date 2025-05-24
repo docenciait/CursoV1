@@ -240,12 +240,12 @@ flowchart LR
 | --- | --- | --- | --- | --- | --- | 
 | 1️⃣ | 4 junio 2025 | Miércoles | 3h | Bloque 1  | Tema 1 y Tema 2 | 
 | 2️⃣ | 5 junio 2025 | Jueves | 4h | Bloque 1 | Tema 3, Tema 4 y Tema 5 | 
-| 3️⃣ | 9 junio 2025 | Lunes | 4h | Bloque 2 | Tema 6 | 
-| 4️⃣ | 10 junio 2025 | Martes | 4h | Bloque 2 | Tema 7 y Tema 8 | 
-| 5️⃣ | 11 junio 2025 | Miércoles | 3h | Bloque 3 | Tema 9 | 
-| 6️⃣ | 12 junio 2025 | Jueves | 4h | Bloque 3 | Tema 10 y Tema 11| 
-| 7️⃣ | 16 junio 2025 | Lunes | 4h | Bloque 4 | Tema 12 y Tema 13 | 
-| 8️⃣ | 17 junio 2025 | Martes | 4h | Bloque 4 + Proyecto Final | Tema 14, Tema 15 y Tema 16 | 
+| 3️⃣ | 6 junio 2025 | Lunes | 4h | Bloque 2 | Tema 6 | 
+| 4️⃣ | 0 junio 2025 | Martes | 4h | Bloque 2 | Tema 7 y Tema 8 | 
+| 5️⃣ | 10 junio 2025 | Miércoles | 3h | Bloque 3 | Tema 9 | 
+| 6️⃣ | 11 junio 2025 | Jueves | 4h | Bloque 3 | Tema 10 y Tema 11| 
+| 7️⃣ | 12 junio 2025 | Lunes | 4h | Bloque 4 | Tema 12 y Tema 13 | 
+| 8️⃣ | 13 junio 2025 | Martes | 4h | Bloque 4 + Proyecto Final | Tema 14, Tema 15 y Tema 16 | 
 
 ---
 
