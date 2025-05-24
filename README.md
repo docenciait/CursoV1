@@ -53,7 +53,7 @@ Desarrolladores backend con experiencia en Python que quieran especializarseen m
 
 ---
 
-- **Fechas: 4, 5, 9, 10, 11, 12, 16 y 17 de junio (8 sesiones)**
+- **Fechas: 4, 5, 6, 9, 10, 11, 12, 13 de junio (8 sesiones)**
 - **Horarios: de 08:30 a 12:30 | 4 y 11 de junio: de 08:30 a 11:30**
 - **Duración: 30.0 horas**
 
