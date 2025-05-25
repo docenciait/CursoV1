@@ -40,7 +40,7 @@
 
 **Arquitectura de Software** 
 
-![](img/uber_sw_arq.png)
+![](img/arq3.PNG)
 
 > **Definición:** 
 
