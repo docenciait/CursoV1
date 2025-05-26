@@ -13,7 +13,7 @@
   - [1.8 Distribución de los Equipos en torno a Microservicios](#18-distribución-de-los-equipos-en-torno-a-microservicios)
   - [1.9 Evaluación del Impacto de los Microservicios en la Gestión del Ciclo de Vida del Software (SDLC)](#19-evaluación-del-impacto-de-los-microservicios-en-la-gestión-del-ciclo-de-vida-del-software-sdlc)
   - [1.10 Herramientas Modernas para la Gestión de Arquitecturas Distribuidas](#110-herramientas-modernas-para-la-gestión-de-arquitecturas-distribuidas)
-  - [1.11 Introducción a Patrones Clave](#111-introducción-a-patrones-clave)
+  - [1.11 Introducción a Patrones Clave: API Gateway, Service Registry y Service Discovery](#111-introducción-a-patrones-clave)
   - [Referencias](#referencias)
 
  ---
@@ -1167,129 +1167,117 @@ graph TD
 
 -----
 
-## 1.11 Introducción a Patrones Clave 
+## 1.11 Introducción a Patrones Clave: API Gateway, Service Registry y Service Discovery
 
-Los patrones son el **lenguaje común** de los arquitectos de software. Son soluciones *reutilizables y probadas* a problemas comunes. En microservicios, entender estos patrones es *aún más crítico* debido a la naturaleza distribuida.
 
-**1. Patrón: API Gateway**
+Cuando pasamos de un monolito a múltiples microservicios, surgen nuevos desafíos: ¿Cómo acceden los clientes (navegadores, apps móviles, otros sistemas) a nuestros servicios? ¿Cómo encuentran los servicios la ubicación (IP y puerto) de otros servicios si estas ubicaciones pueden cambiar dinámicamente? Aquí es donde entran estos patrones.
 
-  * **El Problema:** Exponer N servicios directamente a M clientes (Web, Móvil, B2B) es un caos: Múltiples endpoints, protocolos variados, autenticación repetida, acoplamiento, latencia.
-  * **La Solución:** Una fachada (Facade) inteligente.
-    ```mermaid
-    graph TD
-        C_Web[Cliente Web] --> BFF_Web[BFF Web (Gateway)];
-        C_Mob[Cliente Móvil] --> BFF_Mob[BFF Móvil (Gateway)];
-        C_B2B[Cliente B2B] --> Edge_GW[Edge Gateway];
+#### 1\. Patrón API Gateway 🚪
 
-        BFF_Web --> SvcA[Servicio A];
-        BFF_Web --> SvcB[Servicio B];
-        BFF_Mob --> SvcA;
-        BFF_Mob --> SvcC[Servicio C];
-        Edge_GW --> SvcB;
-        Edge_GW --> SvcC;
-    end
-    ```
-  * **Funciones Detalladas:**
-      * **Enrutamiento (L7):** Basado en path (`/orders`), host, cabeceras.
-      * **Autenticación/Autorización:** Descarga esta responsabilidad de los servicios (Validación JWT, API Keys, OAuth2).
-      * **Rate Limiting / Throttling:** Protege contra abusos o picos.
-      * **Terminación SSL/TLS:** Centraliza la gestión de certificados.
-      * **Transformación:** Adaptar peticiones/respuestas (ej: XML a JSON).
-      * **Agregación (BFF):** Combinar múltiples llamadas internas en una sola respuesta externa.
-  * **Trade-offs:**
-      * **(+)** Desacoplamiento Cliente-Servidor, Seguridad Centralizada, Simplificación Cliente.
-      * **(-)** Potencial SPOF (Single Point of Failure - ¡Necesita HA\!), Cuello de Botella (rendimiento crítico), Riesgo de Lógica Excesiva.
+  * **El Problema:** En una arquitectura de microservicios, los clientes tendrían que conocer la ubicación de *cada* microservicio y manejar múltiples puntos de entrada. Esto complica el código del cliente, lo acopla fuertemente a la estructura interna y dificulta la implementación de funcionalidades transversales (autenticación, logging, rate limiting).
 
-**2. Patrones: Service Registry & Service Discovery**
+  * **La Solución:** El **API Gateway** actúa como un **único punto de entrada** (o unos pocos, según la fachada) para todas las peticiones de los clientes. Es una capa intermedia que se sitúa entre los clientes y los microservicios.
 
-  * **El Problema:** Los servicios son efímeros. ¿Cómo A encuentra a B si B puede cambiar de IP en cualquier momento?
-  * **La Solución:** Un directorio (Registry) y un mecanismo de búsqueda (Discovery).
-    ```mermaid
-    graph TD
-        subgraph Flujo
-            SvcA_1[Svc A - Inst 1] -- 1. Registro (IP1) --> Registry{Service Registry};
-            SvcB_1[Svc B - Inst 1] -- 1. Registro (IP2) --> Registry;
-            SvcB_2[Svc B - Inst 2] -- 1. Registro (IP3) --> Registry;
-            Registry -- 2. Health Checks --> SvcA_1;
-            Registry -- 2. Health Checks --> SvcB_1;
-            Registry -- 2. Health Checks --> SvcB_2;
-            SvcA_1 -- 3. Dame IPs para 'Svc B' --> Registry;
-            Registry -- 4. ['IP2', 'IP3'] --> SvcA_1;
-            SvcA_1 -- 5. Elige IP3 (Balanceo) --> SvcB_2;
-        end
-    ```
-  * **Tipos de Discovery:**
-      * **Client-Side:** El cliente obtiene la lista y elige. **(+)** Control total. **(-)** Complejidad en cliente.
-      * **Server-Side:** El cliente llama a una IP/DNS virtual, y un proxy/LB (K8s Service, Service Mesh) elige. **(+)** Transparente. **(-)** Menos control (salvo con Service Mesh).
-  * **Health Checks:** Son *vitales*. El Registry debe saber si una instancia está *realmente* disponible antes de dar su IP.
-  * **Trade-offs:**
-      * **(+)** Permite sistemas dinámicos y elásticos.
-      * **(-)** El Registry es un componente *crítico* (¡Necesita HA\!), Consistencia del Registry (¿Qué tan rápido se actualiza?).
+  * **Responsabilidades Clave:**
+      * **Enrutamiento (Routing):** Dirige las peticiones entrantes al microservicio apropiado.
+      * **Composición/Agregación:** Puede combinar resultados de varios microservicios en una única respuesta para el cliente.
+      * **Descarga de Tareas (Offloading):** Maneja responsabilidades comunes a muchos servicios, como:
+          * Autenticación y Autorización.
+          * Terminación SSL.
+          * Limitación de Tasa (Rate Limiting).
+          * Cacheo.
+          * Logging y Monitorización.
+          * Transformación de Protocolos (Ej: HTTP a gRPC).
+  * **Ventajas:** Simplifica los clientes, centraliza funcionalidades transversales, oculta la estructura interna de microservicios, proporciona una capa adicional de seguridad.
+  * **Desafíos:** Puede convertirse en un cuello de botella o un monolito si no se diseña y escala adecuadamente. Añade latencia.
 
-**3. Patrón: Circuit Breaker**
+<!-- end list -->
 
-  * **El Problema:** Fallos en cascada. Un servicio lento/caído puede tumbar a todos sus dependientes.
-  * **La Solución:** Un fusible inteligente que protege contra fallos repetidos.
-    ```mermaid
-    stateDiagram-v2
-        [*] --> Closed: Sistema OK
-        Closed --> Open: Umbral Fallos Superado
-        Open --> HalfOpen: Timeout Expirado
-        HalfOpen --> Closed: Llamada OK
-        HalfOpen --> Open: Llamada Falla
-        Open --> Open: Llamada Rechazada (Fail Fast)
-        Closed --> Closed: Llamada OK
-    ```
-  * **Beneficios:**
-      * **Fail Fast:** Evita esperas inútiles, liberando recursos.
-      * **Resiliencia:** Impide que fallos locales se conviertan en fallos globales.
-      * **Degradación Elegante:** Permite ofrecer respuestas *parciales* o *cacheadas* (fallback).
-  * **Implementación:** Librerías (Resilience4j) o, *idealmente*, a nivel de Service Mesh (Istio, Linkerd) para no "contaminar" el código de negocio.
-  * **Trade-offs:**
-      * **(+)** Aumenta drásticamente la resiliencia.
-      * **(-)** Requiere configuración y ajuste fino (umbrales, timeouts), Complejidad añadida si se implementa manualmente.
-
-**4. Patrón: Saga**
-
-  * **El Problema:** Mantener la consistencia de datos en *transacciones de negocio* que abarcan múltiples servicios, **sin usar transacciones distribuidas (XA)**, que son complejas y no escalan bien.
-  * **La Solución:** Secuencia de transacciones locales + Compensaciones.
 ```mermaid
-sequenceDiagram
-    participant Client
-    participant OrderSvc
-    participant StockSvc
-    participant PaymentSvc
-
-    Client ->>+ OrderSvc: Crear Pedido
-    OrderSvc ->>+ StockSvc: ReservarStock(Pedido)
-    StockSvc -->>- OrderSvc: Stock Reservado (OK)
-    OrderSvc ->>+ PaymentSvc: ProcesarPago(Pedido)
-
-    alt Pago OK
-        PaymentSvc -->> OrderSvc: Pago OK
-        OrderSvc ->> Client: Pedido Creado (OK)
-    else Pago Fallido
-        PaymentSvc -->> OrderSvc: Pago Fallido (ERROR)
-        OrderSvc ->> StockSvc: LiberarStock(Pedido)
-        StockSvc -->> OrderSvc: Stock Liberado
-        OrderSvc -->> Client: Pedido Fallido (ERROR)
+graph TD
+    subgraph Clientes
+        C1[Cliente Web]
+        C2[App Móvil]
+        C3[Sistema Externo]
     end
 
-    PaymentSvc -->>- OrderSvc: Fin Activación
+    subgraph Infraestructura
+        GW(API Gateway)
+    end
+
+    subgraph Microservicios
+        MS1[Servicio Usuarios]
+        MS2[Servicio Productos]
+        MS3[Servicio Pedidos]
+    end
+
+    C1 --> GW;
+    C2 --> GW;
+    C3 --> GW;
+
+    GW -- /users/* --> MS1;
+    GW -- /products/* --> MS2;
+    GW -- /orders/* --> MS3;
+    GW -- /composite/order-details --> MS2;
+    GW -- /composite/order-details --> MS3;
 
 ```
-  * **Tipos:**
-      * **Coreografía:** Servicios se suscriben a eventos. Desacoplado pero difícil de seguir.
-      * **Orquestación:** Un servicio director indica los pasos. Centralizado pero más fácil de entender.
-  * **Trade-offs:**
-      * **(+)** Permite consistencia eventual sin XA. Desacopla servicios.
-      * **(-)** **¡Muy Complejo\!** Depurar es difícil, las compensaciones deben ser *idempotentes* y fiables, el razonamiento es complicado.
 
-**Conclusión de Patrones:**
+  * **¿Y con FastAPI?**
+      * Puedes usar FastAPI para *construir* un API Gateway simple/moderado. Sus capacidades de enrutamiento, middleware y dependencias son muy útiles para esto. Podrías tener endpoints en el Gateway que, internamente, usen `httpx` o `aiohttp` para llamar a otros microservicios (también construidos con FastAPI u otra tecnología).
+      * Más comúnmente, tus servicios FastAPI se situarán *detrás* de un API Gateway dedicado como **Kong**, **Tyk**, **AWS API Gateway**, **Azure API Management**, **Google Cloud Endpoints**, o incluso un **Nginx** o **HAProxy** configurado como proxy inverso. Estos gateways ofrecen funcionalidades avanzadas listas para usar.
 
-Estos patrones (y muchos otros como Bulkhead, Rate Limiter, Strangler Fig, CQRS, Event Sourcing) son **esenciales** en tu caja de herramientas. No los aplicarás todos siempre, pero **debes conocerlos** para identificar los problemas y saber qué soluciones existen. Elegir el patrón correcto (y la herramienta que lo implementa) es una de las decisiones más críticas en el diseño de microservicios.
+#### 2\. Patrones Service Registry y Service Discovery 🗺️🔍
+
+  * **El Problema:** En entornos modernos (cloud, contenedores), las instancias de microservicios se crean y destruyen dinámicamente. Sus direcciones IP y puertos no son fijos. ¿Cómo sabe el API Gateway (o cualquier otro servicio) a qué dirección IP y puerto enviar una petición para el "Servicio de Productos"?
+
+  * **La Solución:** Un sistema de dos partes:
+
+      * **Service Registry (Registro de Servicios):** Es una base de datos (o un sistema distribuido) que actúa como una "guía telefónica" para los microservicios. Cuando una instancia de un servicio se inicia, **se registra** a sí misma en el registro, indicando su nombre, dirección IP y puerto. También debe **desregistrarse** al apagarse o actualizar su estado periódicamente (heartbeats) para que el registro sepa que sigue viva.
+      * **Service Discovery (Descubrimiento de Servicios):** Es el proceso mediante el cual un cliente (que puede ser el API Gateway u otro microservicio) **consulta** el Service Registry para encontrar la ubicación actual de un servicio que necesita invocar.
+
+  * **Tipos de Service Discovery:**
+
+      * **Descubrimiento del Lado del Cliente (Client-Side Discovery):** El cliente (ej: el API Gateway) consulta directamente el Service Registry para obtener una lista de ubicaciones disponibles para un servicio y luego elige una (a menudo aplicando balanceo de carga) para hacer la llamada.
+      * **Descubrimiento del Lado del Servidor (Server-Side Discovery):** El cliente hace una llamada a una dirección "virtual" o a un router/proxy (que a menudo es parte de la infraestructura o el propio API Gateway). Este router consulta el Service Registry y reenvía la petición a una instancia activa del servicio. Kubernetes funciona principalmente de esta manera a través de sus 'Services'.
+
+<!-- end list -->
+
+```mermaid
+graph TD
+    SR[Service Registry]
+
+    subgraph Microservicios
+        MS_A1[Instancia A1]
+        MS_A2[Instancia A2]
+        MS_B1[Instancia B1]
+    end
+
+    subgraph Cliente_Gateway
+        C[Cliente / Gateway]
+    end
+
+    MS_A1 --> SR
+    MS_A2 --> SR
+    MS_B1 --> SR
+
+    C --> SR
+    SR --> C
+    C --> MS_A1
+
+
+
+```
+
+  * **¿Y con FastAPI?**
+      * Tus servicios FastAPI **no** incluyen un Service Registry/Discovery de forma nativa. Necesitas integrarlos con herramientas externas.
+      * **Registro:** Podrías usar los [eventos de ciclo de vida (`startup` y `shutdown`)](https://www.google.com/search?q=%5Bhttps://fastapi.tiangolo.com/advanced/events/%5D\(https://fastapi.tiangolo.com/advanced/events/\)) de FastAPI para que, al arrancar, tu servicio haga una llamada a la API de un Service Registry (como **Consul**, **Eureka**, **etcd**, o el API de Kubernetes si estás en ese entorno) para registrarse, y al apagarse, para desregistrarse. También necesitarías implementar *heartbeats* si el registro lo requiere (por ejemplo, un endpoint `/health` que el registro consulte, o que el servicio llame periódicamente al registro).
+      * **Descubrimiento:**
+          * **Lado Cliente:** Si tu servicio FastAPI necesita llamar a otro, usarías una librería cliente para el Service Registry elegido, consultarías la ubicación y luego usarías `httpx` para hacer la llamada. Existen librerías que pueden combinar estos pasos.
+          * **Lado Servidor:** Si estás en Kubernetes, simplemente llamarías al nombre del 'Service' de Kubernetes (ej: `http://servicio-productos/`), y Kubernetes se encargaría de la consulta al registro y el enrutamiento/balanceo. Si usas un API Gateway, este se encargaría del descubrimiento.
 
 -----
+
 
 
 ## Referencias
