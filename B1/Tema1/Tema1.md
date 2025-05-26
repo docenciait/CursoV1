@@ -3,7 +3,6 @@
   - [Objetivos](#objetivos)
   - [1.0 Conceptos Previos](#10-conceptos-previos)
     - [Tabla Comparativa](#tabla-comparativa)
-    - [Gráfico Mermaid de Relación](#gráfico-mermaid-de-relación)
   - [1.1 Evolución de la arquitectura monolítica hacia los microservicios](#11-evolución-de-la-arquitectura-monolítica-hacia-los-microservicios)
   - [1.2 Ventajas y Desventajas Clave de los Microservicios](#12-ventajas-y-desventajas-clave-de-los-microservicios)
   - [1.3 Principios Fundamentales de la Arquitectura de Microservicios](#13-principios-fundamentales-de-la-arquitectura-de-microservicios)
@@ -157,7 +156,6 @@ Aquí vemos algunos ejemplos de enfoques de diseño actuales:
 
 ---
 
-### Gráfico Mermaid de Relación
 
 Este gráfico ilustra cómo un enfoque puede influir en la elección de una arquitectura, y cómo esa arquitectura utiliza patrones específicos para su implementación.
 
