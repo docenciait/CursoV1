@@ -1,48 +1,27 @@
 # Tema 10. INTRODUCCIÓN A LOS WEBSOCKETS Y PUB/SUB EN SISTEMAS DISTRIBUIDOS
 
-## Tabla de Contenidos
-
 - [Tema 10. INTRODUCCIÓN A LOS WEBSOCKETS Y PUB/SUB EN SISTEMAS DISTRIBUIDOS](#tema-10-introducción-a-los-websockets-y-pubsub-en-sistemas-distribuidos)
-  - [Tabla de Contenidos](#tabla-de-contenidos)
-  - [10. Contenidos](#10-contenidos)
-    - [10.1 Casos de uso reales para WebSockets](#101-casos-de-uso-reales-para-websockets)
-  - [Tema 10: INTRODUCCIÓN A LOS WEBSOCKETS Y PUB/SUB EN SISTEMAS DISTRIBUIDOS](#tema-10-introducción-a-los-websockets-y-pubsub-en-sistemas-distribuidos-1)
-    - [10.1 Casos de Uso Reales para WebSockets: Cuando la Instantaneidad es la Norma, no la Excepción](#101-casos-de-uso-reales-para-websockets-cuando-la-instantaneidad-es-la-norma-no-la-excepción)
-    - [10.2 Servidor WebSocket con FastAPI](#102-servidor-websocket-con-fastapi)
-    - [10.2 Servidor WebSocket con FastAPI: La Forja de Conexiones Vivas](#102-servidor-websocket-con-fastapi-la-forja-de-conexiones-vivas)
-    - [10.3 Gestión de clientes conectados y salas lógicas](#103-gestión-de-clientes-conectados-y-salas-lógicas)
-    - [10.3 Gestión de Clientes Conectados y Salas Lógicas: De Solistas a Orquestas en Tiempo Real](#103-gestión-de-clientes-conectados-y-salas-lógicas-de-solistas-a-orquestas-en-tiempo-real)
-    - [10.3 Gestión de `Connected Clients` y `Logical Rooms`: De Conexiones Individuales a Orquestas en Tiempo Real (Versión Refinada)](#103-gestión-de-connected-clients-y-logical-rooms-de-conexiones-individuales-a-orquestas-en-tiempo-real-versión-refinada)
-    - [10.4 Pub/Sub con Redis o Kafka como Backend: Escalando la Comunicación WebSocket Más Allá de la Instancia Única](#104-pubsub-con-redis-o-kafka-como-backend-escalando-la-comunicación-websocket-más-allá-de-la-instancia-única)
-    - [10.5 Push de eventos desde backend a clientes](#105-push-de-eventos-desde-backend-a-clientes)
-    - [10.5 Push de Eventos desde Backend a Clientes `WebSocket`: La Voz Proactiva de Tu Sistema](#105-push-de-eventos-desde-backend-a-clientes-websocket-la-voz-proactiva-de-tu-sistema)
-    - [10.6 Microservicio de notificaciones dedicado](#106-microservicio-de-notificaciones-dedicado)
-    - [10.6 Microservicio de Notificaciones Dedicado: El Maestro de los Ecos y las Alertas](#106-microservicio-de-notificaciones-dedicado-el-maestro-de-los-ecos-y-las-alertas)
-    - [10.7 Consistencia eventual en eventos enviados](#107-consistencia-eventual-en-eventos-enviados)
-    - [10.7 Consistencia Eventual en `Events` Enviados por `WebSocket`: El Eco en el Flujo del Tiempo](#107-consistencia-eventual-en-events-enviados-por-websocket-el-eco-en-el-flujo-del-tiempo)
-    - [10.8 Reconexiones, heartbeats y expiración](#108-reconexiones-heartbeats-y-expiración)
-    - [10.8 Reconexiones, `Heartbeats` y Expiración: El Pulso Vital de las Conexiones `WebSocket`](#108-reconexiones-heartbeats-y-expiración-el-pulso-vital-de-las-conexiones-websocket)
-    - [10.9 Seguridad de canales con JWT o API Keys](#109-seguridad-de-canales-con-jwt-o-api-keys)
-    - [10.9 Seguridad de Canales `WebSocket` con `JWT` o `API Keys`: Guardianes del Portal en Tiempo Real](#109-seguridad-de-canales-websocket-con-jwt-o-api-keys-guardianes-del-portal-en-tiempo-real)
-    - [10.10 Patrones reactivos para tiempo real](#1010-patrones-reactivos-para-tiempo-real)
-    - [10.10 Patrones Reactivos para Tiempo Real: Orquestando el Fluir de la Consciencia Digital](#1010-patrones-reactivos-para-tiempo-real-orquestando-el-fluir-de-la-consciencia-digital)
+- [Contenidos](#10-contenidos)
+- [10.1 Casos de uso reales para WebSockets](#101-casos-de-uso-reales-para-websockets)
+- [10.2 Servidor WebSocket con FastAPI](#102-servidor-websocket-con-fastapi)
+- [10.3 Gestión de clientes conectados y salas lógicas](#103-gestión-de-clientes-conectados-y-salas-lógicas)
+ - [10.4 Pub/Sub con Redis o Kafka como Backend: Escalando la Comunicación WebSocket Más Allá de la Instancia Única](#104-pubsub-con-redis-o-kafka-como-backend-escalando-la-comunicación-websocket-más-allá-de-la-instancia-única)
+ - [10.5 Push de eventos desde backend a clientes](#105-push-de-eventos-desde-backend-a-clientes)
+ - [10.6 Microservicio de notificaciones dedicado](#106-microservicio-de-notificaciones-dedicado)
+- [10.7 Consistencia eventual en eventos enviados](#107-consistencia-eventual-en-eventos-enviados)
+- [10.8 Reconexiones, heartbeats y expiración](#108-reconexiones-heartbeats-y-expiración)
+- [10.9 Seguridad de canales con JWT o API Keys](#109-seguridad-de-canales-con-jwt-o-api-keys)
+- [10.10 Patrones reactivos para tiempo real](#1010-patrones-reactivos-para-tiempo-real)
 
-## 10. Contenidos
 
-### 10.1 Casos de uso reales para WebSockets
-¡Fantástico\! Tema 10, ¡allá vamos\! Prepárense para abrir canales de comunicación directos e instantáneos. Si la mensajería asíncrona tradicional (Tema 9) era como enviar cartas y paquetes que llegaban a su debido tiempo, los WebSockets son como tener una línea telefónica directa y siempre abierta con vuestros clientes y servicios. ¡Pura magia en tiempo real\!
+## Contenidos
 
------
-
-## Tema 10: INTRODUCCIÓN A LOS WEBSOCKETS Y PUB/SUB EN SISTEMAS DISTRIBUIDOS
+## 10.1 Casos de uso reales para WebSockets
 
 En el vertiginoso mundo digital de hoy, la inmediatez no es un lujo, es una expectativa. Los usuarios anhelan actualizaciones al instante, colaboración sin fisuras y sistemas que reaccionen en el parpadeo de un ojo. Las arquitecturas tradicionales de petición-respuesta HTTP, aunque fundamentales, a veces se quedan cortas cuando se trata de esta interacción en tiempo real.
 
 Este tema es vuestra iniciación al universo de la comunicación bidireccional y persistente. Exploraremos cómo los **WebSockets** rompen las cadenas del ciclo HTTP clásico y cómo los patrones **Pub/Sub**, a menudo sobrecargados por brokers como Redis o incluso Kafka, pueden alimentar estas experiencias dinámicas.
 
------
-
-### 10.1 Casos de Uso Reales para WebSockets: Cuando la Instantaneidad es la Norma, no la Excepción
 
 Antes de sumergirnos en el "cómo", necesitamos inspirarnos con el "por qué" y el "dónde". ¿Qué son exactamente los WebSockets y en qué escenarios se convierten en los héroes indiscutibles de la arquitectura?
 
@@ -152,13 +131,7 @@ En la siguiente sección, veremos cómo FastAPI, nuestro versátil framework, no
 
 
 
-¿Listos para el 10.2 y construir nuestro primer servidor WebSocket con FastAPI?
-### 10.2 Servidor WebSocket con FastAPI
-¡Absolutamente\! Si el punto 10.1 fue la carta de presentación de los WebSockets y sus hazañas, el **10.2** es donde nos convertimos en arquitectos de la instantaneidad. Vamos a forjar nuestro primer servidor WebSocket usando FastAPI, y te prometo que será una experiencia reveladora, elegante y, sobre todo, "genial para formar". ¡Prepárate para abrir portales de comunicación directa\!
-
------
-
-### 10.2 Servidor WebSocket con FastAPI: La Forja de Conexiones Vivas
+## 10.2 Servidor WebSocket con FastAPI
 
 Imagina que eres un mago arcano y FastAPI es tu libro de hechizos. Los WebSockets son un tipo de encantamiento especial que te permite abrir un "portal mágico" persistente entre tu servidor y un cliente. A diferencia de los conjuros HTTP (petición-respuesta-desaparición), este portal permanece abierto, permitiendo un flujo de energía (datos) en ambas direcciones, ¡en tiempo real\!
 
@@ -471,25 +444,7 @@ Pero un solo portal, aunque mágico, tiene sus limitaciones. ¿Qué pasa cuando 
 -----
 
 
-### 10.3 Gestión de clientes conectados y salas lógicas
-
-¡Excelente\! Si en el 10.2 abrimos nuestro primer portal WebSocket y establecimos una conexión individual, ahora nos enfrentamos a un desafío mucho más emocionante y realista: ¿qué pasa cuando múltiples usuarios quieren cruzar ese portal simultáneamente? ¿Cómo los gestionamos? ¿Cómo creamos espacios de conversación privados o grupales dentro de este flujo constante de conexiones?
-
-Bienvenido al arte de la orquestación de multitudes en tiempo real.
-
------
-
-### 10.3 Gestión de Clientes Conectados y Salas Lógicas: De Solistas a Orquestas en Tiempo Real
-
-¡Tienes toda la razón\! Mis disculpas. Parece que en mi entusiasmo por avanzar, apliqué tu instrucción sobre los términos en inglés a la sección 10.4, pero me pediste revisar el **10.3** con ese mismo criterio.
-
-Absolutamente, vamos a rehacer el **10.3: Gestión de clientes conectados y salas lógicas** con una atención escrupulosa a no "castellanizar" los términos técnicos que tienen un uso común y extendido en inglés en la industria. Mantendremos la estructura y el enfoque didáctico, pero con un lenguaje técnico más alineado con tu petición.
-
-Permíteme reescribir el 10.3 con este refinamiento.
-
------
-
-### 10.3 Gestión de `Connected Clients` y `Logical Rooms`: De Conexiones Individuales a Orquestas en Tiempo Real (Versión Refinada)
+## 10.3 Gestión de clientes conectados y salas lógicas
 
 En la sección 10.2, abrimos nuestro primer `endpoint` `WebSocket` y establecimos una conexión individual. Ahora, el desafío es gestionar múltiples `clients` conectados concurrentemente y organizarlos en agrupaciones lógicas, comúnmente conocidas como `rooms` (salas) o `channels`. Esto es fundamental para aplicaciones como `chat rooms`, herramientas colaborativas o sistemas de notificación por `topic`.
 
@@ -723,7 +678,7 @@ Ahora sí, ¿procedemos con el **10.4: Pub/Sub con Redis o Kafka como backend**?
 
 
 
-### 10.4 Pub/Sub con Redis o Kafka como Backend: Escalando la Comunicación WebSocket Más Allá de la Instancia Única
+### 10.4 Pub/Sub con Redis o Kafka como Backend
 
 En la sección 10.3, construimos un `ConnectionManager` en memoria para gestionar `active WebSocket connections` y `logical rooms`. Este enfoque es funcional y didáctico para una única `server instance` de FastAPI. Sin embargo, en escenarios de producción que demandan alta disponibilidad y escalabilidad horizontal –donde múltiples `instances` de nuestra aplicación FastAPI operan detrás de un `load balancer`– este modelo `in-memory` presenta una limitación fundamental: **el aislamiento de estado**. Cada `instance` tendría su propio `ConnectionManager`, ciego a las `connections` y `room memberships` gestionadas por sus pares.
 
@@ -927,13 +882,9 @@ He intentado mantener el lenguaje técnico preciso y usar los términos en ingl�
 
 
 ### 10.5 Push de eventos desde backend a clientes
-¡Absolutamente\! Acepto el desafío de "siempre evolucionando y haciéndolo mejor". Para el **10.5: Push de eventos desde backend a clientes**, vamos a refinar aún más el enfoque. No solo se trata de *cómo* el `backend` puede enviar mensajes a través de `WebSockets` (ya lo hemos tocado), sino de *cuándo*, *por qué*, y *cómo orquestar* este `push` de forma reactiva y eficiente en un sistema distribuido, conectando con los conceptos de `Pub/Sub` que acabamos de ver.
+Para el **10.5: Push de eventos desde backend a clientes**, vamos a refinar aún más el enfoque. No solo se trata de *cómo* el `backend` puede enviar mensajes a través de `WebSockets` (ya lo hemos tocado), sino de *cuándo*, *por qué*, y *cómo orquestar* este `push` de forma reactiva y eficiente en un sistema distribuido, conectando con los conceptos de `Pub/Sub` que acabamos de ver.
 
 Imagina que tus clientes `WebSocket` no solo están esperando respuestas a sus acciones, sino que están sintonizados a un canal de noticias en vivo donde el `backend` es el presentador estrella, anunciando eventos importantes tan pronto como ocurren en cualquier parte del sistema.
-
------
-
-### 10.5 Push de Eventos desde Backend a Clientes `WebSocket`: La Voz Proactiva de Tu Sistema
 
 Hasta ahora, hemos visto cómo los `WebSockets` permiten una comunicación bidireccional: el `client` envía un mensaje y el `server` puede responder. Pero la verdadera magia de las aplicaciones en tiempo real a menudo reside en la capacidad del **`server` para iniciar la comunicación y hacer `push` de eventos a los `clients` de forma proactiva**, sin que estos hayan realizado una solicitud inmediata.
 
@@ -1027,27 +978,27 @@ graph TD
       * **Flujo:**
         ```python
         # En un endpoint FastAPI o servicio de aplicación
-        # async def procesar_algo_y_notificar(datos_peticion: dict, user_id: str, distributed_ws_manager: DistributedRoomManager):
-        #     # 1. Procesar la lógica de negocio
-        #     resultado_negocio = await logica_de_negocio_compleja(datos_peticion)
+        async def procesar_algo_y_notificar(datos_peticion: dict, user_id: str, distributed_ws_manager: DistributedRoomManager):
+            # 1. Procesar la lógica de negocio
+            resultado_negocio = await logica_de_negocio_compleja(datos_peticion)
             
-        #     # 2. Preparar el mensaje de notificación WebSocket
-        #     mensaje_ws = {
-        #         "type": "actualizacion_proceso",
-        #         "status": "completado",
-        #         "data": resultado_negocio 
-        #     }
+            # 2. Preparar el mensaje de notificación WebSocket
+            mensaje_ws = {
+                "type": "actualizacion_proceso",
+                "status": "completado",
+                "data": resultado_negocio 
+            }
             
-        #     # 3. Publicar al backend Pub/Sub para que llegue a la instancia correcta
-        #     #    y luego al WebSocket del usuario específico.
-        #     #    El "room_id" aquí podría ser el user_id para notificaciones personales.
-        #     await distributed_ws_manager.publish_message_to_room_backend(
-        #         room_id=f"user_{user_id}", # Canal específico del usuario
-        #         message_to_send=json.dumps(mensaje_ws),
-        #         # original_sender_websocket=None (ya que es originado por el server)
-        #     )
+            # 3. Publicar al backend Pub/Sub para que llegue a la instancia correcta
+            #    y luego al WebSocket del usuario específico.
+            #    El "room_id" aquí podría ser el user_id para notificaciones personales.
+            await distributed_ws_manager.publish_message_to_room_backend(
+                room_id=f"user_{user_id}", # Canal específico del usuario
+                message_to_send=json.dumps(mensaje_ws),
+                # original_sender_websocket=None (ya que es originado por el server)
+            )
             
-        #     return {"status": "procesado", "notificacion_enviada": True}
+            return {"status": "procesado", "notificacion_enviada": True}
         ```
       * El `DistributedRoomManager` (del 10.4) se encarga de publicar en Redis/Kafka. Luego, la tarea `listener` en la `instance` (o `instances`) donde el `user_id` tiene una `session WebSocket` activa recogerá el mensaje y lo enviará.
 
@@ -1081,14 +1032,11 @@ Al combinar la lógica de negocio que genera eventos, un sistema de `Pub/Sub` ro
 
 -----
 
-### 10.6 Microservicio de notificaciones dedicado
-¡Por supuesto\! Si en el 10.5 exploramos el `server push` de eventos de manera general, ahora en el **10.6** vamos a considerar una estrategia arquitectónica más avanzada y a menudo necesaria en sistemas complejos: la creación de un **Microservicio de Notificaciones Dedicado**. Este es un paso evolutivo crucial cuando la lógica de "cuándo, qué y cómo notificar" se vuelve un dominio en sí mismo.
+## 10.6 Microservicio de notificaciones dedicado
+
+Si en el 10.5 exploramos el `server push` de eventos de manera general, ahora en el **10.6** vamos a considerar una estrategia arquitectónica más avanzada y a menudo necesaria en sistemas complejos: la creación de un **Microservicio de Notificaciones Dedicado**. Este es un paso evolutivo crucial cuando la lógica de "cuándo, qué y cómo notificar" se vuelve un dominio en sí mismo.
 
 Imagina que tu aplicación es un imperio vasto con muchas provincias (tus `microservices`). En lugar de que cada provincia gestione sus propios mensajeros y palomas para cada tipo de anuncio, estableces una "Oficina Imperial de Comunicaciones" centralizada.
-
------
-
-### 10.6 Microservicio de Notificaciones Dedicado: El Maestro de los Ecos y las Alertas
 
 A medida que un sistema distribuido crece, la tarea de enviar notificaciones a los usuarios –ya sea a través de `WebSockets`, email, SMS, o `push notifications` móviles– puede volverse compleja y repetitiva si cada `microservice` individual intenta gestionar esta lógica por su cuenta. Un **Microservicio de Notificaciones Dedicado** emerge como una solución elegante para centralizar, estandarizar y escalar esta crucial funcionalidad.
 
@@ -1199,13 +1147,11 @@ Para las notificaciones `WebSocket`, este servicio actúa como un `publisher` in
 
 
 ### 10.7 Consistencia eventual en eventos enviados
-¡Excelente\! Con nuestro `Notification Service` (o una lógica similar) listo para orquestar `pushes` a través de un `Pub/Sub backend`, ahora debemos enfrentar una realidad inherente a los sistemas distribuidos que se comunican de esta manera: la **Consistencia Eventual (`Eventual Consistency`)**.
+
+Con nuestro `Notification Service` (o una lógica similar) listo para orquestar `pushes` a través de un `Pub/Sub backend`, ahora debemos enfrentar una realidad inherente a los sistemas distribuidos que se comunican de esta manera: la **Consistencia Eventual (`Eventual Consistency`)**.
 
 Este no es un tema para asustarse, sino para comprender y diseñar con inteligencia. Si la comunicación instantánea fuera perfecta y sin `delays` en un sistema distribuido, ¡la vida sería demasiado fácil\!
 
------
-
-### 10.7 Consistencia Eventual en `Events` Enviados por `WebSocket`: El Eco en el Flujo del Tiempo
 
 En el mundo de los `WebSockets`, anhelamos la inmediatez. Queremos que cuando un `event` ocurra en el `backend`, el `client` lo vea reflejado *al instante*. Sin embargo, en arquitecturas distribuidas, especialmente aquellas que involucran múltiples `hops` de red, `message queues`, y `Pub/Sub systems` para escalar (como hemos visto en 10.4, 10.5 y 10.6), la "instantaneidad" se convierte en un concepto relativo. Aquí es donde entra en juego la **`Eventual Consistency`**.
 
@@ -1333,13 +1279,11 @@ Aceptar esta realidad y diseñar tanto el `backend` (con flujos de eventos bien 
 
 ### 10.8 Reconexiones, heartbeats y expiración
 
-¡Sigamos adelante\! Con nuestras `FastAPI instances` listas para comunicarse a través de un `Pub/Sub backend` (10.4) y nuestro `backend` capaz de hacer `push` de `events` (10.5), e incluso con un potencial `Notification Microservice` orquestando (10.6), y habiendo aceptado la `eventual consistency` (10.7), ahora debemos enfocarnos en la salud y la longevidad de las propias `WebSocket connections`.
+Con nuestras `FastAPI instances` listas para comunicarse a través de un `Pub/Sub backend` (10.4) y nuestro `backend` capaz de hacer `push` de `events` (10.5), e incluso con un potencial `Notification Microservice` orquestando (10.6), y habiendo aceptado la `eventual consistency` (10.7), ahora debemos enfocarnos en la salud y la longevidad de las propias `WebSocket connections`.
 
 Las `WebSocket connections` son, por naturaleza, de larga duración. Pero el mundo de las redes es un lugar caótico. Las conexiones pueden caer, los `clients` pueden perder conectividad momentáneamente, los `servers` pueden reiniciarse. ¿Cómo construimos sistemas que no solo establezcan estas conexiones, sino que también las mantengan vivas de forma inteligente y sepan cuándo decir adiós?
 
------
 
-### 10.8 Reconexiones, `Heartbeats` y Expiración: El Pulso Vital de las Conexiones `WebSocket`
 
 Mantener una `WebSocket connection` estable y fiable es un arte que combina estrategias del lado del `client` y del `server`. No basta con establecer la conexión; debemos asegurarnos de que siga "viva", detectar cuándo ha fallado, y permitir que los `clients` se recuperen con elegancia.
 
@@ -1544,11 +1488,9 @@ Implementar estas técnicas puede parecer un trabajo adicional, pero es una inve
 
 ### 10.9 Seguridad de canales con JWT o API Keys
 
-¡Continuamos con el viaje\! Ya sabemos cómo mantener nuestras `WebSocket connections` vivas y saludables (10.8). Pero un portal abierto, por muy estable que sea, es una invitación a visitantes no deseados si no tenemos buenos guardianes en la entrada y reglas claras sobre quién puede acceder a qué. Es hora de hablar de **seguridad**.
+Ya sabemos cómo mantener nuestras `WebSocket connections` vivas y saludables (10.8). Pero un portal abierto, por muy estable que sea, es una invitación a visitantes no deseados si no tenemos buenos guardianes en la entrada y reglas claras sobre quién puede acceder a qué. Es hora de hablar de **seguridad**.
 
------
 
-### 10.9 Seguridad de Canales `WebSocket` con `JWT` o `API Keys`: Guardianes del Portal en Tiempo Real
 
 Las `WebSocket connections`, al ser persistentes, exponen una superficie de interacción continua con nuestro `server`. Asegurar estos canales no es una opción, es una necesidad imperante para proteger datos, prevenir abusos y garantizar que solo los `clients` autorizados puedan participar en la comunicación en tiempo real.
 
@@ -1736,13 +1678,10 @@ Al implementar estas prácticas, construyes no solo portales de comunicación en
 
 
 ### 10.10 Patrones reactivos para tiempo real
-¡Y llegamos al clímax de nuestro Tema 10\! Después de explorar los casos de uso, la implementación de servidores `WebSocket` con FastAPI, la gestión de `clients` y `rooms`, la crucial integración con `Pub/Sub backends` para escalar, el `server push`, los `notification services` dedicados, la `eventual consistency`, los `heartbeats` y la seguridad, es hora de ensamblar todo bajo una filosofía de diseño que realmente haga brillar a nuestras aplicaciones en tiempo real: los **Patrones Reactivos**.
+
+Después de explorar los casos de uso, la implementación de servidores `WebSocket` con FastAPI, la gestión de `clients` y `rooms`, la crucial integración con `Pub/Sub backends` para escalar, el `server push`, los `notification services` dedicados, la `eventual consistency`, los `heartbeats` y la seguridad, es hora de ensamblar todo bajo una filosofía de diseño que realmente haga brillar a nuestras aplicaciones en tiempo real: los **Patrones Reactivos**.
 
 Piensa en esto como la diferencia entre una orquesta donde cada músico toca su partitura de forma aislada y una donde todos los músicos reaccionan dinámicamente al director y entre sí, creando una sinfonía armoniosa y adaptable.
-
------
-
-### 10.10 Patrones Reactivos para Tiempo Real: Orquestando el Fluir de la Consciencia Digital
 
 Hemos construido los canales (`WebSockets`), las estaciones de relevo (`Pub/Sub backends`), y los mecanismos de seguridad. Ahora, ¿cómo hacemos que el flujo de información a través de estos canales sea no solo rápido, sino también inteligente, resiliente y verdaderamente adaptativo a las condiciones cambiantes? La respuesta yace en adoptar **patrones y principios reactivos**.
 
