@@ -2,6 +2,7 @@
 - [TEMA 1. INTRODUCCIÓN A LA ARQUITECTURA DE MICROSERVICIOS](#tema-1-introducción-a-la-arquitectura-de-microservicios)
   - [Objetivos](#objetivos)
   - [1.0 Conceptos Previos](#10-conceptos-previos)
+  - [](#)
     - [Tabla Comparativa](#tabla-comparativa)
     - [Gráfico Mermaid de Relación](#gráfico-mermaid-de-relación)
   - [1.1 Evolución de la arquitectura monolítica hacia los microservicios](#11-evolución-de-la-arquitectura-monolítica-hacia-los-microservicios)
@@ -47,9 +48,20 @@ El problema con estas definiciones comunes es entender qué contiene realmente e
 
 ![](img/arq3.PNG)
 
-
+**Estructura:**
+![alt text](image.png)
 
 Ejemplos de arquitecturas tenemos:
+
+**Características:**
+![alt text](image-1.png)
+
+**Decisiones:**
+![alt text](image-2.png)
+
+**Principio de diseño**
+![alt text](image-3.png)
+---
 
 * **Arquitectura Monolítica:**  La aplicación se construye y despliega como una única unidad indivisible. Es sencilla de desarrollar y probar al principio, pero su crecimiento dificulta la escalabilidad, el mantenimiento y la adopción de nuevas tecnologías.
 
