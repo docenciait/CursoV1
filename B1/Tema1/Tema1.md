@@ -64,6 +64,7 @@ El problema con estas definiciones comunes es entender qué contiene realmente e
 
 ![alt text](image-3.png)
 
+
 ---
 
 Ejemplos de arquitecturas tenemos:
@@ -84,20 +85,6 @@ Ejemplos de arquitecturas tenemos:
 
 ---
 
-
-**Patrón de Software** 
-
-> **Definición:** Un patrón de software es "una solución reutilizable a un problema recurrente dentro de un contexto determinado en el diseño de software".
-
-— *Gamma, Helm, Johnson y Vlissides. "Design Patterns: Elements of Reusable Object-Oriented Software" (1994)*
-
-Es decir, un patrón **no es código** , sino una descripción general de cómo resolver un tipo de problema que aparece una y otra vez en la construcción de sistemas de software. Ejemplos famosos de patrones son **Singleton** , **Observer**  o **Factory** .
-**Referencia principal:** 
- 
-- Gamma, E., Helm, R., Johnson, R., & Vlissides, J. (1994). *Design Patterns: Elements of Reusable Object-Oriented Software*. Addison-Wesley.
-
-
----
 
 
 **Patrón de Arquitectura** 
