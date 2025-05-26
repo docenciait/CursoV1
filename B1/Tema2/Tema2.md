@@ -1077,35 +1077,42 @@ FastAPI no solo genera la especificación, sino que también te regala **dos int
 
 ```mermaid
 graph TD
-    SUI[Swagger UI (/docs)]
+    SUI["Swagger UI (/docs)"]
 
     subgraph "Endpoint: POST /orders/"
-        TAG[Tag: Orders]
-        SUM[Summary: Crea un nuevo pedido]
-        DESC[Description: Recibe los datos...<br><i>(De tu Docstring)</i>]
-        PARAMS[Parameters: (None)]
-        REQ_BODY["Request Body<br>(application/json)<br><b>OrderCreateSchema</b>"];
-        RESP["Responses<br>201: <b>OrderSchema</b><br>422: Validation Error"];
-        TRY[Botón 'Try it out']
+        TAG["Tag: Orders"]
+        SUM["Summary: Crea un nuevo pedido"]
+        DESC["Description: Recibe los datos...<br/><i>(De tu Docstring)</i>"]
+        PARAMS["Parameters: (None)"]
+        REQ_BODY["Request Body<br/>(application/json)<br/><b>OrderCreateSchema</b>"]
+        RESP["Responses<br/>201: <b>OrderSchema</b><br/>422: Validation Error"]
+        TRY["Botón 'Try it out'"]
     end
 
     subgraph "Schemas"
-        SCHEMAS[OrderSchema<br>OrderCreateSchema<br><i>(Generados de Pydantic)</i>]
+        SCHEMAS["OrderSchema<br/>OrderCreateSchema<br/><i>(Generados de Pydantic)</i>"]
     end
 
-    SUI --> TAG;
-    SUI --> SUM;
-    SUI --> DESC;
-    SUI --> REQ_BODY;
-    SUI --> RESP;
-    SUI --> TRY;
-    SUI --> SCHEMAS;
+    SUI --> TAG
+    SUI --> SUM
+    SUI --> DESC
+    SUI --> REQ_BODY
+    SUI --> RESP
+    SUI --> TRY
+    SUI --> SCHEMAS
 
-    REQ_BODY -- Muestra --> SCHEMAS;
-    RESP -- Muestra --> SCHEMAS;
+    REQ_BODY -->|Muestra| SCHEMAS
+    RESP -->|Muestra| SCHEMAS
 
-    style SUI fill:#2ecc71
-    style TAG,SUM,DESC,REQ_BODY,RESP,TRY,SCHEMAS fill:#eef
+    style SUI fill:#2ecc71,stroke:#333
+    style TAG fill:#eef,stroke:#333
+    style SUM fill:#eef,stroke:#333
+    style DESC fill:#eef,stroke:#333
+    style REQ_BODY fill:#eef,stroke:#333
+    style RESP fill:#eef,stroke:#333
+    style TRY fill:#eef,stroke:#333
+    style SCHEMAS fill:#eef,stroke:#333
+
 ```
 
 #### 4\. Enriqueciendo Tu Documentación desde el Código
@@ -1166,9 +1173,7 @@ La integración automática con OpenAPI es, sin lugar a dudas, una de las **supe
 
 -----
 
-¡Venga, con el listón bien alto! El punto 2.8 nos introduce en el mundo de la **asincronía post-respuesta** con `BackgroundTasks`. Descubriremos cómo hacer que nuestra API se sienta más rápida y cómo manejar tareas secundarias sin hacer esperar al cliente. ¡Vamos a desvelar este truco de eficiencia! 💨
 
----
 
 ## 2.8. Utilización de BackgroundTasks para tareas asincrónicas
 
@@ -1301,9 +1306,6 @@ Este diagrama muestra claramente que la **respuesta al cliente (`201 Created`) s
 
 ---
 
-¡Entendido! Cero complacencia, máximo rendimiento. Abordaremos el punto 2.9, "Manejo de excepciones personalizadas", con la **máxima rigurosidad, calidad visual y profundidad práctica**. Demostraremos cómo transformar errores internos en respuestas API claras, significativas y profesionales, un aspecto crucial para cualquier sistema robusto. ¡Comenzamos!
-
----
 
 
 ## 2.9. Manejo de Excepciones Personalizadas
@@ -1461,9 +1463,6 @@ El manejo de excepciones personalizadas no es un lujo, es una **necesidad** para
 
 ---
 
-¡Recibido\! El listón se mantiene en lo más alto y mi objetivo es superar tus expectativas. Entendido el contexto temporal y geográfico – nos aseguraremos de que la información sea pertinente y de calidad excepcional. Abordemos el punto 2.10: la configuración de entornos con `BaseSettings`, una pieza clave para microservicios robustos y adaptables. ⚙️🔧
-
------
 
 
 
@@ -1603,20 +1602,22 @@ async def get_app_info(cfg: Settings = Depends(get_settings)):
 
 ```mermaid
 graph TD
-    A[Inicio App (main.py)] --> B(Importa `app.core.config`);
-    B --> C(Crea `settings = Settings()`);
-    C --> D{Lee `.env` / Env Vars};
-    D --> E[Instancia `settings` Global];
+    A["Inicio App: main.py"] --> B["Importa app.core.config"]
+    B --> C["Crea settings = Settings()"]
+    C --> D["Lee .env o variables de entorno"]
+    D --> E["Instancia global de settings"]
 
-    F[Petición a /info] --> G{Endpoint /info};
-    G -- Pide `Depends(get_settings)` --> H{DI FastAPI};
-    H --> I(Llama a `get_settings()`);
-    I -->|Devuelve| E;
-    H -- Inyecta `cfg` --> G;
-    G --> J[Usa `cfg.debug_mode`];
-    J --> K[Respuesta];
+    F["Petición a /info"] --> G["Endpoint: /info"]
+    G -->|Pide Depends → get_settings| H["Sistema DI de FastAPI"]
+    H --> I["Ejecuta get_settings"]
+    I -->|Devuelve instancia| E
+    H -->|Inyecta cfg| G
+    G --> J["Usa cfg.debug_mode"]
+    J --> K["Devuelve respuesta"]
 
-    style E fill:#e74c3c
+    style E fill:#e74c3c,stroke:#333
+
+
 ```
 
 La configuración es la columna vertebral invisible de cualquier aplicación. Usar `pydantic-settings` con FastAPI no es solo una "buena práctica", es una **declaración de intenciones**: apostamos por la **robustez, la seguridad y la claridad**. Al definir nuestras configuraciones como modelos Pydantic, ganamos **validación automática, tipado estricto y una gestión de entornos flexible y centralizada**. Integrado con el sistema de Inyección de Dependencias, nos permite acceder a la configuración de forma limpia y desacoplada, asegurando que nuestros microservicios sean **predecibles y fáciles de desplegar** en cualquier entorno. ¡Esto es construir con calidad altísima\!

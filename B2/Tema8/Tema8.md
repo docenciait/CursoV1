@@ -1,30 +1,24 @@
 # Tema 8. PATRÓN CQRS EN MICROSERVICIOS
 
-## Tabla de Contenidos
 
 - [Tema 8. PATRÓN CQRS EN MICROSERVICIOS](#tema-8-patrón-cqrs-en-microservicios)
-  - [Tabla de Contenidos](#tabla-de-contenidos)
-  - [8. Contenidos](#8-contenidos)
-    - [8.1 Explicación del patrón CQRS y diferencias con CRUD tradicional](#81-explicación-del-patrón-cqrs-y-diferencias-con-crud-tradicional)
-    - [8.2 Diseño de comandos y queries como elementos separados](#82-diseño-de-comandos-y-queries-como-elementos-separados)
-    - [8.2 Diseño de Comandos y Queries como Elementos Separados: Formalización de la Interacción](#82-diseño-de-comandos-y-queries-como-elementos-separados-formalización-de-la-interacción)
-    - [8.3 Implementación de CommandHandlers desacoplados de controladores](#83-implementación-de-commandhandlers-desacoplados-de-controladores)
-    - [8.4 Creación de QueryHandlers para operaciones de lectura especializadas](#84-creación-de-queryhandlers-para-operaciones-de-lectura-especializadas)
-  - [¿Continuamos con el punto 8.5: "Introducción a la persistencia por evento (Event Sourcing)"?](#continuamos-con-el-punto-85-introducción-a-la-persistencia-por-evento-event-sourcing)
-    - [8.5 Introducción a la persistencia por evento (Event Sourcing)](#85-introducción-a-la-persistencia-por-evento-event-sourcing)
-    - [8.6 Aplicación de validadores de comandos (Command Validators)](#86-aplicación-de-validadores-de-comandos-command-validators)
-    - [8.6 Aplicación de Validadores de Comandos (Command Validators)](#86-aplicación-de-validadores-de-comandos-command-validators-1)
-    - [8.7 Gestión de la separación entre modelo de escritura y lectura](#87-gestión-de-la-separación-entre-modelo-de-escritura-y-lectura)
-    - [8.8 Uso de FastAPI como gateway para coordinar comandos y queries](#88-uso-de-fastapi-como-gateway-para-coordinar-comandos-y-queries)
-    - [8.9 Desacoplamiento de Servicios Mediante Colas o Buses de Eventos](#89-desacoplamiento-de-servicios-mediante-colas-o-buses-de-eventos)
-    - [8.10 Análisis de Pros y Contras de CQRS en Sistemas Reales](#810-análisis-de-pros-y-contras-de-cqrs-en-sistemas-reales)
-    - [Bibliografía](#bibliografía)
-  - [Libros Fundamentales y de Referencia](#libros-fundamentales-y-de-referencia)
-  - [Artículos, Blogs y Contribuciones Clave](#artículos-blogs-y-contribuciones-clave)
-  - [Recursos Específicos para Subtemas](#recursos-específicos-para-subtemas)
-  - [Comunidades y Sitios Web](#comunidades-y-sitios-web)
+  - [Contenidos](#8-contenidos)
+  - [8.1 Explicación del patrón CQRS y diferencias con CRUD tradicional](#81-explicación-del-patrón-cqrs-y-diferencias-con-crud-tradicional)
+  - [8.2 Diseño de comandos y queries como elementos separados](#82-diseño-de-comandos-y-queries-como-elementos-separados)
+  - [8.2 Diseño de Comandos y Queries como Elementos Separados: Formalización de la Interacción](#82-diseño-de-comandos-y-queries-como-elementos-separados-formalización-de-la-interacción)
+  - [8.3 Implementación de CommandHandlers desacoplados de controladores](#83-implementación-de-commandhandlers-desacoplados-de-controladores)
+  - [8.4 Creación de QueryHandlers para operaciones de lectura especializadas](#84-creación-de-queryhandlers-para-operaciones-de-lectura-especializadas)
+  - [8.5 Introducción a la persistencia por evento (Event Sourcing)](#85-introducción-a-la-persistencia-por-evento-event-sourcing)
+  - [8.6 Aplicación de validadores de comandos (Command Validators)](#86-aplicación-de-validadores-de-comandos-command-validators)
+  - [8.6 Aplicación de Validadores de Comandos (Command Validators)](#86-aplicación-de-validadores-de-comandos-command-validators-1)
+  - [8.7 Gestión de la separación entre modelo de escritura y lectura](#87-gestión-de-la-separación-entre-modelo-de-escritura-y-lectura)
+  - [8.8 Uso de FastAPI como gateway para coordinar comandos y queries](#88-uso-de-fastapi-como-gateway-para-coordinar-comandos-y-queries)
+  - [8.9 Desacoplamiento de Servicios Mediante Colas o Buses de Eventos](#89-desacoplamiento-de-servicios-mediante-colas-o-buses-de-eventos)
+  - [8.10 Análisis de Pros y Contras de CQRS en Sistemas Reales](#810-análisis-de-pros-y-contras-de-cqrs-en-sistemas-reales)
+  - [Bibliografía](#bibliografía)
 
-## 8. Contenidos
+
+## Contenidos
 
 ### 8.1 Explicación del patrón CQRS y diferencias con CRUD tradicional
 
