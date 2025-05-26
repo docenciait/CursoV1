@@ -55,12 +55,15 @@ El problema con estas definiciones comunes es entender qué contiene realmente e
 Ejemplos de arquitecturas tenemos:
 
 **Características:**
+
 ![alt text](image-1.png)
 
 **Decisiones:**
+
 ![alt text](image-2.png)
 
 **Principio de diseño**
+
 ![alt text](image-3.png)
 ---
 
