@@ -38,10 +38,10 @@
 **Arquitectura de Software** 
 
 La industria en general ha tenido dificultades para definir con precisión qué es la **arquitectura de software**.
+
 Algunos arquitectos se refieren a ella como el plano del sistema, mientras que otros la definen como la hoja de ruta para desarrollar un sistema.
 
-El problema con estas definiciones comunes es entender qué contiene realmente ese plano o esa hoja de ruta.
-Por ejemplo, ¿qué se analiza cuando un arquitecto analiza una arquitectura?
+El problema con estas definiciones comunes es entender qué contiene realmente ese plano o esa hoja de ruta. Por ejemplo, ¿qué se analiza cuando un arquitecto analiza una arquitectura?
 
 > **Definición:** la arquitectura de software consiste en la estructura del sistema (representada por las líneas negras gruesas que sostienen la arquitectura), combinada con las características de la arquitectura que el sistema debe soportar, las decisiones de arquitectura, y, finalmente, los principios de diseño.
 
