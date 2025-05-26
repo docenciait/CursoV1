@@ -171,23 +171,14 @@ graph LR
         RestAPI[REST API]
     end
 
-    subgraph Monolithic_Architecture ["Monolithic Architecture"]
-        direction TB
-        style Monolithic_Architecture fill:#e6ffed,stroke:#009933,stroke-width:2px
-
-        subgraph Core [Application Core]
-            style Core fill:#e6ffed
-            Passenger_Mgmt[Passenger Management]
-            Billing[fa:fa-file-invoice-dollar Billing]
-            Notification[fa:fa-bullhorn Notification]
-            Payments[fa:fa-credit-card Payments]
-            Trip_Mgmt[fa:fa-map-marker-alt Trip Management]
-            Driver_Mgmt[fa:fa-car Driver Management]
-        end
-        %% Internal links aren't shown, just grouping
-        Passenger_Mgmt -.- Billing -.- Notification -.- Payments -.- Trip_Mgmt -.- Driver_Mgmt
-    end
-
+    %% -- Núcleo Monolítico como Hexágono --
+    Core{{<b>Monolithic Core</b><br/><br/>
+        fa:fa-users Passenger Management<br/>
+        fa:fa-file-invoice-dollar Billing<br/>
+        fa:fa-bullhorn Notification<br/>
+        fa:fa-credit-card Payments<br/>
+        fa:fa-map-marker-alt Trip Management<br/>
+        fa:fa-car Driver Management}}
 
     subgraph Output_Adapters
         MySQL_Adapter[MYSQL ADAPTER]
@@ -203,7 +194,7 @@ graph LR
         Stripe[Stripe]
     end
 
-    %% Connections
+    %% -- Conexiones --
     Passenger --o RestAPI
     Driver --o RestAPI
     WebUI --o Core
@@ -220,9 +211,11 @@ graph LR
     SendGrid_Adapter --o SendGrid
     Stripe_Adapter --o Stripe
 
-    %% Styling (Optional - basic)
+    %% -- Estilos --
+    style Core fill:#e6ffed,stroke:#009933,stroke-width:2px;
     classDef adapter fill:#f9f,stroke:#333,stroke-width:2px;
-    class RestAPI,WebUI,MySQL_Adapter,Twilio_Adapter,SendGrid_Adapter,Stripe_Adapter adapter;
+    %% Quitado WebUI de la clase adapter ya que no es un adaptador en el mismo sentido
+    class RestAPI,MySQL_Adapter,Twilio_Adapter,SendGrid_Adapter,Stripe_Adapter adapter;
 ```
 
 **Explicación del Gráfico:**
