@@ -160,28 +160,69 @@ Aquí vemos algunos ejemplos de enfoques de diseño actuales:
 Este gráfico ilustra cómo un enfoque puede influir en la elección de una arquitectura, y cómo esa arquitectura utiliza patrones específicos para su implementación.
 
 ```mermaid
-graph TD
-    subgraph Nivel_Filosófico [Filosofía / Estrategia]
-        A(💡<br/><b>Enfoque de Diseño</b><br/><i>Define la mentalidad<br/>Ej: DDD</i>)
+graph LR
+    subgraph Users
+        Passenger[fa:fa-mobile-alt Passenger]
+        Driver[fa:fa-mobile-alt Driver]
+        WebUI[fa:fa-desktop Web UI]
     end
 
-    subgraph Nivel_Estructural [Estructura / Sistema]
-        B(🏗️<br/><b>Arquitectura de Software</b><br/><i>Define la forma global<br/>Ej: Microservicios</i>)
+    subgraph Input_Adapters
+        RestAPI[REST API]
     end
 
-    subgraph Nivel_Táctico [Soluciones Específicas]
-        C(🧩<br/><b>Patrón de Arquitectura</b><br/><i>Resuelve problemas concretos<br/>Ej: CQRS, Gateway</i>)
-        D(⚙️<br/><b>Patrón de Diseño</b><br/><i>Resuelve problemas de código<br/>Ej: Factory, Singleton</i>)
+    subgraph Monolithic_Architecture ["Monolithic Architecture"]
+        direction TB
+        style Monolithic_Architecture fill:#e6ffed,stroke:#009933,stroke-width:2px
+
+        subgraph Core [Application Core]
+            style Core fill:#e6ffed
+            Passenger_Mgmt[Passenger Management]
+            Billing[fa:fa-file-invoice-dollar Billing]
+            Notification[fa:fa-bullhorn Notification]
+            Payments[fa:fa-credit-card Payments]
+            Trip_Mgmt[fa:fa-map-marker-alt Trip Management]
+            Driver_Mgmt[fa:fa-car Driver Management]
+        end
+        %% Internal links aren't shown, just grouping
+        Passenger_Mgmt -.- Billing -.- Notification -.- Payments -.- Trip_Mgmt -.- Driver_Mgmt
     end
 
-    A -- Guía / Inspira --> B
-    B -- Se implementa usando --> C
-    C -- Puede usar --> D
 
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style B fill:#ccf,stroke:#333,stroke-width:2px
-    style C fill:#cfc,stroke:#333,stroke-width:2px
-    style D fill:#ffc,stroke:#333,stroke-width:1px,stroke-dasharray: 5 5
+    subgraph Output_Adapters
+        MySQL_Adapter[MYSQL ADAPTER]
+        Twilio_Adapter[TWILIO ADAPTER]
+        SendGrid_Adapter[SENDGRID ADAPTER]
+        Stripe_Adapter[STRIPE ADAPTER]
+    end
+
+    subgraph External_Services
+        MySQL[fa:fa-database MYSQL]
+        Twilio[Twilio]
+        SendGrid[SendGrid]
+        Stripe[Stripe]
+    end
+
+    %% Connections
+    Passenger --o RestAPI
+    Driver --o RestAPI
+    WebUI --o Core
+
+    RestAPI --o Core
+
+    Core --o MySQL_Adapter
+    Core --o Twilio_Adapter
+    Core --o SendGrid_Adapter
+    Core --o Stripe_Adapter
+
+    MySQL_Adapter --o MySQL
+    Twilio_Adapter --o Twilio
+    SendGrid_Adapter --o SendGrid
+    Stripe_Adapter --o Stripe
+
+    %% Styling (Optional - basic)
+    classDef adapter fill:#f9f,stroke:#333,stroke-width:2px;
+    class RestAPI,WebUI,MySQL_Adapter,Twilio_Adapter,SendGrid_Adapter,Stripe_Adapter adapter;
 ```
 
 **Explicación del Gráfico:**
