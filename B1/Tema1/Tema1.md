@@ -47,11 +47,9 @@ El problema con estas definiciones comunes es entender qué contiene realmente e
 
 ![](img/arq3.PNG)
 
-> **Definición:** La arquitectura de software es "la estructura o estructuras del sistema, que comprenden componentes de software, las propiedades externas visibles de esos componentes y las relaciones entre ellos". [<a href="#ref1">1</a>]
 
-Es decir, la arquitectura define **cómo**  se organiza un sistema software: qué partes tiene, cómo interactúan, qué restricciones existen y qué principios guían sus decisiones. No se trata solo del diseño técnico, sino también de cuestiones como escalabilidad, mantenibilidad, rendimiento o seguridad. [<a href="#ref2">2</a>]
 
-Claro, aquí tienes la lista con puntos:
+Ejemplos de arquitecturas tenemos:
 
 * **Arquitectura Monolítica:**  La aplicación se construye y despliega como una única unidad indivisible. Es sencilla de desarrollar y probar al principio, pero su crecimiento dificulta la escalabilidad, el mantenimiento y la adopción de nuevas tecnologías.
 
