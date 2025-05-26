@@ -159,6 +159,53 @@ Aquí vemos algunos ejemplos de enfoques de diseño actuales:
 
 Este gráfico ilustra cómo un enfoque puede influir en la elección de una arquitectura, y cómo esa arquitectura utiliza patrones específicos para su implementación.
 
+```mermaid
+graph TD
+    subgraph Nivel_Filosófico [Filosofía / Estrategia]
+        A(💡<br/><b>Enfoque de Diseño</b><br/><i>Define la mentalidad<br/>Ej: DDD</i>)
+    end
+
+    subgraph Nivel_Estructural [Estructura / Sistema]
+        B(🏗️<br/><b>Arquitectura de Software</b><br/><i>Define la forma global<br/>Ej: Microservicios</i>)
+    end
+
+    subgraph Nivel_Táctico [Soluciones Específicas]
+        C(🧩<br/><b>Patrón de Arquitectura</b><br/><i>Resuelve problemas concretos<br/>Ej: CQRS, Gateway</i>)
+        D(⚙️<br/><b>Patrón de Diseño</b><br/><i>Resuelve problemas de código<br/>Ej: Factory, Singleton</i>)
+    end
+
+    A -- Guía / Inspira --> B
+    B -- Se implementa usando --> C
+    C -- Puede usar --> D
+
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#ccf,stroke:#333,stroke-width:2px
+    style C fill:#cfc,stroke:#333,stroke-width:2px
+    style D fill:#ffc,stroke:#333,stroke-width:1px,stroke-dasharray: 5 5
+```
+
+**Explicación del Gráfico:**
+
+1.  El **Enfoque de Diseño** (nivel más alto) establece la filosofía.
+2.  Esta filosofía **guía o inspira** la elección de una **Arquitectura de Software**.
+3.  La **Arquitectura** se construye y refina utilizando **Patrones de Arquitectura** para resolver problemas estructurales específicos.
+4.  A su vez, los **Patrones de Arquitectura** (y el código en general) a menudo utilizan **Patrones de Diseño** (un nivel más bajo, enfocado en clases y objetos) para su implementación detallada. (Añadido para mayor contexto).
+
+
+---
+
+## 1.1 Evolución de la arquitectura monolítica hacia los microservicios
+
+
+Para entender por qué los microservicios han ganado tanta popularidad, primero debemos viajar un poco al pasado (y al presente de muchas aplicaciones) y hablar de su predecesor: **el Monolito**.
+
+**¿Qué es un Monolito? 🧱**
+
+Imaginad una aplicación construida como un **único bloque**. Todas sus funcionalidades (interfaz de usuario, lógica de negocio para pedidos, gestión de usuarios, procesamiento de pagos, acceso a datos) están empaquetadas y desplegadas juntas como una **sola unidad indivisible**.
+
+Piensen en una aplicación web tradicional de FastAPI (o Django, RoR, Spring, etc.) donde todos los módulos, controladores y modelos residen en la misma base de código y se ejecutan en el mismo proceso.
+
+**Visualicemos un Monolito:**
 
 ```mermaid
 graph LR
@@ -217,54 +264,6 @@ graph LR
     classDef adapter fill:#f9f,stroke:#333,stroke-width:2px;
     %% Quitado WebUI de la clase adapter ya que no es un adaptador en el mismo sentido
     class RestAPI,MySQL_Adapter,Twilio_Adapter,SendGrid_Adapter,Stripe_Adapter adapter;
-```
-
-**Explicación del Gráfico:**
-
-1.  El **Enfoque de Diseño** (nivel más alto) establece la filosofía.
-2.  Esta filosofía **guía o inspira** la elección de una **Arquitectura de Software**.
-3.  La **Arquitectura** se construye y refina utilizando **Patrones de Arquitectura** para resolver problemas estructurales específicos.
-4.  A su vez, los **Patrones de Arquitectura** (y el código en general) a menudo utilizan **Patrones de Diseño** (un nivel más bajo, enfocado en clases y objetos) para su implementación detallada. (Añadido para mayor contexto).
-
-
----
-
-## 1.1 Evolución de la arquitectura monolítica hacia los microservicios
-
-
-Para entender por qué los microservicios han ganado tanta popularidad, primero debemos viajar un poco al pasado (y al presente de muchas aplicaciones) y hablar de su predecesor: **el Monolito**.
-
-**¿Qué es un Monolito? 🧱**
-
-Imaginad una aplicación construida como un **único bloque**. Todas sus funcionalidades (interfaz de usuario, lógica de negocio para pedidos, gestión de usuarios, procesamiento de pagos, acceso a datos) están empaquetadas y desplegadas juntas como una **sola unidad indivisible**.
-
-Piensen en una aplicación web tradicional de FastAPI (o Django, RoR, Spring, etc.) donde todos los módulos, controladores y modelos residen en la misma base de código y se ejecutan en el mismo proceso.
-
-**Visualicemos un Monolito:**
-
-```mermaid
-graph TD
-    subgraph Monolithic Application
-        direction TB
-        UI[Interfaz de Usuario] --> BL[Lógica de Negocio];
-        BL --> DB[Base de Datos Única];
-
-        subgraph Lógica de Negocio
-            direction LR
-            Orders[Módulo Pedidos]
-            Users[Módulo Usuarios]
-            Payments[Módulo Pagos]
-            Inventory[Módulo Inventario]
-        end
-
-        Orders --> Users;
-        Orders --> Payments;
-        Orders --> Inventory;
-        Users --> Payments;
-    end
-
-    style Monolithic Application fill:#f9f,stroke:#333,stroke-width:2px
-    style DB fill:#ccf,stroke:#333
 ```
 
 **Los Días Felices del Monolito (¡No todo es malo!)**
