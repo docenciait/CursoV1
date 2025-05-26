@@ -159,6 +159,7 @@ Aquí vemos algunos ejemplos de enfoques de diseño actuales:
 
 Este gráfico ilustra cómo un enfoque puede influir en la elección de una arquitectura, y cómo esa arquitectura utiliza patrones específicos para su implementación.
 
+
 ```mermaid
 graph LR
     subgraph Users
