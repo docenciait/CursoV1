@@ -49,20 +49,20 @@ El problema con estas definiciones comunes es entender qué contiene realmente e
 
 **Estructura:**
 
-![alt text](image.png)
+![alt text](img/image.png)
 
 
 **Características:**
 
-![alt text](image-1.png)
+![alt text](img/image-1.png)
 
 **Decisiones:**
 
-![alt text](image-2.png)
+![alt text](img/image-2.png)
 
 **Principio de diseño**
 
-![alt text](image-3.png)
+![alt text](img/image-3.png)
 
 
 ---
@@ -573,7 +573,7 @@ Aquí es donde la goma se encuentra con el camino. Analicemos situaciones donde 
     * **Resiliencia:** Si el servicio de "Opiniones de Usuarios" cae, ¡la gente *aún debe poder comprar*!
     * **Equipos Independientes:** Tienen cientos de equipos trabajando en paralelo. Cada equipo puede ser dueño de su servicio (Catálogo, Cesta de Compra, Pagos) y desplegar sin pisar a los demás.
     * **Innovación Tecnológica:** Pueden usar bases de datos NoSQL para el catálogo, motores de búsqueda especializados, y lenguajes de ML para recomendaciones.
-* **Referencia Clave:** Netflix es uno de los pioneros y más vocales proponentes de los microservicios. Su blog tecnológico está lleno de ejemplos [^1^]. Amazon, aunque empezó como monolito, tuvo que evolucionar hacia servicios para poder escalar [^2^].
+* **Referencia Clave:** Netflix es uno de los pioneros y más vocales proponentes de los microservicios. Su blog tecnológico está lleno de ejemplos [^1]. Amazon, aunque empezó como monolito, tuvo que evolucionar hacia servicios para poder escalar.
 
 **2. Aplicaciones con Módulos de Diferente Carga y Requisitos (Ej: Redes Sociales, Plataformas de Streaming)**
 
@@ -594,7 +594,7 @@ Aquí es donde la goma se encuentra con el camino. Analicemos situaciones donde 
 **4. Modernización de Sistemas Legados (El Patrón "Strangler Fig")**
 
 * **El Desafío:** Tienes un monolito enorme, antiguo, frágil y difícil de cambiar. Reescribirlo todo de golpe es demasiado arriesgado y costoso.
-* **¿Por qué Microservicios?** El **Patrón Strangler Fig** (Figura Estranguladora), acuñado por Martin Fowler [^3^], propone "estrangular" gradualmente el monolito. Creas nuevos microservicios alrededor del monolito, interceptando llamadas y redirigiéndolas. Poco a poco, la funcionalidad se migra a los nuevos servicios hasta que el monolito original puede ser "apagado".
+* **¿Por qué Microservicios?** El **Patrón Strangler Fig** (Figura Estranguladora), acuñado por Martin Fowler [^3], propone "estrangular" gradualmente el monolito. Creas nuevos microservicios alrededor del monolito, interceptando llamadas y redirigiéndolas. Poco a poco, la funcionalidad se migra a los nuevos servicios hasta que el monolito original puede ser "apagado".
   
 * **Visualicemos el Strangler Fig:**
     ```mermaid
@@ -1295,39 +1295,39 @@ Estos patrones (y muchos otros como Bulkhead, Rate Limiter, Strangler Fig, CQRS,
 ## Referencias
 
 
-[^1^]: **The Netflix Tech Blog:** [https://netflixtechblog.com/](https://netflixtechblog.com/) - *Fuente inagotable de casos de estudio reales y soluciones a problemas de microservicios a gran escala.*
+[^1]: **The Netflix Tech Blog:** [https://netflixtechblog.com/](https://netflixtechblog.com/) - *Fuente inagotable de casos de estudio reales y soluciones a problemas de microservicios a gran escala.*
 
-[^2^]: **Newman, Sam. (2021). *Building Microservices: Designing Fine-Grained Systems* (2nd ed.).** O'Reilly Media. - *Considerado por muchos como la "biblia" de los microservicios, cubre desde los principios hasta la implementación y operación.*
+[^2]: **Newman, Sam. (2021). *Building Microservices: Designing Fine-Grained Systems* (2nd ed.).** O'Reilly Media. - *Considerado por muchos como la "biblia" de los microservicios, cubre desde los principios hasta la implementación y operación.*
 
-[^3^]: **Fowler, Martin. (2004). *StranglerFigApplication*.** [https://martinfowler.com/bliki/StranglerFigApplication.html](https://martinfowler.com/bliki/StranglerFigApplication.html) - *El artículo original que describe este patrón crucial para la modernización de sistemas legados.*
+[^3]: **Fowler, Martin. (2004). *StranglerFigApplication*.** [https://martinfowler.com/bliki/StranglerFigApplication.html](https://martinfowler.com/bliki/StranglerFigApplication.html) - *El artículo original que describe este patrón crucial para la modernización de sistemas legados.*
 
-[^4^]: **Fowler, Martin. (2014). *Microservices*.** [https://martinfowler.com/articles/microservices.html](https://martinfowler.com/articles/microservices.html) - *El artículo que popularizó y definió en gran medida el término "microservicios", discutiendo sus características y diferencias con SOA.*
+[^4]: **Fowler, Martin. (2014). *Microservices*.** [https://martinfowler.com/articles/microservices.html](https://martinfowler.com/articles/microservices.html) - *El artículo que popularizó y definió en gran medida el término "microservicios", discutiendo sus características y diferencias con SOA.*
 
-[^5^]: **Richards, Mark. (2020). *Microservices vs. Service-Oriented Architecture*.** O'Reilly Media. - *Aunque listado como libro, Mark Richards ofrece mucho material (vídeos, artículos) sobre esta distinción.* (Buscar en O'Reilly o YouTube).
+[^5]: **Richards, Mark. (2020). *Microservices vs. Service-Oriented Architecture*.** O'Reilly Media. - *Aunque listado como libro, Mark Richards ofrece mucho material (vídeos, artículos) sobre esta distinción.* (Buscar en O'Reilly o YouTube).
 
-[^6^]: **Evans, Eric. (2003). *Domain-Driven Design: Tackling Complexity in the Heart of Software*.** Addison-Wesley Professional. - *El libro original y fundacional de DDD, esencial para entender el modelado estratégico y táctico.*
+[^6]: **Evans, Eric. (2003). *Domain-Driven Design: Tackling Complexity in the Heart of Software*.** Addison-Wesley Professional. - *El libro original y fundacional de DDD, esencial para entender el modelado estratégico y táctico.*
 
-[^7^]: **Vernon, Vaughn. (2013). *Implementing Domain-Driven Design*.** Addison-Wesley Professional. - *Una guía más práctica y detallada para aplicar los conceptos de DDD en proyectos reales.*
+[^7]: **Vernon, Vaughn. (2013). *Implementing Domain-Driven Design*.** Addison-Wesley Professional. - *Una guía más práctica y detallada para aplicar los conceptos de DDD en proyectos reales.*
 
-[^8^]: **Richardson, Chris. (2018). *Microservices Patterns*.** Manning Publications. - *Un catálogo exhaustivo de patrones para diseñar, implementar y gestionar microservicios, con un fuerte enfoque en DDD y la gestión de datos.*
+[^8]: **Richardson, Chris. (2018). *Microservices Patterns*.** Manning Publications. - *Un catálogo exhaustivo de patrones para diseñar, implementar y gestionar microservicios, con un fuerte enfoque en DDD y la gestión de datos.*
 
-[^9^]: **Brandolini, Alberto. (2021). *EventStorming: Discovering an Entire Business Domain in a Day*.** Leanpub. - *La referencia principal sobre la técnica de EventStorming, crucial para descubrir Bounded Contexts.*
+[^9]: **Brandolini, Alberto. (2021). *EventStorming: Discovering an Entire Business Domain in a Day*.** Leanpub. - *La referencia principal sobre la técnica de EventStorming, crucial para descubrir Bounded Contexts.*
 
-[^10^]: **Conway, Melvin E. (1968). *How Do Committees Invent?*.** Datamation Magazine. - *El artículo original (difícil de encontrar online, pero ampliamente citado) sobre la Ley de Conway.*
+[^10]: **Conway, Melvin E. (1968). *How Do Committees Invent?*.** Datamation Magazine. - *El artículo original (difícil de encontrar online, pero ampliamente citado) sobre la Ley de Conway.*
 
-[^11^]: **Skelton, Matthew & Pais, Manuel. (2019). *Team Topologies: Organizing Business and Technology Teams for Fast Flow*.** IT Revolution Press. - *Un libro clave para entender cómo estructurar equipos para maximizar la agilidad, muy relevante para microservicios.*
+[^11]: **Skelton, Matthew & Pais, Manuel. (2019). *Team Topologies: Organizing Business and Technology Teams for Fast Flow*.** IT Revolution Press. - *Un libro clave para entender cómo estructurar equipos para maximizar la agilidad, muy relevante para microservicios.*
 
-[^12^]: **Kniberg, Henrik. (2014). *Spotify Engineering Culture*.** Crisp's Blog & Videos. [https://blog.crisp.se/2014/03/27/henrikkniberg/spotify-engineering-culture-part-1](https://blog.crisp.se/2014/03/27/henrikkniberg/spotify-engineering-culture-part-1) - *Una descripción influyente (aunque no una "receta") de cómo Spotify organizó sus equipos autónomos.*
+[^12]: **Kniberg, Henrik. (2014). *Spotify Engineering Culture*.** Crisp's Blog & Videos. [https://blog.crisp.se/2014/03/27/henrikkniberg/spotify-engineering-culture-part-1](https://blog.crisp.se/2014/03/27/henrikkniberg/spotify-engineering-culture-part-1) - *Una descripción influyente (aunque no una "receta") de cómo Spotify organizó sus equipos autónomos.*
 
-[^13^]: **Kim, Gene, Behr, Kevin, & Spafford, George. (2013). *The Phoenix Project: A Novel About IT, DevOps, and Helping Your Business Win*.** IT Revolution Press. - *Una introducción novelada pero fundamental a la cultura y prácticas DevOps.*
+[^13]: **Kim, Gene, Behr, Kevin, & Spafford, George. (2013). *The Phoenix Project: A Novel About IT, DevOps, and Helping Your Business Win*.** IT Revolution Press. - *Una introducción novelada pero fundamental a la cultura y prácticas DevOps.*
 
-[^14^]: **Forsgren, Nicole, Humble, Jez, & Kim, Gene. (2018). *Accelerate: The Science of Lean Software and DevOps*.** IT Revolution Press. - *Un estudio basado en datos que demuestra el impacto de las prácticas DevOps y arquitecturas desacopladas en el rendimiento.*
+[^14]: **Forsgren, Nicole, Humble, Jez, & Kim, Gene. (2018). *Accelerate: The Science of Lean Software and DevOps*.** IT Revolution Press. - *Un estudio basado en datos que demuestra el impacto de las prácticas DevOps y arquitecturas desacopladas en el rendimiento.*
 
-[^15^]: **Nginx. *What Is an API Gateway?*.** [https://www.nginx.com/learn/api-gateway/](https://www.nginx.com/learn/api-gateway/) - *Una buena introducción al patrón API Gateway.*
+[^15]: **Nginx. *What Is an API Gateway?*.** [https://www.nginx.com/learn/api-gateway/](https://www.nginx.com/learn/api-gateway/) - *Una buena introducción al patrón API Gateway.*
 
-[^16^]: **Richardson, Chris. *Microservices.io*.** [https://microservices.io/](https://microservices.io/) - *Un sitio web invaluable mantenido por Chris Richardson, que cataloga patrones y conceptos de microservicios.* (El enlace específico era a [https://microservices.io/patterns/service-registry.html](https://microservices.io/patterns/service-registry.html)).
+[^16]: **Richardson, Chris. *Microservices.io*.** [https://microservices.io/](https://microservices.io/) - *Un sitio web invaluable mantenido por Chris Richardson, que cataloga patrones y conceptos de microservicios.* (El enlace específico era a [https://microservices.io/patterns/service-registry.html](https://microservices.io/patterns/service-registry.html)).
 
-[^17^]: **Microsoft Docs. *Azure Architecture Center - Microservices*.** [https://learn.microsoft.com/en-us/azure/architecture/microservices/](https://learn.microsoft.com/en-us/azure/architecture/microservices/) - *Una guía completa y bien estructurada sobre el diseño de microservicios, con muchos patrones explicados.* (El enlace específico era a la sección de Gateways).
+[^17]: **Microsoft Docs. *Azure Architecture Center - Microservices*.** [https://learn.microsoft.com/en-us/azure/architecture/microservices/](https://learn.microsoft.com/en-us/azure/architecture/microservices/) - *Una guía completa y bien estructurada sobre el diseño de microservicios, con muchos patrones explicados.* (El enlace específico era a la sección de Gateways).
 
 ---
 
