@@ -15,6 +15,7 @@
   - [1.10 Herramientas Modernas para la Gestión de Arquitecturas Distribuidas](#110-herramientas-modernas-para-la-gestión-de-arquitecturas-distribuidas)
   - [1.11 Introducción a Patrones Clave](#111-introducción-a-patrones-clave)
   - [Referencias](#referencias)
+
  ---
 
 ## Objetivos
@@ -718,7 +719,7 @@ Como ya sabéis de nuestro curso, DDD es un enfoque para el desarrollo de softwa
 
 **El "Match" Perfecto: Bounded Contexts ❤️ Microservices**
 
-La conexión más fuerte y vital entre DDD y los microservicios es el concepto de **Bounded Context**.
+La conexión más fuerte y vital entre DDD y los microservicios es el concepto de **Bounded Context**. [^5^]
 
 > **Un Bounded Context es, a menudo, el candidato ideal para convertirse en un microservicio.**
 
@@ -1294,32 +1295,40 @@ Estos patrones (y muchos otros como Bulkhead, Rate Limiter, Strangler Fig, CQRS,
 ## Referencias
 
 
+[^1^]: **The Netflix Tech Blog:** [https://netflixtechblog.com/](https://netflixtechblog.com/) - *Fuente inagotable de casos de estudio reales y soluciones a problemas de microservicios a gran escala.*
+
+[^2^]: **Newman, Sam. (2021). *Building Microservices: Designing Fine-Grained Systems* (2nd ed.).** O'Reilly Media. - *Considerado por muchos como la "biblia" de los microservicios, cubre desde los principios hasta la implementación y operación.*
+
+[^3^]: **Fowler, Martin. (2004). *StranglerFigApplication*.** [https://martinfowler.com/bliki/StranglerFigApplication.html](https://martinfowler.com/bliki/StranglerFigApplication.html) - *El artículo original que describe este patrón crucial para la modernización de sistemas legados.*
+
+[^4^]: **Fowler, Martin. (2014). *Microservices*.** [https://martinfowler.com/articles/microservices.html](https://martinfowler.com/articles/microservices.html) - *El artículo que popularizó y definió en gran medida el término "microservicios", discutiendo sus características y diferencias con SOA.*
+
+[^5^]: **Richards, Mark. (2020). *Microservices vs. Service-Oriented Architecture*.** O'Reilly Media. - *Aunque listado como libro, Mark Richards ofrece mucho material (vídeos, artículos) sobre esta distinción.* (Buscar en O'Reilly o YouTube).
+
+[^6^]: **Evans, Eric. (2003). *Domain-Driven Design: Tackling Complexity in the Heart of Software*.** Addison-Wesley Professional. - *El libro original y fundacional de DDD, esencial para entender el modelado estratégico y táctico.*
+
+[^7^]: **Vernon, Vaughn. (2013). *Implementing Domain-Driven Design*.** Addison-Wesley Professional. - *Una guía más práctica y detallada para aplicar los conceptos de DDD en proyectos reales.*
+
+[^8^]: **Richardson, Chris. (2018). *Microservices Patterns*.** Manning Publications. - *Un catálogo exhaustivo de patrones para diseñar, implementar y gestionar microservicios, con un fuerte enfoque en DDD y la gestión de datos.*
+
+[^9^]: **Brandolini, Alberto. (2021). *EventStorming: Discovering an Entire Business Domain in a Day*.** Leanpub. - *La referencia principal sobre la técnica de EventStorming, crucial para descubrir Bounded Contexts.*
+
+[^10^]: **Conway, Melvin E. (1968). *How Do Committees Invent?*.** Datamation Magazine. - *El artículo original (difícil de encontrar online, pero ampliamente citado) sobre la Ley de Conway.*
+
+[^11^]: **Skelton, Matthew & Pais, Manuel. (2019). *Team Topologies: Organizing Business and Technology Teams for Fast Flow*.** IT Revolution Press. - *Un libro clave para entender cómo estructurar equipos para maximizar la agilidad, muy relevante para microservicios.*
+
+[^12^]: **Kniberg, Henrik. (2014). *Spotify Engineering Culture*.** Crisp's Blog & Videos. [https://blog.crisp.se/2014/03/27/henrikkniberg/spotify-engineering-culture-part-1](https://blog.crisp.se/2014/03/27/henrikkniberg/spotify-engineering-culture-part-1) - *Una descripción influyente (aunque no una "receta") de cómo Spotify organizó sus equipos autónomos.*
+
+[^13^]: **Kim, Gene, Behr, Kevin, & Spafford, George. (2013). *The Phoenix Project: A Novel About IT, DevOps, and Helping Your Business Win*.** IT Revolution Press. - *Una introducción novelada pero fundamental a la cultura y prácticas DevOps.*
+
+[^14^]: **Forsgren, Nicole, Humble, Jez, & Kim, Gene. (2018). *Accelerate: The Science of Lean Software and DevOps*.** IT Revolution Press. - *Un estudio basado en datos que demuestra el impacto de las prácticas DevOps y arquitecturas desacopladas en el rendimiento.*
+
+[^15^]: **Nginx. *What Is an API Gateway?*.** [https://www.nginx.com/learn/api-gateway/](https://www.nginx.com/learn/api-gateway/) - *Una buena introducción al patrón API Gateway.*
+
+[^16^]: **Richardson, Chris. *Microservices.io*.** [https://microservices.io/](https://microservices.io/) - *Un sitio web invaluable mantenido por Chris Richardson, que cataloga patrones y conceptos de microservicios.* (El enlace específico era a [https://microservices.io/patterns/service-registry.html](https://microservices.io/patterns/service-registry.html)).
+
+[^17^]: **Microsoft Docs. *Azure Architecture Center - Microservices*.** [https://learn.microsoft.com/en-us/azure/architecture/microservices/](https://learn.microsoft.com/en-us/azure/architecture/microservices/) - *Una guía completa y bien estructurada sobre el diseño de microservicios, con muchos patrones explicados.* (El enlace específico era a la sección de Gateways).
+
 ---
 
 
-**Libros Fundamentales:**
-
-* **[2] Newman, Sam. (2021). *Building Microservices: Designing Fine-Grained Systems* (2nd ed.).** O'Reilly Media. - *Considerado por muchos como la "biblia" de los microservicios, cubre desde los principios hasta la implementación y operación.*
-* **[6] Evans, Eric. (2003). *Domain-Driven Design: Tackling Complexity in the Heart of Software*.** Addison-Wesley Professional. - *El libro original y fundacional de DDD, esencial para entender el modelado estratégico y táctico.*
-* **[7] Vernon, Vaughn. (2013). *Implementing Domain-Driven Design*.** Addison-Wesley Professional. - *Una guía más práctica y detallada para aplicar los conceptos de DDD en proyectos reales.*
-* **[8] Richardson, Chris. (2018). *Microservices Patterns*.** Manning Publications. - *Un catálogo exhaustivo de patrones para diseñar, implementar y gestionar microservicios, con un fuerte enfoque en DDD y la gestión de datos.*
-* **[9] Brandolini, Alberto. (2021). *EventStorming: Discovering an Entire Business Domain in a Day*.** Leanpub. - *La referencia principal sobre la técnica de EventStorming, crucial para descubrir Bounded Contexts.*
-* **[11] Skelton, Matthew & Pais, Manuel. (2019). *Team Topologies: Organizing Business and Technology Teams for Fast Flow*.** IT Revolution Press. - *Un libro clave para entender cómo estructurar equipos para maximizar la agilidad, muy relevante para microservicios.*
-* **[13] Kim, Gene, Behr, Kevin, & Spafford, George. (2013). *The Phoenix Project: A Novel About IT, DevOps, and Helping Your Business Win*.** IT Revolution Press. - *Una introducción novelada pero fundamental a la cultura y prácticas DevOps.*
-* **[14] Forsgren, Nicole, Humble, Jez, & Kim, Gene. (2018). *Accelerate: The Science of Lean Software and DevOps*.** IT Revolution Press. - *Un estudio basado en datos que demuestra el impacto de las prácticas DevOps y arquitecturas desacopladas en el rendimiento.*
-
-**Artículos y Recursos Web Clave:**
-
-* **[1] The Netflix Tech Blog:** [https://netflixtechblog.com/](https://netflixtechblog.com/) - *Fuente inagotable de casos de estudio reales y soluciones a problemas de microservicios a gran escala.*
-* **[3] Fowler, Martin. (2004). *StranglerFigApplication*.** [https://martinfowler.com/bliki/StranglerFigApplication.html](https://martinfowler.com/bliki/StranglerFigApplication.html) - *El artículo original que describe este patrón crucial para la modernización de sistemas legados.*
-* **[4] Fowler, Martin. (2014). *Microservices*.** [https://martinfowler.com/articles/microservices.html](https://martinfowler.com/articles/microservices.html) - *El artículo que popularizó y definió en gran medida el término "microservicios", discutiendo sus características y diferencias con SOA.*
-* **[5] Richards, Mark. (2020). *Microservices vs. Service-Oriented Architecture*.** O'Reilly Media. - *Aunque listado como libro, Mark Richards ofrece mucho material (vídeos, artículos) sobre esta distinción.* (Buscar en O'Reilly o YouTube).
-* **[10] Conway, Melvin E. (1968). *How Do Committees Invent?*.** Datamation Magazine. - *El artículo original (difícil de encontrar online, pero ampliamente citado) sobre la Ley de Conway.*
-* **[12] Kniberg, Henrik. (2014). *Spotify Engineering Culture*.** Crisp's Blog & Videos. [https://blog.crisp.se/2014/03/27/henrikkniberg/spotify-engineering-culture-part-1](https://blog.crisp.se/2014/03/27/henrikkniberg/spotify-engineering-culture-part-1) - *Una descripción influyente (aunque no una "receta") de cómo Spotify organizó sus equipos autónomos.*
-* **[15] Nginx. *What Is an API Gateway?*.** [https://www.nginx.com/learn/api-gateway/](https://www.nginx.com/learn/api-gateway/) - *Una buena introducción al patrón API Gateway.*
-* **[16] Richardson, Chris. *Microservices.io*.** [https://microservices.io/](https://microservices.io/) - *Un sitio web invaluable mantenido por Chris Richardson, que cataloga patrones y conceptos de microservicios.* (El enlace específico era a [https://microservices.io/patterns/service-registry.html](https://microservices.io/patterns/service-registry.html)).
-* **[17] Microsoft Docs. *Azure Architecture Center - Microservices*.** [https://learn.microsoft.com/en-us/azure/architecture/microservices/](https://learn.microsoft.com/en-us/azure/architecture/microservices/) - *Una guía completa y bien estructurada sobre el diseño de microservicios, con muchos patrones explicados.* (El enlace específico era a la sección de Gateways).
-
----
-
-Esta lista proporciona un excelente punto de partida para cualquiera que desee profundizar en los fundamentos teóricos y prácticos de la arquitectura de microservicios y los conceptos relacionados que hemos tratado en este primer tema. ¡Feliz lectura e investigación!
