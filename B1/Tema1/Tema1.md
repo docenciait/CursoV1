@@ -304,25 +304,77 @@ Cada microservicio:
 **Visualicemos los Microservicios:**
 
 ```mermaid
-graph TD
-    subgraph Ecosistema de Microservicios
-        UI[UI / API Gateway] --> OrderSvc[Servicio Pedidos];
-        UI --> UserSvc[Servicio Usuarios];
-        UI --> PaymentSvc[Servicio Pagos];
+graph LR
 
-        OrderSvc --> UserSvc;
-        OrderSvc --> PaymentSvc;
-        OrderSvc --> OrderDB[(Base Datos Pedidos)];
-        UserSvc --> UserDB[(Base Datos Usuarios)];
-        PaymentSvc --> PaymentDB[(Base Datos Pagos)];
+    subgraph UI
+        PassengerUI[Passenger Web UI]
+        DriverUI[Driver Web UI]
+        Mobile[📱 Usuario Móvil]
+        WebUser[🧑‍💻 Usuario Web]
     end
 
-    style OrderSvc fill:#D4E6F1,stroke:#333
-    style UserSvc fill:#D5F5E3,stroke:#333
-    style PaymentSvc fill:#FCF3CF,stroke:#333
-    style OrderDB fill:#D4E6F1,stroke:#333,stroke-dasharray: 5 5
-    style UserDB fill:#D5F5E3,stroke:#333,stroke-dasharray: 5 5
-    style PaymentDB fill:#FCF3CF,stroke:#333,stroke-dasharray: 5 5
+    subgraph Gateway
+        APIGW[API Gateway]
+    end
+
+    subgraph Core
+        PassengerMS[Passenger Management]
+        DriverMS[Driver Management]
+        TripMS[Trip Management]
+    end
+
+    subgraph PaymentsSection
+        BillingMS[Billing]
+        PaymentsMS[Payments]
+    end
+
+    subgraph Notifications
+        NotificationMS[Notification]
+    end
+
+    subgraph Adapters
+        Stripe[Stripe Adapter]
+        Twilio[Twilio Adapter]
+        Sendgrid[Sendgrid Adapter]
+    end
+
+    %% UI flows
+    Mobile --> APIGW
+    WebUser --> APIGW
+    PassengerUI --> APIGW
+    DriverUI --> APIGW
+
+    %% API Gateway to Core Services
+    APIGW --> PassengerMS
+    APIGW --> DriverMS
+    APIGW --> TripMS
+
+    %% Core service to supporting services
+    PassengerMS --> BillingMS
+    DriverMS --> PaymentsMS
+    TripMS --> NotificationMS
+    PassengerMS --> NotificationMS
+    DriverMS --> NotificationMS
+
+    %% Billing and Payments Adapters
+    BillingMS --> Stripe
+    PaymentsMS --> BillingMS
+    NotificationMS --> Twilio
+    NotificationMS --> Sendgrid
+
+    %% Styles
+    classDef service fill:#A9DFBF,stroke:#27AE60,stroke-width:2px;
+    class PassengerMS,DriverMS,TripMS,BillingMS,PaymentsMS,NotificationMS service;
+
+    classDef adapter fill:#D6DBDF,stroke:#566573,stroke-dasharray: 4 4;
+    class Stripe,Twilio,Sendgrid adapter;
+
+    classDef ui fill:#D5F5E3,stroke:#229954;
+    class PassengerUI,DriverUI,Mobile,WebUser ui;
+
+    classDef gateway fill:#FCF3CF,stroke:#F1C40F;
+    class APIGW gateway;
+
 ```
 
 **(Piensa 🤔):** ¿Cómo este nuevo diagrama aborda los "dolores" que mencionamos en la tabla anterior?
