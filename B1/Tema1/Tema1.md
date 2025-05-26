@@ -49,6 +49,7 @@ El problema con estas definiciones comunes es entender qué contiene realmente e
 ![](img/arq3.PNG)
 
 **Estructura:**
+
 ![alt text](image.png)
 
 Ejemplos de arquitecturas tenemos:
