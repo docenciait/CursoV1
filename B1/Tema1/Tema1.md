@@ -52,7 +52,6 @@ El problema con estas definiciones comunes es entender qué contiene realmente e
 
 ![alt text](image.png)
 
-Ejemplos de arquitecturas tenemos:
 
 **Características:**
 
@@ -66,6 +65,8 @@ Ejemplos de arquitecturas tenemos:
 
 ![alt text](image-3.png)
 ---
+
+Ejemplos de arquitecturas tenemos:
 
 * **Arquitectura Monolítica:**  La aplicación se construye y despliega como una única unidad indivisible. Es sencilla de desarrollar y probar al principio, pero su crecimiento dificulta la escalabilidad, el mantenimiento y la adopción de nuevas tecnologías.
 
