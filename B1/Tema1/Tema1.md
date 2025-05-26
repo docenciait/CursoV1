@@ -93,9 +93,8 @@ Ejemplos de arquitecturas tenemos:
 
 — *Bass, Clements y Kazman. "Software Architecture in Practice", 3rd ed. (2012)*
 
-En otras palabras:
+> En otras palabras: Mientras un patrón de diseño (como Singleton) soluciona **detalles de clases y objetos** , un **patrón de arquitectura**  ofrece una **estructura global** : cómo dividir el sistema, cómo se comunican las partes, cómo fluye la información.
 
-Mientras un patrón de diseño (como Singleton) soluciona **detalles de clases y objetos** , un **patrón de arquitectura**  ofrece una **estructura global** : cómo dividir el sistema, cómo se comunican las partes, cómo fluye la información.
 **Ejemplos de patrones de arquitectura:** 
  
 - **Modelo-Vista-Controlador (MVC)**  → separa datos, lógica y presentación.
