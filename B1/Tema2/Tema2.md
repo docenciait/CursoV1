@@ -282,24 +282,26 @@ La verdadera potencia se libera gracias a la **integración nativa** de FastAPI 
 #### Flujo de Datos con Pydantic en FastAPI
 
 ```mermaid
-%%{init: {"themeVariables": {"fontSize": "20px"}}}%%
+%%{init: {"themeVariables": {"fontSize": "42px"}}}%%
 graph LR
-    Cliente -- "1. Petición HTTP (JSON)" --> FastAPI
-    FastAPI -- "2. ¿Tipo Pydantic?" --> Pydantic_Model_Input[Modelo Pydantic Input]
-    Pydantic_Model_Input -- "3. Valida y Deserializa" --> Objeto_Python[Objeto Python Tipado]
-    FastAPI -- "4. Pasa Objeto" --> Logica[Tu Lógica de Negocio]
-    Logica -- "5. Devuelve Objeto/Modelo" --> Pydantic_Model_Output[Modelo Pydantic Output]
-    Pydantic_Model_Output -- "6. Serializa" --> JSON_Respuesta[JSON Respuesta]
-    FastAPI -- "7. Envía Respuesta" --> Cliente
+    Cliente --> FastAPI
+    FastAPI --> Pydantic_Model_Input
+    Pydantic_Model_Input --> Objeto_Python
+    FastAPI --> Logica
+    Logica --> Pydantic_Model_Output
+    Pydantic_Model_Output --> JSON_Respuesta
+    FastAPI --> Cliente
 
-    Pydantic_Model_Input -- "Informa" --> OpenAPI
-    Pydantic_Model_Output -- "Informa" --> OpenAPI
-    OpenAPI -- "Genera" --> Documentacion[Swagger o ReDoc]
+    Pydantic_Model_Input --> OpenAPI
+    Pydantic_Model_Output --> OpenAPI
+    OpenAPI --> Documentacion
 
     style FastAPI fill:#f9f,stroke:#333,stroke-width:2px
     style Logica fill:#ccf,stroke:#333,stroke-width:2px
     style Cliente fill:#9cf,stroke:#333,stroke-width:2px
     style Documentacion fill:#9c9,stroke:#333,stroke-width:2px
+
+
 
 
 ```
@@ -394,7 +396,7 @@ Tanto para migración como para *greenfield*, nuestro objetivo es llegar a micro
 Basados en lo anterior, proponemos la siguiente estructura de proyecto, diseñada para soportar un microservicio (un Bounded Context) bajo los principios DDD y Hexagonal:
 
 ```mermaid
-%%{init: {"themeVariables": {"fontSize": "20px"}}}%%
+%%{init: {"themeVariables": {"fontSize": "62px"}}}%%
 graph TD
     A(mi_microservicio) --> B(app);
     A --> C(tests);
