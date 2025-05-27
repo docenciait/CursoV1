@@ -895,20 +895,20 @@ Es la herramienta **principal y recomendada** para crear middlewares HTTP person
 
 ```mermaid
 graph TD
-    A[Petición Entrante] --> B(Middleware: Inicia dispatch);
-    B --> C(<b>1. Código PRE-<br>call_next</b><br><i>(Inspeccionar/Modificar Request,<br>Validar, Poner datos en state)</i>);
-    C --> D{¿Continuar?};
-    D -- Sí --> E(<b>2. await call_next(request)</b><br><i>(Pasa control al siguiente<br>middleware o al endpoint)</i>);
-    D -- No --> H(<b>Retorna Respuesta<br>Temprana</b><br><i>(Ej: 401 Unauthorized)</i>);
-    E --> F(<b>3. Código POST-<br>call_next</b><br><i>(Inspeccionar/Modificar Response,<br>Añadir Headers, Logging final)</i>);
-    F --> G[Retorna Respuesta Final];
-    G --> I[Cliente];
-    H --> I;
-
+    A[Petición Entrante] --> B[Middleware: Inicia dispatch]
+    B --> C[PRE-call_next: modificar req, validar]
+    C --> D{¿Continuar?}
+    D -- Sí --> E[await call_next]
+    D -- No --> H[Respuesta temprana]
+    E --> F[POST-call_next: modificar resp, logging]
+    F --> G[Retorna respuesta final]
+    G --> I[Cliente]
+    H --> I
     style B fill:#3498db
     style E fill:#e74c3c
     style H fill:#f39c12
     style G fill:#2ecc71
+
 ```
 
 #### 3. El Arsenal: Middlewares Personalizados Potentes y Prácticos
