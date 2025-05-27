@@ -14,7 +14,7 @@
     - [14.8 Cobertura y calidad con `coverage.py`](#148-cobertura-y-calidad-con-coveragepy)
     - [14.9 Estructura de carpetas y fixtures](#149-estructura-de-carpetas-y-fixtures)
     - [14.10 Automatización en pipelines CI/CD](#1410-automatización-en-pipelines-cicd)
-  - [Bibliografía Concisa para el Tema 14: Testing en Python y FastAPI](#bibliografía-concisa-para-el-tema-14-testing-en-python-y-fastapi)
+  - [Bibliografía](#bibliografía)
 
 ## 14. Contenidos
 
@@ -2121,7 +2121,7 @@ Invertir en un buen `pipeline` CI/CD con `testing` automatizado robusto no es un
 
 -----
 
-## Bibliografía Concisa para el Tema 14: Testing en Python y FastAPI
+## Bibliografía 
 
 Aquí tienes algunas referencias clave y concisas para profundizar en el `testing` con Python y FastAPI:
 

@@ -2,7 +2,6 @@
 
 
 - [Tema 13. PERSISTENCIA DE DATOS EN MICROSERVICIOS](#tema-13-persistencia-de-datos-en-microservicios)
-  - [13. Contenidos](#13-contenidos)
     - [13.1 Integración de SQLAlchemy ORM](#131-integración-de-sqlalchemy-orm)
     - [13.2 Modelos desacoplados del dominio (DTO vs Entity)](#132-modelos-desacoplados-del-dominio-dto-vs-entity)
     - [13.3 Patrones de Repositorio con SQLAlchemy: Guardianes Elegantes de Tu Persistencia](#133-patrones-de-repositorio-con-sqlalchemy-guardianes-elegantes-de-tu-persistencia)
@@ -17,9 +16,8 @@
     - [13.10 `Pools` de Conexión y `Timeouts`: Optimizando el Flujo Ininterrumpido de Datos](#1310-pools-de-conexión-y-timeouts-optimizando-el-flujo-ininterrumpido-de-datos)
   - [Bibliografía](#bibliografía)
 
-## 13. Contenidos
 
-### 13.1 Integración de SQLAlchemy ORM
+## 13.1 Integración de SQLAlchemy ORM
 ---
 En el desarrollo de `microservices` robustos con FastAPI, la persistencia de datos es un pilar. Cuando se trata de bases de datos relacionales (como PostgreSQL, MySQL, SQLite), **SQLAlchemy** se erige como la biblioteca Python por excelencia, ofreciendo un poderoso **Object Relational Mapper (ORM)**. Esta sección se enfoca en su integración **asíncrona** con FastAPI, una sinergia crucial para construir aplicaciones `backend` de alto rendimiento y no bloqueantes.
 
@@ -270,10 +268,9 @@ La integración asíncrona de SQLAlchemy ORM con FastAPI, apuntalada por el sist
 
 Al internalizar el flujo `async`, el ciclo de vida de la `session` gestionado por `Depends`, y las responsabilidades transaccionales, tus profesionales estarán equipados no solo para realizar operaciones CRUD, sino para construir capas de acceso a datos complejas, mantenibles y altamente performantes. Esta base sólida es esencial antes de adentrarnos en patrones más avanzados de persistencia y diseño de dominio.
 
------
 
-### 13.2 Modelos desacoplados del dominio (DTO vs Entity)
------
+## 13.2 Modelos desacoplados del dominio (DTO vs Entity)
+
 
  Con una base sólida sobre cómo integrar SQLAlchemy ORM de forma asíncrona con FastAPI (nuestro 13.1 definitivo), es el momento de abordar una distinción conceptual y práctica crucial en el diseño de aplicaciones robustas: el desacoplamiento entre los modelos que usamos para la persistencia (las `entities` ORM) y los modelos que usamos para la comunicación API (los `Data Transfer Objects - DTOs`, que en FastAPI son nuestros modelos Pydantic).
 
@@ -464,16 +461,15 @@ Desacoplar tus `DTOs` (modelos de API Pydantic) de tus `Entities` ORM (modelos S
 
 Aunque introduce una capa de mapeo, los beneficios en términos de robustez y adaptabilidad a largo plazo son inmensos, especialmente en aplicaciones y `microservices` que se espera evolucionen y se mantengan durante años. FastAPI y Pydantic te proporcionan las herramientas perfectas para implementar este patrón de forma elegante.
 
------
 
-¡Absolutamente\! Continuamos con el **13.3**. Después de haber integrado SQLAlchemy ORM (13.1) y comprendido la importancia de desacoplar nuestros modelos de API (DTOs) de los modelos de base de datos (Entities ORM) (13.2), el siguiente paso lógico es introducir una abstracción que nos permita organizar y gestionar nuestro acceso a datos de una manera aún más limpia y estructurada: el **Patrón Repositorio (`Repository Pattern`)**.
+Continuamos con el **13.3**. Después de haber integrado SQLAlchemy ORM (13.1) y comprendido la importancia de desacoplar nuestros modelos de API (DTOs) de los modelos de base de datos (Entities ORM) (13.2), el siguiente paso lógico es introducir una abstracción que nos permita organizar y gestionar nuestro acceso a datos de una manera aún más limpia y estructurada: el **Patrón Repositorio (`Repository Pattern`)**.
 
 Este patrón es un pilar en arquitecturas que buscan un alto grado de desacoplamiento y testabilidad, como la Arquitectura Hexagonal.
 
------
 
-### 13.3 Patrones de Repositorio con SQLAlchemy: Guardianes Elegantes de Tu Persistencia
----
+
+## 13.3 Patrones de Repositorio con SQLAlchemy: Guardianes Elegantes de Tu Persistencia
+
 Imagina que tus `entities` ORM (como `ProductDB`) son tesoros valiosos guardados en una compleja bóveda (tu base de datos). En lugar de que cada parte de tu aplicación (tus `endpoints` o `services`) tenga que conocer los intrincados mecanismos de la cerradura y los pasadizos secretos de la bóveda (los detalles de SQLAlchemy, las sentencias `select`, cómo manejar `sessions`), designas a un **Guardián del Tesoro** o **Bibliotecario Experto** para cada tipo de tesoro. Este guardián es tu **Repositorio**.
 
 **El Patrón Repositorio: Tu Intermediario Experto con la Capa de Persistencia 🧑‍💼**
@@ -775,12 +771,9 @@ El Patrón Repositorio es una abstracción poderosa y fundamental en la construc
 
 Es un paso esencial hacia una arquitectura más limpia y profesional, preparando el terreno para conceptos como la `Unit of Work` que exploraremos a continuación.
 
------
 
+## 13.4 Gestión de Transacciones Locales: Asegurando la Atomicidad en Tus Operaciones de Datos
 
-
-### 13.4 Gestión de Transacciones Locales: Asegurando la Atomicidad en Tus Operaciones de Datos
-----
 
 En cualquier aplicación que interactúe con una base de datos, especialmente para operaciones de escritura (crear, actualizar, eliminar), la **atomicidad** es un concepto crítico. Queremos que una serie de cambios relacionados en la base de datos se traten como una **única unidad de trabajo indivisible (`single, indivisible unit of work`)**: o todas las operaciones dentro de esa unidad tienen éxito y se aplican (`commit`), o si alguna falla, todas las operaciones anteriores dentro de esa unidad se deshacen (`rollback`), dejando la base de datos en el estado en que estaba antes de que comenzara la unidad. Esto es la esencia de una **transacción**.
 
@@ -1003,11 +996,9 @@ En FastAPI, al usar SQLAlchemy asíncrono:
 
 Dominar este flujo es esencial para construir `microservices` que no solo sean rápidos, sino también fiables y correctos en su manejo de datos.
 
------
 
+## 13.5 Transacciones distribuidas: sagas y outbox
 
-### 13.5 Transacciones distribuidas: sagas y outbox
------
 Entramos en uno de los territorios más desafiantes pero cruciales de los `microservices`: las **transacciones distribuidas**. Si el 13.4 trató sobre asegurar la atomicidad dentro de *una única* base de datos (transacciones locales), el **13.5** aborda el complejo problema de mantener la consistencia cuando una operación de negocio abarca *múltiples* servicios, cada uno potencialmente con su propia base de datos.
 
 En un sistema monolítico con una única base de datos, las transacciones ACID locales (13.4) son nuestros grandes aliados para mantener la consistencia. Pero en una arquitectura de `microservices`, una única "operación de negocio" puede requerir la coordinación de cambios de estado a través de varios servicios independientes, cada uno con su propia base de datos.
@@ -1182,11 +1173,9 @@ Las transacciones distribuidas son uno de los problemas más difíciles en `micr
 
 Estos patrones no son triviales de implementar, pero son herramientas esenciales para construir sistemas de `microservices` que sean resilientes, escalables y mantengan la consistencia de los datos a un nivel de negocio, incluso en ausencia de transacciones distribuidas tradicionales. La elección de usarlos debe basarse en una necesidad clara de consistencia a través de los límites del servicio.
 
------
 
+## 13.6 Rollback coordinado con eventos
 
-### 13.6 Rollback coordinado con eventos
-----
 Tras explorar las Sagas y el patrón `Outbox` en el 13.5 como mecanismos para gestionar operaciones que abarcan múltiples `microservices`, es natural que nos preguntemos: ¿qué sucede cuando uno de los pasos de esta compleja coreografía distribuida falla? No podemos simplemente hacer un `ROLLBACK DATABASE` global como en una transacción ACID local.
 
 Aquí es donde el concepto de **`rollback` coordinado con `events`** se vuelve esencial. Es la forma en que las Sagas manejan los fallos, deshaciendo el trabajo previo para mantener la consistencia del negocio a un nivel aceptable.
@@ -1208,7 +1197,6 @@ Cuando una transacción local crucial dentro de una `Saga` falla (y los reintent
 1.  Deshacer sus propios cambios locales (si es posible dentro de su propia transacción atómica).
 2.  **Publicar un `failure event` específico.** Este `event` es la señal para el resto de los participantes de la `Saga` de que algo ha ido mal y que podrían necesitar tomar acciones compensatorias.
 
-<!-- end list -->
 
   * **Ejemplos de `Failure Events`:**
       * `PaymentFailedEvent { orderId: "123", reason: "Insufficient funds" }`
@@ -1314,10 +1302,10 @@ El `rollback` coordinado por `events` es la manifestación del principio de "aut
 
 Requiere un diseño cuidadoso, una atención meticulosa a la idempotencia y fiabilidad de las transacciones compensatorias, y una buena infraestructura de `eventing` y `observability`. Pero el resultado es un sistema que puede manejar fallos parciales con mayor gracia, deshaciendo operaciones de manera coordinada para evitar dejar el negocio en un estado corrupto o inconsistente a largo plazo. Es un pilar para construir `microservices` que no solo son autónomos, sino también colaborativamente resilientes.
 
------
 
-### 13.7 Conexión a MongoDB con `motor`
------
+
+## 13.7 Conexión a MongoDB con `motor`
+
 Cambiamos de tercio en nuestra exploración de la persistencia. Si con SQLAlchemy (13.1) nos sumergimos en el mundo estructurado de las bases de datos relacionales, ahora con el **13.7** nos aventuramos en la flexibilidad y escalabilidad de las bases de datos NoSQL, específicamente **MongoDB**, utilizando **`Motor`**, su `driver` oficial asíncrono para Python.
 
 Imagina que pasamos de construir con ladrillos perfectamente uniformes (SQL) a trabajar con arcilla increíblemente maleable (NoSQL con MongoDB). Ambos tienen su lugar y su poder, y `Motor` es la herramienta que nos permite modelar esa arcilla a alta velocidad en nuestras aplicaciones FastAPI.
@@ -1526,7 +1514,6 @@ Aunque MongoDB es `schema-flexible`, **sigue siendo crucial usar modelos Pydanti
       * **Para `Responses`:** A menudo querrás exponer el `_id` como un `string` `id` en tu API.
       * **Para `Requests`:** Al crear `documents`, MongoDB genera el `_id`. Al actualizar/buscar, puedes recibir un `ID string` del `client` y necesitarás convertirlo a `ObjectId`.
 
-    <!-- end list -->
 
     ```python
     from pydantic import BaseModel, Field
@@ -1614,11 +1601,9 @@ sequenceDiagram
 
 Con esta integración, estás listo para construir `microservices` FastAPI que aprovechen las fortalezas de MongoDB para la persistencia de datos `document-oriented`.
 
------
 
+## 13.8 Esquemas flexibles en MongoDB
 
-### 13.8 Esquemas flexibles en MongoDB
------
 
 Con nuestro `Motor` listo para la acción (13.7), es hora de sumergirnos en una de las características más distintivas y, a menudo, debatidas de MongoDB: su **esquema flexible**. Este es el corazón del **13.8**.
 
@@ -1810,19 +1795,13 @@ El esquema flexible de MongoDB es una de sus características más potentes, ofr
 
 Al entender y gestionar conscientemente la flexibilidad de esquema, puedes aprovechar al máximo MongoDB sin caer en el caos de datos inconsistentes.
 
------
 
+## 13.9 Bases de datos por servicio y separación
 
-### 13.9 Bases de datos por servicio y separación
----
 ¡Continuamos con el **13.9**\! Este punto nos lleva directamente al corazón de la arquitectura de `microservices` y cómo se relaciona con la persistencia: el principio de **"una base de datos por servicio"** y la importancia de la **separación de datos**.
 
 Si en las secciones anteriores exploramos *cómo* conectarnos a diferentes tipos de bases de datos (SQL con SQLAlchemy, NoSQL con MongoDB), ahora nos preguntaremos *dónde* deben residir esos datos en un ecosistema de `microservices`.
 
------
-
-### 13.9 Bases de Datos por Servicio y Separación de Datos: Autonomía y Desacoplamiento en la Persistencia de `Microservices`
----
 
 Uno de los principios fundamentales y más transformadores en el diseño de arquitecturas de `microservices` es la idea de que **cada `microservice` debe poseer y gestionar su propia base de datos, y esta no debe ser compartida directamente por otros servicios.** Este concepto es crucial para lograr la verdadera autonomía, el desacoplamiento y la escalabilidad independiente que prometen los `microservices`.
 
@@ -1962,17 +1941,15 @@ El principio de "una base de datos por servicio" es fundamental para lograr los 
 
 Para tus profesionales que desarrollan `microservices` con FastAPI, entender y aplicar este principio de separación de datos es tan importante como diseñar los `endpoints` de la API o la lógica de negocio interna de cada servicio. Es la base sobre la cual se construyen sistemas distribuidos verdaderamente robustos y evolutivos.
 
------
+
 
 
 ### 13.10 Pools de conexión y timeouts
-¡Y llegamos al último tramo de nuestro Tema 13 sobre persistencia\! El **13.10** se centra en dos aspectos operativos absolutamente cruciales para la salud, el rendimiento y la resiliencia de cualquier aplicación que interactúe con una base de datos: los **`connection pools` (pools de conexiones)** y la gestión de **`timeouts` (tiempos de espera)**.
+
+El **13.10** se centra en dos aspectos operativos absolutamente cruciales para la salud, el rendimiento y la resiliencia de cualquier aplicación que interactúe con una base de datos: los **`connection pools` (pools de conexiones)** y la gestión de **`timeouts` (tiempos de espera)**.
 
 Si tus `database connections` son las autopistas hacia tus datos, los `connection pools` son los carriles inteligentemente gestionados para evitar atascos, y los `timeouts` son las señales de emergencia y los desvíos para cuando el tráfico se detiene inesperadamente.
 
------
-
-### 13.10 `Pools` de Conexión y `Timeouts`: Optimizando el Flujo Ininterrumpido de Datos
 
 Conectar a una base de datos es una operación costosa en términos de recursos y tiempo. Establecer una nueva `connection` para cada `query` o `request` es ineficiente y no escala. Del mismo modo, esperar indefinidamente a que una base de datos responda puede dejar tu aplicación colgada y no responsiva. Aquí es donde los `connection pools` y una gestión inteligente de `timeouts` se vuelven indispensables.
 

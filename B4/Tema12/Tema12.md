@@ -1,7 +1,6 @@
 # Tema 12. ESCALABILIDAD Y OPTIMIZACIÓN DE MICROSERVICIOS
 
 - [Tema 12. ESCALABILIDAD Y OPTIMIZACIÓN DE MICROSERVICIOS](#tema-12-escalabilidad-y-optimización-de-microservicios)
-  - [12. Contenidos](#12-contenidos)
     - [12.1 Escalado horizontal vs vertical](#121-escalado-horizontal-vs-vertical)
     - [12.1 Escalado Horizontal vs. Vertical: El Dilema del Crecimiento – ¿Más Músculo o Más Manos?](#121-escalado-horizontal-vs-vertical-el-dilema-del-crecimiento--más-músculo-o-más-manos)
     - [12.2 Caching con Redis para endpoints críticos](#122-caching-con-redis-para-endpoints-críticos)
@@ -11,52 +10,22 @@
     - [12.5 `Workers` Asincrónicos y Uso de Recursos: La Danza Eficiente del Procesamiento en Segundo Plano](#125-workers-asincrónicos-y-uso-de-recursos-la-danza-eficiente-del-procesamiento-en-segundo-plano)
     - [12.5 Workers asincrónicos y uso de recursos](#125-workers-asincrónicos-y-uso-de-recursos)
     - [12.6 Profiling y detección de cuellos de botella](#126-profiling-y-detección-de-cuellos-de-botella)
-  - [Has construido tu `microservice` FastAPI, lo has escalado, y parece funcionar. Pero, ¿es realmente rápido? ¿Utiliza los recursos eficientemente? ¿Dónde se esconde ese fragmento de código que está ralentizando todo cuando la carga aumenta? Aquí es donde el **`profiling`** se convierte en tu herramienta de diagnóstico más poderosa.](#has-construido-tu-microservice-fastapi-lo-has-escalado-y-parece-funcionar-pero-es-realmente-rápido-utiliza-los-recursos-eficientemente-dónde-se-esconde-ese-fragmento-de-código-que-está-ralentizando-todo-cuando-la-carga-aumenta-aquí-es-donde-el-profiling-se-convierte-en-tu-herramienta-de-diagnóstico-más-poderosa)
     - [12.7 Throttling para prevenir sobrecarga](#127-throttling-para-prevenir-sobrecarga)
     - [12.7 `Throttling` y `Rate Limiting` para Prevenir Sobrecarga: El Guardián del Flujo de Tu API](#127-throttling-y-rate-limiting-para-prevenir-sobrecarga-el-guardián-del-flujo-de-tu-api)
     - [12.8 Kubernetes HPA (Horizontal Pod Autoscaler)](#128-kubernetes-hpa-horizontal-pod-autoscaler)
-  - [Imagina que tienes una flota de taxis (tus `FastAPI Pods`). En lugar de decidir manualmente cuántos taxis enviar a la calle, el HPA actúa como un despachador inteligente que monitoriza la demanda (ej. peticiones de viaje o uso de CPU de los taxis) y automáticamente añade más taxis durante las horas pico o los retira cuando la demanda baja.](#imagina-que-tienes-una-flota-de-taxis-tus-fastapi-pods-en-lugar-de-decidir-manualmente-cuántos-taxis-enviar-a-la-calle-el-hpa-actúa-como-un-despachador-inteligente-que-monitoriza-la-demanda-ej-peticiones-de-viaje-o-uso-de-cpu-de-los-taxis-y-automáticamente-añade-más-taxis-durante-las-horas-pico-o-los-retira-cuando-la-demanda-baja)
     - [12.9 Afinidad y políticas de tolerancia](#129-afinidad-y-políticas-de-tolerancia)
-  - [`Affinity` y `Anti-Affinity`: Dictando las Preferencias Sociales de Tus `Pods` 🤝💔](#affinity-y-anti-affinity-dictando-las-preferencias-sociales-de-tus-pods-)
-    - [Tipos de `Affinity`/`Anti-Affinity`:](#tipos-de-affinityanti-affinity)
-    - [Modos de `Affinity`/`Anti-Affinity`:](#modos-de-affinityanti-affinity)
-    - [Ejemplo Conceptual: `Pod Anti-Affinity` para Alta Disponibilidad de FastAPI](#ejemplo-conceptual-pod-anti-affinity-para-alta-disponibilidad-de-fastapi)
-    - [Diagrama `Mermaid`: `Pod Anti-Affinity`](#diagrama-mermaid-pod-anti-affinity)
-  - [`Taints` y `Tolerations`: Reservando `Nodes` y Permitiendo el Acceso 🚧🔑](#taints-y-tolerations-reservando-nodes-y-permitiendo-el-acceso-)
-    - [Casos de Uso para `Taints` y `Tolerations` con FastAPI:](#casos-de-uso-para-taints-y-tolerations-con-fastapi)
-    - [Diagrama `Mermaid`: `Taints` y `Tolerations`](#diagrama-mermaid-taints-y-tolerations)
-  - [Sinergia: Usando `Affinity`/`Anti-Affinity` y `Taints`/`Tolerations` Juntos](#sinergia-usando-affinityanti-affinity-y-taintstolerations-juntos)
-  - [Conclusión: Emplazamiento Estratégico de `Pods` para `Microservices` Optimizados](#conclusión-emplazamiento-estratégico-de-pods-para-microservices-optimizados)
     - [12.10 Batching y Debouncing en concurrencia](#1210-batching-y-debouncing-en-concurrencia)
-  - [`Batching` y `Debouncing` en Concurrencia: Optimizaciones Finas para Flujos Eficientes](#batching-y-debouncing-en-concurrencia-optimizaciones-finas-para-flujos-eficientes)
-    - [`Batching`: El Poder de Agrupar para la Eficiencia  собирать группы](#batching-el-poder-de-agrupar-para-la-eficiencia--собирать-группы)
-    - [`Debouncing`: Esperando el Momento Oportuno para Actuar ⏳](#debouncing-esperando-el-momento-oportuno-para-actuar-)
-    - [`Debouncing` vs. `Throttling`: Una Breve Distinción Necesaria 🚦](#debouncing-vs-throttling-una-breve-distinción-necesaria-)
-    - [Aplicación en `Microservices` FastAPI y `Workers` Asíncronos:](#aplicación-en-microservices-fastapi-y-workers-asíncronos)
-  - [Conclusión del Tema 12: Hacia Sistemas Optimizados, Conscientes de sus Recursos y Preparados para el Mundo Real 🌟](#conclusión-del-tema-12-hacia-sistemas-optimizados-conscientes-de-sus-recursos-y-preparados-para-el-mundo-real-)
   - [Referencias Bibliográficas y Recursos Adicionales Recomendados](#referencias-bibliográficas-y-recursos-adicionales-recomendados)
-    - [1. Arquitectura de Software y Diseño General](#1-arquitectura-de-software-y-diseño-general)
-    - [2. `Microservices`](#2-microservices)
-    - [3. CQRS y `Event Sourcing`](#3-cqrs-y-event-sourcing)
-    - [4. Diseño de APIs RESTful](#4-diseño-de-apis-restful)
-    - [5. FastAPI y Python `Async`](#5-fastapi-y-python-async)
-    - [6. Sistemas de Mensajería](#6-sistemas-de-mensajería)
-    - [7. `WebSockets`](#7-websockets)
-    - [8. `Caching` y Redis](#8-caching-y-redis)
-    - [9. `Load Balancing` (NGINX, Traefik)](#9-load-balancing-nginx-traefik)
-    - [10. `Containerization` y `Orchestration` (Docker, Kubernetes)](#10-containerization-y-orchestration-docker-kubernetes)
-    - [11. `Profiling` y Optimización](#11-profiling-y-optimización)
 
-## 12. Contenidos
 
-### 12.1 Escalado horizontal vs vertical
-¡Excelente\! Iniciamos el **Tema 12: ESCALABILIDAD Y OPTIMIZACIÓN DE MICROSERVICIOS**. Este tema es la sala de máquinas de nuestros sistemas. Ya hemos construido APIs funcionales (Tema 11) y sistemas de mensajería en tiempo real (Tema 10). Ahora, la pregunta es: ¿cómo hacemos para que soporten la carga del éxito? ¿Cómo aseguramos que sigan siendo rápidos y fiables a medida que crece el número de usuarios y la cantidad de datos?
+
+
+## 12.1 Escalado horizontal vs vertical
+
+Iniciamos el **Tema 12: ESCALABILIDAD Y OPTIMIZACIÓN DE MICROSERVICIOS**. Este tema es la sala de máquinas de nuestros sistemas. Ya hemos construido APIs funcionales (Tema 11) y sistemas de mensajería en tiempo real (Tema 10). Ahora, la pregunta es: ¿cómo hacemos para que soporten la carga del éxito? ¿Cómo aseguramos que sigan siendo rápidos y fiables a medida que crece el número de usuarios y la cantidad de datos?
 
 Comenzaremos por el principio fundamental del crecimiento: las dos estrategias primarias para escalar.
 
------
-
-### 12.1 Escalado Horizontal vs. Vertical: El Dilema del Crecimiento – ¿Más Músculo o Más Manos?
 
 Cuando tu aplicación o `microservice` FastAPI empieza a recibir más tráfico del que una única `instance` puede manejar eficientemente, o cuando necesitas mejorar su rendimiento, te enfrentas a una decisión crucial: ¿cómo escalar? Hay dos enfoques fundamentales: **Escalado Vertical (`Scaling Up`)** y **Escalado Horizontal (`Scaling Out`)**.
 
@@ -190,13 +159,9 @@ Sin embargo, para construir `microservices` modernos, resilientes y capaces de m
 
 ### 12.2 Caching con Redis para endpoints críticos
 
-¡Entendido\! Vamos a turbocargar nuestras APIs con el **12.2**. Si el escalado (12.1) nos da más carreteras o coches más grandes, el `caching` es como tener teletransportadores para los destinos más frecuentes. Reduce drásticamente los tiempos de viaje (latencia) y la carga en nuestros sistemas principales.
+Vamos a turbocargar nuestras APIs con el **12.2**. Si el escalado (12.1) nos da más carreteras o coches más grandes, el `caching` es como tener teletransportadores para los destinos más frecuentes. Reduce drásticamente los tiempos de viaje (latencia) y la carga en nuestros sistemas principales.
 
 Y sí, prestaré especial atención a la sintaxis de los diagramas `Mermaid` para asegurar que sean claros, sofisticados y, sobre todo, ¡funcionales\!
-
------
-
-### 12.2 `Caching` con Redis para `Endpoints` Críticos: El Turbo de Tu API a la Velocidad de la Luz
 
 A medida que tus `microservices` FastAPI ganan popularidad y la carga aumenta, incluso con un buen escalado, ciertos `endpoints` pueden convertirse en cuellos de botella. Esto suele ocurrir cuando recuperan datos que no cambian con frecuencia pero cuya obtención es costosa (consultas complejas a bases de datos, llamadas a servicios externos lentos, cálculos intensivos). Aquí es donde el **`caching` estratégico** se convierte en tu mejor aliado, y **Redis** es a menudo el campeón elegido para esta tarea.
 
@@ -459,7 +424,7 @@ La estrategia `Cache-Aside` es un excelente punto de partida por su simplicidad 
 -----
 
 
-### 12.3 Balanceo de carga con NGINX o Traefik
+## 12.3 Balanceo de carga con NGINX o Traefik
 
 Continuamos con el **Tema 12.3**. Una vez que hemos decidido escalar horizontalmente nuestras aplicaciones FastAPI (como vimos en 12.1), añadiendo más `instances`, necesitamos un "director de orquesta" para el tráfico entrante. Este director es el **`Load Balancer` (Balanceador de Carga)**. Su misión es distribuir inteligentemente las peticiones de los `clients` entre nuestras múltiples `server instances`, asegurando que ninguna se sobrecargue y que el sistema en su conjunto siga siendo rápido y disponible.
 
@@ -704,10 +669,8 @@ El `load balancing` no es un lujo, sino un componente no negociable para cualqui
 
 La elección dependerá de tu infraestructura (¿`on-premise`, `cloud`, `containers`, Kubernetes?), tu nivel de `expertise` en DevOps, y las necesidades específicas de tu aplicación. El objetivo final es el mismo: que ninguna `instance` de tu API FastAPI se vea abrumada, y que tus `users` siempre reciban una respuesta rápida y fiable.
 
------
 
-
-### 12.4 Desacoplamiento con colas para paralelo
+## 12.4 Desacoplamiento con colas para paralelo
 
 Este punto es crucial porque nos permite ir más allá de simplemente hacer que nuestra API sea *accesible* a través de un `load balancer`; nos enfocamos en cómo hacer que el *trabajo interno* de nuestra aplicación sea más eficiente, responsivo y capaz de manejar grandes volúmenes mediante el **desacoplamiento con colas para habilitar el procesamiento paralelo**.
 
@@ -863,7 +826,7 @@ Esta arquitectura es la base para manejar cargas de trabajo serias y construir s
 
 
 
-### 12.5 `Workers` Asincrónicos y Uso de Recursos: La Danza Eficiente del Procesamiento en Segundo Plano
+## 12.5 `Workers` Asincrónicos y Uso de Recursos: La Danza Eficiente del Procesamiento en Segundo Plano
 
 En la sección anterior (12.4), establecimos la importancia de desacoplar tareas pesadas o de larga duración de nuestros `API endpoints` mediante `message queues`, permitiendo que `workers` dedicados las procesen en paralelo. Ahora, vamos a optimizar esos `workers`: ¿cómo podemos hacer que utilicen los recursos del `server` (CPU, memoria, I/O) de la manera más eficiente posible? La respuesta, en muchos casos, especialmente para tareas `I/O-bound`, reside en el uso de **`workers` asincrónicos** basados en `asyncio`.
 
@@ -1028,17 +991,17 @@ Los `workers` asíncronos son una evolución natural y poderosa para optimizar e
 
 Al combinar `message queues` con `workers` asíncronos (y, crucialmente, múltiples procesos de estos `workers` para el paralelismo de CPU), construyes una infraestructura de `backend` que no solo es escalable y resiliente, sino también altamente eficiente en el uso de los recursos.
 
------
 
-### 12.5 Workers asincrónicos y uso de recursos
 
-### 12.6 Profiling y detección de cuellos de botella
+## 12.6 Profiling y detección de cuellos de botella
+
 Este es un punto absolutamente crítico para cualquier profesional que construya `microservices` de alto rendimiento. Una vez que hemos diseñado para la escalabilidad (12.1-12.5), necesitamos herramientas para **medir, entender y mejorar** el rendimiento real de nuestra aplicación. Sin esto, la optimización es como navegar en la niebla.
 
 Prepárense para ponerse las gafas de detective y el estetoscopio de ingeniero, porque vamos a diagnosticar nuestras aplicaciones FastAPI.
 
 
 Has construido tu `microservice` FastAPI, lo has escalado, y parece funcionar. Pero, ¿es realmente rápido? ¿Utiliza los recursos eficientemente? ¿Dónde se esconde ese fragmento de código que está ralentizando todo cuando la carga aumenta? Aquí es donde el **`profiling`** se convierte en tu herramienta de diagnóstico más poderosa.
+
 -----
 
 **1. `Profiling`: El Arte de Ver Tu Código en Cámara Lenta (y Rápida) 🔬**
@@ -1208,15 +1171,12 @@ Al medir antes de optimizar, te aseguras de enfocar tus valiosos esfuerzos donde
 -----
 
 
-### 12.7 Throttling para prevenir sobrecarga
+## 12.7 Throttling para prevenir sobrecarga
 
-¡Absolutamente\! Prosigamos con el **12.7**. Después de optimizar y escalar, debemos proteger. Una API popular puede convertirse rápidamente en víctima de su propio éxito si no gestionamos la cantidad de tráfico que recibe. El `throttling` y el `rate limiting` son nuestros escudos protectores.
+Prosigamos con el **12.7**. Después de optimizar y escalar, debemos proteger. Una API popular puede convertirse rápidamente en víctima de su propio éxito si no gestionamos la cantidad de tráfico que recibe. El `throttling` y el `rate limiting` son nuestros escudos protectores.
 
 Vamos a explorar cómo implementar estas defensas en nuestras APIs FastAPI, manteniendo nuestro estilo profesional, práctico y, espero, "evolucionado y mejorado".
 
------
-
-### 12.7 `Throttling` y `Rate Limiting` para Prevenir Sobrecarga: El Guardián del Flujo de Tu API
 
 Tu API FastAPI está funcionando, es rápida, escalable... y de repente, un `client` (o un grupo de `clients`, o un `bot` malicioso) empieza a bombardearla con miles de peticiones por segundo. Sin defensas, tus `backend resources` (bases de datos, otros `microservices`, e incluso la propia API) pueden verse abrumados, degradando el servicio para todos los `users` o incluso provocando una caída total.
 
@@ -1414,10 +1374,8 @@ El `Rate Limiting` y el `Throttling` son mecanismos de defensa esenciales para c
 
 Al aplicar estas técnicas, no solo proteges tu infraestructura de la sobrecarga y el abuso, sino que también aseguras un servicio justo y estable para todos tus `users` legítimos.
 
------
 
-
-### 12.8 Kubernetes HPA (Horizontal Pod Autoscaler)
+## 12.8 Kubernetes HPA (Horizontal Pod Autoscaler)
 
 Continuamos con el **12.8**, y tendré muy presente que los diagramas `Mermaid` se integrarán directamente en `Markdown`, por lo que me aseguraré de que la sintaxis sea impecable para su correcto renderizado.
 
@@ -1585,10 +1543,8 @@ El `Horizontal Pod Autoscaler` de Kubernetes es una herramienta indispensable pa
 
 Dominar el HPA, junto con una buena definición de `resource requests/limits` y `health probes` para tus `Pods` FastAPI, es un paso de gigante hacia la operación eficiente y robusta de `microservices` en un entorno de producción moderno.
 
------
 
-
-### 12.9 Afinidad y políticas de tolerancia
+## 12.9 Afinidad y políticas de tolerancia
 
 Ahora que sabemos cómo escalar automáticamente nuestros `Pods` con HPA (12.8), vamos a explorar cómo podemos influir más finamente en *dónde* Kubernetes decide ejecutar esos `Pods`. Esto es crucial para optimizar costos, mejorar el rendimiento y asegurar la alta disponibilidad.
 
@@ -1761,9 +1717,8 @@ Las reglas de **`affinity` y `anti-affinity`**, junto con los **`taints` y `tole
 
 Dominar estos conceptos te da un control mucho más granular sobre cómo tu aplicación FastAPI se despliega y opera en un entorno Kubernetes, llevando tu escalabilidad y resiliencia al siguiente nivel.
 
------
 
-### 12.10 Batching y Debouncing en concurrencia
+## 12.10 Batching y Debouncing en concurrencia
 
 ¡Excelente\! Llegamos al **12.10**, la última sección de nuestro Tema 12 sobre escalabilidad y optimización. Después de explorar estrategias de escalado, `caching`, `load balancing`, `autoscaling` y la gestión inteligente de `Pods` en Kubernetes, ahora nos enfocaremos en dos técnicas de optimización a un nivel más micro, pero increíblemente efectivas en entornos concurrentes: **`Batching` (Agrupamiento)** y **`Debouncing` (Anti-rebote/Retardo de Ejecución)**.
 
@@ -1996,7 +1951,7 @@ Es fácil confundir `debouncing` con `throttling`, pero sirven a propósitos dif
 
 -----
 
-## Conclusión del Tema 12: Hacia Sistemas Optimizados, Conscientes de sus Recursos y Preparados para el Mundo Real 🌟
+**Conclusión:**
 
 El `batching` y el `debouncing` son dos técnicas de optimización, a menudo consideradas "micro-optimizaciones", pero que pueden tener un impacto macro en la eficiencia, el rendimiento y la responsividad de tus sistemas concurrentes y distribuidos, incluyendo `microservices` FastAPI y sus `workers` asociados.
 
@@ -2126,9 +2081,5 @@ Esta lista no es exhaustiva, pero representa un excelente punto de partida para 
   * **Documentación de herramientas específicas:** `SnakeViz`, `Py-Spy`, `Yappi`, `Scalene`.
   * **Brendan Gregg's website/blog y libros (ej. *BPF Performance Tools*, *Systems Performance*).**
       * Una autoridad mundial en `performance analysis` y `profiling` a nivel de sistema, muy relevante si necesitas profundizar.
-
------
-
-Espero que esta lista de referencias sirva como un excelente trampolín para que tus profesionales continúen su aprendizaje y se conviertan en maestros del diseño y la implementación de `microservices` robustos, escalables y de alto rendimiento con FastAPI. ¡El conocimiento es un viaje continuo\!
 
 -----
