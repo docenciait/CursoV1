@@ -2,17 +2,17 @@
 
 
 - [Tema 5. SEGURIDAD Y BUENAS PRÁCTICAS EN MICROSERVICIOS](#tema-5-seguridad-y-buenas-prácticas-en-microservicios)
-  - [5.1 Autenticación basada en JWT con FastAPI {#51-autenticación-basada-en-jwt-con-fastapi}](#51-autenticación-basada-en-jwt-con-fastapi-51-autenticación-basada-en-jwt-con-fastapi)
-  - [5.2 Autorización por roles y scopes (RBAC) {#52-autorización-por-roles-y-scopes-rbac}](#52-autorización-por-roles-y-scopes-rbac-52-autorización-por-roles-y-scopes-rbac)
-  - [5.3 Comunicación segura con HTTPS y certificados {#53-comunicación-segura-con-https-y-certificados}](#53-comunicación-segura-con-https-y-certificados-53-comunicación-segura-con-https-y-certificados)
-  - [5.4 Validación de inputs y outputs {#54-validación-de-inputs-y-outputs}](#54-validación-de-inputs-y-outputs-54-validación-de-inputs-y-outputs)
-  - [5.5 Políticas de CORS estrictas {#55-políticas-de-cors-estrictas}](#55-políticas-de-cors-estrictas-55-políticas-de-cors-estrictas)
-  - [5.6 Protección de endpoints WebSocket y REST {#56-protección-de-endpoints-websocket-y-rest}](#56-protección-de-endpoints-websocket-y-rest-56-protección-de-endpoints-websocket-y-rest)
+  - [5.1 Autenticación basada en JWT con FastAPI](#51-autenticación-basada-en-jwt-con-fastapi)
+  - [5.2 Autorización por roles y scopes (RBAC)](#52-autorización-por-roles-y-scopes-rbac)
+  - [5.3 Comunicación segura con HTTPS y certificados](#53-comunicación-segura-con-https-y-certificados)
+  - [5.4 Validación de inputs y outputs](#54-validación-de-inputs-y-outputs)
+  - [5.5 Políticas de CORS estrictas](#55-políticas-de-cors-estrictas)
+  - [5.6 Protección de endpoints WebSocket y REST](#56-protección-de-endpoints-websocket-y-rest)
   - [5.7 Rotación de claves y secretos {#57-rotación-de-claves-y-secretos}](#57-rotación-de-claves-y-secretos-57-rotación-de-claves-y-secretos)
-  - [5.8 Gestión de credenciales con Vault o AWS Secrets Manager {#58-gestión-de-credenciales-con-vault-o-aws-secrets-manager}](#58-gestión-de-credenciales-con-vault-o-aws-secrets-manager-58-gestión-de-credenciales-con-vault-o-aws-secrets-manager)
-  - [5.9 Análisis de vulnerabilidades OWASP {#59-análisis-de-vulnerabilidades-owasp}](#59-análisis-de-vulnerabilidades-owasp-59-análisis-de-vulnerabilidades-owasp)
-  - [5.10 Auditoría y trazabilidad de usuarios {#510-auditoría-y-trazabilidad-de-usuarios}](#510-auditoría-y-trazabilidad-de-usuarios-510-auditoría-y-trazabilidad-de-usuarios)
-  - [5.11 Configuración de rate limiting {#511-configuración-de-rate-limiting}](#511-configuración-de-rate-limiting-511-configuración-de-rate-limiting)
+  - [5.8 Gestión de credenciales con Vault o AWS Secrets Manager](#58-gestión-de-credenciales-con-vault-o-aws-secrets-manager)
+  - [5.9 Análisis de vulnerabilidades OWASP](#59-análisis-de-vulnerabilidades-owasp)
+  - [5.10 Auditoría y trazabilidad de usuarios](#510-auditoría-y-trazabilidad-de-usuarios)
+  - [5.11 Configuración de rate limiting](#511-configuración-de-rate-limiting)
   - [Referencias](#referencias)
 
 ---
@@ -25,7 +25,7 @@ esencial. Este tema cubre los aspectos fundamentales de la seguridad y
 las buenas prácticas para construir microservicios robustos y
 protegidos, con ejemplos y consideraciones para FastAPI.
 
-## 5.1 Autenticación basada en JWT con FastAPI {#51-autenticación-basada-en-jwt-con-fastapi}
+## 5.1 Autenticación basada en JWT con FastAPI
 
 La autenticación es el proceso de verificar la identidad de un usuario,
 cliente o servicio. JSON Web Tokens (JWT) son un estándar abierto (RFC
@@ -281,7 +281,7 @@ from fastapi import FastAPI, Depends, HTTPException, status
     codificado, no cifrado. Si se necesita cifrado, usar JWE (JSON Web
     Encryption).
 
-### 5.2 Autorización por roles y scopes (RBAC) {#52-autorización-por-roles-y-scopes-rbac}
+## 5.2 Autorización por roles y scopes (RBAC) 
 
 La autenticación confirma *quién* es un usuario, mientras que la
 autorización determina *qué* se le permite hacer a ese usuario
@@ -463,7 +463,7 @@ from fastapi.security import OAuth2PasswordBearer, SecurityScopes
     #     return {"message": "You have items:read scope!"}
 ```
 
-### 5.3 Comunicación segura con HTTPS y certificados {#53-comunicación-segura-con-https-y-certificados}
+## 5.3 Comunicación segura con HTTPS y certificados 
 
 La comunicación en tránsito entre clientes y microservicios, y entre los
 propios microservicios, debe ser cifrada para proteger la
@@ -620,7 +620,7 @@ es el estándar para esto.
             de mTLS. El plano de control del mesh gestiona la CA, la
             emisión y rotación de certificados.
 
-### 5.4 Validación de inputs y outputs {#54-validación-de-inputs-y-outputs}
+## 5.4 Validación de inputs y outputs 
 
 La validación de todos los datos que entran y salen de un servicio es
 una práctica de seguridad fundamental. Ayuda a prevenir una amplia gama
@@ -800,7 +800,7 @@ from pydantic import BaseModel
         sus propios bugs. Usar modelos Pydantic para deserializar y
         validar las respuestas de otros microservicios.
 
-### 5.5 Políticas de CORS estrictas {#55-políticas-de-cors-estrictas}
+## 5.5 Políticas de CORS estrictas
 
 Cross-Origin Resource Sharing (CORS) es un mecanismo de seguridad del
 navegador que restringe las solicitudes HTTP que una página web en un
@@ -907,7 +907,7 @@ from fastapi import FastAPI
     -   `CORSMiddleware` de FastAPI maneja estas preflight requests
         automáticamente según su configuración.
 
-### 5.6 Protección de endpoints WebSocket y REST {#56-protección-de-endpoints-websocket-y-rest}
+## 5.6 Protección de endpoints WebSocket y REST 
 
 Tanto los endpoints RESTful tradicionales como los endpoints WebSocket
 requieren estrategias de protección adecuadas, aunque con algunas
@@ -1093,7 +1093,7 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Depends, status, HT
         -   Herramientas a nivel de infraestructura (WAFs, CDNs) pueden
             ayudar.
 
-### 5.7 Rotación de claves y secretos {#57-rotación-de-claves-y-secretos}
+## 5.7 Rotación de claves y secretos {#57-rotación-de-claves-y-secretos}
 
 Las claves y secretos (API keys, contraseñas de bases de datos, claves
 de firma de JWT, claves de cifrado, etc.) son fundamentales para la
@@ -1201,7 +1201,7 @@ práctica de seguridad crítica.
         conocido del servidor de autenticación (ej.
         `/.well-known/jwks.json`).
 
-### 5.8 Gestión de credenciales con Vault o AWS Secrets Manager {#58-gestión-de-credenciales-con-vault-o-aws-secrets-manager}
+## 5.8 Gestión de credenciales con Vault o AWS Secrets Manager 
 
 Almacenar secretos (contraseñas, API keys, certificados, claves de
 cifrado, etc.) directamente en archivos de configuración, código fuente,
@@ -1366,7 +1366,7 @@ Management Systems) proporcionan una solución centralizada y segura.
         }
 ```
 
-### 5.9 Análisis de vulnerabilidades OWASP {#59-análisis-de-vulnerabilidades-owasp}
+## 5.9 Análisis de vulnerabilidades OWASP 
 
 El Open Web Application Security Project (OWASP) es una comunidad online
 sin ánimo de lucro que produce artículos, metodologías, documentación,
@@ -1583,7 +1583,7 @@ web. Su proyecto más conocido es el **OWASP Top 10**.
         manual y creativa.
     -   **Revisiones de Código con Enfoque en Seguridad.**
 
-### 5.10 Auditoría y trazabilidad de usuarios {#510-auditoría-y-trazabilidad-de-usuarios}
+## 5.10 Auditoría y trazabilidad de usuarios 
 
 La auditoría y la trazabilidad de las acciones de los usuarios (y de los
 servicios) son cruciales para la seguridad, el cumplimiento normativo y
@@ -1797,7 +1797,7 @@ registro cronológico y seguro de eventos.
         return {"message": f"Admin action performed by {actor}"}
 ```
 
-### 5.11 Configuración de rate limiting {#511-configuración-de-rate-limiting}
+## 5.11 Configuración de rate limiting 
 
 El Rate Limiting (limitación de tasa o frecuencia) es una técnica de
 control que restringe el número de solicitudes que un cliente
