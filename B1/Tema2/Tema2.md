@@ -282,6 +282,7 @@ La verdadera potencia se libera gracias a la **integración nativa** de FastAPI 
 #### Flujo de Datos con Pydantic en FastAPI
 
 ```mermaid
+%%{init: {"themeVariables": {"fontSize": "20px"}}}%%
 graph LR
     Cliente -- "1. Petición HTTP (JSON)" --> FastAPI
     FastAPI -- "2. ¿Tipo Pydantic?" --> Pydantic_Model_Input[Modelo Pydantic Input]
@@ -299,6 +300,7 @@ graph LR
     style Logica fill:#ccf,stroke:#333,stroke-width:2px
     style Cliente fill:#9cf,stroke:#333,stroke-width:2px
     style Documentacion fill:#9c9,stroke:#333,stroke-width:2px
+
 
 ```
 #### Tabla Resumen: Pydantic `Field` Comunes
