@@ -11,6 +11,7 @@
   - [6.7 Integrar eventos de dominio desde la capa interna](#67-integrar-eventos-de-dominio-desde-la-capa-interna)
   - [6.8 Implementar casos de uso en la capa de aplicación](#68-implementar-casos-de-uso-en-la-capa-de-aplicación)   
   - [6.9 Configurar inyecciones de dependencia de adaptadores externos](#69-configurar-inyecciones-de-dependencia-de-adaptadores-externos)
+  - [6.10 Ejemplo de microservicio hexagonal completo con FastAPI](#610-ejemplo-de-microservicio-hexagonal-completo-con-fastapi)
 
 
 
@@ -23,7 +24,7 @@
 
 ---
 
-## **6.1 Comprender el patrón de puertos y adaptadores**
+## 6.1 Comprender el patrón de puertos y adaptadores
 
 
 ¡Bienvenido/a al núcleo de la Arquitectura Hexagonal! Este patrón, también conocido como "Puertos y Adaptadores" (Ports and Adapters), fue concebido por Alistair Cockburn y su objetivo principal es **proteger el corazón de tu aplicación (el dominio) de las dependencias externas y la tecnología.**
@@ -170,7 +171,7 @@ La Arquitectura Hexagonal es un excelente habilitador para DDD.
 
 ---
 
-## **6.2 Identificar las capas: dominio, aplicación, infraestructura, interfaces**
+## 6.2 Identificar las capas: dominio, aplicación, infraestructura, interfaces
 
 Aunque la Arquitectura Hexagonal no prescribe capas estrictas como la arquitectura en capas tradicional, conceptualmente podemos identificar estas áreas:
 
@@ -218,7 +219,7 @@ Aunque la Arquitectura Hexagonal no prescribe capas estrictas como la arquitectu
 
 ---
 
-## **6.3 Diseñar interfaces para cada puerto (entrada y salida)**
+## 6.3 Diseñar interfaces para cada puerto (entrada y salida)
 
 Una vez que hemos comprendido el concepto de Puertos y Adaptadores (Sección 6.1) e idealmente identificado las capas principales de nuestra aplicación (Sección 6.2), el siguiente paso crucial es **diseñar las interfaces para nuestros puertos**. Estas interfaces son los contratos formales que definen cómo el núcleo de la aplicación interactúa con el mundo exterior y viceversa.
 
@@ -504,7 +505,7 @@ mi_proyecto/
 > Diseñar interfaces efectivas para tus puertos es un arte que se refina con la práctica y la comprensión profunda del dominio. Son la base para un sistema modular, testeable, flexible y mantenible bajo la Arquitectura Hexagonal, permitiendo que tu lógica de negocio evolucione independientemente de las tecnologías externas.
 ---
 
-## **6.4 Implementar adaptadores HTTP como controladores REST o WebSocket**
+## 6.4 Implementar adaptadores HTTP como controladores REST o WebSocket
 
 Una vez que hemos definido las interfaces para nuestros puertos de entrada (Sección 6.3), necesitamos implementar los **Adaptadores de Entrada** (Driving Adapters) que permitirán al mundo exterior interactuar con el núcleo de nuestra aplicación. En aplicaciones web modernas, los adaptadores HTTP son omnipresentes, manifestándose comúnmente como controladores RESTful o, para comunicación bidireccional en tiempo real, como manejadores de WebSocket.
 
@@ -716,7 +717,7 @@ async def websocket_endpoint_inventario(
 > Implementar adaptadores HTTP correctamente es fundamental para exponer las capacidades del núcleo de tu aplicación de una manera estándar, segura y fácil de usar para los clientes. FastAPI proporciona herramientas poderosas para construir estos adaptadores de forma eficiente y alineada con los principios de la Arquitectura Hexagonal.
 ---
 
-## **6.5 Separar repositorios del dominio usando interfaces**
+## 6.5 Separar repositorios del dominio usando interfaces
 
 Un aspecto fundamental de la Arquitectura Hexagonal, especialmente cuando se combina con Domain-Driven Design (DDD), es la gestión de la persistencia de datos. El patrón **Repository** de DDD nos ofrece una abstracción crucial para esto: una interfaz similar a una colección para acceder a los objetos de nuestro dominio (Entidades y Raíces de Agregados). En la Arquitectura Hexagonal, estas interfaces de repositorio actúan como **Puertos de Salida** (Driven Ports).
 
@@ -892,7 +893,7 @@ Esta sección se ha centrado en *definir la interfaz* del repositorio para logra
 > Al separar el *qué* (la interfaz del repositorio definida por las necesidades de la aplicación/dominio) del *cómo* (la implementación del adaptador en la infraestructura), ganamos una enorme flexibilidad y mantenemos nuestro núcleo de negocio limpio y desacoplado de las preocupaciones tecnológicas de la persistencia.
 ---
 
-## **6.6 Diseñar pruebas para el núcleo sin depender de infraestructuras**
+## 6.6 Diseñar pruebas para el núcleo sin depender de infraestructuras
 
 Una de las ventajas más significativas de la Arquitectura Hexagonal es su inherente **testeabilidad**. Al desacoplar el núcleo de la aplicación (la lógica de dominio y de aplicación) de las preocupaciones de la infraestructura (bases de datos, APIs externas, frameworks web), podemos diseñar pruebas robustas, rápidas y fiables para este núcleo sin necesidad de levantar entornos complejos o depender de componentes externos.
 
@@ -1230,7 +1231,7 @@ Al diseñar pruebas para el núcleo sin depender de infraestructuras, estás inv
 
 ---
 
-## **6.7 Integrar eventos de dominio desde la capa interna**
+## 6.7 Integrar eventos de dominio desde la capa interna
 
 Imagina que el núcleo de tu aplicación (tu capa de Dominio y Aplicación) no es solo un ejecutor de tareas, sino un narrador de historias. Cada vez que ocurre algo importante, algo que cambia el estado del negocio, tu aplicación "anuncia" esa noticia. Esas "noticias" son los **Eventos de Dominio**.
 
@@ -1546,7 +1547,7 @@ Intenta dibujar (mentalmente o en papel) el flujo completo, desde que el usuario
 ¡Y eso es un vistazo dinámico a los eventos de dominio\! Son una pieza clave para construir aplicaciones que no solo funcionan, sino que también son adaptables, resilientes y cuentan la historia de tu negocio de manera efectiva.
 ---
 
-## **6.8 Implementar casos de uso en la capa de aplicación**
+## 6.8 Implementar casos de uso en la capa de aplicación
 
 Ya hemos hablado de los puertos de entrada (nuestras APIs del núcleo) y de cómo los adaptadores HTTP (como los controladores FastAPI) los invocan. Pero, ¿quién implementa realmente la lógica detrás de estos puertos de entrada? ¡Bienvenidos a la **Capa de Aplicación** y a sus protagonistas: los **Servicios de Aplicación** o **Manejadores de Casos de Uso**\!
 
@@ -1786,7 +1787,7 @@ class ServicioGestionInventario(IGestionInventarioInputPort):
 Implementar correctamente los casos de uso en la capa de aplicación es fundamental para tener un sistema bien estructurado, fácil de probar, mantener y evolucionar, donde la lógica de negocio está bien protegida y orquestada de manera clara.
 ---
 
-## **6.9 Configurar inyecciones de dependencia de adaptadores externos**
+## 6.9 Configurar inyecciones de dependencia de adaptadores externos
 
 **Imaginemos nuestro hexágono...**
 
@@ -2152,7 +2153,7 @@ En la próxima sesión, pondremos todo esto aún más en práctica al diseñar p
 
 ¡Gracias y a seguir construyendo hexágonos sólidos\!
 
-## **6.10 Ejemplo de microservicio hexagonal completo con FastAPI**
+## 6.10 Ejemplo de microservicio hexagonal completo con FastAPI
 
 Ahora, juntemos todo en una estructura de proyecto.
 
@@ -2452,7 +2453,4 @@ networks:
 
 ---
 
-Este es un desarrollo exhaustivo del tema. Cubre los conceptos clave y proporciona ejemplos prácticos para construir un microservicio FastAPI robusto y bien arquitecturado. La clave es mantener la disciplina de las dependencias y pensar en términos de interfaces (puertos) y sus implementaciones (adaptadores).
-
----
 
