@@ -319,9 +319,8 @@ graph LR
 | `description`| Texto descriptivo (para OpenAPI). | `Field(description="...")` |
 | `examples` | Lista de ejemplos (para OpenAPI). | `Field(examples=["ej1", "ej2"])` |
 
-#### Conclusión 
 
-Pydantic es el **superpoder** 🦸 de FastAPI para la gestión de datos. Nos permite definir contratos de API claros y robustos, validarlos automáticamente y obtener documentación de alta calidad sin esfuerzo adicional. Al aprender a definir modelos Pydantic efectivos:
+Pydantic nos permite definir contratos de API claros y robustos, validarlos automáticamente y obtener documentación de alta calidad sin esfuerzo adicional. Al aprender a definir modelos Pydantic efectivos:
 
   * **Reducimos drásticamente el código *boilerplate*** de validación.
   * **Aumentamos la fiabilidad** de nuestros servicios al garantizar la integridad de los datos.
@@ -330,15 +329,7 @@ Pydantic es el **superpoder** 🦸 de FastAPI para la gestión de datos. Nos per
 
 Dominar Pydantic es, en gran medida, dominar una de las partes más importantes y beneficiosas de trabajar con FastAPI, proporcionándonos las herramientas esenciales para construir microservicios fiables, mantenibles y bien documentados.
 
------
-¡De acuerdo! Tienes toda la razón, es mucho más coherente centrarse en la **Arquitectura Hexagonal**, ya que es uno de los pilares de este curso, y contextualizar la estructura del proyecto en el marco de la **evolución desde un monolito**.
 
-Vamos a reformular el punto 2.3 para que refleje esto. Empezaremos discutiendo los patrones para "romper" un monolito, elegiremos un enfoque alineado con nuestros objetivos (DDD, Hexagonal) y luego presentaremos una estructura de proyecto FastAPI que soporte esa visión.
-
----
-¡De acuerdo! Entendido. Olvidemos las iteraciones anteriores y centrémonos en seguir exactamente la estructura que propones para el punto 2.3. Vamos a definir patrones, valorarlos y, a partir de ahí, derivar y explicar la estructura base escalable.
-
----
 
 ## 2.3 Creación de una Estructura Base Escalable para un Microservicio
 
