@@ -283,24 +283,24 @@ La verdadera potencia se libera gracias a la **integración nativa** de FastAPI 
 
 ```mermaid
 graph LR
-    Cliente -- 1. Petición HTTP (JSON) --> FastAPI;
-    FastAPI -- 2. ¿Tipo Pydantic? --> Pydantic_Model_Input[Modelo Pydantic (Input)];
-    Pydantic_Model_Input -- 3. Valida y Deserializa --> Objeto_Python[Objeto Python Tipado];
-    FastAPI -- 4. Pasa Objeto --> Logica[Tu Lógica de Negocio];
-    Logica -- 5. Devuelve Objeto/Modelo --> Pydantic_Model_Output[Modelo Pydantic (Output)];
-    Pydantic_Model_Output -- 6. Serializa --> JSON_Respuesta[JSON (Respuesta)];
-    FastAPI -- 7. Envía Respuesta --> Cliente;
+    Cliente -- "1. Petición HTTP (JSON)" --> FastAPI
+    FastAPI -- "2. ¿Tipo Pydantic?" --> Pydantic_Model_Input[Modelo Pydantic Input]
+    Pydantic_Model_Input -- "3. Valida y Deserializa" --> Objeto_Python[Objeto Python Tipado]
+    FastAPI -- "4. Pasa Objeto" --> Logica[Tu Lógica de Negocio]
+    Logica -- "5. Devuelve Objeto/Modelo" --> Pydantic_Model_Output[Modelo Pydantic Output]
+    Pydantic_Model_Output -- "6. Serializa" --> JSON_Respuesta[JSON Respuesta]
+    FastAPI -- "7. Envía Respuesta" --> Cliente
 
-    Pydantic_Model_Input -- Informa --> OpenAPI;
-    Pydantic_Model_Output -- Informa --> OpenAPI;
-    OpenAPI -- Genera --> Documentacion[Swagger / ReDoc];
+    Pydantic_Model_Input -- "Informa" --> OpenAPI
+    Pydantic_Model_Output -- "Informa" --> OpenAPI
+    OpenAPI -- "Genera" --> Documentacion[Swagger o ReDoc]
 
     style FastAPI fill:#f9f,stroke:#333,stroke-width:2px
     style Logica fill:#ccf,stroke:#333,stroke-width:2px
     style Cliente fill:#9cf,stroke:#333,stroke-width:2px
     style Documentacion fill:#9c9,stroke:#333,stroke-width:2px
-```
 
+```
 #### Tabla Resumen: Pydantic `Field` Comunes
 
 | Parámetro | Descripción | Ejemplo |
