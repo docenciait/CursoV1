@@ -1,20 +1,18 @@
 # Tema 10. INTRODUCCIÓN A LOS WEBSOCKETS Y PUB/SUB EN SISTEMAS DISTRIBUIDOS
 
 - [Tema 10. INTRODUCCIÓN A LOS WEBSOCKETS Y PUB/SUB EN SISTEMAS DISTRIBUIDOS](#tema-10-introducción-a-los-websockets-y-pubsub-en-sistemas-distribuidos)
-- [Contenidos](#10-contenidos)
-- [10.1 Casos de uso reales para WebSockets](#101-casos-de-uso-reales-para-websockets)
-- [10.2 Servidor WebSocket con FastAPI](#102-servidor-websocket-con-fastapi)
-- [10.3 Gestión de clientes conectados y salas lógicas](#103-gestión-de-clientes-conectados-y-salas-lógicas)
- - [10.4 Pub/Sub con Redis o Kafka como Backend: Escalando la Comunicación WebSocket Más Allá de la Instancia Única](#104-pubsub-con-redis-o-kafka-como-backend-escalando-la-comunicación-websocket-más-allá-de-la-instancia-única)
- - [10.5 Push de eventos desde backend a clientes](#105-push-de-eventos-desde-backend-a-clientes)
- - [10.6 Microservicio de notificaciones dedicado](#106-microservicio-de-notificaciones-dedicado)
-- [10.7 Consistencia eventual en eventos enviados](#107-consistencia-eventual-en-eventos-enviados)
-- [10.8 Reconexiones, heartbeats y expiración](#108-reconexiones-heartbeats-y-expiración)
-- [10.9 Seguridad de canales con JWT o API Keys](#109-seguridad-de-canales-con-jwt-o-api-keys)
-- [10.10 Patrones reactivos para tiempo real](#1010-patrones-reactivos-para-tiempo-real)
+  - [10.1 Casos de uso reales para WebSockets](#101-casos-de-uso-reales-para-websockets)
+  - [10.2 Servidor WebSocket con FastAPI](#102-servidor-websocket-con-fastapi)
+  - [10.3 Gestión de clientes conectados y salas lógicas](#103-gestión-de-clientes-conectados-y-salas-lógicas)
+  - [10.4 Pub/Sub con Redis o Kafka como Backend](#104-pubsub-con-redis-o-kafka-como-backend)
+  - [10.5 Push de eventos desde backend a clientes](#105-push-de-eventos-desde-backend-a-clientes)
+  - [10.6 Microservicio de notificaciones dedicado](#106-microservicio-de-notificaciones-dedicado)
+  - [10.7 Consistencia eventual en eventos enviados](#107-consistencia-eventual-en-eventos-enviados)
+  - [10.8 Reconexiones, heartbeats y expiración](#108-reconexiones-heartbeats-y-expiración)
+  - [10.9 Seguridad de canales con JWT o API Keys](#109-seguridad-de-canales-con-jwt-o-api-keys)
+  - [10.10 Patrones reactivos para tiempo real](#1010-patrones-reactivos-para-tiempo-real)
 
 
-## Contenidos
 
 ## 10.1 Casos de uso reales para WebSockets
 
@@ -435,7 +433,7 @@ sequenceDiagram
   * **Tipos de Datos:** Hemos usado `_text`. Recuerda que tienes `_json` (muy útil con Pydantic para enviar/recibir modelos) y `_bytes` para datos binarios.
   * **Bloqueo:** Gracias a `async` y `await`, las operaciones de red de WebSocket no bloquean el servidor FastAPI, permitiéndole manejar múltiples clientes concurrentemente. ¡Este es el poder de `asyncio`\!
 
-**Conclusión: ¡Tu Portal a la Comunicación Instantánea está Oficialmente Abierto\!**
+
 
 ¡Felicidades, artífice de la conexión\! Has construido tu primer servidor WebSocket con FastAPI. Has abierto un canal directo, persistente y bidireccional. Este es el ladrillo fundamental sobre el que se construyen las aplicaciones en tiempo real más sofisticadas.
 
@@ -678,7 +676,7 @@ Ahora sí, ¿procedemos con el **10.4: Pub/Sub con Redis o Kafka como backend**?
 
 
 
-### 10.4 Pub/Sub con Redis o Kafka como Backend
+## 10.4 Pub/Sub con Redis o Kafka como Backend
 
 En la sección 10.3, construimos un `ConnectionManager` en memoria para gestionar `active WebSocket connections` y `logical rooms`. Este enfoque es funcional y didáctico para una única `server instance` de FastAPI. Sin embargo, en escenarios de producción que demandan alta disponibilidad y escalabilidad horizontal –donde múltiples `instances` de nuestra aplicación FastAPI operan detrás de un `load balancer`– este modelo `in-memory` presenta una limitación fundamental: **el aislamiento de estado**. Cada `instance` tendría su propio `ConnectionManager`, ciego a las `connections` y `room memberships` gestionadas por sus pares.
 
@@ -881,7 +879,7 @@ He intentado mantener el lenguaje técnico preciso y usar los términos en ingl�
 -----
 
 
-### 10.5 Push de eventos desde backend a clientes
+## 10.5 Push de eventos desde backend a clientes
 Para el **10.5: Push de eventos desde backend a clientes**, vamos a refinar aún más el enfoque. No solo se trata de *cómo* el `backend` puede enviar mensajes a través de `WebSockets` (ya lo hemos tocado), sino de *cuándo*, *por qué*, y *cómo orquestar* este `push` de forma reactiva y eficiente en un sistema distribuido, conectando con los conceptos de `Pub/Sub` que acabamos de ver.
 
 Imagina que tus clientes `WebSocket` no solo están esperando respuestas a sus acciones, sino que están sintonizados a un canal de noticias en vivo donde el `backend` es el presentador estrella, anunciando eventos importantes tan pronto como ocurren en cualquier parte del sistema.
@@ -1146,7 +1144,7 @@ Para las notificaciones `WebSocket`, este servicio actúa como un `publisher` in
 -----
 
 
-### 10.7 Consistencia eventual en eventos enviados
+## 10.7 Consistencia eventual en eventos enviados
 
 Con nuestro `Notification Service` (o una lógica similar) listo para orquestar `pushes` a través de un `Pub/Sub backend`, ahora debemos enfrentar una realidad inherente a los sistemas distribuidos que se comunican de esta manera: la **Consistencia Eventual (`Eventual Consistency`)**.
 
@@ -1277,7 +1275,7 @@ Aceptar esta realidad y diseñar tanto el `backend` (con flujos de eventos bien 
 -----
 
 
-### 10.8 Reconexiones, heartbeats y expiración
+## 10.8 Reconexiones, heartbeats y expiración
 
 Con nuestras `FastAPI instances` listas para comunicarse a través de un `Pub/Sub backend` (10.4) y nuestro `backend` capaz de hacer `push` de `events` (10.5), e incluso con un potencial `Notification Microservice` orquestando (10.6), y habiendo aceptado la `eventual consistency` (10.7), ahora debemos enfocarnos en la salud y la longevidad de las propias `WebSocket connections`.
 
@@ -1486,7 +1484,7 @@ Implementar estas técnicas puede parecer un trabajo adicional, pero es una inve
 -----
 
 
-### 10.9 Seguridad de canales con JWT o API Keys
+## 10.9 Seguridad de canales con JWT o API Keys
 
 Ya sabemos cómo mantener nuestras `WebSocket connections` vivas y saludables (10.8). Pero un portal abierto, por muy estable que sea, es una invitación a visitantes no deseados si no tenemos buenos guardianes en la entrada y reglas claras sobre quién puede acceder a qué. Es hora de hablar de **seguridad**.
 
@@ -1677,7 +1675,7 @@ Al implementar estas prácticas, construyes no solo portales de comunicación en
 -----
 
 
-### 10.10 Patrones reactivos para tiempo real
+## 10.10 Patrones reactivos para tiempo real
 
 Después de explorar los casos de uso, la implementación de servidores `WebSocket` con FastAPI, la gestión de `clients` y `rooms`, la crucial integración con `Pub/Sub backends` para escalar, el `server push`, los `notification services` dedicados, la `eventual consistency`, los `heartbeats` y la seguridad, es hora de ensamblar todo bajo una filosofía de diseño que realmente haga brillar a nuestras aplicaciones en tiempo real: los **Patrones Reactivos**.
 
@@ -1779,7 +1777,7 @@ Veamos algunos patrones y conceptos que nos ayudan a construir esta reactividad:
   * El modelo **`async/await`** de FastAPI y Python es intrínsecamente no bloqueante, lo cual es un pilar para construir sistemas responsivos. Cada `WebSocket connection` es manejada por una `asyncio task`, permitiendo al `server` gestionar miles de `connections` concurrentes eficientemente.
   * Las **`asyncio tasks`** (`asyncio.create_task`) son perfectas para ejecutar procesos en segundo plano como `heartbeats`, `stream processing stages`, o `listeners` de `Pub/Sub backends` que alimentan las `WebSocket connections`.
 
-**Conclusión del Tema 10 y del Viaje por la Mensajería en Tiempo Real 🏁**
+**Conclusión**
 
 Hemos recorrido un largo camino en este Tema 10: desde los casos de uso de `WebSockets`, pasando por la construcción de `servers` con FastAPI, la gestión de `clients` y `rooms`, el escalado con `Pub/Sub backends`, el `server push` de `events`, la arquitectura con `Notification Services` dedicados, la comprensión de la `eventual consistency`, y la importancia de `heartbeats` y reconexiones.
 

@@ -2,39 +2,30 @@
 
 
 - [Tema 9. INTRODUCCIÓN A LA MENSAJERÍA CON KAFKA, RABBITMQ](#tema-9-introducción-a-la-mensajería-con-kafka-rabbitmq)
-  - [Contenidos](#contenidos)
-    - [9.1 Comparar Kafka vs RabbitMQ: casos de uso y diferencias clave](#91-comparar-kafka-vs-rabbitmq-casos-de-uso-y-diferencias-clave)
-  - [Tema 9: INTRODUCCIÓN A LA MENSAJERÍA CON KAFKA Y RABBITMQ](#tema-9-introducción-a-la-mensajería-con-kafka-y-rabbitmq)
-    - [9.1 Kafka vs. RabbitMQ: El Duelo de Titanes en la Mensajería Asíncrona – ¿Cuál Elegir y Por Qué?](#91-kafka-vs-rabbitmq-el-duelo-de-titanes-en-la-mensajería-asíncrona--cuál-elegir-y-por-qué)
-    - [9.2 Instalación y configuración de un broker básico](#92-instalación-y-configuración-de-un-broker-básico)
-    - [9.3 Conceptos de topic, exchange, queue y binding](#93-conceptos-de-topic-exchange-queue-y-binding)
-    - [9.4 Publicación de mensajes desde un microservicio productor](#94-publicación-de-mensajes-desde-un-microservicio-productor)
-    - [9.5 Procesamiento de eventos en consumidores desacoplados](#95-procesamiento-de-eventos-en-consumidores-desacoplados)
-    - [9.6 Diseño de mensajes idempotentes y trazables](#96-diseño-de-mensajes-idempotentes-y-trazables)
-    - [9.7 Patrones de eventos: Event Notification y Event Carried State](#97-patrones-de-eventos-event-notification-y-event-carried-state)
-    - [9.8 Manejo de Errores y Reintentos en Colas: Navegando la Tormenta de la Mensajería](#98-manejo-de-errores-y-reintentos-en-colas-navegando-la-tormenta-de-la-mensajería)
-    - [9.9 Uso de `aiokafka`, `kombu` o `pika`](#99-uso-de-aiokafka-kombu-o-pika)
-    - [9.10 Integración con lógica de dominio en arquitectura hexagonal](#910-integración-con-lógica-de-dominio-en-arquitectura-hexagonal)
-    - [9.10 Integración con Lógica de Dominio en Arquitectura Hexagonal: El Corazón Protegido](#910-integración-con-lógica-de-dominio-en-arquitectura-hexagonal-el-corazón-protegido)
+  - [9.1 Comparar Kafka vs RabbitMQ: casos de uso y diferencias clave](#91-comparar-kafka-vs-rabbitmq-casos-de-uso-y-diferencias-clave)
+  - [9.2 Instalación y configuración de un broker básico](#92-instalación-y-configuración-de-un-broker-básico)
+  - [9.3 Conceptos de topic, exchange, queue y binding](#93-conceptos-de-topic-exchange-queue-y-binding)
+  - [9.4 Publicación de mensajes desde un microservicio productor](#94-publicación-de-mensajes-desde-un-microservicio-productor)
+  - [9.5 Procesamiento de eventos en consumidores desacoplados](#95-procesamiento-de-eventos-en-consumidores-desacoplados)
+  - [9.6 Diseño de mensajes idempotentes y trazables](#96-diseño-de-mensajes-idempotentes-y-trazables)
+  - [9.7 Patrones de eventos: Event Notification y Event Carried State](#97-patrones-de-eventos-event-notification-y-event-carried-state)
+  - [9.8 Manejo de Errores y Reintentos en Colas: Navegando la Tormenta de la Mensajería](#98-manejo-de-errores-y-reintentos-en-colas-navegando-la-tormenta-de-la-mensajería)
+  - [9.9 Uso de `aiokafka`, `kombu` o `pika`](#99-uso-de-aiokafka-kombu-o-pika)
+  - [9.10 Integración con lógica de dominio en arquitectura hexagonal](#910-integración-con-lógica-de-dominio-en-arquitectura-hexagonal)
 
 
-## Contenidos
 
-### 9.1 Comparar Kafka vs RabbitMQ: casos de uso y diferencias clave
+
+## 9.1 Comparar Kafka vs RabbitMQ: casos de uso y diferencias clave
 
 ¡Absolutamente\! Vamos a sumergirnos en el Tema 9 con un enfoque fresco, práctico y potente. Quiero que este viaje por la mensajería sea tan revelador como una buena novela de ciencia ficción, pero con aplicaciones directas en vuestro día a día como arquitectos de software.
 
------
 
-## Tema 9: INTRODUCCIÓN A LA MENSAJERÍA CON KAFKA Y RABBITMQ
 
 Imaginad por un momento que vuestros microservicios son ciudades bulliciosas. Necesitan carreteras eficientes, sistemas postales inteligentes y redes de noticias en tiempo real para funcionar y prosperar. La mensajería asíncrona es precisamente eso: la infraestructura vital que permite que estas ciudades digitales se comuniquen, colaboren y reaccionen a los acontecimientos sin colapsar.
 
 En este tema, nos convertiremos en urbanistas de la información, explorando dos de las metrópolis de la mensajería más influyentes: **RabbitMQ**, el astuto cartero con rutas para cada ocasión, y **Apache Kafka**, el imponente río de datos que registra la historia del mundo en tiempo real.
 
------
-
-### 9.1 Kafka vs. RabbitMQ: El Duelo de Titanes en la Mensajería Asíncrona – ¿Cuál Elegir y Por Qué?
 
 Elegir el sistema de mensajería adecuado es como decidir entre construir un tren de alta velocidad o una red de carreteras urbanas ultra-flexibles. Ambas son soluciones de transporte, pero sirven a propósitos distintos y brillan en escenarios diferentes. RabbitMQ y Kafka, aunque a menudo agrupados bajo el paraguas de "brokers de mensajes", operan bajo filosofías fundamentalmente distintas.
 
@@ -202,7 +193,7 @@ La decisión final dependerá de vuestros requisitos de rendimiento, escalabilid
 
 
 
-### 9.2 Instalación y configuración de un broker básico
+## 9.2 Instalación y configuración de un broker básico
 
 Si la sección anterior fue el mapa estelar, esta será vuestra primera incursión en la construcción de naves espaciales. Vamos a pasar de la teoría a la acción, encendiendo los motores de vuestro primer broker de mensajes. Y sí, ¡vamos a evolucionar el estilo para que sintáis el poder en vuestras manos\!
 
@@ -323,7 +314,7 @@ En la siguiente sección, empezaremos a explorar los componentes internos de est
 -----
 
 
-### 9.3 Conceptos de topic, exchange, queue y binding
+## 9.3 Conceptos de topic, exchange, queue y binding
 
 Si en la sección anterior encendimos el motor, ahora vamos a estudiar los planos detallados de nuestra maquinaria de mensajería. Comprender estos conceptos es como aprender el lenguaje de los flujos de datos; una vez que los dominas, puedes orquestar sinfonías de información.
 
@@ -500,7 +491,7 @@ En las próximas secciones, veremos cómo los productores publican mensajes y c�
 -----
 
 
-### 9.4 Publicación de mensajes desde un microservicio productor
+## 9.4 Publicación de mensajes desde un microservicio productor
 
 Con los cimientos conceptuales firmes y nuestro broker RabbitMQ esperando órdenes, es hora de dar el siguiente paso evolutivo: **dar voz a nuestros microservicios**. Un servicio silencioso es un servicio aislado. Vamos a enseñarles a enviar mensajes, a iniciar conversaciones asíncronas que pueden desencadenar un universo de acciones.
 
@@ -716,7 +707,7 @@ Pero el viaje del mensaje solo ha comenzado. El productor ha hablado; ahora nece
 
 -----
 
-### 9.5 Procesamiento de eventos en consumidores desacoplados
+## 9.5 Procesamiento de eventos en consumidores desacoplados
 
 Si en la sección anterior aprendimos a lanzar nuestras "botellas al mar" (mensajes), ahora nos convertiremos en los atentos vigías de la costa, listos para recoger esas botellas, leer sus secretos y actuar en consecuencia. ¡Es hora de dominar el arte de la escucha activa en la mensajería\!
 
@@ -981,11 +972,8 @@ graph TD
 
 Pero, ¿qué sucede cuando un mensaje es un poco... problemático? ¿O cuando queremos asegurarnos de que nuestras acciones sean rastreables a través de múltiples saltos? Eso nos lleva directamente a los siguientes desafíos: diseñar mensajes robustos y patrones de comunicación efectivos.
 
------
 
-
-### 9.6 Diseño de mensajes idempotentes y trazables
-
+## 9.6 Diseño de mensajes idempotentes y trazables
 
 Hasta ahora, hemos aprendido a enviar ("producir") y recibir ("consumir") mensajes. Nuestras ciudades digitales tienen oficinas postales y carteros diligentes (RabbitMQ) o vastos ríos de información con pescadores atentos (Kafka). Pero, ¿qué pasa con la calidad de las "cartas" (mensajes) en sí mismas? ¿Qué ocurre si un cartero entrega la misma carta dos veces por error, o si una carta importante se pierde en una tormenta de datos y necesitamos seguir su rastro?
 
@@ -1139,9 +1127,8 @@ La idempotencia y la trazabilidad no son lujos; son necesidades en sistemas dist
 
 Al diseñar vuestros mensajes y consumidores con estos "superpoderes" desde el principio, estaréis construyendo una base mucho más sólida y fiable para vuestras aplicaciones basadas en mensajería.
 
------
 
-### 9.7 Patrones de eventos: Event Notification y Event Carried State
+## 9.7 Patrones de eventos: Event Notification y Event Carried State
 Acabamos de explorar el crucial diseño de mensajes idempotentes y trazables en el punto 9.6. Con esa base sólida, ahora estamos listos para sumergirnos en el **punto 9.7** y analizar dos patrones fundamentales sobre *qué* información viaja dentro de esos mensajes: **Event Notification** y **Event-Carried State Transfer**.
 
 Imagina que tus servicios son detectives. Un evento ocurre. ¿Cómo les das la pista? ¿Les envías una nota críptica para que investiguen más, o les entregas el expediente completo del caso? Esa es la esencia de lo que vamos a discutir.
@@ -1308,9 +1295,9 @@ Voy a proceder como si hubiéramos cubierto el 9.6 satisfactoriamente y ahora to
 
 ¡Vamos con el 9.8\! Este es un punto crucial donde la teoría se encuentra con la cruda realidad de los sistemas distribuidos: los fallos. Aprenderemos a construir sistemas de mensajería que no solo funcionen bien cuando todo va bien, sino que sepan cómo recuperarse y gestionar el caos cuando las cosas se tuercen.
 
------
 
-### 9.8 Manejo de Errores y Reintentos en Colas: Navegando la Tormenta de la Mensajería
+
+## 9.8 Manejo de Errores y Reintentos en Colas: Navegando la Tormenta de la Mensajería
 
 Hemos diseñado nuestros mensajes para que sean idempotentes y trazables, y hemos explorado cómo comunicar cambios de estado. Pero, ¿qué sucede cuando un consumidor, a pesar de sus mejores intenciones, no puede procesar un mensaje? ¿Qué pasa si una base de datos está caída, un servicio externo no responde, o simplemente hay un bug inesperado en nuestra lógica?
 
@@ -1528,9 +1515,8 @@ El manejo de errores y las estrategias de reintento no son "extras" o "nice-to-h
 
 Al implementar estas técnicas, construyes confianza: confianza en que tus mensajes llegarán, confianza en que los fallos se manejarán con gracia, y confianza en que tu sistema seguirá funcionando, incluso cuando la tormenta arrecie.
 
------
 
-### 9.9 Uso de `aiokafka`, `kombu` o `pika`
+## 9.9 Uso de `aiokafka`, `kombu` o `pika`
 
 Ya hemos explorado los conceptos, los patrones y los desafíos. Ahora es el momento de conocer a nuestros fieles compañeros de código, las bibliotecas Python que nos permitirán interactuar con RabbitMQ y Kafka. Es como presentarle a un piloto su cabina de mandos: cada botón y palanca tiene un propósito, y dominarlos es clave para un vuelo exitoso.
 
@@ -1752,18 +1738,15 @@ Con estas bibliotecas en tu cinturón de herramientas, estás equipado para cons
 
 Ahora que sabemos *cómo* hablar con los brokers usando Python, el siguiente y último paso de este tema es integrar esta capacidad de mensajería de forma elegante y coherente con nuestra lógica de dominio, especialmente en una arquitectura hexagonal.
 
------
 
 
-### 9.10 Integración con lógica de dominio en arquitectura hexagonal
+## 9.10 Integración con lógica de dominio en arquitectura hexagonal
 
-¡Llegamos al gran final del Tema 9\! Hemos navegado por los mares de Kafka y RabbitMQ, aprendido a construir nuestras naves productoras y estaciones de escucha consumidoras, y hemos equipado nuestros mensajes con superpoderes de idempotencia y trazabilidad. Ahora, la pregunta culminante: ¿cómo encaja toda esta poderosa maquinaria de mensajería dentro de una arquitectura de software elegante, robusta y, sobre todo, mantenible como la Arquitectura Hexagonal?
+Hemos navegado por los mares de Kafka y RabbitMQ, aprendido a construir nuestras naves productoras y estaciones de escucha consumidoras, y hemos equipado nuestros mensajes con superpoderes de idempotencia y trazabilidad. Ahora, la pregunta culminante: ¿cómo encaja toda esta poderosa maquinaria de mensajería dentro de una arquitectura de software elegante, robusta y, sobre todo, mantenible como la Arquitectura Hexagonal?
 
 Es como tener el motor de un cohete (nuestra mensajería) y el módulo de mando de una nave espacial (nuestra lógica de dominio). Necesitamos acoplarlos de forma segura y eficiente, sin que los humos del motor invadan la cabina.
 
------
 
-### 9.10 Integración con Lógica de Dominio en Arquitectura Hexagonal: El Corazón Protegido
 
 La **Arquitectura Hexagonal**, también conocida como **Puertos y Adaptadores**, es un modelo arquitectónico que busca un objetivo noble: **proteger el núcleo de tu aplicación (la lógica de negocio y de dominio) de las dependencias del mundo exterior** (como interfaces de usuario, bases de datos, y sí, ¡sistemas de mensajería\!). El objetivo es que tu lógica de negocio no "sepa" ni le importe si está siendo invocada por una petición HTTP, un mensaje de RabbitMQ, o una prueba unitaria.
 
@@ -1991,7 +1974,7 @@ En este modelo:
   * Tus endpoints FastAPI son **Adaptadores de Entrada HTTP**. Reciben peticiones HTTP, las validan (Pydantic), y llaman a los mismos Puertos de Entrada (Casos de Uso) que podrían ser llamados por tus consumidores de mensajes.
   * Los Servicios de Aplicación/Casos de Uso en el núcleo, una vez invocados (ya sea por HTTP o por un mensaje), pueden a su vez invocar Puertos de Salida para publicar eventos (ej. `IEventPublisher`) o interactuar con la persistencia (`IRepository`). El origen de la invocación inicial es irrelevante para esta lógica interna.
 
-**Conclusión del Tema 9: Mensajería como Ciudadano de Primera Clase y Bien Comportado en Tu Arquitectura**
+**Conclusión**
 
 Hemos completado un viaje intenso: desde elegir entre Kafka y RabbitMQ, instalar un broker, entender sus conceptos fundamentales, aprender a producir y consumir mensajes con bibliotecas Python específicas, asegurar que nuestros mensajes sean robustos mediante idempotencia y trazabilidad, diferenciar patrones de eventos, y gestionar errores.
 

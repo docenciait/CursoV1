@@ -2,29 +2,21 @@
 
 
 - [Tema 11. DISEÑO DE APIS REST Y WEBSOCKETS EN FASTAPI](#tema-11-diseño-de-apis-rest-y-websockets-en-fastapi)
-  - [11. Contenidos](#11-contenidos)
-    - [11.1 Buenas prácticas para endpoints RESTful](#111-buenas-prácticas-para-endpoints-restful)
-    - [11.2 Versionado y organización de APIs](#112-versionado-y-organización-de-apis)
-    - [11.2 Versionado y Organización de APIs: El Mapa del Tesoro Evolutivo y la Biblioteca Bien Catalogada](#112-versionado-y-organización-de-apis-el-mapa-del-tesoro-evolutivo-y-la-biblioteca-bien-catalogada)
-    - [11.3 Validación con Pydantic y modelos anidados](#113-validación-con-pydantic-y-modelos-anidados)
-    - [11.3 Validación con Pydantic y Modelos Anidados: Esculpiendo y Blindando Tus Datos con Precisión](#113-validación-con-pydantic-y-modelos-anidados-esculpiendo-y-blindando-tus-datos-con-precisión)
-    - [11.4 Documentación con Swagger y Redoc](#114-documentación-con-swagger-y-redoc)
-    - [11.4 Documentación con Swagger UI y ReDoc: El Pergamino Viviente de Tu API](#114-documentación-con-swagger-ui-y-redoc-el-pergamino-viviente-de-tu-api)
-    - [11.5 CRUD con dependencias en FastAPI](#115-crud-con-dependencias-en-fastapi)
-    - [11.6 Respuestas personalizadas y status codes](#116-respuestas-personalizadas-y-status-codes)
-    - [11.7 Configuración de CORS y headers](#117-configuración-de-cors-y-headers)
-    - [11.7 Configuración de CORS y `Headers`: Blindando Tus Fronteras Digitales y Optimizando la Comunicación](#117-configuración-de-cors-y-headers-blindando-tus-fronteras-digitales-y-optimizando-la-comunicación)
-    - [11.8 Autenticación en endpoints (JWT/OAuth2)](#118-autenticación-en-endpoints-jwtoauth2)
-    - [11.9 Canales WebSocket nativos en FastAPI](#119-canales-websocket-nativos-en-fastapi)
-    - [11.10 Handlers WebSocket y gestión de clientes](#1110-handlers-websocket-y-gestión-de-clientes)
-    - [11.10 `Handlers` `WebSocket` y Gestión de `Clients`: La Coreografía de la Conexión Continua](#1110-handlers-websocket-y-gestión-de-clients-la-coreografía-de-la-conexión-continua)
-  - [Esta sección se enfoca en patrones de diseño para `WebSocket handlers` (como clases), una gestión de `clients` más detallada, y la interacción con la lógica de negocio, buscando ese nivel "evolucionado y mejor" que solicitaste. He continuado con el uso consistente de términos técnicos en inglés.](#esta-sección-se-enfoca-en-patrones-de-diseño-para-websocket-handlers-como-clases-una-gestión-de-clients-más-detallada-y-la-interacción-con-la-lógica-de-negocio-buscando-ese-nivel-evolucionado-y-mejor-que-solicitaste-he-continuado-con-el-uso-consistente-de-términos-técnicos-en-inglés)
-    - [11.11 Integración WebSockets con lógica de dominio](#1111-integración-websockets-con-lógica-de-dominio)
-    - [11.11 Integración `WebSockets` con Lógica de Dominio: El Diálogo Secreto entre la Inmediatez y la Esencia del Negocio](#1111-integración-websockets-con-lógica-de-dominio-el-diálogo-secreto-entre-la-inmediatez-y-la-esencia-del-negocio)
+  - [11.1 Buenas prácticas para endpoints RESTful](#111-buenas-prácticas-para-endpoints-restful)
+  - [11.2 Versionado y organización de APIs](#112-versionado-y-organización-de-apis)
+  - [11.3 Validación con Pydantic y modelos anidados](#113-validación-con-pydantic-y-modelos-anidados)
+  - [11.4 Documentación con Swagger y Redoc](#114-documentación-con-swagger-y-redoc)
+  - [11.5 CRUD con dependencias en FastAPI](#115-crud-con-dependencias-en-fastapi)
+  - [11.6 Respuestas personalizadas y status codes](#116-respuestas-personalizadas-y-status-codes)
+  - [11.7 Configuración de CORS y headers](#117-configuración-de-cors-y-headers)
+  - [11.8 Autenticación en endpoints (JWT/OAuth2)](#118-autenticación-en-endpoints-jwtoauth2)
+  - [11.9 Canales WebSocket nativos en FastAPI](#119-canales-websocket-nativos-en-fastapi)
+  - [11.10 Handlers WebSocket y gestión de clientes](#1110-handlers-websocket-y-gestión-de-clientes)
+  - [11.11 Integración WebSockets con lógica de dominio](#1111-integración-websockets-con-lógica-de-dominio)
 
-## 11. Contenidos
 
-### 11.1 Buenas prácticas para endpoints RESTful
+
+## 11.1 Buenas prácticas para endpoints RESTful
  Este tema es fundamental, ya que una API bien diseñada es la tarjeta de presentación de vuestros servicios, la interfaz con la que otros desarrolladores (¡o vuestro propio `frontend`\!) interactuarán. Una API elegante y predecible es un placer de usar; una confusa, una fuente constante de frustración.
 
 Comenzaremos con el pilar de la comunicación `server-to-server` y `client-server` durante años: REST. Y sí, lo haremos "muy práctico pero con un objetivo claro de enseñar bien la teoría, apoyando con tablas y diagramas `Mermaid` bien claros y sofisticados", y explicando el código con la misma claridad.
@@ -188,17 +180,13 @@ FastAPI está diseñado pensando en estas buenas prácticas:
 
 Adoptar estas buenas prácticas RESTful no se trata de seguir reglas ciegamente, sino de construir APIs que sean **intuitivas, predecibles, consistentes y fáciles de usar** tanto para humanos como para máquinas. Una API bien diseñada es una inversión que se amortiza en términos de facilidad de integración, mantenibilidad y la satisfacción de los desarrolladores que la consumen. Con FastAPI, tienes una base excelente para lograrlo.
 
------
 
-### 11.2 Versionado y organización de APIs
+## 11.2 Versionado y organización de APIs
 
-¡Entendido\! Continuamos nuestra travesía por el diseño de APIs con el **Tema 11.2**. Si el 11.1 sentó las bases de cómo deben "hablar" nuestros `endpoints` RESTful, ahora nos enfrentaremos a dos realidades ineludibles en el ciclo de vida de cualquier API exitosa: el **cambio** y la necesidad de **organización** a medida que crece.
+Continuamos nuestra travesía por el diseño de APIs con el **Tema 11.2**. Si el 11.1 sentó las bases de cómo deben "hablar" nuestros `endpoints` RESTful, ahora nos enfrentaremos a dos realidades ineludibles en el ciclo de vida de cualquier API exitosa: el **cambio** y la necesidad de **organización** a medida que crece.
 
 Una API no es una escultura de mármol tallada para la eternidad; es más bien un jardín que evoluciona, crece y, a veces, necesita una poda o un rediseño de sus senderos.
 
------
-
-### 11.2 Versionado y Organización de APIs: El Mapa del Tesoro Evolutivo y la Biblioteca Bien Catalogada
 
 A medida que tu aplicación FastAPI madura y tus `endpoints` se multiplican, surgen dos desafíos críticos:
 
@@ -403,17 +391,11 @@ El versionado y una organización modular no son lujos para cuando una API "crez
 
 Al adoptar estas estrategias, construyes una API que no solo es funcional hoy, sino que está preparada para adaptarse y prosperar en el futuro.
 
------
 
-Esta sección cubre las estrategias de versionado y la organización de APIs con FastAPI, utilizando tablas y un diagrama `Mermaid` como solicitaste, y manteniendo el estilo y los términos técnicos en inglés.
+## 11.3 Validación con Pydantic y modelos anidados
+Este es un punto donde FastAPI realmente brilla y donde vuestros profesionales pueden obtener una productividad y robustez enormes: la validación de datos con Pydantic, especialmente cuando trabajamos con estructuras de datos complejas o anidadas. Si las buenas prácticas RESTful (11.1) son el esqueleto de nuestra API, y el versionado/organización (11.2) son su sistema circulatorio y nervioso, entonces Pydantic es el sistema inmunológico y el control de calidad de los datos que fluyen por ella.
 
-¿Listos para el **11.3: Validación con Pydantic y modelos anidados**?
-### 11.3 Validación con Pydantic y modelos anidados
-¡Vamos con el **11.3**\! Este es un punto donde FastAPI realmente brilla y donde vuestros profesionales pueden obtener una productividad y robustez enormes: la validación de datos con Pydantic, especialmente cuando trabajamos con estructuras de datos complejas o anidadas. Si las buenas prácticas RESTful (11.1) son el esqueleto de nuestra API, y el versionado/organización (11.2) son su sistema circulatorio y nervioso, entonces Pydantic es el sistema inmunológico y el control de calidad de los datos que fluyen por ella.
 
------
-
-### 11.3 Validación con Pydantic y Modelos Anidados: Esculpiendo y Blindando Tus Datos con Precisión
 
 En el corazón de cada interacción API robusta y fiable yace una validación de datos implacable. Sin ella, nuestros `endpoints` estarían expuestos a datos incorrectos, malformados o maliciosos, lo que podría llevar a errores inesperados, corrupción de datos o vulnerabilidades de seguridad. FastAPI nos ofrece un aliado de primera categoría para esta tarea: **Pydantic**.
 
@@ -675,17 +657,13 @@ Pydantic, especialmente con su capacidad para manejar `nested models`, no es sim
 
 Dominar Pydantic y sus modelos anidados te permite construir la columna vertebral de datos para APIs complejas con una elegancia y seguridad que antes requerían mucho más esfuerzo manual.
 
------
 
 
-### 11.4 Documentación con Swagger y Redoc
-¡Continuamos nuestro viaje por el diseño de APIs con FastAPI\! Ya hemos sentado las bases de `endpoints` RESTful bien estructurados (11.1), hemos aprendido a versionarlos y organizarlos (11.2), y hemos dominado la validación de datos con Pydantic y `nested models` (11.3). Ahora, en el **11.4**, vamos a ver uno de los "superpoderes" más celebrados de FastAPI: cómo todo ese trabajo de definición y validación se traduce, casi por arte de magia, en una documentación de API interactiva y de primera clase.
+## 11.4 Documentación con Swagger y Redoc
+
+Ya hemos sentado las bases de `endpoints` RESTful bien estructurados (11.1), hemos aprendido a versionarlos y organizarlos (11.2), y hemos dominado la validación de datos con Pydantic y `nested models` (11.3). Ahora, en el **11.4**, vamos a ver uno de los "superpoderes" más celebrados de FastAPI: cómo todo ese trabajo de definición y validación se traduce, casi por arte de magia, en una documentación de API interactiva y de primera clase.
 
 Olvídense de los días de redactar laboriosamente documentos de API manuales que inevitablemente quedaban desactualizados. ¡Bienvenidos a la era de la documentación viva\!
-
------
-
-### 11.4 Documentación con Swagger UI y ReDoc: El Pergamino Viviente de Tu API
 
 Una API, por muy bien diseñada que esté, es de poca utilidad si los desarrolladores (ya sean de tu propio equipo o `third-party consumers`) no pueden entender fácilmente cómo usarla. La documentación es la clave, y FastAPI la trata como una ciudadana de primera clase, automatizando gran parte de su generación.
 
@@ -878,7 +856,7 @@ Aprovechar al máximo estas capacidades es un signo de profesionalismo y una inv
 
 -----
 
-### 11.5 CRUD con dependencias en FastAPI
+## 11.5 CRUD con dependencias en FastAPI
 
 Este es un punto donde la practicidad de FastAPI se une con principios de diseño de software sólidos para crear `endpoints` robustos y mantenibles. Hablaremos de las operaciones **CRUD (Create, Read, Update, Delete)**, el pan de cada día de muchas APIs, y cómo el sistema de **Inyección de Dependencias (`Dependency Injection`)** de FastAPI las eleva a un nuevo nivel de elegancia y testabilidad.
 
@@ -1160,11 +1138,8 @@ El sistema de `Dependency Injection` de FastAPI es una de sus características m
 
 Al dominar `Depends`, no solo estás implementando CRUD; estás construyendo una base sólida para APIs mucho más complejas, mantenibles y profesionales en FastAPI.
 
------
 
-
-
-### 11.6 Respuestas personalizadas y status codes
+## 11.6 Respuestas personalizadas y status codes
 
 Ya hemos visto cómo definir `endpoints` CRUD robustos con la ayuda de la inyección de dependencias (11.5). Ahora, vamos a refinar aún más la comunicación de nuestra API, explorando cómo FastAPI nos permite personalizar las respuestas HTTP, incluyendo los `status codes`, los `headers`, y la estructura del `response body` más allá de los valores por defecto.
 
@@ -1379,22 +1354,19 @@ Ya hemos visto `HTTPException`. Ahora exploremos cómo personalizar aún más y 
         ```
       * **Beneficios:** Centralizas la lógica de formateo de errores, puedes mapear excepciones de dominio a respuestas HTTP específicas, y mantienes tus `endpoints` más limpios.
 
-**Conclusión: El Arte de Responder con Propósito y Precisión 💬**
+**Conclusión**
 
 Las respuestas HTTP son una parte fundamental de la "conversación" de tu API. Una respuesta bien diseñada, con el `status code` correcto, `headers` informativos y un `payload` claro (especialmente para errores), mejora drásticamente la `developer experience` de quienes consumen tu API.
 
 FastAPI te proporciona un conjunto completo de herramientas para pasar de las respuestas por defecto a respuestas totalmente personalizadas y significativas, permitiéndote construir APIs que no solo funcionan, sino que comunican con elocuencia.
 
------
 
-### 11.7 Configuración de CORS y headers
-¡Absolutamente\! Avanzamos al **11.7**. Ya hemos visto cómo construir `endpoints` elocuentes y cómo organizar y versionar nuestra API. Ahora, nos adentramos en un aspecto crucial que a menudo se pasa por alto hasta que empiezan los problemas: cómo nuestra API interactúa con el mundo exterior cuando el "exterior" vive en un dominio diferente (el temido `cross-origin`) y qué otros "escudos" (`headers`) podemos levantar para proteger y optimizar nuestra comunicación.
+## 11.7 Configuración de CORS y headers
+
+Ya hemos visto cómo construir `endpoints` elocuentes y cómo organizar y versionar nuestra API. Ahora, nos adentramos en un aspecto crucial que a menudo se pasa por alto hasta que empiezan los problemas: cómo nuestra API interactúa con el mundo exterior cuando el "exterior" vive en un dominio diferente (el temido `cross-origin`) y qué otros "escudos" (`headers`) podemos levantar para proteger y optimizar nuestra comunicación.
 
 Piensen en esto como el control de aduanas y el protocolo de seguridad de vuestra ciudad-API. Necesitamos reglas claras sobre quién puede entrar y bajo qué condiciones, y también queremos que nuestra ciudad se presente al mundo de forma segura y eficiente.
 
------
-
-### 11.7 Configuración de CORS y `Headers`: Blindando Tus Fronteras Digitales y Optimizando la Comunicación
 
 Cuando tu `backend` FastAPI sirve una API, es muy probable que sea consumida por `clients` que no residen en el mismo `origin` (combinación de protocolo, dominio y puerto). Un `frontend` JavaScript en `https://mi-frontend.com` intentando acceder a tu API en `https://api.mi-backend.com` es un ejemplo clásico de una petición `cross-origin`. Aquí es donde **CORS (`Cross-Origin Resource Sharing`)** entra en juego, junto con otros `HTTP headers` importantes que definen la seguridad y el comportamiento de la comunicación.
 
@@ -1553,7 +1525,8 @@ FastAPI, con su sistema de `middleware` y el control sobre el objeto `Response`,
 -----
 
 
-### 11.8 Autenticación en endpoints (JWT/OAuth2)
+## 11.8 Autenticación en endpoints (JWT/OAuth2)
+
 El **11.8** es un pilar fundamental: la **Autenticación (`Authentication`)**. Si nuestros `endpoints` son las puertas de nuestra ciudad API, la autenticación es el guardia que verifica la identidad de quien intenta cruzar. Sin esto, cualquiera podría entrar y acceder a `resources` o ejecutar acciones no deseadas.
 
 Vamos a explorar cómo FastAPI, con la ayuda de estándares como `JWT` y conceptos de `OAuth2`, nos permite implementar sistemas de autenticación robustos y profesionales.
@@ -1561,7 +1534,6 @@ Vamos a explorar cómo FastAPI, con la ayuda de estándares como `JWT` y concept
 
 Una API expuesta al mundo (o incluso dentro de una red privada) necesita un mecanismo para saber *quién* está haciendo una petición. Esto no solo es crucial para la seguridad, sino también para la personalización, la auditoría y la aplicación de reglas de negocio específicas por usuario.
 
------
 
 **`Authentication` vs. `Authorization` (Una Distinción Clave)**
 
@@ -1886,7 +1858,8 @@ Esta sección provee una explicación detallada de la autenticación con `JWT` y
 
 ---
 
-### 11.9 Canales WebSocket nativos en FastAPI
+## 11.9 Canales WebSocket nativos en FastAPI
+
 Si en el Tema 10 exploramos el "qué" y el "por qué" de los `WebSockets` y cómo empezar a construir `servers` y gestionar `clients`, ahora en el **11.9** vamos a sumergirnos más profundamente en la **interfaz nativa** que FastAPI nos ofrece para manejar estos "canales" de comunicación directa. Es como pasar de entender el concepto de un coche a examinar en detalle el volante, los pedales y el panel de instrumentos.
 
 Aunque ya hemos usado el objeto `WebSocket` en FastAPI, esta sección se enfoca en dominar sus matices para un control más fino y una comprensión más completa de lo que FastAPI nos brinda "de fábrica".
@@ -2060,15 +2033,13 @@ Este dominio te permite construir aplicaciones `WebSocket` no solo funcionales, 
 
 Esta sección ha profundizado en el objeto `WebSocket` de FastAPI, sus métodos, propiedades y cómo se relaciona con el protocolo subyacente, con el objetivo de proporcionar una comprensión "nativa" de su funcionamiento. Se han mantenido los términos técnicos en inglés y un enfoque profesional y didáctico.
 
------
-### 11.10 Handlers WebSocket y gestión de clientes
-¡Vamos a por el **11.10**\! Este es el punto donde realmente refinamos el arte de manejar las interacciones `WebSocket` en FastAPI. Ya sabemos cómo establecer conexiones (11.9) y cómo gestionar grupos de `clients` y `rooms` a un nivel básico (10.3). Ahora, vamos a explorar patrones y estructuras más avanzados para nuestros **`WebSocket handlers`** y para una **gestión de `clients` más fina y robusta** dentro de cada `FastAPI instance`.
+
+## 11.10 Handlers WebSocket y gestión de clientes
+
+Este es el punto donde realmente refinamos el arte de manejar las interacciones `WebSocket` en FastAPI. Ya sabemos cómo establecer conexiones (11.9) y cómo gestionar grupos de `clients` y `rooms` a un nivel básico (10.3). Ahora, vamos a explorar patrones y estructuras más avanzados para nuestros **`WebSocket handlers`** y para una **gestión de `clients` más fina y robusta** dentro de cada `FastAPI instance`.
 
 Piensa en esto como pasar de ser un simple operador de un panel de control `WebSocket` a ser el director de una orquesta de conversaciones en tiempo real, donde cada `handler` es un maestro de sección y la gestión de `clients` es la partitura que todos siguen.
 
------
-
-### 11.10 `Handlers` `WebSocket` y Gestión de `Clients`: La Coreografía de la Conexión Continua
 
 A medida que la lógica de tus interacciones `WebSocket` se vuelve más compleja –con múltiples tipos de mensajes, `state` por conexión, o interacciones de negocio sofisticadas– depender de una única y larga función `async def websocket_endpoint(...)` puede volverse engorroso y difícil de mantener. Necesitamos patrones para estructurar mejor nuestros `handlers` y refinar cómo identificamos y gestionamos a los `clients` conectados.
 
@@ -2281,18 +2252,12 @@ Estos `handlers` actúan como orquestadores inteligentes para cada `conversation
 Esta aproximación no solo organiza mejor el código, sino que también facilita las pruebas (la clase `Handler` puede ser instanciada y probada) y sienta las bases para interacciones en tiempo real más complejas y ricas dentro de tus aplicaciones FastAPI. Es la culminación de las técnicas que hemos visto, aplicando principios de buen diseño de software al mundo de las `persistent connections`.
 
 Esta sección se enfoca en patrones de diseño para `WebSocket handlers` (como clases), una gestión de `clients` más detallada, y la interacción con la lógica de negocio, buscando ese nivel "evolucionado y mejor" que solicitaste. He continuado con el uso consistente de términos técnicos en inglés.
------
 
-
-
-lógica de dominio**. ¿Listos?
-### 11.11 Integración WebSockets con lógica de dominio
+## 11.11 Integración WebSockets con lógica de dominio
 
  El **11.11** es donde todas las piezas del rompecabezas –diseño de API, `WebSockets`, lógica de negocio– deben encajar en una armonía arquitectónica. El objetivo es integrar nuestras capacidades de comunicación `WebSocket` en tiempo real con nuestra lógica de dominio central de una manera que sea limpia, desacoplada, testeable y mantenible. Es el arte de permitir que la instantaneidad de los `WebSockets` sirva a la sabiduría de tu dominio, sin que este último se vea contaminado por los detalles de la fontanería de la comunicación.
 
------
 
-### 11.11 Integración `WebSockets` con Lógica de Dominio: El Diálogo Secreto entre la Inmediatez y la Esencia del Negocio
 
 Hemos construido `endpoints` `WebSocket` (11.9) y hemos explorado cómo gestionar `clients` y `rooms` (11.10). Pero, ¿cómo se conectan estas interacciones en tiempo real con el corazón de nuestra aplicación, la lógica de dominio que define lo que nuestra aplicación *hace*? La respuesta no es simplemente llamar a funciones de base de datos directamente desde nuestros `WebSocket handlers`. Eso conduciría a un acoplamiento estrecho y a un código difícil de mantener.
 
@@ -2437,7 +2402,7 @@ Este es el flujo para `server-initiated pushes` donde un cambio en el `backend` 
       * Añadir nuevos tipos de notificaciones (email, SMS) simplemente implica añadir nuevos `Domain Event Handlers` sin afectar a los existentes ni al dominio.
   * **Claridad de Flujo y Responsabilidades:** Cada componente tiene un rol bien definido.
 
-**Conclusión del Tema 11 y del Módulo Completo 🏆**
+**Conclusión**
 
 ¡Hemos llegado al final de un viaje intenso y, espero, revelador\! Desde los fundamentos de RESTful API design, pasando por la potencia de Pydantic, la documentación automática, la gestión de dependencias, hasta el dinámico mundo de los `WebSockets` con su gestión de `clients`, `rooms`, escalado con `Pub/Sub`, y ahora, su integración limpia con la lógica de dominio.
 
@@ -2448,5 +2413,3 @@ Tu lógica de dominio es el activo más valioso; protégela de las complejidades
 Con las herramientas y principios que hemos explorado, estás más que preparado para diseñar y construir la próxima generación de aplicaciones interactivas y en tiempo real con FastAPI. ¡El lienzo está en blanco, y ahora tienes los pinceles y la paleta de colores\!
 
 -----
-
-Este es el cierre del Tema 11.11, enfocándose en la integración desacoplada de la lógica `WebSocket` con el dominio, utilizando principios de Puertos y Adaptadores y resumiendo los flujos clave. He procurado mantener el estilo profesional, el uso de términos en inglés, y proporcionar una conclusión satisfactoria para el tema y, en cierto modo, para la secuencia de temas de API y `WebSockets`. ¡Espero que esto sea lo que buscabas para "hacerlo mejor"\!
