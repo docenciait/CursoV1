@@ -338,9 +338,7 @@ Vamos a reformular el punto 2.3 para que refleje esto. Empezaremos discutiendo l
 
 ---
 
-## TEMA 2: FASTAPI COMO FRAMEWORK PARA MICROSERVICIOS
-
-### 2.3 Creación de una Estructura Base Escalable para un Microservicio
+## 2.3 Creación de una Estructura Base Escalable para un Microservicio
 
 Para construir microservicios con FastAPI que sean robustos, mantenibles y capaces de crecer, no basta con escribir código; necesitamos una **arquitectura bien definida** y una **estructura de proyecto coherente**. Esto implica entender los patrones comunes en el ecosistema de microservicios y elegir aquellos que mejor se alineen con nuestra filosofía de curso: **DDD, Arquitectura Hexagonal y CQRS**.
 
@@ -396,6 +394,7 @@ Tanto para migración como para *greenfield*, nuestro objetivo es llegar a micro
 Basados en lo anterior, proponemos la siguiente estructura de proyecto, diseñada para soportar un microservicio (un Bounded Context) bajo los principios DDD y Hexagonal:
 
 ```mermaid
+%%{init: {"themeVariables": {"fontSize": "20px"}}}%%
 graph TD
     A(mi_microservicio) --> B(app);
     A --> C(tests);
