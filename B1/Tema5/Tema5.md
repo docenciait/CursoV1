@@ -8,7 +8,7 @@
   - [5.4 Validación de inputs y outputs](#54-validación-de-inputs-y-outputs)
   - [5.5 Políticas de CORS estrictas](#55-políticas-de-cors-estrictas)
   - [5.6 Protección de endpoints WebSocket y REST](#56-protección-de-endpoints-websocket-y-rest)
-  - [5.7 Rotación de claves y secretos {#57-rotación-de-claves-y-secretos}](#57-rotación-de-claves-y-secretos-57-rotación-de-claves-y-secretos)
+  - [5.7 Rotación de claves y secretos](#57-rotación-de-claves-y-secretos-57-rotación-de-claves-y-secretos)
   - [5.8 Gestión de credenciales con Vault o AWS Secrets Manager](#58-gestión-de-credenciales-con-vault-o-aws-secrets-manager)
   - [5.9 Análisis de vulnerabilidades OWASP](#59-análisis-de-vulnerabilidades-owasp)
   - [5.10 Auditoría y trazabilidad de usuarios](#510-auditoría-y-trazabilidad-de-usuarios)
@@ -1093,7 +1093,7 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Depends, status, HT
         -   Herramientas a nivel de infraestructura (WAFs, CDNs) pueden
             ayudar.
 
-## 5.7 Rotación de claves y secretos {#57-rotación-de-claves-y-secretos}
+## 5.7 Rotación de claves y secretos
 
 Las claves y secretos (API keys, contraseñas de bases de datos, claves
 de firma de JWT, claves de cifrado, etc.) son fundamentales para la
