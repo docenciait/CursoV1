@@ -46,6 +46,8 @@ FastAPI es un framework web para construir APIs con Python 3.7+ basado en las an
 
 Esta combinación permite a FastAPI ofrecer un rendimiento comparable al de frameworks de Node.js y Go, al tiempo que mantiene la facilidad de uso y la expresividad de Python.
 
+![alt text](img/image.png)
+
 **Ventajas Clave de FastAPI:**
 
 * **Alto Rendimiento:** Gracias a Starlette y al uso de async/await para operaciones concurrentes, FastAPI es uno de los frameworks Python más rápidos disponibles.  
