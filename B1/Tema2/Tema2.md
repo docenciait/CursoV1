@@ -333,7 +333,7 @@ Dominar Pydantic es, en gran medida, dominar una de las partes más importantes 
 
 ## 2.3 Creación de una Estructura Base Escalable para un Microservicio
 
-Para construir microservicios con FastAPI que sean robustos, mantenibles y capaces de crecer, no basta con escribir código; necesitamos una **arquitectura bien definida** y una **estructura de proyecto coherente**. Esto implica entender los patrones comunes en el ecosistema de microservicios y elegir aquellos que mejor se alineen con nuestra filosofía de curso: **DDD, Arquitectura Hexagonal y CQRS**.
+Para construir microservicios con FastAPI que sean robustos, mantenibles y capaces de crecer, no basta con escribir código; necesitamos una **arquitectura bien definida** y una **estructura de proyecto coherente**. Esto implica entender los patrones comunes en el ecosistema de microservicios y elegir aquellos que mejor se alineen con nuestra filosofía de curso: **DDD, Microservicios, Hexagonal y CQRS**.
 
 #### 1. Patrones Clave en Microservicios
 
