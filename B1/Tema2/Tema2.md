@@ -131,9 +131,6 @@ Resultados Numéricos Representativos de TechEmpower (RPS \- Requests Per Second
 
 ---
 
-¡Entendido\! Vamos a crear una versión definitiva del punto 2.2 que integre fluidamente la teoría (el *qué* y el *porqué*) con la práctica (el *cómo*), y que presente la información como el conjunto de conocimientos esenciales sobre Pydantic para nuestro curso, sin necesidad de mencionar explícitamente lo que se omite.
-
------
 
 
 ## 2.2 Uso de Pydantic para Validación y Tipado Estricto
