@@ -1,6 +1,5 @@
 # Tema 6. ARQUITECTURA HEXAGONAL Y APLICACIÓN DE DDD
 
-
 - [Tema 6. ARQUITECTURA HEXAGONAL Y APLICACIÓN DE DDD](#tema-6-arquitectura-hexagonal-y-aplicación-de-ddd)
   - [Contenidos](#tabla-de-contenidos)
   - [6.1 Comprender el patrón de puertos y adaptadores](#61-comprender-el-patrón-de-puertos-y-adaptadores)
@@ -15,10 +14,7 @@
 
 
 
-
-
 ---
-
 
 
 **Objetivo del Tema:** Aprender a diseñar y construir aplicaciones FastAPI siguiendo los principios de la Arquitectura Hexagonal y DDD, logrando un código desacoplado, enfocado en el dominio del negocio y fácilmente adaptable a cambios tecnológicos o de requisitos.

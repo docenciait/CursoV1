@@ -1,9 +1,6 @@
 # Tema 12. ESCALABILIDAD Y OPTIMIZACIÓN DE MICROSERVICIOS
 
-## Tabla de Contenidos
-
 - [Tema 12. ESCALABILIDAD Y OPTIMIZACIÓN DE MICROSERVICIOS](#tema-12-escalabilidad-y-optimización-de-microservicios)
-  - [Tabla de Contenidos](#tabla-de-contenidos)
   - [12. Contenidos](#12-contenidos)
     - [12.1 Escalado horizontal vs vertical](#121-escalado-horizontal-vs-vertical)
     - [12.1 Escalado Horizontal vs. Vertical: El Dilema del Crecimiento – ¿Más Músculo o Más Manos?](#121-escalado-horizontal-vs-vertical-el-dilema-del-crecimiento--más-músculo-o-más-manos)

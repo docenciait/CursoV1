@@ -1,6 +1,5 @@
 # Tema 7. INTRODUCCIÓN A DOMAIN-DRIVEN DESIGN (DDD)
 
-
 - [Tema 7. INTRODUCCIÓN A DOMAIN-DRIVEN DESIGN (DDD)](#tema-7-introducción-a-domain-driven-design-ddd)
 
   - [Contenidos](#7-contenidos)

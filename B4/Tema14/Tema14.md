@@ -1,9 +1,8 @@
 # Tema 14. BREVE INTRODUCCIÓN AL TESTING
 
-## Tabla de Contenidos
+
 
 - [Tema 14. BREVE INTRODUCCIÓN AL TESTING](#tema-14-breve-introducción-al-testing)
-  - [Tabla de Contenidos](#tabla-de-contenidos)
   - [14. Contenidos](#14-contenidos)
     - [14.1 Entorno de pruebas con Pytest en FastAPI](#141-entorno-de-pruebas-con-pytest-en-fastapi)
     - [14.2 Pruebas unitarias para servicios de dominio](#142-pruebas-unitarias-para-servicios-de-dominio)
@@ -15,6 +14,7 @@
     - [14.8 Cobertura y calidad con `coverage.py`](#148-cobertura-y-calidad-con-coveragepy)
     - [14.9 Estructura de carpetas y fixtures](#149-estructura-de-carpetas-y-fixtures)
     - [14.10 Automatización en pipelines CI/CD](#1410-automatización-en-pipelines-cicd)
+  - [Bibliografía Concisa para el Tema 14: Testing en Python y FastAPI](#bibliografía-concisa-para-el-tema-14-testing-en-python-y-fastapi)
 
 ## 14. Contenidos
 

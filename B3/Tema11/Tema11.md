@@ -1,9 +1,7 @@
 # Tema 11. DISEÑO DE APIS REST Y WEBSOCKETS EN FASTAPI
 
-## Tabla de Contenidos
 
 - [Tema 11. DISEÑO DE APIS REST Y WEBSOCKETS EN FASTAPI](#tema-11-diseño-de-apis-rest-y-websockets-en-fastapi)
-  - [Tabla de Contenidos](#tabla-de-contenidos)
   - [11. Contenidos](#11-contenidos)
     - [11.1 Buenas prácticas para endpoints RESTful](#111-buenas-prácticas-para-endpoints-restful)
     - [11.2 Versionado y organización de APIs](#112-versionado-y-organización-de-apis)

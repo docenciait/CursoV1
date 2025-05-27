@@ -1,9 +1,6 @@
 # Tema 15. BUENAS PRÁCTICAS Y AUTOMATIZACIÓN DE DESPLIEGUES
 
-## Tabla de Contenidos
-
 - [Tema 15. BUENAS PRÁCTICAS Y AUTOMATIZACIÓN DE DESPLIEGUES](#tema-15-buenas-prácticas-y-automatización-de-despliegues)
-  - [Tabla de Contenidos](#tabla-de-contenidos)
   - [15. Contenidos](#15-contenidos)
     - [15.1 Dockerfiles eficientes para microservicios](#151-dockerfiles-eficientes-para-microservicios)
     - [15.2 Imágenes versionadas semánticamente](#152-imágenes-versionadas-semánticamente)
@@ -15,6 +12,7 @@
     - [15.8 Métricas con Prometheus y Grafana](#158-métricas-con-prometheus-y-grafana)
     - [15.9 Logs centralizados con ELK o Loki](#159-logs-centralizados-con-elk-o-loki)
     - [15.10 Rollout y rollback automático](#1510-rollout-y-rollback-automático)
+  - [Bibliografía](#bibliografía)
 
 ## 15. Contenidos
 

@@ -1,9 +1,7 @@
 # Tema 13. PERSISTENCIA DE DATOS EN MICROSERVICIOS
 
-## Tabla de Contenidos
 
 - [Tema 13. PERSISTENCIA DE DATOS EN MICROSERVICIOS](#tema-13-persistencia-de-datos-en-microservicios)
-  - [Tabla de Contenidos](#tabla-de-contenidos)
   - [13. Contenidos](#13-contenidos)
     - [13.1 Integración de SQLAlchemy ORM](#131-integración-de-sqlalchemy-orm)
     - [13.2 Modelos desacoplados del dominio (DTO vs Entity)](#132-modelos-desacoplados-del-dominio-dto-vs-entity)
@@ -14,7 +12,10 @@
     - [13.7 Conexión a MongoDB con `motor`](#137-conexión-a-mongodb-con-motor)
     - [13.8 Esquemas flexibles en MongoDB](#138-esquemas-flexibles-en-mongodb)
     - [13.9 Bases de datos por servicio y separación](#139-bases-de-datos-por-servicio-y-separación)
+    - [13.9 Bases de Datos por Servicio y Separación de Datos: Autonomía y Desacoplamiento en la Persistencia de `Microservices`](#139-bases-de-datos-por-servicio-y-separación-de-datos-autonomía-y-desacoplamiento-en-la-persistencia-de-microservices)
     - [13.10 Pools de conexión y timeouts](#1310-pools-de-conexión-y-timeouts)
+    - [13.10 `Pools` de Conexión y `Timeouts`: Optimizando el Flujo Ininterrumpido de Datos](#1310-pools-de-conexión-y-timeouts-optimizando-el-flujo-ininterrumpido-de-datos)
+  - [Bibliografía](#bibliografía)
 
 ## 13. Contenidos
 

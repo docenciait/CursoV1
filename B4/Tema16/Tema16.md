@@ -1,9 +1,7 @@
 # Tema 16. PROYECTO FINAL: APLICACIÓN COMPLETA BASADA EN MICROSERVICIOS CON FASTAPI
 
-## Tabla de Contenidos
 
 - [Tema 16. PROYECTO FINAL: APLICACIÓN COMPLETA BASADA EN MICROSERVICIOS CON FASTAPI](#tema-16-proyecto-final-aplicación-completa-basada-en-microservicios-con-fastapi)
-  - [Tabla de Contenidos](#tabla-de-contenidos)
   - [16. Contenidos](#16-contenidos)
     - [16.1 Definición de dominio y bounded contexts](#161-definición-de-dominio-y-bounded-contexts)
     - [16.2 División en microservicios independientes](#162-división-en-microservicios-independientes)
