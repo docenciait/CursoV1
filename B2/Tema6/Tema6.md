@@ -39,8 +39,7 @@ Aquí es donde entran en juego los "Puertos" y los "Adaptadores".
 ### 1. El Hexágono (La Aplicación):
 
 |!["figure"](img/image.png )|
-|:--:|
-| *Figura 1. Arquitectura Hexagonal* |
+
 
 Piensa en tu aplicación no como una estructura en capas tradicional (presentación, lógica, datos), sino como un hexágono (la forma es solo una metáfora para indicar que hay múltiples puntos de entrada y salida, no necesariamente seis).
 
@@ -50,21 +49,21 @@ Piensa en tu aplicación no como una estructura en capas tradicional (presentaci
 ### Gráfico 1: El Hexágono Conceptual
 
 
-```
-      +-----------------------+
-      |     Infraestructura   | (Adaptadores: UI, DB, APIs Externas, Tests)
-      |       (Exterior)      |
-      +-----------+-----------+
-                  |
-                  | (Puertos)
-                  |
-      +-----------+-----------+
-      |  Dominio y Lógica de  |
-      |  Aplicación (Núcleo)  |
-      |       (Interior)      |
-      +-----------------------+
-```
+```mermaid
+graph TD
+    subgraph Exterior
+        A[Infraestructura]
+    end
 
+    subgraph Interior
+        C[Dominio y Lógica de Aplicación]
+    end
+
+    A --> B[Puertos]
+    B --> C
+
+
+```
 ### 2. Puertos (Ports):
 
 Los puertos son la **especificación** de cómo el exterior puede interactuar con el interior de la aplicación, o cómo la aplicación puede interactuar con el exterior. Son como los enchufes en una pared: definen una interfaz, pero no la implementación.
@@ -77,28 +76,20 @@ Los puertos son la **especificación** de cómo el exterior puede interactuar co
 
 ### Gráfico 2: Puertos de Entrada y Salida
 
-# Diagrama ASCII
-```
-      +-----------------------------------------------------+
-      |                     Adaptador UI                    |
-      |                  (Ej: FastAPI Endpoint)             |
-      +-------------------------+---------------------------+
-                                | (Llama a)
-                                v
-      +-----------------------------------------------------+
-      |      Puerto de Entrada (Interfaz ServicioPedido)    |
-      |-----------------------------------------------------|
-      |                 LÓGICA DE APLICACIÓN                |  <-- NÚCLEO DEL
-      |                    (Caso de Uso)                    |      HEXÁGONO
-      |-----------------------------------------------------|
-      |      Puerto de Salida (Interfaz RepositorioPedido)  |
-      +-------------------------+---------------------------+
-                                | (Es implementado por)
-                                v
-      +-----------------------------------------------------+
-      |                  Adaptador de Persistencia          |
-      |                   (Ej: SQLAlchemy con PostgreSQL)   |
-      +-----------------------------------------------------+
+
+```mermaid
+graph TD
+    UI[Adaptador_UI]
+    Entrada[Puerto_Entrada]
+    Logica[Logica_Aplicacion]
+    Salida[Puerto_Salida]
+    Persistencia[Adaptador_Persistencia]
+
+    UI -->|Llama a| Entrada
+    Entrada --> Logica
+    Logica --> Salida
+    Salida -->|Implementado por| Persistencia
+
 ```
 
 ### 3. Adaptadores (Adapters):
