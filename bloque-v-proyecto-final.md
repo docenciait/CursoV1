@@ -1,2 +1,0 @@
-# Bloque V - Proyecto Final
-
