@@ -1,4 +1,4 @@
-![](B1/Tema1/img/portada.PNG)
+![](Bloque%20I%20-%20Principios%20de%20Microservicios,%20Framework%20FastAPI%20y%20Arquitectura%20Base/Tema1/img/portada.PNG)
 
 # CURSO: Arquitectura de Microservicios, Hexagonal, DDD y CQRS en FastAPI  
 
