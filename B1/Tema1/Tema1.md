@@ -2,7 +2,6 @@
 - [TEMA 1. INTRODUCCIÓN A LA ARQUITECTURA DE MICROSERVICIOS](#tema-1-introducción-a-la-arquitectura-de-microservicios)
   - [Objetivos](#objetivos)
   - [1.0 Conceptos Previos](#10-conceptos-previos)
-    - [Tabla Comparativa](#tabla-comparativa)
   - [1.1 Evolución de la arquitectura monolítica hacia los microservicios](#11-evolución-de-la-arquitectura-monolítica-hacia-los-microservicios)
   - [1.2 Ventajas y Desventajas Clave de los Microservicios](#12-ventajas-y-desventajas-clave-de-los-microservicios)
   - [1.3 Principios Fundamentales de la Arquitectura de Microservicios](#13-principios-fundamentales-de-la-arquitectura-de-microservicios)
@@ -147,7 +146,7 @@ Aquí vemos algunos ejemplos de enfoques de diseño actuales:
 
 
 
-### Tabla Comparativa
+**Tabla Comparativa**
 
 | Concepto | Nivel / Alcance | Propósito Principal (La Pregunta que Responde) | Descripción Breve | Ejemplo Principal |
 | :--- | :--- | :--- | :--- | :--- |
