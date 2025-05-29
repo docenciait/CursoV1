@@ -1,7 +1,6 @@
 # Table of contents
 
-* [README](README.md)
-* [Presentación del Curso](<Presentación del Curso.md>)
+* [Presentación del Curso](README.md)
 * [Requerimientos Previos](<Requerimientos Previos.md>)
 * [Bloque V - Proyecto Final](<Bloque V - Proyecto Final/Readme.md>)
 * [Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base](bloque-i-principios-de-microservicios-framework-fastapi-y-arquitectura-base/README.md)
