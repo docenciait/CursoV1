@@ -1,7 +1,7 @@
 # Tema 16. PROYECTO FINAL: APLICACIÓN COMPLETA BASADA EN MICROSERVICIOS CON FASTAPI
 
 * [Tema 16. PROYECTO FINAL: APLICACIÓN COMPLETA BASADA EN MICROSERVICIOS CON FASTAPI](Tema16.md#tema-16-proyecto-final-aplicación-completa-basada-en-microservicios-con-fastapi)
-  * [16. Contenidos](Tema16.md#16-contenidos)
+
     * [16.1 Definición de dominio y bounded contexts](Tema16.md#161-definición-de-dominio-y-bounded-contexts)
     * [16.2 División en microservicios independientes](Tema16.md#162-división-en-microservicios-independientes)
     * [16.3 Contratos REST, eventos y gRPC entre servicios](Tema16.md#163-contratos-rest-eventos-y-grpc-entre-servicios)
@@ -13,9 +13,8 @@
     * [16.9 Despliegue automatizado con CI/CD en Kubernetes](Tema16.md#169-despliegue-automatizado-con-cicd-en-kubernetes)
     * [16.10 Documentación y repositorio versionado](Tema16.md#1610-documentación-y-repositorio-versionado)
 
-## 16. Contenidos
 
-### 16.1 Definición de dominio y bounded contexts
+## 16.1 Definición de dominio y bounded contexts
 
 Este es el momento de cristalizar todo lo aprendido en un proyecto cohesivo. Siguiendo tu directriz, no nos extenderemos en teoría abstracta, sino que **plantearemos un proyecto con una idea actual y describiremos cómo se abordaría cada punto de este tema dentro de ese proyecto**.
 
@@ -148,15 +147,15 @@ graph TD
 
 Esta definición inicial del dominio y sus `bounded contexts` nos da un marco sólido para empezar a pensar en la división en `microservices` (16.2) y los contratos entre ellos. Es un ejercicio iterativo; a medida que profundicemos en cada aspecto del proyecto, podríamos refinar estos límites.
 
-***
 
-### 16.2 División en microservicios independientes
 
-Seremos concisos y concretos, basándonos en los `bounded contexts` definidos en 16.1.
+## 16.2 División en microservicios independientes
+
+
 
 La meta aquí es traducir cada `bounded context` (o un grupo coherente de ellos) en un `microservice` con responsabilidades claras y límites bien definidos.
 
-***
+
 
 Basándonos en los `Bounded Contexts` identificados para **ParkWise** en la sección 16.1, proponemos la siguiente división inicial en `microservices` independientes. Cada servicio será responsable de su propio dominio de datos y lógica de negocio, exponiendo sus capacidades a través de APIs.
 
@@ -262,13 +261,13 @@ graph TD
 
 Esta división busca un equilibrio entre cohesión (agrupar funcionalidades relacionadas) y desacoplamiento (permitir desarrollo y despliegue independiente).
 
-***
 
-### 16.3 Contratos REST, eventos y gRPC entre servicios
+
+## 16.3 Contratos REST, eventos y gRPC entre servicios
 
 Vamos directos al **16.3** para el proyecto **ParkWise**. Habiendo definido el dominio, los `bounded contexts` (16.1) y la división inicial en `microservices` (16.2), ahora es crucial definir **cómo estos servicios van a "hablar" entre sí y con el mundo exterior**. Los contratos de comunicación son las reglas del lenguaje que aseguran que la colaboración sea posible y fiable.
 
-***
+
 
 En un ecosistema de `microservices` como ParkWise, no existe una única forma de comunicación. Se elegirá el estilo más adecuado (síncrono, asíncrono, `request/response`, `event-driven`) según la naturaleza de la interacción. Para cada estilo, un **contrato bien definido** es esencial.
 
@@ -428,7 +427,7 @@ Esta estrategia multi-modal, con contratos claros para cada modo, permitirá que
 
 ***
 
-### 16.4 DDD + arquitectura hexagonal en cada servicio
+## 16.4 DDD + arquitectura hexagonal en cada servicio
 
 Si el 16.3 definió _cómo_ se comunican nuestros `microservices` de ParkWise, el **16.4** se sumerge en _cómo estructuramos internamente cada uno de esos `microservices`_. Para construir servicios que sean robustos, mantenibles y evolucionables, aplicaremos los principios de **`Domain-Driven Design (DDD)`** y la **Arquitectura Hexagonal (también conocida como `Ports and Adapters`)**.
 
@@ -665,9 +664,9 @@ Aplicar los principios de `Domain-Driven Design` y la Arquitectura Hexagonal _de
 
 FastAPI se integra perfectamente en este modelo, actuando como un `driving adapter` eficiente para las interacciones HTTP y `WebSocket`, mientras que su sistema de `Dependency Injection` facilita la conexión de estos `adapters` con los `ports` de entrada de tu `application core`.
 
-***
 
-### 16.5 Desarrollo de API Gateway y orquestador de eventos
+
+## 16.5 Desarrollo de API Gateway y orquestador de eventos
 
 Avanzamos al **16.5** del proyecto **ParkWise**. Habiendo definido la estructura interna de nuestros `microservices` con DDD y Arquitectura Hexagonal (16.4), ahora necesitamos pensar en cómo los `clients` externos acceden a nuestro ecosistema y cómo se coordinan los flujos de negocio más complejos que involucran múltiples servicios, especialmente los asíncronos.
 
@@ -1047,11 +1046,11 @@ Para el proyecto ParkWise, la capacidad de definir y ejecutar localmente un ento
 
 Este `setup` local es el primer paso para asegurar que la lógica de persistencia de cada `microservice` ParkWise (usando SQLAlchemy para MariaDB y `Motor` para MongoDB, como se vio en 13.1 y 13.7) funcione correctamente antes de pasar a `pipelines` CI/CD y despliegues en Kubernetes.
 
-***
 
-### 16.7 Seguridad, validación y pruebas completas
 
-***
+## 16.7 Seguridad, validación y pruebas completas
+
+
 
 Para el proyecto **ParkWise**, este punto define las estrategias integrales para asegurar la robustez, fiabilidad y seguridad de la plataforma a través de sus `microservices`.
 
@@ -1102,11 +1101,11 @@ Para el proyecto **ParkWise**, este punto define las estrategias integrales para
 
 Este enfoque integral de seguridad, validación y `testing` es fundamental para garantizar que ParkWise sea una plataforma fiable, segura y de alta calidad.
 
-***
+
 
 ### 16.8 Colas con Kafka y WebSockets para real-time
 
-***
+
 
 En el proyecto ParkWise, la comunicación en tiempo real (`real-time`) y los flujos de `events` desacoplados son esenciales. Para esto, **Kafka** será nuestro `message broker` principal para la comunicación asíncrona entre `microservices` y para alimentar las actualizaciones `real-time` a los `clients` a través de **`WebSockets`**. El entorno de desarrollo local se gestionará con **`Docker Compose`**.
 
@@ -1216,13 +1215,11 @@ Este `setup` con `Docker Compose` permitirá a los desarrolladores de ParkWise:
 * Desarrollar y probar los flujos `event-driven` y las interacciones `real-time` de manera integral.
 * Asegurar que la configuración de conexión a Kafka y otros `backing services` sea correcta desde las primeras etapas.
 
-***
 
 ### 16.9 Despliegue automatizado con CI/CD en Kubernetes
 
 Habiendo definido cómo ParkWise utilizará Kafka y `WebSockets` dentro de un entorno `Docker Compose` para desarrollo (16.8), el siguiente paso es llevar esta complejidad a un entorno de producción o `staging` de manera automatizada y escalable. Esto nos lleva al despliegue en **Kubernetes** gestionado por `pipelines` de **CI/CD**.
 
-***
 
 Para el proyecto ParkWise, el objetivo es desplegar nuestros `microservices` (contenedores Docker) en un `cluster` de Kubernetes, y automatizar este proceso utilizando un `pipeline` de CI/CD. Esto sigue las prácticas modernas de DevOps para asegurar despliegues rápidos, fiables y consistentes.
 
