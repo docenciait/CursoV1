@@ -1,6 +1,6 @@
 # TEMA 2. FASTAPI COMO FRAMEWORK PARA MICROSERVICIOS
 
-- [Tema 2. FASTAPI COMO FRAMEWORK PARA MICROSERVICIOS](#tema-2-fastapi-como-framework-para-microservicios)
+
   - [Objetivos](#objetivos)
   - [Contenidos](#contenidos)
   - [2.1. Presentación de FastAPI y ventajas frente a Flask o Django](#21-presentación-de-fastapi-y-ventajas-frente-a-flask-o-django)
