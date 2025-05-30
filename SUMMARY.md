@@ -13,30 +13,31 @@
   
   * [Tema 5. Seguridad y buenas prácticas en microservicios](<Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base/Tema5/Tema5.md>)
  
-  * [BLOQUE 1 – Hands-on Labs](<Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base/hands-on-labs-b1/labs.md>)
+  * [Bloque I – Hands-on Labs](<Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base/hands-on-labs-b1/labs.md>)
 
 * [Bloque II - Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio](bloque-ii-arquitectura-hexagonal-separacion-de-responsabilidades-y-diseno-orientado-al-dominio/README.md)
   * [Tema 6. Arquitectura Hexagonal y Aplicación de DDD](<Bloque II - Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio/Tema6/Tema6.md>)
-  * [Tema7](bloque-ii-arquitectura-hexagonal-separacion-de-responsabilidades-y-diseno-orientado-al-dominio/tema7/README.md)
-  * [Tema 7. INTRODUCCIÓN A DOMAIN-DRIVEN DESIGN (DDD)](<Bloque II - Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio/Tema7/Tema7.md>)
-  * [Tema8](bloque-ii-arquitectura-hexagonal-separacion-de-responsabilidades-y-diseno-orientado-al-dominio/tema8/README.md)
-    * [Tema 8. PATRÓN CQRS EN MICROSERVICIOS](<Bloque II - Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio/Tema8/Tema8.md>)
-* [Bloque IV - Escalabilidad, Persistencia, Testing y Despliegue de Microservicios](bloque-iv-escalabilidad-persistencia-testing-y-despliegue-de-microservicios/README.md)
-  * [Tema12](bloque-iv-escalabilidad-persistencia-testing-y-despliegue-de-microservicios/tema12/README.md)
-    * [Tema 12. ESCALABILIDAD Y OPTIMIZACIÓN DE MICROSERVICIOS](<Bloque IV - Escalabilidad, Persistencia, Testing y Despliegue de Microservicios/Tema12/Tema12.md>)
-  * [Tema13](bloque-iv-escalabilidad-persistencia-testing-y-despliegue-de-microservicios/tema13/README.md)
-    * [Tema 13. PERSISTENCIA DE DATOS EN MICROSERVICIOS](<Bloque IV - Escalabilidad, Persistencia, Testing y Despliegue de Microservicios/Tema13/Tema13.md>)
-  * [Tema14](bloque-iv-escalabilidad-persistencia-testing-y-despliegue-de-microservicios/tema14/README.md)
-    * [Tema 14. BREVE INTRODUCCIÓN AL TESTING](<Bloque IV - Escalabilidad, Persistencia, Testing y Despliegue de Microservicios/Tema14/Tema14.md>)
-  * [Tema15](bloque-iv-escalabilidad-persistencia-testing-y-despliegue-de-microservicios/tema15/README.md)
-    * [Tema 15. BUENAS PRÁCTICAS Y AUTOMATIZACIÓN DE DESPLIEGUES](<Bloque IV - Escalabilidad, Persistencia, Testing y Despliegue de Microservicios/Tema15/Tema15.md>)
-  * [Tema16](bloque-iv-escalabilidad-persistencia-testing-y-despliegue-de-microservicios/tema16/README.md)
-    * [Tema 16. PROYECTO FINAL: APLICACIÓN COMPLETA BASADA EN MICROSERVICIOS CON FASTAPI](bloque-iv-escalabilidad-persistencia-testing-y-despliegue-de-microservicios/tema16/tema-16.-proyecto-final-aplicacion-completa-basada-en-microservicios-con-fastapi.md)
+  * [Tema 7. Introducción a Domain-Driven Design (DDD)](<Bloque II - Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio/Tema7/Tema7.md>)
+
+  * [Tema 8. Patrón CQRS en Microservicios](<Bloque II - Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio/Tema8/Tema8.md>)
+
+  * [Bloque II – Hands-on Labs](<Bloque II - Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio/hands-on-labs-b2/labs.md>)
+
 * [Bloque III - Comunicación Asíncrona, Eventos, Pub, Sub y Mensajería Distribuida](<Bloque III - Comunicación Asíncrona, Eventos, Pub, Sub y Mensajería Distribuida/Readme.md>)
- 
-    * [Tema10](bloque-iii-comunicacion-asincrona-eventos-pub/sub-y-mensajeria-distribuida/tema10/README.md)
-      * [Tema 10. INTRODUCCIÓN A LOS WEBSOCKETS Y PUB/SUB EN SISTEMAS DISTRIBUIDOS](bloque-iii-comunicacion-asincrona-eventos-pub/sub-y-mensajeria-distribuida/tema10/tema-10.-introduccion-a-los-websockets-y-pub-sub-en-sistemas-distribuidos.md)
-    * [Tema11](bloque-iii-comunicacion-asincrona-eventos-pub/sub-y-mensajeria-distribuida/tema11/README.md)
-      * [Tema 11. DISEÑO DE APIS REST Y WEBSOCKETS EN FASTAPI](bloque-iii-comunicacion-asincrona-eventos-pub/sub-y-mensajeria-distribuida/tema11/tema-11.-diseno-de-apis-rest-y-websockets-en-fastapi.md)
-    * [Tema9](bloque-iii-comunicacion-asincrona-eventos-pub/sub-y-mensajeria-distribuida/tema9/README.md)
-      * [Tema 9. INTRODUCCIÓN A LA MENSAJERÍA CON KAFKA, RABBITMQ](bloque-iii-comunicacion-asincrona-eventos-pub/sub-y-mensajeria-distribuida/tema9/tema-9.-introduccion-a-la-mensajeria-con-kafka-rabbitmq.md)
+    
+    * [Tema 9. Introducción a la mensajería con Kafka, RabbitMQ](bloque-iii-comunicacion-asincrona-eventos-pub/sub-y-mensajeria-distribuida/tema9/README.md)
+    
+    * [Tema 10. Introducción a los websockets y pub/sub en sistemas distribuidos](bloque-iii-comunicacion-asincrona-eventos-pub/sub-y-mensajeria-distribuida/tema10/README.md)
+    
+    * [Tema 11. Diseño de APIs REST y Websdockets en FastAPI](bloque-iii-comunicacion-asincrona-eventos-pub/sub-y-mensajeria-distribuida/tema11/README.md)
+
+    * [Bloque III – Hands-on Labs](<Bloque III - Comunicación Asíncrona, Eventos, Pub, Sub y Mensajería Distribuida/hands-on-labs-b3/labs.md>)
+    
+* [Bloque IV - Escalabilidad, Persistencia, Testing y Despliegue de Microservicios](bloque-iv-escalabilidad-persistencia-testing-y-despliegue-de-microservicios/README.md)
+  * [Tema 12. Escalabilidad y optimización de microservicios](<Bloque IV - Escalabilidad, Persistencia, Testing y Despliegue de Microservicios/Tema12/Tema12.md>)
+  * [Tema 13. Persistencia de datos en microservicios](<Bloque IV - Escalabilidad, Persistencia, Testing y Despliegue de Microservicios/Tema13/Tema13.md>)
+  * [Tema 14. Breve introducción al testing](<Bloque IV - Escalabilidad, Persistencia, Testing y Despliegue de Microservicios/Tema14/Tema14.md>)
+  * [Tema 15. Buenas prácticas y automatización de despliegues](<Bloque IV - Escalabilidad, Persistencia, Testing y Despliegue de Microservicios/Tema15/Tema15.md>)
+
+  * [Bloque IV – Hands-on Labs](<Bloque II - Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio/hands-on-labs-b2/labs.md>)
+
