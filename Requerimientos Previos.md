@@ -170,7 +170,7 @@ sudo apt install python3.12 python3.12-pip python3.12-venv virtualenv -y
 
 ### 4.1 Instalación
 
-- Instalar en Varias plataformas VSCode: [⬇️  Aquí ](https://code.visualstudio.com/docs/setup/setup-overview)
+- Instalar en Varias plataformas VSCode: [⬇️ Aquí ](https://code.visualstudio.com/docs/setup/setup-overview)
 
 ### 4.2 Descargar el archivo de perfil que te proporciona el formador:
 
