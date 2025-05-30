@@ -7,6 +7,11 @@ Este manual describe cómo instalar y configurar todo el entorno necesario para 
 ## ✅ Requisitos
 
 * Windows 10/11 
+* Ubuntu WSL
+* Docker/Docker Compose
+* git
+* Postman
+* VScode
 * Conexión a internet estable
 * Permisos de administrador
 
@@ -32,7 +37,7 @@ wsl --list --online
 4. Instalar Ubuntu:
 
 ```powershell
-wsl --install -d Ubuntu
+wsl --install -d Ubuntu-24.04
 ```
 
 5. Verifica instalación:
@@ -42,6 +47,8 @@ wsl --status
 ```
 
 ### 1.2 Instalar Docker Desktop
+
+#### Windows 10/11
 
 1. Descargar desde: [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
 2. Instalar con:
@@ -55,29 +62,58 @@ docker --version
 docker info
 ```
 
+
 ---
 
-## 2. Docker tanto en Windows como en Ubuntu WSL
+### 1.3 Ubuntu (WSL)
 
-### 2.1 Ubuntu (WSL)
+
+!!! info "Uso recomendado de Docker WSL Ubuntu"
+    Se recomienda usar docker bajo WSL Ubuntu en Windows 10/11
 
 ```bash
-sudo apt update && sudo apt install docker.io docker-compose -y
+# Add Docker's official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+sudo apt-get update
 sudo usermod -aG docker $USER
+
+# Install docker and docker-compose
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 ```
 
 > Reinicia la sesión de WSL: `exit` y vuelve a entrar
 
-### 2.2 Verificación
+!!! Info Iniciar el servicio de Docker Desktop 
+    - Windows 10/11: Asegúrate que Docker Desktop esté iniciado
+    - Ubuntu/WSL: `sudo service docker start`
+
+### 1.4 Verificación
 
 ```bash
+# Windows 10/11
 docker version
-docker-compose version
+docker compose version
+
+## Ubuntu/WSL
+sudo docker version
+sudo docker compose version
 ```
 
 ---
 
-## 3. Instalación de Git
+## 2. Instalación de Git
+
+### Windows 10/11
 
 1. Descargar desde: [https://git-scm.com/download/win](https://git-scm.com/download/win)
 2. Instalar con todas las opciones por defecto.
@@ -87,9 +123,24 @@ docker-compose version
 git --version
 ```
 
+### Ubuntu/WSL
+```bash
+sudo apt install git
+```
+
+### Configuración git
+
+```bash
+# Configurar nombre y correo
+git config --global user.name "Tu Nombre Completo"
+git config --global user.email "tu_correo@ejemplo.com"
+```
+
 ---
 
-## 4. Instalación de Python 3.12
+## 3. Instalación de Python 3.12
+
+### Windows 10/11
 
 1. Descargar desde: [https://www.python.org/downloads/release/python-3120/](https://www.python.org/downloads/release/python-3120/)
 2. Marcar:
@@ -101,78 +152,230 @@ git --version
 ```bash
 python --version
 pip --version
+pip install virtualenv # Instalar virtualenv
+```
+
+
+### Ubuntu WSL
+
+!!! Info Normalmente Pyton 3.12 viene instalado en Ubuntu 24/WSL pero se realiza otra vez la instalación para verificarlo
+
+```bash
+sudo apt install python3.12 python3.12-pip python3.12-venv virtualenv -y
 ```
 
 ---
 
-## 5. Importar perfil de VS Code
+## 4. Instalación y Configuración VSCode
 
-### 5.1 Descargar el archivo de perfil que te proporciona el formador:
+### 4.1 Instalación
 
-Archivo: [fastapi-course.code-profile](fastapi_arquitecture.profile.code-profile.zip)
+[Instalar en Varias plataformas VSCode](https://code.visualstudio.com/docs/setup/setup-overview)
 
-### 5.2 Importar el perfil
+### 4.2 Descargar el archivo de perfil que te proporciona el formador:
+
+Archivo: [fastapi-course.code-profile](https://raw.githubusercontent.com/docenciait/imagina-assets/refs/heads/main/fastapi_arquitecture.profile.code-profile)
+
+Haz clic para descargar el informe: <a href="https://raw.githubusercontent.com/docenciait/imagina-assets/refs/heads/main/fastapi_arquitecture.profile.code-profile" download="fastapi-arquitecture.profile">⬇️ Perfil VSCode</a>
+
+<a href="https://raw.githubusercontent.com/docenciait/imagina-assets/refs/heads/main/fastapi_arquitecture.profile.code-profile" download="Software_v1.2.zip">⬇️ Descargar Software (ZIP)</a>
+
+### 4.3 Importar el perfil
 
 1. Abre Visual Studio Code
 2. `Ctrl + Shift + P` > `Profiles: Import Profile`
 3. Selecciona "Desde archivo"
 4. Carga el archivo `.code-profile`
 
----
 
-## 6. Test Lab
+## 5 Instalación de make
 
-Proyecto que incluyen varias configuraciones que tiene como objetivo 
+- Herramienta para poder usar cómodamente los comandos docker, docker compose mediante Makefile
 
+### Windows 10/11
 
-### 6.2 Makefile de ejemplo
-
-```makefile
-.PHONY: build up down restart logs test
-
-build:
-	docker compose build
-
-up:
-	docker compose up -d
-
-down:
-	docker compose down
-
-restart:
-	make down && make up
-
-logs:
-	docker compose logs -f
-
-test:
-	docker compose exec app pytest
+1. Instalar choco como administrador
+2. Instalar make en un Terminal Administrador:
+```bash
+choco install make
+make --version
 ```
 
-### 6.3 Ejecutar el proyecto
+### Ubuntu/WSL
 
 ```bash
-git clone https://github.com/tu-org/fastapi-lab.git
+sudo apt install make
+sudo make --version
+```
+
+
+---
+
+# 🧪 6. Laboratorio Test 
+
+
+
+
+## 🎯 Objetivo
+
+* Proveer un entorno completo de microservicio backend usando FastAPI y herramientas auxiliares para que el alumno experimente con un entorno similar a los usuados en los laboratorios.
+
+
+
+---
+
+## 🚀 Tecnologías incluidas
+
+| Componente       | Tecnología           |
+| ---------------- | -------------------- |
+| Backend API      | FastAPI              |
+| ORM              | SQLAlchemy           |
+| Base de datos    | MariaDB              |
+| Cache            | Redis                |
+| Mensajería       | RabbitMQ             |
+| Observabilidad   | Prometheus + Grafana |
+| Pruebas          | Pytest               |
+| API Gateway      | NGINX                |
+| Vault (Secretos) | HashiCorp Vault      |
+
+---
+
+## 📁 Estructura del proyecto
+
+```
+fastapi-lab/
+├── app/
+│   ├── main.py
+├── tests/
+│   └── test_health.py
+├── Dockerfile
+├── docker-compose.yml
+├── Makefile
+├── prometheus/
+│   └── prometheus.yml
+├── grafana/
+│   └── provisioning/
+├── nginx/
+│   └── nginx.conf
+└── requirements.txt
+```
+
+---
+
+## ⚙️ Instrucciones de uso
+
+### 1. Clonar el repositorio
+
+```bash
+git clone <REPO_URL>
 cd fastapi-lab
-make build
+```
+
+### 2. Comandos del Makefile
+
+| Comando           | Descripción                                                    |
+| ----------------- | -------------------------------------------------------------- |
+| `make build`      | Construir las imágenes Docker                                  |
+| `make up`         | Levantar todos los servicios en segundo plano                  |
+| `make down`       | Detener y eliminar los contenedores                            |
+| `make restart`    | Reiniciar todo el entorno                                      |
+| `make logs`       | Ver logs en tiempo real de los servicios                       |
+| `make test`       | Ejecutar los tests unitarios definidos en `tests/`             |
+| `make test-debug` | Ejecutar los tests con modo verbose y salida a consola         |
+| `make clean`      | Limpiar contenedores, redes e imágenes no usados               |
+| `make reset`      | Borrar volúmenes, redes, contenedores e imágenes completamente |
+| `make prune`      | Apagar servicios y eliminar todos los recursos Docker          |
+
+---
+
+### 3. Levantar el entorno completo
+
+```bash
+make build  # Recordad que en Ubuntu va con sudo
 make up
 ```
 
-> El servicio estará disponible en: `http://localhost:8000/docs`
+### 4. Acceder a los servicios
+
+| Servicio        | URL / Puerto                                                   |
+| --------------- | -------------------------------------------------------------- |
+| FastAPI         | [http://localhost:8000/docs](http://localhost:8000/docs)       |
+| NGINX (Gateway) | [http://localhost:8080/health](http://localhost:8080/health)   |
+| MariaDB         | `localhost:3306` (usuario: root, pass: password)               |
+| Redis           | `localhost:6379`                                               |
+| RabbitMQ        | [http://localhost:15672](http://localhost:15672) (guest/guest) |
+| Prometheus      | [http://localhost:9090](http://localhost:9090)                 |
+| Grafana         | [http://localhost:3000](http://localhost:3000) (admin/admin)   |
+| Vault           | [http://localhost:8200](http://localhost:8200) (Token: root)   |
 
 ---
 
-### 6.4 Verificar servicios
 
-* **MariaDB**: puerto 3306
-* **Redis**: puerto 6379
-* **RabbitMQ**: [http://localhost:15672](http://localhost:15672)
-* **Prometheus**: [http://localhost:9090](http://localhost:9090)
-* **Grafana**: [http://localhost:3000](http://localhost:3000) (user: admin / pass: admin)
-* **FastAPI**: [http://localhost:8000](http://localhost:8000)
-* **gRPC**: puerto 50051
-* **WebSockets**: vía `/ws` endpoint
-* **Tests**: ejecutar con `make test`
+
+
+## 🔎 Cómo probar cada servicio manualmente
+
+1. **FastAPI**
+
+   * URL de prueba: `http://localhost:8000/health`
+   * Respuesta esperada:
+
+   ```json
+   { "status": "ok" }
+   ```
+
+2. **MariaDB**
+
+   ```bash
+   docker compose exec mariadb mysql -uroot -ppassword -e "SHOW DATABASES;"
+   ```
+
+3. **Redis**
+
+   ```bash
+   docker compose exec redis redis-cli ping
+   # PONG
+   ```
+
+4. **RabbitMQ**
+
+   Accede vía navegador a: `http://localhost:15672` (guest/guest).
+
+5. **Prometheus**
+
+   Abre: `http://localhost:9090` → `Targets` para verificar endpoints scrapeados.
+
+6. **Grafana**
+
+   Accede: `http://localhost:3000` → Login: `admin/admin` → Añadir datasource Prometheus.
+
+7. **Vault**
+
+   Accede: `http://localhost:8200`, Token root: `root`.
+
+---
+
+## 🧹 Cómo limpiar todo
+
+Para dejar limpio el entorno:
+
+```bash
+make down    # Para detener
+make prune   # Para eliminar contenedores, volúmenes, redes e imágenes
+```
+
+O limpieza forzada:
+
+```bash
+make reset
+```
+
+Esto elimina **todo** lo relacionado con los contenedores, imágenes, redes y volúmenes usados en este laboratorio.
+
+
+
+!!! Info Este laboratorio es el punto de partida para entender cómo funcionan los diferentes componentes de un entorno de microservicios y su orquestación completa con Docker y FastAPI.
+
 
 ---
 
