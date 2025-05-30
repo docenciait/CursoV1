@@ -5,10 +5,8 @@
 * [Proyecto Final](<Proyecto/Tema16.md>)
 * [Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base](bloque-i-principios-de-microservicios-framework-fastapi-y-arquitectura-base/README.md)
   * [Tema 1. Introducción a la Arquitectura de Microservicios](<Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base/Tema1/Tema1.md>)
-  * [Tema2](bloque-i-principios-de-microservicios-framework-fastapi-y-arquitectura-base/tema2/README.md)
-    * [TEMA 2. FASTAPI COMO FRAMEWORK PARA MICROSERVICIOS](<Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base/Tema2/Tema2.md>)
-    * [labs](bloque-i-principios-de-microservicios-framework-fastapi-y-arquitectura-base/tema2/labs/README.md)
-      * [LABORATORIO 1](<Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base/Tema2/labs/lab1.md>)
+  * [Tema 2. FastAPI como framework para microservicios](<Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base/Tema2/Tema2.md>)
+  
   * [Tema3](bloque-i-principios-de-microservicios-framework-fastapi-y-arquitectura-base/tema3/README.md)
     * [Tema 3. INTRODUCCIÓN A LA COMUNICACIÓN ENTRE MICROSERVICIOS SÍNCRONA Y ASÍNCRONA](<Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base/Tema3/Tema3.md>)
   * [Tema4](bloque-i-principios-de-microservicios-framework-fastapi-y-arquitectura-base/tema4/README.md)
