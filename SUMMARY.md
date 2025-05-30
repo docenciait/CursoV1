@@ -13,7 +13,8 @@
   
   * [Tema 5. Seguridad y buenas prácticas en microservicios](<Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base/Tema5/Tema5.md>)
  
-    * [BLOQUE 1 – Hands-on Labs](<Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base/hands-on-labs-b1/labs.md>)
+  * [BLOQUE 1 – Hands-on Labs](<Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base/hands-on-labs-b1/labs.md>)
+
 * [Bloque II - Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio](bloque-ii-arquitectura-hexagonal-separacion-de-responsabilidades-y-diseno-orientado-al-dominio/README.md)
   * [Tema6](bloque-ii-arquitectura-hexagonal-separacion-de-responsabilidades-y-diseno-orientado-al-dominio/tema6/README.md)
     * [Tema6](<Bloque II - Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio/Tema6/Tema6.md>)
