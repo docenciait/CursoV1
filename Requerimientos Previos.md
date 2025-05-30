@@ -174,12 +174,9 @@ sudo apt install python3.12 python3.12-pip python3.12-venv virtualenv -y
 
 ### 4.2 Descargar el archivo de perfil que te proporciona el formador:
 
-Archivo: [fastapi-course.code-profile](https://raw.githubusercontent.com/docenciait/imagina-assets/refs/heads/main/fastapi_arquitecture.profile.code-profile)
+⬇️ Perfil VSCode: [fastapi-course.code-profile](https://raw.githubusercontent.com/docenciait/imagina-assets/refs/heads/main/fastapi_arquitecture.profile.code-profile)
 
-Haz clic para descargar el informe: <a href="https://raw.githubusercontent.com/docenciait/imagina-assets/refs/heads/main/fastapi_arquitecture.profile.code-profile" download="fastapi-arquitecture.profile">⬇️ Perfil VSCode</a>
-<a href="ruta/a_tu/fichero.md" download="nombre_que_quieras_darle.md">
-  Descargar mi archivo Markdown
-</a>
+
 ### 4.3 Importar el perfil
 
 1. Abre Visual Studio Code
@@ -264,7 +261,9 @@ fastapi-lab/
 
 ## ⚙️ Instrucciones de uso
 
-### 1. Clonar el repositorio
+### 1. Descargar y Extraer
+
+[Test Lab](https://github.com/docenciait/imagina-assets/blob/main/fastapi-lab.zip)
 
 ```bash
 git clone <REPO_URL>
