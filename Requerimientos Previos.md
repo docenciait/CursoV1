@@ -177,9 +177,9 @@ sudo apt install python3.12 python3.12-pip python3.12-venv virtualenv -y
 Archivo: [fastapi-course.code-profile](https://raw.githubusercontent.com/docenciait/imagina-assets/refs/heads/main/fastapi_arquitecture.profile.code-profile)
 
 Haz clic para descargar el informe: <a href="https://raw.githubusercontent.com/docenciait/imagina-assets/refs/heads/main/fastapi_arquitecture.profile.code-profile" download="fastapi-arquitecture.profile">⬇️ Perfil VSCode</a>
-
-<a href="https://raw.githubusercontent.com/docenciait/imagina-assets/refs/heads/main/fastapi_arquitecture.profile.code-profile" download="Software_v1.2.zip">⬇️ Descargar Software (ZIP)</a>
-
+<a href="ruta/a_tu/fichero.md" download="nombre_que_quieras_darle.md">
+  Descargar mi archivo Markdown
+</a>
 ### 4.3 Importar el perfil
 
 1. Abre Visual Studio Code
