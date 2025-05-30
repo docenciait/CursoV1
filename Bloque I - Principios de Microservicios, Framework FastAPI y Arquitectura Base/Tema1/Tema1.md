@@ -135,28 +135,28 @@ Aquí vemos algunos ejemplos de enfoques de diseño actuales:
 Este gráfico ilustra cómo un enfoque puede influir en la elección de una arquitectura, y cómo esa arquitectura utiliza patrones específicos para su implementación.
 
 ```mermaid
-graph TD
-    subgraph Nivel_Filosófico [Filosofía / Estrategia]
-        A(💡<br/><b>Enfoque de Diseño</b><br/><i>Define la mentalidad<br/>Ej: DDD</i>)
-    end
+    graph TD
+        subgraph Nivel_Filosófico [Filosofía / Estrategia]
+            A(💡<br/><b>Enfoque de Diseño</b><br/><i>Define la mentalidad<br/>Ej: DDD</i>)
+        end
 
-    subgraph Nivel_Estructural [Estructura / Sistema]
-        B(🏗️<br/><b>Arquitectura de Software</b><br/><i>Define la forma global<br/>Ej: Microservicios</i>)
-    end
+        subgraph Nivel_Estructural [Estructura / Sistema]
+            B(🏗️<br/><b>Arquitectura de Software</b><br/><i>Define la forma global<br/>Ej: Microservicios</i>)
+        end
 
-    subgraph Nivel_Táctico [Soluciones Específicas]
-        C(🧩<br/><b>Patrón de Arquitectura</b><br/><i>Resuelve problemas concretos<br/>Ej: CQRS, Gateway</i>)
-        D(⚙️<br/><b>Patrón de Diseño</b><br/><i>Resuelve problemas de código<br/>Ej: Factory, Singleton</i>)
-    end
+        subgraph Nivel_Táctico [Soluciones Específicas]
+            C(🧩<br/><b>Patrón de Arquitectura</b><br/><i>Resuelve problemas concretos<br/>Ej: CQRS, Gateway</i>)
+            D(⚙️<br/><b>Patrón de Diseño</b><br/><i>Resuelve problemas de código<br/>Ej: Factory, Singleton</i>)
+        end
 
-    A -- Guía / Inspira --> B
-    B -- Se implementa usando --> C
-    C -- Puede usar --> D
+        A -- Guía / Inspira --> B
+        B -- Se implementa usando --> C
+        C -- Puede usar --> D
 
-    style A fill:#f9f,stroke:#333,stroke-width:2px
-    style B fill:#ccf,stroke:#333,stroke-width:2px
-    style C fill:#cfc,stroke:#333,stroke-width:2px
-    style D fill:#ffc,stroke:#333,stroke-width:1px,stroke-dasharray: 5 5
+        style A fill:#f9f,stroke:#333,stroke-width:2px
+        style B fill:#ccf,stroke:#333,stroke-width:2px
+        style C fill:#cfc,stroke:#333,stroke-width:2px
+        style D fill:#ffc,stroke:#333,stroke-width:1px,stroke-dasharray: 5 5
 ```
 
 **Explicación del Gráfico:**
@@ -181,62 +181,62 @@ Piensen en una aplicación web tradicional de FastAPI (o Django, RoR, Spring, et
 **Visualicemos un Monolito:**
 
 ```mermaid
-graph LR
-    subgraph Users
-        Passenger[fa:fa-mobile-alt Passenger]
-        Driver[fa:fa-mobile-alt Driver]
-        WebUI[fa:fa-desktop Web UI]
-    end
+    graph LR
+        subgraph Users
+            Passenger[fa:fa-mobile-alt Passenger]
+            Driver[fa:fa-mobile-alt Driver]
+            WebUI[fa:fa-desktop Web UI]
+        end
 
-    subgraph Input_Adapters
-        RestAPI[REST API]
-    end
+        subgraph Input_Adapters
+            RestAPI[REST API]
+        end
 
-    %% -- Núcleo Monolítico como Hexágono --
-    Core{{<b>Monolithic Core</b><br/><br/>
-        fa:fa-users Passenger Management<br/>
-        fa:fa-file-invoice-dollar Billing<br/>
-        fa:fa-bullhorn Notification<br/>
-        fa:fa-credit-card Payments<br/>
-        fa:fa-map-marker-alt Trip Management<br/>
-        fa:fa-car Driver Management}}
+        %% -- Núcleo Monolítico como Hexágono --
+        Core{{<b>Monolithic Core</b><br/><br/>
+            fa:fa-users Passenger Management<br/>
+            fa:fa-file-invoice-dollar Billing<br/>
+            fa:fa-bullhorn Notification<br/>
+            fa:fa-credit-card Payments<br/>
+            fa:fa-map-marker-alt Trip Management<br/>
+            fa:fa-car Driver Management}}
 
-    subgraph Output_Adapters
-        MySQL_Adapter[MYSQL ADAPTER]
-        Twilio_Adapter[TWILIO ADAPTER]
-        SendGrid_Adapter[SENDGRID ADAPTER]
-        Stripe_Adapter[STRIPE ADAPTER]
-    end
+        subgraph Output_Adapters
+            MySQL_Adapter[MYSQL ADAPTER]
+            Twilio_Adapter[TWILIO ADAPTER]
+            SendGrid_Adapter[SENDGRID ADAPTER]
+            Stripe_Adapter[STRIPE ADAPTER]
+        end
 
-    subgraph External_Services
-        MySQL[fa:fa-database MYSQL]
-        Twilio[Twilio]
-        SendGrid[SendGrid]
-        Stripe[Stripe]
-    end
+        subgraph External_Services
+            MySQL[fa:fa-database MYSQL]
+            Twilio[Twilio]
+            SendGrid[SendGrid]
+            Stripe[Stripe]
+        end
 
-    %% -- Conexiones --
-    Passenger --o RestAPI
-    Driver --o RestAPI
-    WebUI --o Core
+        %% -- Conexiones --
+        Passenger --o RestAPI
+        Driver --o RestAPI
+        WebUI --o Core
 
-    RestAPI --o Core
+        RestAPI --o Core
 
-    Core --o MySQL_Adapter
-    Core --o Twilio_Adapter
-    Core --o SendGrid_Adapter
-    Core --o Stripe_Adapter
+        Core --o MySQL_Adapter
+        Core --o Twilio_Adapter
+        Core --o SendGrid_Adapter
+        Core --o Stripe_Adapter
 
-    MySQL_Adapter --o MySQL
-    Twilio_Adapter --o Twilio
-    SendGrid_Adapter --o SendGrid
-    Stripe_Adapter --o Stripe
+        MySQL_Adapter --o MySQL
+        Twilio_Adapter --o Twilio
+        SendGrid_Adapter --o SendGrid
+        Stripe_Adapter --o Stripe
 
-    %% -- Estilos --
-    style Core fill:#e6ffed,stroke:#009933,stroke-width:2px;
-    classDef adapter fill:#f9f,stroke:#333,stroke-width:2px;
-    %% Quitado WebUI de la clase adapter ya que no es un adaptador en el mismo sentido
-    class RestAPI,MySQL_Adapter,Twilio_Adapter,SendGrid_Adapter,Stripe_Adapter adapter;
+        %% -- Estilos --
+        style Core fill:#e6ffed,stroke:#009933,stroke-width:2px;
+        classDef adapter fill:#f9f,stroke:#333,stroke-width:2px;
+        %% Quitado WebUI de la clase adapter ya que no es un adaptador en el mismo sentido
+        class RestAPI,MySQL_Adapter,Twilio_Adapter,SendGrid_Adapter,Stripe_Adapter adapter;
 ```
 
 **Los Días Felices del Monolito (¡No todo es malo!)**
@@ -277,76 +277,76 @@ Cada microservicio:
 **Visualicemos los Microservicios:**
 
 ```mermaid
-graph LR
+    graph LR
 
-    subgraph UI
-        PassengerUI[Passenger Web UI]
-        DriverUI[Driver Web UI]
-        Mobile[📱 Usuario Móvil]
-        WebUser[🧑‍💻 Usuario Web]
-    end
+        subgraph UI
+            PassengerUI[Passenger Web UI]
+            DriverUI[Driver Web UI]
+            Mobile[📱 Usuario Móvil]
+            WebUser[🧑‍💻 Usuario Web]
+        end
 
-    subgraph Gateway
-        APIGW[API Gateway]
-    end
+        subgraph Gateway
+            APIGW[API Gateway]
+        end
 
-    subgraph Core
-        PassengerMS[Passenger Management]
-        DriverMS[Driver Management]
-        TripMS[Trip Management]
-    end
+        subgraph Core
+            PassengerMS[Passenger Management]
+            DriverMS[Driver Management]
+            TripMS[Trip Management]
+        end
 
-    subgraph PaymentsSection
-        BillingMS[Billing]
-        PaymentsMS[Payments]
-    end
+        subgraph PaymentsSection
+            BillingMS[Billing]
+            PaymentsMS[Payments]
+        end
 
-    subgraph Notifications
-        NotificationMS[Notification]
-    end
+        subgraph Notifications
+            NotificationMS[Notification]
+        end
 
-    subgraph Adapters
-        Stripe[Stripe Adapter]
-        Twilio[Twilio Adapter]
-        Sendgrid[Sendgrid Adapter]
-    end
+        subgraph Adapters
+            Stripe[Stripe Adapter]
+            Twilio[Twilio Adapter]
+            Sendgrid[Sendgrid Adapter]
+        end
 
-    %% UI flows
-    Mobile --> APIGW
-    WebUser --> APIGW
-    PassengerUI --> APIGW
-    DriverUI --> APIGW
+        %% UI flows
+        Mobile --> APIGW
+        WebUser --> APIGW
+        PassengerUI --> APIGW
+        DriverUI --> APIGW
 
-    %% API Gateway to Core Services
-    APIGW --> PassengerMS
-    APIGW --> DriverMS
-    APIGW --> TripMS
+        %% API Gateway to Core Services
+        APIGW --> PassengerMS
+        APIGW --> DriverMS
+        APIGW --> TripMS
 
-    %% Core service to supporting services
-    PassengerMS --> BillingMS
-    DriverMS --> PaymentsMS
-    TripMS --> NotificationMS
-    PassengerMS --> NotificationMS
-    DriverMS --> NotificationMS
+        %% Core service to supporting services
+        PassengerMS --> BillingMS
+        DriverMS --> PaymentsMS
+        TripMS --> NotificationMS
+        PassengerMS --> NotificationMS
+        DriverMS --> NotificationMS
 
-    %% Billing and Payments Adapters
-    BillingMS --> Stripe
-    PaymentsMS --> BillingMS
-    NotificationMS --> Twilio
-    NotificationMS --> Sendgrid
+        %% Billing and Payments Adapters
+        BillingMS --> Stripe
+        PaymentsMS --> BillingMS
+        NotificationMS --> Twilio
+        NotificationMS --> Sendgrid
 
-    %% Styles
-    classDef service fill:#A9DFBF,stroke:#27AE60,stroke-width:2px;
-    class PassengerMS,DriverMS,TripMS,BillingMS,PaymentsMS,NotificationMS service;
+        %% Styles
+        classDef service fill:#A9DFBF,stroke:#27AE60,stroke-width:2px;
+        class PassengerMS,DriverMS,TripMS,BillingMS,PaymentsMS,NotificationMS service;
 
-    classDef adapter fill:#D6DBDF,stroke:#566573,stroke-dasharray: 4 4;
-    class Stripe,Twilio,Sendgrid adapter;
+        classDef adapter fill:#D6DBDF,stroke:#566573,stroke-dasharray: 4 4;
+        class Stripe,Twilio,Sendgrid adapter;
 
-    classDef ui fill:#D5F5E3,stroke:#229954;
-    class PassengerUI,DriverUI,Mobile,WebUser ui;
+        classDef ui fill:#D5F5E3,stroke:#229954;
+        class PassengerUI,DriverUI,Mobile,WebUser ui;
 
-    classDef gateway fill:#FCF3CF,stroke:#F1C40F;
-    class APIGW gateway;
+        classDef gateway fill:#FCF3CF,stroke:#F1C40F;
+        class APIGW gateway;
 
 ```
 
@@ -405,16 +405,16 @@ No todo es color de rosa. La naturaleza distribuida de los microservicios introd
 **Visualicemos la Balanza (Conceptual):**
 
 ```mermaid
-graph TD
-    subgraph Decisión Arquitectónica
-        Monolito -- Simplicidad Inicial, Fácil Arranque --> Balanza((⚖️))
-        Microservicios -- Escalabilidad, Agilidad --> Balanza
+    graph TD
+        subgraph Decisión Arquitectónica
+            Monolito -- Simplicidad Inicial, Fácil Arranque --> Balanza((⚖️))
+            Microservicios -- Escalabilidad, Agilidad --> Balanza
 
-        Balanza -- Complejidad, Coste Operacional --> Penalizaciones[Penalizaciones Microservicios]
-        Balanza -- Rigidez, Riesgo Despliegue --> Penalizaciones_Mono[Penalizaciones Monolito]
-    end
+            Balanza -- Complejidad, Coste Operacional --> Penalizaciones[Penalizaciones Microservicios]
+            Balanza -- Rigidez, Riesgo Despliegue --> Penalizaciones_Mono[Penalizaciones Monolito]
+        end
 
-    style Balanza fill:#eee,stroke:#333,stroke-width:4px
+        style Balanza fill:#eee,stroke:#333,stroke-width:4px
 ```
 
 _(Este diagrama simple ilustra que la elección implica sopesar los beneficios frente a las penalizaciones de cada enfoque)._
@@ -590,32 +590,32 @@ La mejor manera de entenderlo es comparando sus características y filosofías:
 **Visualizando la Diferencia en Comunicación:**
 
 ```mermaid
-graph TD
+    graph TD
 
-    %% Direcciones para cada sección
-    %% Mermaid no soporta `direction` dentro de subgraph
+        %% Direcciones para cada sección
+        %% Mermaid no soporta `direction` dentro de subgraph
 
-    %% Sección SOA
-    subgraph Arquitectura_SOA_Con_ESB
-        AppA[Aplicación A] --> ESB{Enterprise Service Bus}
-        AppB[Aplicación B] --> ESB
-        ESB -- Enruta/Transforma --> Svc1[Servicio 1]
-        ESB -- Enruta/Transforma --> Svc2[Servicio 2]
-        ESB -- Enruta/Transforma --> Svc3[Servicio 3]
-    end
+        %% Sección SOA
+        subgraph Arquitectura_SOA_Con_ESB
+            AppA[Aplicación A] --> ESB{Enterprise Service Bus}
+            AppB[Aplicación B] --> ESB
+            ESB -- Enruta/Transforma --> Svc1[Servicio 1]
+            ESB -- Enruta/Transforma --> Svc2[Servicio 2]
+            ESB -- Enruta/Transforma --> Svc3[Servicio 3]
+        end
 
-    %% Sección Microservicios
-    subgraph Arquitectura_Microservicios_Pipes_Tontos
-        Client[Cliente / Gateway] --> MS1[Microservicio A]
-        Client --> MS2[Microservicio B]
-        MS1 -- Llamada API Directa --> MS3[Microservicio C]
-        MS2 -- Mensaje --> Queue([Cola Mensajes])
-        MS3 --> Queue
-    end
+        %% Sección Microservicios
+        subgraph Arquitectura_Microservicios_Pipes_Tontos
+            Client[Cliente / Gateway] --> MS1[Microservicio A]
+            Client --> MS2[Microservicio B]
+            MS1 -- Llamada API Directa --> MS3[Microservicio C]
+            MS2 -- Mensaje --> Queue([Cola Mensajes])
+            MS3 --> Queue
+        end
 
-    %% Estilos
-    style ESB fill:#FADBD8,stroke:#922B21,stroke-width:2px
-    style Queue fill:#D6EAF8
+        %% Estilos
+        style ESB fill:#FADBD8,stroke:#922B21,stroke-width:2px
+        style Queue fill:#D6EAF8
 
 ```
 
@@ -657,57 +657,57 @@ La conexión más fuerte y vital entre DDD y los microservicios es el concepto d
 **Visualizando la Magia: De Bounded Contexts a Microservicios**
 
 ```mermaid
-graph TD
+    graph TD
 
-    %% Bounded Contexts
-    subgraph Dominio_Empresarial_Ecommerce
-        BC_Sales[Contexto: Ventas]
-        BC_Shipping[Contexto: Envíos]
-        BC_Billing[Contexto: Facturación]
-        BC_Identity[Contexto: Identidad]
-        BC_Catalog[Contexto: Catálogo]
+        %% Bounded Contexts
+        subgraph Dominio_Empresarial_Ecommerce
+            BC_Sales[Contexto: Ventas]
+            BC_Shipping[Contexto: Envíos]
+            BC_Billing[Contexto: Facturación]
+            BC_Identity[Contexto: Identidad]
+            BC_Catalog[Contexto: Catálogo]
 
-        BC_Sales -- interactúa con --> BC_Shipping
-        BC_Sales -- interactúa con --> BC_Billing
-        BC_Sales -- interactúa con --> BC_Identity
-        BC_Sales -- interactúa con --> BC_Catalog
-        BC_Shipping -- interactúa con --> BC_Billing
-    end
+            BC_Sales -- interactúa con --> BC_Shipping
+            BC_Sales -- interactúa con --> BC_Billing
+            BC_Sales -- interactúa con --> BC_Identity
+            BC_Sales -- interactúa con --> BC_Catalog
+            BC_Shipping -- interactúa con --> BC_Billing
+        end
 
-    %% Microservicios
-    subgraph Arquitectura_Microservicios
-        MS_Order[Servicio: Pedidos]
-        MS_Shipping[Servicio: Envíos]
-        MS_Billing[Servicio: Facturación]
-        MS_User[Servicio: Usuarios]
-        MS_Product[Servicio: Productos]
-    end
+        %% Microservicios
+        subgraph Arquitectura_Microservicios
+            MS_Order[Servicio: Pedidos]
+            MS_Shipping[Servicio: Envíos]
+            MS_Billing[Servicio: Facturación]
+            MS_User[Servicio: Usuarios]
+            MS_Product[Servicio: Productos]
+        end
 
-    %% Mapeos entre Bounded Context y Microservicios
-    BC_Sales -- mapea a --> MS_Order
-    BC_Shipping -- mapea a --> MS_Shipping
-    BC_Billing -- mapea a --> MS_Billing
-    BC_Identity -- mapea a --> MS_User
-    BC_Catalog -- mapea a --> MS_Product
+        %% Mapeos entre Bounded Context y Microservicios
+        BC_Sales -- mapea a --> MS_Order
+        BC_Shipping -- mapea a --> MS_Shipping
+        BC_Billing -- mapea a --> MS_Billing
+        BC_Identity -- mapea a --> MS_User
+        BC_Catalog -- mapea a --> MS_Product
 
-    %% Comunicación entre microservicios
-    MS_Order -- API --> MS_Shipping
-    MS_Order -- API --> MS_Billing
-    MS_Order -- API --> MS_User
-    MS_Order -- API --> MS_Product
+        %% Comunicación entre microservicios
+        MS_Order -- API --> MS_Shipping
+        MS_Order -- API --> MS_Billing
+        MS_Order -- API --> MS_User
+        MS_Order -- API --> MS_Product
 
-    %% Estilos
-    style BC_Sales fill:#E8DAEF
-    style BC_Shipping fill:#D4E6F1
-    style BC_Billing fill:#D1F2EB
-    style BC_Identity fill:#FCF3CF
-    style BC_Catalog fill:#FDEBD0
+        %% Estilos
+        style BC_Sales fill:#E8DAEF
+        style BC_Shipping fill:#D4E6F1
+        style BC_Billing fill:#D1F2EB
+        style BC_Identity fill:#FCF3CF
+        style BC_Catalog fill:#FDEBD0
 
-    style MS_Order fill:#E8DAEF
-    style MS_Shipping fill:#D4E6F1
-    style MS_Billing fill:#D1F2EB
-    style MS_User fill:#FCF3CF
-    style MS_Product fill:#FDEBD0
+        style MS_Order fill:#E8DAEF
+        style MS_Shipping fill:#D4E6F1
+        style MS_Billing fill:#D1F2EB
+        style MS_User fill:#FCF3CF
+        style MS_Product fill:#FDEBD0
 
 ```
 
@@ -762,45 +762,45 @@ Aquí es donde se une con el Principio de Responsabilidad Única (SRP), pero a u
 **Visualicemos las Responsabilidades Claras:**
 
 ```mermaid
-graph TD
+    graph TD
 
-    %% Contexto Catálogo / Servicio Productos
-    subgraph Catálogo_Productos
-        direction LR
-        P1[Producto<br>ID, Nombre, Desc.<br>Precio, Imágenes]
-        C1[Categoría]
-        P1 --> C1
-    end
+        %% Contexto Catálogo / Servicio Productos
+        subgraph Catálogo_Productos
+            direction LR
+            P1[Producto<br>ID, Nombre, Desc.<br>Precio, Imágenes]
+            C1[Categoría]
+            P1 --> C1
+        end
 
-    %% Contexto Inventario / Servicio Stock
-    subgraph Inventario_Stock
-        direction LR
-        P2[Producto<br>SKU, NivelStock<br>Ubicación]
-        W1[Almacén]
-        P2 --> W1
-    end
+        %% Contexto Inventario / Servicio Stock
+        subgraph Inventario_Stock
+            direction LR
+            P2[Producto<br>SKU, NivelStock<br>Ubicación]
+            W1[Almacén]
+            P2 --> W1
+        end
 
-    %% Contexto Envíos / Servicio Logística
-    subgraph Envios_Logistica
-        direction LR
-        P3[Producto<br>SKU, Peso<br>Dimensiones]
-        S1[Envío]
-        S1 --> P3
-    end
+        %% Contexto Envíos / Servicio Logística
+        subgraph Envios_Logistica
+            direction LR
+            P3[Producto<br>SKU, Peso<br>Dimensiones]
+            S1[Envío]
+            S1 --> P3
+        end
 
-    %% Comunicación entre microservicios
-    MS_Product[Serv. Productos] -- "SKU para Stock" --> MS_Stock[Serv. Stock]
-    MS_Order[Serv. Pedidos] -- "SKU, Peso, Dims" --> MS_Logistics[Serv. Logística]
+        %% Comunicación entre microservicios
+        MS_Product[Serv. Productos] -- "SKU para Stock" --> MS_Stock[Serv. Stock]
+        MS_Order[Serv. Pedidos] -- "SKU, Peso, Dims" --> MS_Logistics[Serv. Logística]
 
-    %% Estilo de nodos (aplicado individualmente si se desea)
-    style P1 fill:#FDEBD0
-    style C1 fill:#FDEBD0
+        %% Estilo de nodos (aplicado individualmente si se desea)
+        style P1 fill:#FDEBD0
+        style C1 fill:#FDEBD0
 
-    style P2 fill:#D6EAF8
-    style W1 fill:#D6EAF8
+        style P2 fill:#D6EAF8
+        style W1 fill:#D6EAF8
 
-    style P3 fill:#D5F5E3
-    style S1 fill:#D5F5E3
+        style P3 fill:#D5F5E3
+        style S1 fill:#D5F5E3
 
 ```
 
@@ -844,21 +844,21 @@ En muchas organizaciones tradicionales, los equipos se estructuran por _capas te
 **Visualicemos esto:**
 
 ```mermaid
-graph TD
-    subgraph Equipos_por_Capas_Horizontales
-        Req[Requisito: Añadir campo X] --> FE_Team[Equipo Frontend]
-        FE_Team -- Necesito API --> BE_Team[Equipo Backend]
-        BE_Team -- Necesito columna --> DB_Team[Equipo Base de Datos]
-        FE_Team -- UI Lista --> QA_Team[Equipo QA]
-        BE_Team -- API Lista --> QA_Team
-        QA_Team -- OK --> Ops_Team[Equipo Operaciones]
-    end
+    graph TD
+        subgraph Equipos_por_Capas_Horizontales
+            Req[Requisito: Añadir campo X] --> FE_Team[Equipo Frontend]
+            FE_Team -- Necesito API --> BE_Team[Equipo Backend]
+            BE_Team -- Necesito columna --> DB_Team[Equipo Base de Datos]
+            FE_Team -- UI Lista --> QA_Team[Equipo QA]
+            BE_Team -- API Lista --> QA_Team
+            QA_Team -- OK --> Ops_Team[Equipo Operaciones]
+        end
 
-    style FE_Team fill:#AED6F1
-    style BE_Team fill:#A9DFBF
-    style DB_Team fill:#F9E79F
-    style QA_Team fill:#F5CBA7
-    style Ops_Team fill:#D7DBDD
+        style FE_Team fill:#AED6F1
+        style BE_Team fill:#A9DFBF
+        style DB_Team fill:#F9E79F
+        style QA_Team fill:#F5CBA7
+        style Ops_Team fill:#D7DBDD
 
 
 ```
@@ -883,21 +883,21 @@ La arquitectura de microservicios promueve (y se beneficia enormemente) de una e
 **Visualicemos esto:**
 
 ```mermaid
-graph TD
-    subgraph Equipos_Verticales
-        Req_Orders[Req: Mejorar Pedidos] --> Team_Orders["Equipo Pedidos\n(FE, BE, DB, QA, Ops)"]
-        Req_Payments[Req: Nuevo Pago] --> Team_Payments["Equipo Pagos\n(FE, BE, DB, QA, Ops)"]
+    graph TD
+        subgraph Equipos_Verticales
+            Req_Orders[Req: Mejorar Pedidos] --> Team_Orders["Equipo Pedidos\n(FE, BE, DB, QA, Ops)"]
+            Req_Payments[Req: Nuevo Pago] --> Team_Payments["Equipo Pagos\n(FE, BE, DB, QA, Ops)"]
 
-        Team_Orders -- Despliega --> Svc_Orders[Servicio Pedidos]
-        Team_Payments -- Despliega --> Svc_Payments[Servicio Pagos]
+            Team_Orders -- Despliega --> Svc_Orders[Servicio Pedidos]
+            Team_Payments -- Despliega --> Svc_Payments[Servicio Pagos]
 
-        Team_Orders -- Colabora API --> Team_Payments
-    end
+            Team_Orders -- Colabora API --> Team_Payments
+        end
 
-    style Team_Orders fill:#A9DFBF
-    style Team_Payments fill:#F9E79F
-    style Svc_Orders fill:#A9DFBF
-    style Svc_Payments fill:#F9E79F
+        style Team_Orders fill:#A9DFBF
+        style Team_Payments fill:#F9E79F
+        style Svc_Orders fill:#A9DFBF
+        style Svc_Payments fill:#F9E79F
 
 
 ```
@@ -943,33 +943,33 @@ Analicemos cada fase del SDLC, destacando cómo los microservicios cambian las r
 Este diagrama ilustra el flujo, pero también la **naturaleza cíclica e interconectada** y la **complejidad añadida** en las fases de prueba y operación.
 
 ```mermaid
-graph TD
-    subgraph SDLC_Microservices_Impact
-        Plan["Planificación y Diseño Estratégico\n(DDD, Límites, Contratos API)"] --> Dev["Desarrollo\n(Servicios Autónomos, Entornos Locales)"]
-        Dev --> Build["Construcción\n(Imágenes Docker, Registros)"]
-        Build --> Test["Pruebas\n(Unitarias ✅, Integración ❗, E2E 🔥)"]
-        Test --> Release["Release & Versionado\n(Gestión de Múltiples Artefactos)"]
-        Release --> Deploy["Despliegue\n(CI/CD, K8s, Canary/Blue-Green)"]
-        Deploy --> Operate["Operación y Monitorización\n(Observabilidad, Resiliencia, Escalado)"]
-        Operate -->|Feedback / Bugs| Plan
-        Operate -->|Alertas / Métricas| Dev
-        Dev -->|Pruebas Continuas| Test
-        Build -->|Pruebas Unitarias| Test
-    end
+    graph TD
+        subgraph SDLC_Microservices_Impact
+            Plan["Planificación y Diseño Estratégico\n(DDD, Límites, Contratos API)"] --> Dev["Desarrollo\n(Servicios Autónomos, Entornos Locales)"]
+            Dev --> Build["Construcción\n(Imágenes Docker, Registros)"]
+            Build --> Test["Pruebas\n(Unitarias ✅, Integración ❗, E2E 🔥)"]
+            Test --> Release["Release & Versionado\n(Gestión de Múltiples Artefactos)"]
+            Release --> Deploy["Despliegue\n(CI/CD, K8s, Canary/Blue-Green)"]
+            Deploy --> Operate["Operación y Monitorización\n(Observabilidad, Resiliencia, Escalado)"]
+            Operate -->|Feedback / Bugs| Plan
+            Operate -->|Alertas / Métricas| Dev
+            Dev -->|Pruebas Continuas| Test
+            Build -->|Pruebas Unitarias| Test
+        end
 
-    style Plan fill:#D4E6F1
-    style Dev fill:#D5F5E3
-    style Build fill:#FCF3CF
-    style Test fill:#FADBD8,stroke:#C0392B,stroke-width:2px
-    style Release fill:#FDEBD0
-    style Deploy fill:#E8DAEF
-    style Operate fill:#FADBD8,stroke:#C0392B,stroke-width:2px
+        style Plan fill:#D4E6F1
+        style Dev fill:#D5F5E3
+        style Build fill:#FCF3CF
+        style Test fill:#FADBD8,stroke:#C0392B,stroke-width:2px
+        style Release fill:#FDEBD0
+        style Deploy fill:#E8DAEF
+        style Operate fill:#FADBD8,stroke:#C0392B,stroke-width:2px
 
-    %% linkStyle aplica solo hasta el índice 9
-    linkStyle 6 stroke-width:1px,fill:none,stroke:gray,stroke-dasharray: 3 5
-    linkStyle 7 stroke-width:1px,fill:none,stroke:gray,stroke-dasharray: 3 5
-    linkStyle 8 stroke-width:1px,fill:none,stroke:gray,stroke-dasharray: 3 5
-    linkStyle 9 stroke-width:1px,fill:none,stroke:gray,stroke-dasharray: 3 5
+        %% linkStyle aplica solo hasta el índice 9
+        linkStyle 6 stroke-width:1px,fill:none,stroke:gray,stroke-dasharray: 3 5
+        linkStyle 7 stroke-width:1px,fill:none,stroke:gray,stroke-dasharray: 3 5
+        linkStyle 8 stroke-width:1px,fill:none,stroke:gray,stroke-dasharray: 3 5
+        linkStyle 9 stroke-width:1px,fill:none,stroke:gray,stroke-dasharray: 3 5
 
 
 ```
@@ -1001,73 +1001,73 @@ Para navegar la complejidad descrita en el punto 1.9, necesitamos un arsenal de 
 Podemos visualizar estas herramientas como capas que se construyen unas sobre otras:
 
 ```mermaid
-graph TD
+    graph TD
 
-    DevEx["Experiencia del Desarrollador\n(Portales, Backstage)"] --> Py
-    DevEx --> Go
-    DevEx --> Java
-    DevEx --> Node
-    DevEx --> OtelSDK
-    DevEx --> DDDLibs
+        DevEx["Experiencia del Desarrollador\n(Portales, Backstage)"] --> Py
+        DevEx --> Go
+        DevEx --> Java
+        DevEx --> Node
+        DevEx --> OtelSDK
+        DevEx --> DDDLibs
 
-    %% Capa de Aplicación
-    Py["Python / FastAPI"] --> CICD
-    Go["Go / Gin"] --> CICD
-    Java["Java / Spring"] --> CICD
-    Node["Node.js / Express"] --> CICD
-    OtelSDK["SDK OpenTelemetry"] --> Observability
-    DDDLibs["Librerías DDD / Hexagonal"] --> CICD
+        %% Capa de Aplicación
+        Py["Python / FastAPI"] --> CICD
+        Go["Go / Gin"] --> CICD
+        Java["Java / Spring"] --> CICD
+        Node["Node.js / Express"] --> CICD
+        OtelSDK["SDK OpenTelemetry"] --> Observability
+        DDDLibs["Librerías DDD / Hexagonal"] --> CICD
 
-    %% CI/CD
-    CICD["CI/CD y GitOps"]
-    CICD --> Source["Git\n(GitHub / GitLab)"]
-    CICD --> Build["CI Tools\n(Actions, Jenkins, GitLab CI)"]
-    CICD --> Registry["Registros\n(Docker Hub, ECR)"]
-    CICD --> Deploy["CD Tools\n(ArgoCD, Flux)"]
+        %% CI/CD
+        CICD["CI/CD y GitOps"]
+        CICD --> Source["Git\n(GitHub / GitLab)"]
+        CICD --> Build["CI Tools\n(Actions, Jenkins, GitLab CI)"]
+        CICD --> Registry["Registros\n(Docker Hub, ECR)"]
+        CICD --> Deploy["CD Tools\n(ArgoCD, Flux)"]
 
-    %% Observabilidad
-    Observability["Observabilidad"]
-    Observability --> Logs["Logging\n(Fluentd → Loki / ELK)"]
-    Observability --> Metrics["Métricas\n(Prometheus → Grafana)"]
-    Observability --> Tracing["Tracing\n(Jaeger / Zipkin ← OTel)"]
+        %% Observabilidad
+        Observability["Observabilidad"]
+        Observability --> Logs["Logging\n(Fluentd → Loki / ELK)"]
+        Observability --> Metrics["Métricas\n(Prometheus → Grafana)"]
+        Observability --> Tracing["Tracing\n(Jaeger / Zipkin ← OTel)"]
 
-    %% Comunicación
-    Comms["Comunicación y Red"]
-    Comms --> Gateway["API Gateway\n(Kong, Traefik)"]
-    Comms --> Mesh["Service Mesh\n(Istio, Linkerd)"]
-    Comms --> Messaging["Mensajería\n(Kafka, RabbitMQ)"]
+        %% Comunicación
+        Comms["Comunicación y Red"]
+        Comms --> Gateway["API Gateway\n(Kong, Traefik)"]
+        Comms --> Mesh["Service Mesh\n(Istio, Linkerd)"]
+        Comms --> Messaging["Mensajería\n(Kafka, RabbitMQ)"]
 
-    %% Conexiones hacia Orquestación
-    CICD --> Orchestration
-    Observability --> Orchestration
-    Comms --> Orchestration
+        %% Conexiones hacia Orquestación
+        CICD --> Orchestration
+        Observability --> Orchestration
+        Comms --> Orchestration
 
-    %% Orquestación
-    Orchestration["Orquestación y Runtimes"]
-    Orchestration --> K8s["Kubernetes\n(EKS, GKE, AKS)"]
-    Orchestration --> Docker["Container Runtime\n(Docker, containerd)"]
-    Orchestration --> Storage["Almacenamiento\n(Ceph, Portworx)"]
-    Orchestration --> Network["Redes CNI\n(Calico, Cilium)"]
+        %% Orquestación
+        Orchestration["Orquestación y Runtimes"]
+        Orchestration --> K8s["Kubernetes\n(EKS, GKE, AKS)"]
+        Orchestration --> Docker["Container Runtime\n(Docker, containerd)"]
+        Orchestration --> Storage["Almacenamiento\n(Ceph, Portworx)"]
+        Orchestration --> Network["Redes CNI\n(Calico, Cilium)"]
 
-    %% Infraestructura
-    Orchestration --> Infra
-    Infra["Infraestructura Física / Cloud"]
-    Infra --> AWS
-    Infra --> GCP
-    Infra --> Azure
-    Infra --> OnPrem
+        %% Infraestructura
+        Orchestration --> Infra
+        Infra["Infraestructura Física / Cloud"]
+        Infra --> AWS
+        Infra --> GCP
+        Infra --> Azure
+        Infra --> OnPrem
 
-    AWS[AWS]
-    GCP[Google Cloud]
-    Azure[Azure]
-    OnPrem[On-Premise]
+        AWS[AWS]
+        GCP[Google Cloud]
+        Azure[Azure]
+        OnPrem[On-Premise]
 
-    %% Estilos por capa
-    style CICD fill:#FCF3CF
-    style Observability fill:#FADBD8
-    style Comms fill:#E8DAEF
-    style Orchestration fill:#D4E6F1
-    style Infra fill:#E5E7E9
+        %% Estilos por capa
+        style CICD fill:#FCF3CF
+        style Observability fill:#FADBD8
+        style Comms fill:#E8DAEF
+        style Orchestration fill:#D4E6F1
+        style Infra fill:#E5E7E9
 
 ```
 
@@ -1110,32 +1110,32 @@ Cuando pasamos de un monolito a múltiples microservicios, surgen nuevos desafí
 * **Desafíos:** Puede convertirse en un cuello de botella o un monolito si no se diseña y escala adecuadamente. Añade latencia.
 
 ```mermaid
-graph TD
-    subgraph Clientes
-        C1[Cliente Web]
-        C2[App Móvil]
-        C3[Sistema Externo]
-    end
+    graph TD
+        subgraph Clientes
+            C1[Cliente Web]
+            C2[App Móvil]
+            C3[Sistema Externo]
+        end
 
-    subgraph Infraestructura
-        GW(API Gateway)
-    end
+        subgraph Infraestructura
+            GW(API Gateway)
+        end
 
-    subgraph Microservicios
-        MS1[Servicio Usuarios]
-        MS2[Servicio Productos]
-        MS3[Servicio Pedidos]
-    end
+        subgraph Microservicios
+            MS1[Servicio Usuarios]
+            MS2[Servicio Productos]
+            MS3[Servicio Pedidos]
+        end
 
-    C1 --> GW;
-    C2 --> GW;
-    C3 --> GW;
+        C1 --> GW;
+        C2 --> GW;
+        C3 --> GW;
 
-    GW -- /users/* --> MS1;
-    GW -- /products/* --> MS2;
-    GW -- /orders/* --> MS3;
-    GW -- /composite/order-details --> MS2;
-    GW -- /composite/order-details --> MS3;
+        GW -- /users/* --> MS1;
+        GW -- /products/* --> MS2;
+        GW -- /orders/* --> MS3;
+        GW -- /composite/order-details --> MS2;
+        GW -- /composite/order-details --> MS3;
 
 ```
 
@@ -1154,26 +1154,26 @@ graph TD
   * **Descubrimiento del Lado del Servidor (Server-Side Discovery):** El cliente hace una llamada a una dirección "virtual" o a un router/proxy (que a menudo es parte de la infraestructura o el propio API Gateway). Este router consulta el Service Registry y reenvía la petición a una instancia activa del servicio. Kubernetes funciona principalmente de esta manera a través de sus 'Services'.
 
 ```mermaid
-graph TD
-    SR[Service Registry]
+    graph TD
+        SR[Service Registry]
 
-    subgraph Microservicios
-        MS_A1[Instancia A1]
-        MS_A2[Instancia A2]
-        MS_B1[Instancia B1]
-    end
+        subgraph Microservicios
+            MS_A1[Instancia A1]
+            MS_A2[Instancia A2]
+            MS_B1[Instancia B1]
+        end
 
-    subgraph Cliente_Gateway
-        C[Cliente / Gateway]
-    end
+        subgraph Cliente_Gateway
+            C[Cliente / Gateway]
+        end
 
-    MS_A1 --> SR
-    MS_A2 --> SR
-    MS_B1 --> SR
+        MS_A1 --> SR
+        MS_A2 --> SR
+        MS_B1 --> SR
 
-    C --> SR
-    SR --> C
-    C --> MS_A1
+        C --> SR
+        SR --> C
+        C --> MS_A1
 
 
 
