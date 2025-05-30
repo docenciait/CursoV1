@@ -30,7 +30,7 @@ Desarrolladores backend con experiencia en Python que quieran especializarseen m
 
 # Tabla de Contenidos
 
-- [1. Introducción a la Arquitectura de Microservicios](./T1/Tema1.md)
+- [1. Introducción a la Arquitectura de Microservicios](Bloque%20I%20-%20Principios%20de%20Microservicios,%20Framework%20FastAPI%20y%20Arquitectura%20Base/Tema1/Tema1.md)
 - [2. FastAPI como Framework para Microservicios](./T2/Tema2.md)
 - [3. Introducción a la Comunicación entre Microservicios Síncrona y Asíncrona](./T3/Tema3.md)
 - [4. Manejo de Errores y Circuit Breakers en Microservicios](./T4/Tema4.md)
