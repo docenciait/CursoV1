@@ -170,7 +170,7 @@ sudo apt install python3.12 python3.12-pip python3.12-venv virtualenv -y
 
 ### 4.1 Instalación
 
-[Instalar en Varias plataformas VSCode](https://code.visualstudio.com/docs/setup/setup-overview)
+- Instalar en Varias plataformas VSCode: [⬇️  Aquí ](https://code.visualstudio.com/docs/setup/setup-overview)
 
 ### 4.2 Descargar el archivo de perfil que te proporciona el formador:
 
@@ -183,6 +183,7 @@ sudo apt install python3.12 python3.12-pip python3.12-venv virtualenv -y
 2. `Ctrl + Shift + P` > `Profiles: Import Profile`
 3. Selecciona "Desde archivo"
 4. Carga el archivo `.code-profile`
+5. ¡¡¡Tarda un poco!!!
 
 
 ## 5 Instalación de make
@@ -191,7 +192,7 @@ sudo apt install python3.12 python3.12-pip python3.12-venv virtualenv -y
 
 ### Windows 10/11
 
-1. Instalar choco como administrador
+1. Instalar choco como administrador en Windows [⬇️ Enlace](https://chocolatey.org/install)
 2. Instalar make en un Terminal Administrador:
 ```bash
 choco install make
@@ -217,6 +218,8 @@ sudo make --version
 
 * Proveer un entorno completo de microservicio backend usando FastAPI y herramientas auxiliares para que el alumno experimente con un entorno similar a los usuados en los laboratorios.
 
+* El alumno luego obtendrá los repositorios de los laboratorios con el tiempo adecuado para su previa instalación.
+
 
 
 ---
@@ -235,12 +238,28 @@ sudo make --version
 | API Gateway      | NGINX                |
 | Vault (Secretos) | HashiCorp Vault      |
 
+
+
+---
+
+## ⚙️ Instrucciones de uso
+
+!!! Info Se recomienda no tener contenedores, imágenes, redes, volúmenes de docker previos para no eliminar accidentalmente otros items al realizar reseteos de la infraestructura
+
+
+### 1. Descargar y Extraer
+
+⬇️ Descargar zip: [Test Lab](https://github.com/docenciait/imagina-assets/blob/main/test-lab.zip)
+
+1. Descomprimir zip 
+2. `cd test-lab`
+
 ---
 
 ## 📁 Estructura del proyecto
 
 ```
-fastapi-lab/
+test-lab/
 ├── app/
 │   ├── main.py
 ├── tests/
@@ -257,20 +276,9 @@ fastapi-lab/
 └── requirements.txt
 ```
 
----
-
-## ⚙️ Instrucciones de uso
-
-### 1. Descargar y Extraer
-
-[Test Lab](https://github.com/docenciait/imagina-assets/blob/main/fastapi-lab.zip)
-
-```bash
-git clone <REPO_URL>
-cd fastapi-lab
-```
-
 ### 2. Comandos del Makefile
+
+> Usar con sudo si estás en Ubuntu/WSL
 
 | Comando           | Descripción                                                    |
 | ----------------- | -------------------------------------------------------------- |
@@ -290,25 +298,9 @@ cd fastapi-lab
 ### 3. Levantar el entorno completo
 
 ```bash
-make build  # Recordad que en Ubuntu va con sudo
+make build  
 make up
 ```
-
-### 4. Acceder a los servicios
-
-| Servicio        | URL / Puerto                                                   |
-| --------------- | -------------------------------------------------------------- |
-| FastAPI         | [http://localhost:8000/docs](http://localhost:8000/docs)       |
-| NGINX (Gateway) | [http://localhost:8080/health](http://localhost:8080/health)   |
-| MariaDB         | `localhost:3306` (usuario: root, pass: password)               |
-| Redis           | `localhost:6379`                                               |
-| RabbitMQ        | [http://localhost:15672](http://localhost:15672) (guest/guest) |
-| Prometheus      | [http://localhost:9090](http://localhost:9090)                 |
-| Grafana         | [http://localhost:3000](http://localhost:3000) (admin/admin)   |
-| Vault           | [http://localhost:8200](http://localhost:8200) (Token: root)   |
-
----
-
 
 
 
@@ -340,9 +332,11 @@ make up
 
    Accede vía navegador a: `http://localhost:15672` (guest/guest).
 
+
 5. **Prometheus**
 
-   Abre: `http://localhost:9090` → `Targets` para verificar endpoints scrapeados.
+   Abre: `http://localhost:9090` 
+
 
 6. **Grafana**
 
@@ -380,4 +374,10 @@ Esto elimina **todo** lo relacionado con los contenedores, imágenes, redes y vo
 
 ## 🏠 Listo
 
-Con este entorno puedes realizar todos los laboratorios del curso sin conflictos entre dependencias, sin instalaciones manuales, y con control total sobre cada componente.
+Aunque este entorno será un test, podrás conocer cómo son los laboratorios del curso sin conflictos entre dependencias, sin instalaciones manuales, y con control total sobre cada componente.
+
+Así también te podrás familiarizar con los entornos de los laboratorios y poder ser resiliente ante cualquier fallo en la medida de lo posible.
+
+!!! Note No obstante, cada sesión se proveerán los laboratorios correspondientes con suficiente tiempo de antelación.
+
+**¡¡¡ Espero que todo hay ido bien y tengas tu entorno configurado y podamos aprender mucho de Arquitecturas con FastAPI!!!**
