@@ -1,6 +1,5 @@
 # Tema 5. SEGURIDAD Y BUENAS PRÁCTICAS EN MICROSERVICIOS
 
-* [Tema 5. SEGURIDAD Y BUENAS PRÁCTICAS EN MICROSERVICIOS](Tema5.md#tema-5-seguridad-y-buenas-prácticas-en-microservicios)
   * [5.1 Autenticación basada en JWT con FastAPI](Tema5.md#51-autenticación-basada-en-jwt-con-fastapi)
   * [5.2 Autorización por roles y scopes (RBAC)](Tema5.md#52-autorización-por-roles-y-scopes-rbac)
   * [5.3 Comunicación segura con HTTPS y certificados](Tema5.md#53-comunicación-segura-con-https-y-certificados)

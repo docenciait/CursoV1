@@ -9,11 +9,10 @@
   
   * [Tema 3. Introducción a la comunicación entre microservicios síncrona y asíncrona](<Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base/Tema3/Tema3.md>)
    
-  * [Tema4](bloque-i-principios-de-microservicios-framework-fastapi-y-arquitectura-base/tema4/README.md)
-    * [Tema 4. MANEJO DE ERRORES Y CIRCUIT BREAKERS EN MICROSERVICIOS](<Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base/Tema4/Tema4.md>)
-  * [Tema5](bloque-i-principios-de-microservicios-framework-fastapi-y-arquitectura-base/tema5/README.md)
-    * [Tema 5. SEGURIDAD Y BUENAS PRÁCTICAS EN MICROSERVICIOS](<Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base/Tema5/Tema5.md>)
-  * [hands-on-labs-b1](bloque-i-principios-de-microservicios-framework-fastapi-y-arquitectura-base/hands-on-labs-b1/README.md)
+  * [Tema 4. Manejo de errores y circuit breakers en microservicios](<Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base/Tema4/Tema4.md>)
+  
+  * [Tema 5. Seguridad y buenas prácticas en microservicios](<Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base/Tema5/Tema5.md>)
+ 
     * [BLOQUE 1 – Hands-on Labs](<Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base/hands-on-labs-b1/labs.md>)
 * [Bloque II - Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio](bloque-ii-arquitectura-hexagonal-separacion-de-responsabilidades-y-diseno-orientado-al-dominio/README.md)
   * [Tema6](bloque-ii-arquitectura-hexagonal-separacion-de-responsabilidades-y-diseno-orientado-al-dominio/tema6/README.md)

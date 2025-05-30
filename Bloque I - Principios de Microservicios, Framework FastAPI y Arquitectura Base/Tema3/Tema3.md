@@ -1,7 +1,6 @@
 # Tema 3. INTRODUCCIÓN A LA COMUNICACIÓN ENTRE MICROSERVICIOS SÍNCRONA Y ASÍNCRONA 
 
 
-- [Tema 3. INTRODUCCIÓN A LA COMUNICACIÓN ENTRE MICROSERVICIOS SÍNCRONA Y ASÍNCRONA](#tema-3-introducción-a-la-comunicación-entre-microservicios-síncrona-y-asíncrona)
   - [3. Contenidos](#3-contenidos)
   - [3.1. Distinción entre comunicación síncrona y asíncrona](#31-distinción-entre-comunicación-síncrona-y-asíncrona)
   - [3.2. Análisis del uso de REST, gRPC o mensajería por eventos](#32-análisis-del-uso-de-rest-grpc-o-mensajería-por-eventos)
