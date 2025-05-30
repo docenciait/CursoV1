@@ -306,6 +306,8 @@ make up
 
 ## 🔎 Cómo probar cada servicio manualmente
 
+* Se requiere instalar [Postman](https://www.postman.com/downloads/)
+
 1. **FastAPI**
 
    * URL de prueba: `http://localhost:8000/health`
