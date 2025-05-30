@@ -1,6 +1,6 @@
 # Tema 13. PERSISTENCIA DE DATOS EN MICROSERVICIOS
 
-* [Tema 13. PERSISTENCIA DE DATOS EN MICROSERVICIOS](Tema13.md#tema-13-persistencia-de-datos-en-microservicios)
+
   * [13.1 Integración de SQLAlchemy ORM](Tema13.md#131-integración-de-sqlalchemy-orm)
   * [13.2 Modelos desacoplados del dominio (DTO vs Entity)](Tema13.md#132-modelos-desacoplados-del-dominio-dto-vs-entity)
   * [13.3 Patrones de Repositorio con SQLAlchemy: Guardianes Elegantes de Tu Persistencia](Tema13.md#133-patrones-de-repositorio-con-sqlalchemy-guardianes-elegantes-de-tu-persistencia)

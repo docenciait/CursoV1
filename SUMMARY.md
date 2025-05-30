@@ -25,11 +25,11 @@
 
 * [Bloque III - Comunicación Asíncrona, Eventos, Pub, Sub y Mensajería Distribuida](<Bloque III - Comunicación Asíncrona, Eventos, Pub, Sub y Mensajería Distribuida/Readme.md>)
     
-    * [Tema 9. Introducción a la mensajería con Kafka, RabbitMQ](bloque-iii-comunicacion-asincrona-eventos-pub/sub-y-mensajeria-distribuida/tema9/README.md)
+    * [Tema 9. Introducción a la mensajería con Kafka, RabbitMQ](<Bloque III - Comunicación Asíncrona, Eventos, Pub, Sub y Mensajería Distribuida/Tema9/Tema9.md>)
     
-    * [Tema 10. Introducción a los websockets y pub/sub en sistemas distribuidos](bloque-iii-comunicacion-asincrona-eventos-pub/sub-y-mensajeria-distribuida/tema10/README.md)
+    * [Tema 10. Introducción a los websockets y pub/sub en sistemas distribuidos](<Bloque III - Comunicación Asíncrona, Eventos, Pub, Sub y Mensajería Distribuida/Tema10/Tema10.md>)
     
-    * [Tema 11. Diseño de APIs REST y Websdockets en FastAPI](bloque-iii-comunicacion-asincrona-eventos-pub/sub-y-mensajeria-distribuida/tema11/README.md)
+    * [Tema 11. Diseño de APIs REST y Websdockets en FastAPI](<Bloque III - Comunicación Asíncrona, Eventos, Pub, Sub y Mensajería Distribuida/Tema11/Tema11.md>)
 
     * [Bloque III – Hands-on Labs](<Bloque III - Comunicación Asíncrona, Eventos, Pub, Sub y Mensajería Distribuida/hands-on-labs-b3/labs.md>)
     

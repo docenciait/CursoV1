@@ -1,6 +1,5 @@
 # Tema 11. DISEÑO DE APIS REST Y WEBSOCKETS EN FASTAPI
 
-* [Tema 11. DISEÑO DE APIS REST Y WEBSOCKETS EN FASTAPI](Tema11.md#tema-11-diseño-de-apis-rest-y-websockets-en-fastapi)
   * [11.1 Buenas prácticas para endpoints RESTful](Tema11.md#111-buenas-prácticas-para-endpoints-restful)
   * [11.2 Versionado y organización de APIs](Tema11.md#112-versionado-y-organización-de-apis)
   * [11.3 Validación con Pydantic y modelos anidados](Tema11.md#113-validación-con-pydantic-y-modelos-anidados)

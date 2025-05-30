@@ -1,6 +1,6 @@
 # Tema 12. ESCALABILIDAD Y OPTIMIZACIÓN DE MICROSERVICIOS
 
-* [Tema 12. ESCALABILIDAD Y OPTIMIZACIÓN DE MICROSERVICIOS](Tema12.md#tema-12-escalabilidad-y-optimización-de-microservicios)
+
   * [12.1 Escalado horizontal vs vertical](Tema12.md#121-escalado-horizontal-vs-vertical)
   * [12.1 Escalado Horizontal vs. Vertical: El Dilema del Crecimiento – ¿Más Músculo o Más Manos?](Tema12.md#121-escalado-horizontal-vs-vertical-el-dilema-del-crecimiento--más-músculo-o-más-manos)
   * [12.2 Caching con Redis para endpoints críticos](Tema12.md#122-caching-con-redis-para-endpoints-críticos)

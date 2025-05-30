@@ -1,7 +1,7 @@
 # Tema 6. ARQUITECTURA HEXAGONAL Y APLICACIÓN DE DDD
 
   
-  - [Contenidos](#tabla-de-contenidos)
+
   - [6.1 Comprender el patrón de puertos y adaptadores](#61-comprender-el-patrón-de-puertos-y-adaptadores)
   - [6.2 Identificar las capas: dominio, aplicación, infraestructura, interfaces](#62-identificar-las-capas-dominio-aplicación-infraestructura-interfaces)
   - [6.3 Diseñar interfaces para cada puerto (entrada y salida)](#63-diseñar-interfaces-para-cada-puerto-entrada-y-salida)

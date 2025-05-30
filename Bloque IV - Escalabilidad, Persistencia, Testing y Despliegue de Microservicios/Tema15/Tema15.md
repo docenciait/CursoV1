@@ -1,7 +1,6 @@
 # Tema 15. BUENAS PRÁCTICAS Y AUTOMATIZACIÓN DE DESPLIEGUES
 
-* [Tema 15. BUENAS PRÁCTICAS Y AUTOMATIZACIÓN DE DESPLIEGUES](Tema15.md#tema-15-buenas-prácticas-y-automatización-de-despliegues)
-  * [15. Contenidos](Tema15.md#15-contenidos)
+
     * [15.1 Dockerfiles eficientes para microservicios](Tema15.md#151-dockerfiles-eficientes-para-microservicios)
     * [15.2 Imágenes versionadas semánticamente](Tema15.md#152-imágenes-versionadas-semánticamente)
     * [15.3 `docker-compose` para entorno local](Tema15.md#153-docker-compose-para-entorno-local)
@@ -14,7 +13,6 @@
     * [15.10 Rollout y rollback automático](Tema15.md#1510-rollout-y-rollback-automático)
   * [Bibliografía](Tema15.md#bibliografía)
 
-## 15. Contenidos
 
 ### 15.1 Dockerfiles eficientes para microservicios
 

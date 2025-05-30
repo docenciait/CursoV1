@@ -1,7 +1,5 @@
 # Tema 7. INTRODUCCIÓN A DOMAIN-DRIVEN DESIGN (DDD)
 
-* [Tema 7. INTRODUCCIÓN A DOMAIN-DRIVEN DESIGN (DDD)](Tema7.md#tema-7-introducción-a-domain-driven-design-ddd)
-  * [Contenidos](Tema7.md#7-contenidos)
   * [7.1 Bloques tácticos y estratégicos del DDD](Tema7.md#71-bloques-tácticos-y-estratégicos-del-ddd)
   * [7.2 Rol de Aggregates, Entities y Value Objects](Tema7.md#72-rol-de-aggregates-entities-y-value-objects)
   * [7.3 Definición de Bounded Contexts y sus fronteras](Tema7.md#73-definición-de-bounded-contexts-y-sus-fronteras)
@@ -14,7 +12,6 @@
   * [7.10 Refactorización de dominio en capas desacopladas](Tema7.md#710-refactorización-de-dominio-en-capas-desacopladas)
   * [Bibliografía](Tema7.md#bibliografía)
 
-## 7. Contenidos
 
 ### 7.1 Bloques tácticos y estratégicos del DDD
 

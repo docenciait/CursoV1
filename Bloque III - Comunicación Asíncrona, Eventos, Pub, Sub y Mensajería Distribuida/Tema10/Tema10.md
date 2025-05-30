@@ -1,6 +1,5 @@
 # Tema 10. INTRODUCCIÓN A LOS WEBSOCKETS Y PUB/SUB EN SISTEMAS DISTRIBUIDOS
 
-* [Tema 10. INTRODUCCIÓN A LOS WEBSOCKETS Y PUB/SUB EN SISTEMAS DISTRIBUIDOS](Tema10.md#tema-10-introducción-a-los-websockets-y-pubsub-en-sistemas-distribuidos)
   * [10.1 Casos de uso reales para WebSockets](Tema10.md#101-casos-de-uso-reales-para-websockets)
   * [10.2 Servidor WebSocket con FastAPI](Tema10.md#102-servidor-websocket-con-fastapi)
   * [10.3 Gestión de clientes conectados y salas lógicas](Tema10.md#103-gestión-de-clientes-conectados-y-salas-lógicas)

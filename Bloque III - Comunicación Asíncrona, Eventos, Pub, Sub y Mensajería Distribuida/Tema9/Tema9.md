@@ -1,6 +1,5 @@
 # Tema 9. INTRODUCCIÓN A LA MENSAJERÍA CON KAFKA, RABBITMQ
 
-* [Tema 9. INTRODUCCIÓN A LA MENSAJERÍA CON KAFKA, RABBITMQ](Tema9.md#tema-9-introducción-a-la-mensajería-con-kafka-rabbitmq)
   * [9.1 Comparar Kafka vs RabbitMQ: casos de uso y diferencias clave](Tema9.md#91-comparar-kafka-vs-rabbitmq-casos-de-uso-y-diferencias-clave)
   * [9.2 Instalación y configuración de un broker básico](Tema9.md#92-instalación-y-configuración-de-un-broker-básico)
   * [9.3 Conceptos de topic, exchange, queue y binding](Tema9.md#93-conceptos-de-topic-exchange-queue-y-binding)

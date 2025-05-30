@@ -1,6 +1,5 @@
 # Tema 8. PATRÓN CQRS EN MICROSERVICIOS
 
-- [Tema 8. PATRÓN CQRS EN MICROSERVICIOS](#tema-8-patrón-cqrs-en-microservicios)
   - [8.1 Explicación del patrón CQRS y diferencias con CRUD tradicional](#81-explicación-del-patrón-cqrs-y-diferencias-con-crud-tradicional)
   - [8.2 Diseño de Comandos y Queries como Elementos Separados: Formalización de la Interacción](#82-diseño-de-comandos-y-queries-como-elementos-separados-formalización-de-la-interacción)
   - [8.3 Implementación de CommandHandlers desacoplados de controladores](#83-implementación-de-commandhandlers-desacoplados-de-controladores)

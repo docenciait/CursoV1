@@ -1,7 +1,5 @@
 # Tema 14. BREVE INTRODUCCIÓN AL TESTING
 
-* [Tema 14. BREVE INTRODUCCIÓN AL TESTING](Tema14.md#tema-14-breve-introducción-al-testing)
-  * [14. Contenidos](Tema14.md#14-contenidos)
     * [14.1 Entorno de pruebas con Pytest en FastAPI](Tema14.md#141-entorno-de-pruebas-con-pytest-en-fastapi)
     * [14.2 Pruebas unitarias para servicios de dominio](Tema14.md#142-pruebas-unitarias-para-servicios-de-dominio)
     * [14.3 Simulación de dependencias con `unittest.mock`](Tema14.md#143-simulación-de-dependencias-con-unittestmock)
@@ -14,7 +12,6 @@
     * [14.10 Automatización en pipelines CI/CD](Tema14.md#1410-automatización-en-pipelines-cicd)
   * [Bibliografía](Tema14.md#bibliografía)
 
-## 14. Contenidos
 
 ### 14.1 Entorno de pruebas con Pytest en FastAPI
 
