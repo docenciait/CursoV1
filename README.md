@@ -64,6 +64,7 @@ Desarrolladores backend con experiencia en Python que quieran especializarseen m
 ## 📘 Resumen de Bloques, Temas y Contenidos 
 
 ```mermaid
+
 flowchart LR
     subgraph Bloque1 ["🔷 Bloque 1 – Principios de Microservicios, Framework FastAPI y Arquitectura Base<br/>Tema 1<br/>Tema 2<br/>Tema 3<br/>Tema 4<br/>Tema 5"]
     end
