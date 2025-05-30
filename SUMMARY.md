@@ -16,10 +16,9 @@
   * [BLOQUE 1 – Hands-on Labs](<Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base/hands-on-labs-b1/labs.md>)
 
 * [Bloque II - Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio](bloque-ii-arquitectura-hexagonal-separacion-de-responsabilidades-y-diseno-orientado-al-dominio/README.md)
-  * [Tema6](bloque-ii-arquitectura-hexagonal-separacion-de-responsabilidades-y-diseno-orientado-al-dominio/tema6/README.md)
-    * [Tema6](<Bloque II - Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio/Tema6/Tema6.md>)
+  * [Tema 6. Arquitectura Hexagonal y Aplicación de DDD](<Bloque II - Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio/Tema6/Tema6.md>)
   * [Tema7](bloque-ii-arquitectura-hexagonal-separacion-de-responsabilidades-y-diseno-orientado-al-dominio/tema7/README.md)
-    * [Tema 7. INTRODUCCIÓN A DOMAIN-DRIVEN DESIGN (DDD)](<Bloque II - Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio/Tema7/Tema7.md>)
+  * [Tema 7. INTRODUCCIÓN A DOMAIN-DRIVEN DESIGN (DDD)](<Bloque II - Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio/Tema7/Tema7.md>)
   * [Tema8](bloque-ii-arquitectura-hexagonal-separacion-de-responsabilidades-y-diseno-orientado-al-dominio/tema8/README.md)
     * [Tema 8. PATRÓN CQRS EN MICROSERVICIOS](<Bloque II - Arquitectura Hexagonal, Separación de Responsabilidades y Diseño Orientado al Dominio/Tema8/Tema8.md>)
 * [Bloque IV - Escalabilidad, Persistencia, Testing y Despliegue de Microservicios](bloque-iv-escalabilidad-persistencia-testing-y-despliegue-de-microservicios/README.md)
