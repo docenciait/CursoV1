@@ -109,7 +109,7 @@ pip --version
 
 ### 5.1 Descargar el archivo de perfil que te proporciona el formador:
 
-Archivo: [fastapi-course.code-profile](fastapi_arquitecture.profile)
+Archivo: [fastapi-course.code-profile](fastapi_arquitecture.profile.code-profile.zip)
 
 ### 5.2 Importar el perfil
 
