@@ -741,31 +741,31 @@ Un castillo no tiene una sola puerta gigante; tiene varias, cada una para un pro
 **Visualizando la Estructura de Routers:**
 
 ```mermaid
-graph TD
-    subgraph "Archivo: app/main.py"
-        A["FastAPI"]
-    end
+    graph TD
+        subgraph "Archivo: app/main.py"
+            A["FastAPI"]
+        end
 
-    subgraph "Módulos: app/api/v1/endpoints/"
-        B["orders.py<br/>prefix '/orders'"]
-        C["users.py<br/>prefix '/users'"]
-        D["products.py<br/>prefix '/products'"]
-    end
+        subgraph "Módulos: app/api/v1/endpoints/"
+            B["orders.py<br/>prefix '/orders'"]
+            C["users.py<br/>prefix '/users'"]
+            D["products.py<br/>prefix '/products'"]
+        end
 
-    A --> B
-    A --> C
-    A --> D
+        A --> B
+        A --> C
+        A --> D
 
-    B --> B1["@post '/'"]
-    B --> B2["@get '/{id}'"]
-    C --> C1["@post '/'"]
-    C --> C2["@get '/{id}'"]
-    D --> D1["@get '/'"]
+        B --> B1["@post '/'"]
+        B --> B2["@get '/{id}'"]
+        C --> C1["@post '/'"]
+        C --> C2["@get '/{id}'"]
+        D --> D1["@get '/'"]
 
-    style A fill:#f9f,stroke:#333
-    style B fill:#ccf,stroke:#333
-    style C fill:#ccf,stroke:#333
-    style D fill:#ccf,stroke:#333
+        style A fill:#f9f,stroke:#333
+        style B fill:#ccf,stroke:#333
+        style C fill:#ccf,stroke:#333
+        style D fill:#ccf,stroke:#333
 
 
 ```
