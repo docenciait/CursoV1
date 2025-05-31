@@ -14,22 +14,15 @@
   - [2.9. Manejo de excepciones personalizadas](#29-manejo-de-excepciones-personalizadas)
   - [2.10. Configuración de entornos con `BaseSettings`](#210-configuración-de-entornos-con-basesettings)
   - [2.11. Preparación para despliegue en producción con `uvicorn` y `gunicorn`](#211-preparación-para-despliegue-en-producción-con-uvicorn-y-gunicorn)
-
+  - [Referencias Bibliográficas](#referencias-bibliográficas)
 ---
 
 ## Objetivos
 
-- Presentar FastAPI y sus ventajas frente a Flask o Django en microservicios
-- Entender cómo FastAPI usa Pydantic para validación y tipado estricto
-- Crear una estructura base escalable para un microservicio en FastAPI
-- Gestionar rutas y controladores RESTful de manera limpia y desacoplada
-- Implementar middlewares personalizados en FastAPI
-- Aplicar dependencias y manejo de inyecciones con el sistema de FastAPI
-- Integrar OpenAPI automáticamente para documentación de servicios
-- Utilizar BackgroundTasks para tareas asincrónicas internas
-- Manejar excepciones personalizadas con FastAPI
-- Configurar entornos y variables con `pydantic.BaseSettings`
-- Preparar servicios para producción con `uvicorn` y `gunicorn`
+* Conocer FastAPI y sus ventajas como framework Python moderno para el desarrollo * de microservicios.
+* Dominar las características clave de FastAPI para la creación eficiente de APIs, como la validación con Pydantic, la inyección de dependencias y el enrutamiento.
+* Aprender a estructurar y configurar un microservicio FastAPI de manera escalable, desde el desarrollo local hasta la preparación para producción.
+* Utilizar funcionalidades avanzadas de FastAPI como middlewares, tareas en segundo plano y manejo de excepciones para construir servicios robustos.
 
 ## Contenidos
 
@@ -2035,3 +2028,40 @@ La preparación para producción no es un *afterthought*, es una **disciplina**.
 
 ---
 
+## Referencias Bibliográficas
+
+* **[1] FastAPI Official Documentation.** (s.f.). Tiangolo.
+    * Recuperado de [https://fastapi.tiangolo.com/](https://fastapi.tiangolo.com/)
+    * *Referencia principal para todos los aspectos de FastAPI, incluyendo Pydantic, inyección de dependencias, BackgroundTasks, OpenAPI, etc.*
+
+* **[2] Pydantic Documentation.** (s.f.). Pydantic.
+    * Recuperado de [https://docs.pydantic.dev/](https://docs.pydantic.dev/)
+    * *Documentación oficial para la validación de datos, serialización y configuración con Pydantic, incluyendo `BaseModel` y `Field`.*
+
+* **[3] Pydantic-Settings Documentation.** (s.f.). Pydantic.
+    * Recuperado de [https://docs.pydantic.dev/pydantic-settings/](https://docs.pydantic.dev/pydantic-settings/)
+    * *Para la gestión de configuraciones con `BaseSettings`, como se describe en la sección 2.10.*
+
+* **[4] Starlette Official Documentation.** (s.f.). Encode.
+    * Recuperado de [https://www.starlette.io/](https://www.starlette.io/)
+    * *El framework ASGI de bajo nivel sobre el cual se construye FastAPI, relevante para entender los middlewares y `BackgroundTasks`.*
+
+### Estándares y Especificaciones
+
+* **[5] OpenAPI Specification.** (s.f.). OpenAPI Initiative.
+    * Recuperado de [https://spec.openapis.org/oas/latest.html](https://spec.openapis.org/oas/latest.html)
+    * *El estándar en el que FastAPI basa su generación automática de documentación API, como se detalla en la sección 2.7.*
+
+* **[6] JSON Schema Organization.** (s.f.).
+    * Recuperado de [https://json-schema.org/](https://json-schema.org/)
+    * *El estándar utilizado por OpenAPI (y Pydantic) para definir la estructura de los datos JSON.*
+
+### Servidores ASGI y WSGI
+
+* **[7] Uvicorn Official Documentation.** (s.f.). Encode.
+    * Recuperado de [https://www.uvicorn.org/](https://www.uvicorn.org/)
+    * *El servidor ASGI de alto rendimiento recomendado para FastAPI en desarrollo y como worker en producción, mencionado en la sección 2.11.*
+
+* **[8] Gunicorn Official Documentation.** (s.f.). Gunicorn.
+    * Recuperado de [https://gunicorn.org/](https://gunicorn.org/)
+    * *El servidor WSGI HTTP de Python para UNIX, comúnmente usado como gestor de procesos para workers Uvicorn en producción (sección 2.11).*

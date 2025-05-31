@@ -1,5 +1,5 @@
 # Tema 3. INTRODUCCIÓN A LA COMUNICACIÓN ENTRE MICROSERVICIOS SÍNCRONA Y ASÍNCRONA 
-
+  - [Objetivos](#objetivos)
   - [3.1. Distinción entre comunicación síncrona y asíncrona](#31-distinción-entre-comunicación-síncrona-y-asíncrona)
   - [3.2. Análisis del uso de REST, gRPC o mensajería por eventos](#32-análisis-del-uso-de-rest-grpc-o-mensajería-por-eventos)
   - [3.3. Implementación de APIs REST entre microservicios con FastAPI](#33-implementación-de-apis-rest-entre-microservicios-con-fastapi)
@@ -10,10 +10,21 @@
   - [3.8. Introducción de colas para integración asíncrona](#38-introducción-de-colas-para-integración-asíncrona)
   - [3.9. Uso de mecanismos de pub/sub para desacoplamiento extremo](#39-uso-de-mecanismos-de-pubsub-para-desacoplamiento-extremo)
   - [3.10. Manejo del versionado de contratos en microservicios independientes](#310-manejo-del-versionado-de-contratos-en-microservicios-independientes)
-
-
+  - [Referencias bibliográficas]()
 
 ---
+## Objetivos 
+
+
+* **Comprender las diferencias fundamentales** entre los modelos de comunicación síncrona y asíncrona en arquitecturas de microservicios.
+* **Evaluar las principales tecnologías de comunicación** (REST, gRPC, mensajería por eventos) y saber cuándo aplicar cada una.
+* **Implementar mecanismos de comunicación síncrona y asíncrona** entre servicios, incluyendo la definición y gestión de contratos API.
+* **Conocer estrategias y patrones para mejorar la resiliencia y el desacoplamiento** en la comunicación entre microservicios, como el manejo de fallos, el uso de colas, pub/sub y conceptos de Service Mesh.
+
+---
+
+
+
 
 En el paradigma de microservicios, las aplicaciones se construyen como un conjunto de servicios pequeños y autónomos que se comunican entre sí. La elección del mecanismo de comunicación es crucial y tiene un impacto significativo en la resiliencia, escalabilidad y acoplamiento del sistema. Esta sección explora los diferentes enfoques para la comunicación entre microservicios, tanto síncrona como asíncrona, en el contexto de un curso de FastAPI.
 
@@ -730,3 +741,97 @@ Cuando los microservicios evolucionan de forma independiente, sus contratos API 
 **Conclusión sobre versionado:**
 
 El versionado es un desafío inherente. Elegir una estrategia, ser consistente, priorizar retrocompatibilidad y comunicar claramente son claves. Herramientas como OpenAPI, Protobuf y Schema Registries ayudan a gestionar contratos eficazmente.
+
+---
+
+## Referencias bibliográficas
+
+### Comunicación Síncrona: REST y gRPC
+
+* **[1] FastAPI Official Documentation.** (s.f.). Tiangolo.
+    * Recuperado de [https://fastapi.tiangolo.com/](https://fastapi.tiangolo.com/)
+    * *Relevante para la sección 3.3 sobre implementación de APIs REST entre microservicios con FastAPI.*
+
+* **[2] HTTPX - A next generation HTTP client for Python.** (s.f.). Encode.
+    * Recuperado de [https://www.python-httpx.org/](https://www.python-httpx.org/)
+    * *Cliente HTTP asíncrono recomendado por FastAPI, mencionado en la sección 3.3.*
+
+* **[3] Requests: HTTP for Humans™.** (s.f.). Python Software Foundation.
+    * Recuperado de [https://requests.readthedocs.io/](https://requests.readthedocs.io/)
+    * *Popular librería cliente HTTP síncrona para Python.*
+
+* **[4] gRPC Documentation.** (s.f.). gRPC Authors, Google LLC.
+    * Recuperado de [https://grpc.io/docs/](https://grpc.io/docs/)
+    * *Documentación oficial para gRPC, incluyendo conceptos, guías y tutoriales para Python (sección 3.4).*
+
+* **[5] Protocol Buffers Documentation.** (s.f.). Google Developers.
+    * Recuperado de [https://protobuf.dev/overview/](https://protobuf.dev/overview/)
+    * *Documentación oficial para Protocol Buffers (Protobuf), el lenguaje de definición de interfaz usado por gRPC (secciones 3.4, 3.5).*
+
+### Definición de Contratos
+
+* **[6] JSON Schema Organization.** (s.f.).
+    * Recuperado de [https://json-schema.org/](https://json-schema.org/)
+    * *Estándar para definir la estructura de documentos JSON, relevante para contratos REST y OpenAPI (sección 3.5).*
+
+* **[7] OpenAPI Specification.** (s.f.). OpenAPI Initiative.
+    * Recuperado de [https://spec.openapis.org/oas/latest.html](https://spec.openapis.org/oas/latest.html)
+    * *Estándar para describir APIs REST, utilizado por FastAPI para la generación de documentación y esquemas (implícitamente relevante para contratos REST).*
+
+### Comunicación Asíncrona: Colas y Pub/Sub
+
+* **[8] RabbitMQ Tutorials & Documentation.** (s.f.). Pivotal Software, Inc.
+    * Recuperado de [https://www.rabbitmq.com/getstarted.html](https://www.rabbitmq.com/getstarted.html) y [https://www.rabbitmq.com/documentation.html](https://www.rabbitmq.com/documentation.html)
+    * *Broker de mensajes popular, relevante para las secciones 3.8 (colas) y 3.9 (pub/sub).*
+
+* **[9] Pika - Python AMQP Client Library.** (s.f.).
+    * Recuperado de [https://pika.readthedocs.io/](https://pika.readthedocs.io/)
+    * *Librería cliente de Python para RabbitMQ (AMQP), utilizada en los ejemplos de las secciones 3.8.*
+
+* **[10] aio-pika - AMQP 0-9-1 client library for asyncio and Python.** (s.f.).
+    * Recuperado de [https://aio-pika.readthedocs.io/](https://aio-pika.readthedocs.io/)
+    * *Librería cliente asíncrona para RabbitMQ, recomendada para entornos asyncio como FastAPI.*
+
+* **[11] Apache Kafka Documentation.** (s.f.). Apache Software Foundation.
+    * Recuperado de [https://kafka.apache.org/documentation/](https://kafka.apache.org/documentation/)
+    * *Plataforma de streaming de eventos distribuida, utilizada para mensajería de alto rendimiento y pub/sub (secciones 3.8, 3.9).*
+
+* **[12] Redis Pub/Sub Documentation.** (s.f.). Redis.
+    * Recuperado de [https://redis.io/docs/manual/pubsub/](https://redis.io/docs/manual/pubsub/)
+    * *Funcionalidad de publicación/suscripción de Redis, mencionada en la sección 3.9.*
+
+* **[13] aioredis - Async Python client for Redis.** (s.f.).
+    * Recuperado de [https://aioredis.readthedocs.io/](https://aioredis.readthedocs.io/)
+    * *Librería cliente asíncrona para Redis, adecuada para usar con FastAPI.*
+
+### Resiliencia y Service Mesh
+
+* **[14] Tenacity - PyPI.** (s.f.).
+    * Recuperado de [https://pypi.org/project/tenacity/](https://pypi.org/project/tenacity/)
+    * *Librería Python para reintentar acciones, mencionada en la sección 3.7 para manejo de retries.*
+
+* **[15] pybreaker - PyPI.** (s.f.).
+    * Recuperado de [https://pypi.org/project/pybreaker/](https://pypi.org/project/pybreaker/)
+    * *Implementación del patrón Circuit Breaker en Python, relevante para la sección 3.7.*
+
+* **[16] Istio Documentation.** (s.f.). Istio Authors.
+    * Recuperado de [https://istio.io/latest/docs/](https://istio.io/latest/docs/)
+    * *Ejemplo de Service Mesh popular, relevante para la sección 3.6.*
+
+* **[17] Linkerd Documentation.** (s.f.). Linkerd Authors.
+    * Recuperado de [https://linkerd.io/docs/](https://linkerd.io/docs/)
+    * *Otro Service Mesh conocido, enfocado en simplicidad y rendimiento (sección 3.6).*
+
+### Versionado y Pruebas de Contrato
+
+* **[18] Pact Documentation.** (s.f.). Pact Foundation.
+    * Recuperado de [https://docs.pact.io/](https://docs.pact.io/)
+    * *Herramienta para Consumer-Driven Contract Testing, mencionada en la sección 3.10 sobre versionado.*
+
+* **[19] Avro Documentation.** (s.f.). Apache Software Foundation.
+    * Recuperado de [https://avro.apache.org/docs/current/](https://avro.apache.org/docs/current/)
+    * *Sistema de serialización de datos, mencionado como opción para mensajería por eventos con esquemas robustos (sección 3.5).*
+
+* **[20] Confluent Schema Registry Documentation.** (s.f.). Confluent, Inc.
+    * Recuperado de [https://docs.confluent.io/platform/current/schema-registry/index.html](https://docs.confluent.io/platform/current/schema-registry/index.html)
+    * *Herramienta para gestionar esquemas (Avro, Protobuf, JSON Schema) en arquitecturas de streaming, especialmente con Kafka (sección 3.10).*

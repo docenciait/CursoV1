@@ -14,23 +14,16 @@
   * [1.9 Evaluación del Impacto de los Microservicios en la Gestión del Ciclo de Vida del Software (SDLC)](Tema1.md#19-evaluación-del-impacto-de-los-microservicios-en-la-gestión-del-ciclo-de-vida-del-software-sdlc)
   * [1.10 Herramientas Modernas para la Gestión de Arquitecturas Distribuidas](Tema1.md#110-herramientas-modernas-para-la-gestión-de-arquitecturas-distribuidas)
   * [1.11 Introducción a Patrones Clave: API Gateway, Service Registry y Service Discovery](Tema1.md#111-introducción-a-patrones-clave)
-  * [Referencias](Tema1.md#referencias)
+  * [Referencias Bibliográficas](#referencias-bibliográficas)
 
 ***
 
 ## Objetivos
 
-* Entender la evolución de la arquitectura monolítica hacia los microservicios
-* Identificar las ventajas y desventajas clave de los microservicios
-* Describir los principios fundamentales de la arquitectura de microservicios
-* Analizar casos de uso reales donde los microservicios aportan valor
-* Distinguir entre microservicios y SOA (Service-Oriented Architecture)
-* Comprender la importancia del diseño orientado a dominio en este contexto
-* Introducir los conceptos de bounded context y separación de responsabilidades
-* Explorar cómo se distribuyen los equipos en torno a microservicios
-* Evaluar el impacto de los microservicios en la gestión del ciclo de vida del software
-* Conocer herramientas modernas para la gestión de arquitecturas distribuidas
-* Introducción a patrones como API Gateway, Service Discovery, y Service Registry
+* Entender qué son los microservicios y su evolución desde las arquitecturas monolíticas.
+* Evaluar la idoneidad de los microservicios, conociendo sus ventajas, desventajas y casos de uso típicos.
+* Asimilar los principios de diseño fundamentales de los microservicios, incluyendo la importancia de DDD y la organización de equipos.
+* Identificar patrones arquitectónicos y herramientas esenciales para construir y gestionar sistemas basados en microservicios.
 
 ***
 
@@ -1186,8 +1179,36 @@ Cuando pasamos de un monolito a múltiples microservicios, surgen nuevos desafí
     * **Lado Cliente:** Si tu servicio FastAPI necesita llamar a otro, usarías una librería cliente para el Service Registry elegido, consultarías la ubicación y luego usarías `httpx` para hacer la llamada. Existen librerías que pueden combinar estos pasos.
     * **Lado Servidor:** Si estás en Kubernetes, simplemente llamarías al nombre del 'Service' de Kubernetes (ej: `http://servicio-productos/`), y Kubernetes se encargaría de la consulta al registro y el enrutamiento/balanceo. Si usas un API Gateway, este se encargaría del descubrimiento.
 
-***
+---
 
-## Referencias
+## Referencias Bibliográficas
 
-***
+
+* **[1] Bass, L., Clements, P., & Kazman, R. (2012).** _Software Architecture in Practice_ (3rd ed.). Addison-Wesley Professional.
+    * *Mencionado en la sección "1.0 Conceptos Previos" como una definición de patrón de arquitectura.*
+
+* **[2] Fowler, M. (2004).** _Strangler Fig Application_. MartinFowler.com.
+    * Recuperado de [https://martinfowler.com/bliki/OriginalStranglerFigApplication.html](https://martinfowler.com/bliki/OriginalStranglerFigApplication.html)
+    * *Mencionado en la sección "1.4 Casos de Uso Reales donde los Microservicios Aportan Valor" en relación con la modernización de sistemas legados.*
+
+* **[3] Evans, E. (2003).** _Domain-Driven Design: Tackling Complexity in the Heart of Software_. Addison-Wesley Professional.
+    * *Referenciado implícitamente por `[^5^]` en la sección "1.6 La Importancia del Diseño Orientado a Dominio (DDD) en este Contexto", en relación con Bounded Contexts.*
+
+* **[4] Brandolini, A.** _Introducing EventStorming_. Leanpub.
+    * Ver también: [EventStorming.com](https://www.eventstorming.com/)
+    * *Referenciado implícitamente por `[^9^]` en la sección "1.7 Bounded Context y Separación de Responsabilidades" como una técnica para identificar Bounded Contexts.*
+
+* **[5] Conway, M. E. (1968).** How Do Committees Invent?. _Datamation_, _14_(5), 28-31.
+    * Disponible en múltiples fuentes online, por ejemplo: [melconway.com](http://www.melconway.com/Home/Committees_Paper.html)
+    * *Referenciado implícitamente por `[^10^]` en la sección "1.8 Distribución de los Equipos en torno a Microservicios" como la Ley de Conway.*
+
+* **[6] Skelton, M., & Pais, M. (2019).** _Team Topologies: Organizing Business and Technology Teams for Fast Flow_. IT Revolution Press.
+    * *Referenciado implícitamente por `[^11^]` en la sección "1.8 Distribución de los Equipos en torno a Microservicios" en relación con "Stream-Aligned Teams".*
+
+* **[7] Netflix Technology Blog.**
+    * Recuperado de [https://netflixtechblog.com/](https://netflixtechblog.com/) (o [https://research.netflix.com/](https://research.netflix.com/) para el área de investigación)
+    * *Mencionado en la sección "1.4 Casos de Uso Reales donde los Microservicios Aportan Valor" como ejemplo de una empresa pionera en microservicios.*
+
+* **[8] FastAPI Event Handlers (Startup/Shutdown).** _FastAPI Documentation_.
+    * Recuperado de [https://fastapi.tiangolo.com/advanced/events/](https://fastapi.tiangolo.com/advanced/events/)
+    * *Mencionado en la sección "1.11 Introducción a Patrones Clave" en el contexto de cómo los servicios FastAPI podrían registrarse/desregistrarse en un Service Registry.*

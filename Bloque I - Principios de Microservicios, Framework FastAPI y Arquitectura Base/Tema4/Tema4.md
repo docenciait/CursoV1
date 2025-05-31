@@ -1,6 +1,6 @@
 # Tema 4. MANEJO DE ERRORES Y CIRCUIT BREAKERS EN MICROSERVICIOS
 
-
+  - [Objetivos](#objetivos)
   - [4.1 Diseño de estrategia global de manejo de errores](#41-diseño-de-estrategia-global-de-manejo-de-errores)
   - [4.2 Implementación de controladores de excepciones personalizados en FastAPI](#42-implementación-de-controladores-de-excepciones-personalizados-en-fastapi)
   - [4.3 Definición de errores de negocio vs errores técnicos](#43-definición-de-errores-de-negocio-vs-errores-técnicos)
@@ -11,6 +11,18 @@
   - [4.8 Captura y log de trazas con contexto de peticiones](#48-captura-y-log-de-trazas-con-contexto-de-peticiones)
   - [4.9 Visibilidad de errores mediante dashboards](#49-visibilidad-de-errores-mediante-dashboards)
   - [4.10 Pruebas para simular fallos y degradación controlada](#410-pruebas-para-simular-fallos-y-degradación-controlada)
+  - [Referencias Bibliográficas](#referencias-bibliográficas)
+---
+
+## Objetivos
+
+
+
+  * **Diseñar e implementar una estrategia global y robusta para el manejo de errores** en microservicios, distinguiendo entre errores de negocio y técnicos.
+  * **Dominar la aplicación de patrones de resiliencia clave**, como Retry (con backoff exponencial) y Circuit Breaker, para proteger los servicios contra fallos transitorios y sostenidos de sus dependencias.
+  * **Construir endpoints resilientes en FastAPI**, capaces de degradarse con gracia y comunicar fallos de manera efectiva.
+  * **Implementar un sistema de observabilidad avanzado** para errores, mediante logging estructurado y contextualizado, tracing distribuido y dashboards estratégicos, que permita la detección, diagnóstico y análisis eficaz de incidentes.
+  * **Validar la resiliencia del sistema** a través de pruebas de simulación de fallos y degradación controlada, adoptando principios de Ingeniería del Caos.
 
 
 
@@ -1407,5 +1419,69 @@ Los GameDays son **ejercicios planificados** donde el equipo simula un incidente
 Las pruebas de simulación de fallos y degradación controlada son el **crisol donde se forja la verdadera resiliencia**. Van más allá de las pruebas funcionales, adentrándose en el territorio de la **Ingeniería del Caos** para asegurar que nuestra arquitectura no solo es robusta en papel, sino **antifrágil en la práctica**. Al abrazar proactivamente el fallo en entornos controlados, construimos la confianza y la experiencia necesarias para operar nuestros microservicios con **calidad altísima y serenidad** frente a la inevitable turbulencia de la producción. Es el sello final de un sistema diseñado por profesionales.
 
 ---
+
+## Referencias bibliográficas
+
+### Estrategias de Manejo de Errores y Principios de Resiliencia
+
+  * **[1] FastAPI - Handling Errors.** (s.f.). Tiangolo - FastAPI Official Documentation.
+
+      * Recuperado de [https://fastapi.tiangolo.com/tutorial/handling-errors/](https://fastapi.tiangolo.com/tutorial/handling-errors/)
+      * *Documentación oficial sobre el manejo de `HTTPException` y `RequestValidationError`, y la implementación de controladores de excepciones personalizados (sección 4.2).*
+
+### Implementación de Patrones de Resiliencia
+
+  * **[2] `pybreaker` - PyPI.** (s.f.).
+
+      * Recuperado de [https://pypi.org/project/pybreaker/](https://pypi.org/project/pybreaker/)
+      * *Librería Python para implementar el patrón Circuit Breaker, utilizada en la sección 4.6.*
+      * Documentación: [https://pybreaker.readthedocs.io/](https://www.google.com/search?q=https://pybreaker.readthedocs.io/)
+
+  * **[3] `tenacity` - PyPI.** (s.f.).
+
+      * Recuperado de [https://pypi.org/project/tenacity/](https://pypi.org/project/tenacity/)
+      * *Librería Python para reintentar acciones con diversas estrategias (backoff exponencial), mencionada en la sección 4.4.*
+      * Documentación: [https://tenacity.readthedocs.io/](https://tenacity.readthedocs.io/)
+
+### Observabilidad: Logging y Tracing
+
+  * **[6] `structlog` - Structured Logging for Python.** (s.f.).
+
+      * Recuperado de [https://www.structlog.org/en/stable/](https://www.structlog.org/en/stable/)
+      * *Librería avanzada para logging estructurado en Python, recomendada en la sección 4.8.*
+
+  * **[7] `python-json-logger` - PyPI.** (s.f.).
+
+      * Recuperado de [https://pypi.org/project/python-json-logger/](https://pypi.org/project/python-json-logger/)
+      * *Formateador de logs JSON para la librería estándar `logging` de Python (sección 4.8).*
+
+  * **[8] OpenTelemetry Documentation.** (s.f.). OpenTelemetry Authors.
+
+      * Recuperado de [https://opentelemetry.io/docs/](https://opentelemetry.io/docs/)
+      * *Estándar y conjunto de herramientas para telemetría (trazas, métricas, logs), detallado en la sección 4.8. Incluye SDKs para Python e instrumentación para FastAPI, HTTPX, etc.*
+      * W3C Trace Context: [https://www.w3.org/TR/trace-context/](https://www.w3.org/TR/trace-context/)
+
+  * **[9] Jaeger Tracing.** (s.f.). Jaeger Authors, CNCF.
+
+      * Recuperado de [https://www.jaegertracing.io/docs/](https://www.jaegertracing.io/docs/)
+      * *Backend popular para visualización de trazas distribuidas, compatible con OpenTelemetry.*
+
+  * **[10] Grafana Loki.** (s.f.). Grafana Labs.
+
+      * Recuperado de [https://grafana.com/docs/loki/latest/](https://grafana.com/docs/loki/latest/)
+      * *Sistema de agregación de logs inspirado en Prometheus, optimizado para Grafana.*
+
+
+### Visualización y Dashboards
+
+  * **[11] Grafana Documentation.** (s.f.). Grafana Labs.
+
+      * Recuperado de [https://grafana.com/docs/grafana/latest/](https://grafana.com/docs/grafana/latest/)
+      * *Herramienta líder para visualización de métricas y logs, y creación de dashboards (sección 4.9).*
+
+  * **[12] Prometheus Monitoring System.** (s.f.). Prometheus Authors.
+
+      * Recuperado de [https://prometheus.io/docs/introduction/overview/](https://prometheus.io/docs/introduction/overview/)
+      * *Sistema de monitorización y alerta, comúnmente usado con Grafana para métricas.*
 
 
