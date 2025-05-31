@@ -108,49 +108,43 @@ La estrategia debe predefinir cómo se aplicarán los patrones de resiliencia (q
 #### 7. Visualizando la Implementación de la Estrategia
 
 ```mermaid
-graph TD
-    A[Request + TraceID] --> B{API Layer (FastAPI)};
-    B --> C{App Layer};
-    C --> D{Domain Layer};
-    D -- Lanza<br>BusinessRuleViolationError --> C;
-    C -- Propaga --> B;
-    B -- Captura --> E{Global Handlers (4.2)};
-    E -- Usa Mapeo<br>(4.3, 4.4) --> F(Decide: 409, No Retry);
-    F -- Usa Formato<br>(4.2) --> G[Crea JSONResponse Estándar];
-    G -- Paralelo --> H[Log WARNING<br>(JSON + TraceID) (4.8)];
-    G --> I[Response 409];
-    I --> J[Cliente];
+    graph TD
+        A[Request + TraceID] --> B{API Layer (FastAPI)};
+        B --> C{App Layer};
+        C --> D{Domain Layer};
+        D -- Lanza<br>BusinessRuleViolationError --> C;
+        C -- Propaga --> B;
+        B -- Captura --> E{Global Handlers (4.2)};
+        E -- Usa Mapeo<br>(4.3, 4.4) --> F(Decide: 409, No Retry);
+        F -- Usa Formato<br>(4.2) --> G[Crea JSONResponse Estándar];
+        G -- Paralelo --> H[Log WARNING<br>(JSON + TraceID) (4.8)];
+        G --> I[Response 409];
+        I --> J[Cliente];
 
-    B -- Llama --> K{Infra Layer (HTTP Client)};
-    K -- Llama --> L{Servicio Externo};
-    L -- Falla (503) --> K;
-    K -- Lanza<br>ExternalServiceError --> B;
-    B -- Captura --> E;
-    E -- Usa Mapeo --> M(Decide: 503, Retriable);
-    M -- Aplica Política<br>(4.5) --> N{Retry + Circuit Breaker};
-    N -- Falla Definitivo --> O[Crea JSONResponse 503];
-    O -- Paralelo --> P[Log ERROR<br>(JSON + TraceID + StackTrace) (4.8)];
-    O --> I;
+        B -- Llama --> K{Infra Layer (HTTP Client)};
+        K -- Llama --> L{Servicio Externo};
+        L -- Falla (503) --> K;
+        K -- Lanza<br>ExternalServiceError --> B;
+        B -- Captura --> E;
+        E -- Usa Mapeo --> M(Decide: 503, Retriable);
+        M -- Aplica Política<br>(4.5) --> N{Retry + Circuit Breaker};
+        N -- Falla Definitivo --> O[Crea JSONResponse 503];
+        O -- Paralelo --> P[Log ERROR<br>(JSON + TraceID + StackTrace) (4.8)];
+        O --> I;
 
-    style H,P fill:#9c9
-    style B,E,G,I,J,O fill:#f9f
-    style C fill:#ccf
-    style D fill:#9cf
-    style K,L fill:#9c9
-    style M,N fill:#f39c12
+        style H,P fill:#9c9
+        style B,E,G,I,J,O fill:#f9f
+        style C fill:#ccf
+        style D fill:#9cf
+        style K,L fill:#9c9
+        style M,N fill:#f39c12
 ```
 
 Diseñar una estrategia global de manejo de errores **no es una opción, es una obligación profesional** en el desarrollo de microservicios. Es el **ADN de la resiliencia y la observabilidad**. Al definir **explícitamente** cómo clasificamos, comunicamos, manejamos y observamos los errores, establecemos una base sólida sobre la cual construir un sistema distribuido que pueda **navegar las inevitables tormentas de la producción** con previsibilidad y control. Este diseño es nuestro **manifiesto de calidad y compromiso** con la robustez.
 
----
 
-¡Absolutamente! Mantenemos el rumbo y la altísima calidad. El punto 4.2 es donde la **estrategia se convierte en código**. Vamos a sumergirnos en la implementación de **controladores de excepciones personalizados** en FastAPI. Veremos cómo construir esos "traductores" expertos que convierten nuestros errores internos en respuestas HTTP claras y consistentes, manteniendo nuestro código limpio y nuestra API profesional. ¡Sin fisuras, con profundidad y claridad visual! ✨
 
----
-
-## TEMA 4. MANEJO DE ERRORES Y CIRCUIT BREAKERS EN MICROSERVICIOS
-
-### 4.2. Implementación de Controladores de Excepciones Personalizados en FastAPI
+## 4.2. Implementación de Controladores de Excepciones Personalizados en FastAPI
 
 Ya hemos diseñado nuestra estrategia global (4.1): tenemos una taxonomía de errores, un formato JSON estándar y un mapeo a códigos HTTP. Ahora, necesitamos **enseñarle a FastAPI cómo ejecutar este plan**. Aquí es donde entran los **Controladores de Excepciones Personalizados** (Exception Handlers).
 
@@ -290,28 +284,28 @@ app.add_exception_handler(BaseAppError, eh.handle_business_error) # Fallback par
 **Visualizando la Selección del Handler:**
 
 ```mermaid
-graph TD
-    A["Excepción Lanzada<br/><i>EmailAlreadyExistsError</i>"] --> B["FastAPI Core"]
-    B --> C["¿Hay handler para<br/>EmailAlreadyExistsError?"]
-    C -->|Sí| D["Usa handle_email_exists"]
-    C -->|No| E["¿Hay handler para<br/>BusinessRuleViolationError?"]
-    E -->|Sí| F["Usa handle_business_rule"]
-    E -->|No| G["¿Hay handler para<br/>DomainError?"]
-    G -->|No| H["¿Hay handler para<br/>BaseAppError?"]
-    H -->|Sí| I["Usa handle_business_error"]
-    H -->|No| J["¿Hay handler para<br/>Exception?"]
-    J -->|Sí| K["Usa handle_generic_exception"]
-    J -->|No| L["FastAPI Default 500"]
+    graph TD
+        A["Excepción Lanzada<br/><i>EmailAlreadyExistsError</i>"] --> B["FastAPI Core"]
+        B --> C["¿Hay handler para<br/>EmailAlreadyExistsError?"]
+        C -->|Sí| D["Usa handle_email_exists"]
+        C -->|No| E["¿Hay handler para<br/>BusinessRuleViolationError?"]
+        E -->|Sí| F["Usa handle_business_rule"]
+        E -->|No| G["¿Hay handler para<br/>DomainError?"]
+        G -->|No| H["¿Hay handler para<br/>BaseAppError?"]
+        H -->|Sí| I["Usa handle_business_error"]
+        H -->|No| J["¿Hay handler para<br/>Exception?"]
+        J -->|Sí| K["Usa handle_generic_exception"]
+        J -->|No| L["FastAPI Default 500"]
 
-    D --> Z["Respuesta HTTP 409"]
-    I --> Z
-    K --> Z
-    L --> Z
+        D --> Z["Respuesta HTTP 409"]
+        I --> Z
+        K --> Z
+        L --> Z
 
-    style D fill:#2ecc71,stroke:#333
-    style I fill:#2ecc71,stroke:#333
-    style K fill:#2ecc71,stroke:#333
-    style L fill:#e74c3c,stroke:#333
+        style D fill:#2ecc71,stroke:#333
+        style I fill:#2ecc71,stroke:#333
+        style K fill:#2ecc71,stroke:#333
+        style L fill:#e74c3c,stroke:#333
 
 ```
 FastAPI busca el handler más específico que coincida con el tipo de la excepción.
@@ -329,11 +323,7 @@ FastAPI busca el handler más específico que coincida con el tipo de la excepci
 
 La implementación de controladores de excepciones personalizados es donde nuestra **estrategia global cobra vida**. Es el mecanismo técnico que nos permite **traducir la semántica de nuestro dominio** en respuestas HTTP **claras, consistentes y profesionales**. Al dominar `app.exception_handler` y diseñarlos cuidadosamente para reflejar nuestra taxonomía y formato de error, no solo mejoramos la experiencia del consumidor de nuestra API, sino que también construimos un sistema **más fácil de depurar, monitorizar y mantener**. Es la **fontanería de alta calidad** que asegura que, incluso cuando las tuberías se rompen, el daño se contiene y se comunica eficazmente.
 
----
 
-¡Desafío aceptado! Mantenemos y **elevamos** la calidad. El punto 4.3 es el **cerebro** de nuestra estrategia de errores. Aquí no hay margen para la ambigüedad; debemos ser cirujanos, diseccionando cada posible fallo para entender su **naturaleza fundamental**. Si no distinguimos entre un tropiezo esperado y un fallo catastrófico, nuestra resiliencia será una ilusión. ¡Vamos a iluminar esta distinción con la precisión de un láser y la claridad del cristal!
-
----
 
 ## 4.3. Definición de Errores de Negocio vs. Errores Técnicos: El Diagnóstico Preciso
 
@@ -386,23 +376,23 @@ Los Errores Técnicos son **fallos inesperados** en el propio sistema o en sus d
 ¿Cómo decidimos en qué categoría cae un error en tiempo real (o al diseñar los handlers)?
 
 ```mermaid
-graph TD
-    A[Ocurre un Error] --> B{¿Es una violación<br>de una regla de negocio<br>o validación explícita?};
-    B -- Sí --> C(<b>Error de Negocio</b>);
-    B -- No --> D{¿Es un error esperado<br>de una dependencia externa<br>(ej: API externa devuelve 404)?};
-    D -- Sí --> E{¿Podemos manejarlo<br>como parte del flujo<br>o es un error de Negocio?};
-    E -- Sí (Negocio) --> C;
-    E -- No (Fallo nuestro) --> F(<b>Error Técnico</b>);
-    D -- No --> F;
+    graph TD
+        A[Ocurre un Error] --> B{¿Es una violación<br>de una regla de negocio<br>o validación explícita?};
+        B -- Sí --> C(<b>Error de Negocio</b>);
+        B -- No --> D{¿Es un error esperado<br>de una dependencia externa<br>(ej: API externa devuelve 404)?};
+        D -- Sí --> E{¿Podemos manejarlo<br>como parte del flujo<br>o es un error de Negocio?};
+        E -- Sí (Negocio) --> C;
+        E -- No (Fallo nuestro) --> F(<b>Error Técnico</b>);
+        D -- No --> F;
 
-    C --> G[Mapear a 4xx];
-    F --> H[Mapear a 5xx];
+        C --> G[Mapear a 4xx];
+        F --> H[Mapear a 5xx];
 
-    G --> I[Informar Cliente Específicamente<br>Log INFO/WARN<br>NO Alertar<br>NO Reintentar];
-    H --> J[Informar Cliente Genéricamente<br>Log ERROR/CRITICAL + StackTrace<br>¡ALERTAR!<br>¿Reintentar? (Si transitorio)];
+        G --> I[Informar Cliente Específicamente<br>Log INFO/WARN<br>NO Alertar<br>NO Reintentar];
+        H --> J[Informar Cliente Genéricamente<br>Log ERROR/CRITICAL + StackTrace<br>¡ALERTAR!<br>¿Reintentar? (Si transitorio)];
 
-    style C fill:#3498db
-    style F fill:#e74c3c
+        style C fill:#3498db
+        style F fill:#e74c3c
 ```
 
 #### 4. La Importancia Estratégica: Impacto en la Acción
@@ -460,21 +450,21 @@ Aquí es donde la estrategia brilla: aplicamos **Retry con Backoff Exponencial y
 #### 3. Visualizando el Flujo de Retry con Backoff y Jitter
 
 ```mermaid
-sequenceDiagram
-    participant C as Cliente MS
-    participant S as Servidor MS
+    sequenceDiagram
+        participant C as Cliente MS
+        participant S as Servidor MS
 
-    C->>S: 1. Petición Inicial
-    S-->>C: 503 Service Unavailable (Fallo 1)
-    C->>C: Intento 1. Calcula Pausa (Ej: 1s + Jitter 0.2s = 1.2s)
-    Note over C: ESPERA 1.2s
-    C->>S: 2. Reintento 1
-    S-->>C: 503 Service Unavailable (Fallo 2)
-    C->>C: Intento 2. Calcula Pausa (Ej: 2s + Jitter 0.1s = 2.1s)
-    Note over C: ESPERA 2.1s
-    C->>S: 3. Reintento 2
-    S-->>C: 200 OK (¡Éxito!)
-    Note over C: Operación Exitosa
+        C->>S: 1. Petición Inicial
+        S-->>C: 503 Service Unavailable (Fallo 1)
+        C->>C: Intento 1. Calcula Pausa (Ej: 1s + Jitter 0.2s = 1.2s)
+        Note over C: ESPERA 1.2s
+        C->>S: 2. Reintento 1
+        S-->>C: 503 Service Unavailable (Fallo 2)
+        C->>C: Intento 2. Calcula Pausa (Ej: 2s + Jitter 0.1s = 2.1s)
+        Note over C: ESPERA 2.1s
+        C->>S: 3. Reintento 2
+        S-->>C: 200 OK (¡Éxito!)
+        Note over C: Operación Exitosa
 ```
 Si tras N reintentos sigue fallando, *entonces* se considera un fallo definitivo y se propaga la excepción (o se abre un Circuit Breaker).
 
@@ -1307,11 +1297,9 @@ La visibilidad de errores (y del sistema en general) mediante dashboards **no es
 
 ¡Absolutamente! Con la calidad como estandarte y la madrugada española como testigo de nuestra dedicación, acometemos el punto 4.10, el broche de oro del Tema 4. Hemos diseñado estrategias, implementado controladores, patrones de resiliencia y sistemas de observabilidad. Ahora, llega el momento de la verdad: **someter a prueba nuestra fortaleza**. No basta con *creer* que somos resilientes; debemos *demostrarlo* enfrentando a nuestro sistema a fallos y degradaciones controladas. ¡Es la hora del "crash test" para nuestros microservicios! 💥🚗
 
----
 
-## TEMA 4. MANEJO DE ERRORES Y CIRCUIT BREAKERS EN MICROSERVICIOS
 
-### 4.10. Pruebas para Simular Fallos y Degradación Controlada: Forjando la Antifragilidad
+## 4.10. Pruebas para Simular Fallos y Degradación Controlada: Forjando la Antifragilidad
 
 Hemos construido un impresionante castillo de resiliencia con fosos (Timeouts), murallas (Bulkheads), y torres de vigilancia (Circuit Breakers). Pero, ¿resistirá el asedio? Las **pruebas de simulación de fallos** y **degradación controlada** son nuestro campo de entrenamiento, donde intencionadamente introducimos el caos para verificar que nuestras defensas funcionan como se espera y que nuestro sistema, en lugar de colapsar, se degrada con la gracia que hemos diseñado.
 
