@@ -2000,30 +2000,33 @@ Esta estructura Dockerizada es **ideal para CI/CD**:
 **Arquitectura de Despliegue con CI/CD:**
 
 ```mermaid
-graph TD
-    DEV[Desarrollador] -- 1. git push --> GIT[Repositorio Git];
-    GIT -- 2. Webhook --> CI_CD[Pipeline CI/CD<br>(Jenkins, GitHub Actions, GitLab CI)];
-    CI_CD -- 3. Build & Test --> BUILD[Docker Build + Tests];
-    BUILD -- 4. Push Image --> REGISTRY[Registro Docker];
+flowchart TD
+    DEV[Desarrollador] -->|git push| GIT[Repositorio Git]
+    GIT -->|Webhook| CI_CD[Pipeline CI/CD: Jenkins, GitHub Actions, GitLab CI]
+    CI_CD -->|Build y Test| BUILD[Docker Build más Tests]
+    BUILD -->|Push Imagen| REGISTRY[Registro Docker]
 
-    CI_CD -- 5. Trigger Deploy --> ORCHESTRATOR[Orquestador<br>(Kubernetes / Cloud)];
-    ORCHESTRATOR -- 6. Pull Image --> REGISTRY;
-    ORCHESTRATOR -- 7. Deploy & Inject Config --> PROD_ENV[Entorno Producción];
+    CI_CD -->|Trigger Deploy| ORCHESTRATOR[Orquestador: Kubernetes o Cloud]
+    ORCHESTRATOR -->|Pull Imagen| REGISTRY
+    ORCHESTRATOR -->|Deploy e Inyectar Config| PROD_ENV_GROUP[Entorno de Producción]
 
-    subgraph PROD_ENV
-        PROXY[Reverse Proxy / LB]
-        SVC_API[Servicio API<br>(Varios Contenedores)];
-        SVC_DB[Servicio MariaDB<br>(Gestionado o Contenedor)];
+    subgraph PROD_ENV_GROUP [Entorno de Producción]
+        PROXY[Reverse Proxy o Load Balancer]
+        SVC_API[Servicio API: Varios Contenedores]
+        SVC_DB[Servicio MariaDB: Gestionado o Contenedor]
     end
 
-    PROXY --> SVC_API;
-    SVC_API <--> SVC_DB;
+    PROXY --> SVC_API
+    SVC_API <--> SVC_DB
 
-    CLIENTE[Usuarios] --> PROXY;
+    CLIENTE[Usuarios] --> PROXY
 
     style DEV,CLIENTE fill:#9cf
     style GIT,CI_CD,BUILD,REGISTRY,ORCHESTRATOR fill:#f39c12
-    style PROD_ENV fill:#e74c3c
+    style PROD_ENV_GROUP fill:#e74c3c
+
+
+
 ```
 
 #### Conclusión del Punto 2.11
