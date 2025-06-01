@@ -819,7 +819,7 @@ Existe una observación muy famosa en el mundo del software conocida como la **L
 
 ¿Qué significa esto para nosotros? Que **tu arquitectura de software tenderá a reflejar cómo están organizados tus equipos (y viceversa)**. Si quieres una arquitectura de microservicios exitosa (modular, independiente), necesitas equipos que trabajen de forma modular e independiente.
 
-**El Modelo Tradicional (Orientado a Monolitos/Capas): *
+**El Modelo Tradicional (Orientado a Monolitos/Capas):**
 
 En muchas organizaciones tradicionales, los equipos se estructuran por _capas tecnológicas_:
 
