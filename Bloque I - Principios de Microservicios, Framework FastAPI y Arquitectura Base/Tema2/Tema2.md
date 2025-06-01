@@ -6,7 +6,7 @@
   - [2.1. Presentación de FastAPI y ventajas frente a Flask o Django](#21-presentación-de-fastapi-y-ventajas-frente-a-flask-o-django)
   - [2.2. Uso de Pydantic para validación y tipado estricto](#22-uso-de-pydantic-para-validación-y-tipado-estricto)
   - [2.3. Creación de una estructura base escalable para un microservicio](#23-creación-de-una-estructura-base-escalable-para-un-microservicio)
-  - [2.4. Gestión de rutas y controladores RESTful desacoplados](#24-gestión-de-rutas-y-controladores-restful-desacoplados-el-arte-de-la-fachada-perfecta)
+  - [2.4. Gestión de rutas y controladores RESTful desacoplados](#24-gestión-de-rutas-y-controladores-restful-desacoplados)
   - [2.5. Implementación de middlewares personalizados](#25-implementación-de-middlewares-personalizados)
   - [2.6. Aplicación del sistema de dependencias e inyecciones](#26-aplicación-del-sistema-de-dependencias-e-inyecciones)
   - [2.7. Integración automática de documentación con OpenAPI](#27-integración-automática-de-documentación-con-openapi)
@@ -702,7 +702,7 @@ mi_microservicio/
 > El *pegamento* que une todo esto es la **Inyección de Dependencias**, gestionada típicamente en `app/main.py`, donde le dices a FastAPI (o a un contenedor de dependencias) qué implementación concreta (`SQLAlchemyItemRepository`) debe usar cuando una clase (`ItemService`) pide una interfaz (`ItemRepositoryInterface`).
 
 
-## 2.4. Gestión de Rutas y Controladores RESTful Desacoplados: El Arte de la Fachada Perfecta
+## 2.4. Gestión de Rutas y Controladores RESTful Desacoplados
 
 Imagina nuestro microservicio como una fortaleza medieval (nuestro Dominio Hexagonal). La API REST es su **puente levadizo y su cuerpo de guardia**: el punto de entrada controlado. Si los guardias (nuestros controladores) empiezan a tomar decisiones estratégicas o a cultivar sus propios campos (lógica de negocio), ¡tendremos un caos! Su misión es **verificar, traducir y dirigir** el tráfico hacia el interior del castillo, manteniéndose **delgados, eficientes y estrictamente enfocados** en su rol.
 
