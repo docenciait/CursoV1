@@ -64,7 +64,7 @@ Esta combinación permite a FastAPI ofrecer un rendimiento comparable al de fram
 * Servicios con validación de datos robusta y documentación automática.  
 * Proyectos donde la velocidad de desarrollo y la reducción de errores son críticas.
 
-## **Tabla Comparativa de Frameworks API**
+**Tabla Comparativa de Frameworks API**
 
 | Característica | FastAPI (Python) | DRF (Django REST framework) (Python) | Flask (Python) | Quart (Python) | Django Ninja (Python) | Express.js (Node.js) | NestJS (Node.js) | ASP.NET Core Web API (C\#) | Spring Boot (Java) |
 | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- |
@@ -81,7 +81,7 @@ Esta combinación permite a FastAPI ofrecer un rendimiento comparable al de fram
 | **Tipado Fuerte** | Fomentado (*Type Hints*) | Opcional | Opcional | Fomentado (*Type Hints*) | Fomentado (*Type Hints*) | Opcional (JavaScript), Fuerte (TypeScript) | Fuerte (TypeScript por defecto) | Fuerte (C\#) | Fuerte (Java) |
 | **Inyección de Dependencias** | Integrada y Sencilla | No nativa en DRF (Django sí tiene) | No nativa | No nativa | Integrada y Sencilla | No nativa | Integrada y Potente | Integrada y Potente | Integrada y Potente (Spring DI) |
 
-## **Benchmarking de Frameworks API (TechEmpower)**
+**Benchmarking de Frameworks API (TechEmpower)**
 
 Los benchmarks de TechEmpower son una referencia ampliamente utilizada para comparar el rendimiento de frameworks web. Es crucial entender que:
 
@@ -569,7 +569,7 @@ mi_microservicio/
 
 ---
 
-## Diferencias Clave con la Versión DDD/Hexagonal
+### Diferencias Clave con la Versión DDD/Hexagonal
 
 * **Ausencia de `app/domain/`**: No hay una capa explícita y rica para el dominio. La lógica de negocio principal reside en `app/application/services/`.
 * **Puertos en `application/`**: Las interfaces (puertos) son definidas por la capa de aplicación, ya que es ella la que *necesita* estos servicios externos para cumplir sus casos de uso.
@@ -834,10 +834,6 @@ La gestión de rutas y controladores en FastAPI, cuando se hace con una **mental
 ## 2.5. Implementación de Middlewares Personalizados
 
 Entendido, ahora te haré un **desarrollo mucho más práctico, directo y profesional** como corresponde a un **curso de microservicios** de nivel serio:
-
----
-
-# 2.5. Implementación de Middlewares Personalizados en FastAPI (Avanzado)
 
 En un entorno de **microservicios real** necesitamos middlewares que resuelvan:
 
