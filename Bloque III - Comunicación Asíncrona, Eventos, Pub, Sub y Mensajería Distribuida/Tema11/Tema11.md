@@ -1,5 +1,7 @@
-# Tema 11. DISEÑO DE APIS REST Y WEBSOCKETS EN FASTAPI
+# Tema 11. Diseño de APIs Rest y Websockets en FastAPI
 
+
+  * [Objetivos](#objetivos)
   * [11.1 Buenas prácticas para endpoints RESTful](Tema11.md#111-buenas-prácticas-para-endpoints-restful)
   * [11.2 Versionado y organización de APIs](Tema11.md#112-versionado-y-organización-de-apis)
   * [11.3 Validación con Pydantic y modelos anidados](Tema11.md#113-validación-con-pydantic-y-modelos-anidados)
@@ -11,6 +13,17 @@
   * [11.9 Canales WebSocket nativos en FastAPI](Tema11.md#119-canales-websocket-nativos-en-fastapi)
   * [11.10 Handlers WebSocket y gestión de clientes](Tema11.md#1110-handlers-websocket-y-gestión-de-clientes)
   * [11.11 Integración WebSockets con lógica de dominio](Tema11.md#1111-integración-websockets-con-lógica-de-dominio)
+  * [Referencias Bibliográficas](#referencias-bibliográficas)
+
+---
+## Objetivos
+* **Aplicar** buenas prácticas en el diseño de `endpoints` RESTful (uso de sustantivos, métodos HTTP correctos, versionado básico) y organizar APIs en FastAPI.
+*  **Utilizar** Pydantic de forma efectiva para la validación de datos de entrada y salida, incluyendo el manejo de modelos anidados.
+*  **Aprovechar** las capacidades de FastAPI para la generación automática de documentación interactiva de APIs con Swagger UI y ReDoc.
+*  **Implementar** operaciones CRUD básicas y `endpoints` WebSocket seguros en FastAPI, gestionando aspectos como la autenticación y las conexiones de clientes.
+*  **Esbozar** cómo integrar la comunicación WebSocket y las operaciones API con la lógica de dominio de una manera desacoplada.
+
+---
 
 ## 11.1 Buenas prácticas para endpoints RESTful
 
@@ -2158,3 +2171,21 @@ Tu lógica de dominio es el activo más valioso; protégela de las complejidades
 Con las herramientas y principios que hemos explorado, estás más que preparado para diseñar y construir la próxima generación de aplicaciones interactivas y en tiempo real con FastAPI. ¡El lienzo está en blanco, y ahora tienes los pinceles y la paleta de colores!
 
 ***
+
+
+## Referencias bibliográficas
+
+
+1.  **Documentación Oficial de FastAPI:**
+    * Visitar: `https://fastapi.tiangolo.com/`
+    * *La fuente principal y más completa para aprender sobre todos los aspectos de FastAPI, incluyendo el diseño de rutas, Pydantic, WebSockets, dependencias y OpenAPI.*
+2.  **Documentación Oficial de Pydantic:**
+    * Visitar: `https://docs.pydantic.dev/`
+    * *Esencial para dominar la validación de datos, la configuración de modelos y las capacidades avanzadas que Pydantic ofrece y que FastAPI aprovecha.*
+3.  **MDN Web Docs - Guía de API HTTP:**
+    * Consultar en: `https://developer.mozilla.org/en-US/docs/Web/HTTP` (y secciones relacionadas con REST).
+    * *Un excelente recurso para entender los fundamentos de HTTP, los métodos, los códigos de estado y las buenas prácticas generales para el diseño de APIs web.*
+4.  **MDN Web Docs - WebSockets API:**
+    * Consultar en: `https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API`
+    * *Documentación fundamental sobre el estándar WebSockets, su API en el navegador y los conceptos clave para la comunicación bidireccional.*
+---

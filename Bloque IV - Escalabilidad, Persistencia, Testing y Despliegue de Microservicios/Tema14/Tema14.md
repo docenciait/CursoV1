@@ -1,16 +1,29 @@
-# Tema 14. BREVE INTRODUCCIÓN AL TESTING
+# Tema 14. Breve introducción al testing
 
-    * [14.1 Entorno de pruebas con Pytest en FastAPI](Tema14.md#141-entorno-de-pruebas-con-pytest-en-fastapi)
-    * [14.2 Pruebas unitarias para servicios de dominio](Tema14.md#142-pruebas-unitarias-para-servicios-de-dominio)
-    * [14.3 Simulación de dependencias con `unittest.mock`](Tema14.md#143-simulación-de-dependencias-con-unittestmock)
-    * [14.4 `TestClient` para REST y WebSocket](Tema14.md#144-testclient-para-rest-y-websocket)
-    * [14.5 Pruebas de integración con DB temporal](Tema14.md#145-pruebas-de-integración-con-db-temporal)
-    * [14.6 Pruebas E2E entre microservicios](Tema14.md#146-pruebas-e2e-entre-microservicios)
-    * [14.7 Validación de eventos y colas en tests async](Tema14.md#147-validación-de-eventos-y-colas-en-tests-async)
-    * [14.8 Cobertura y calidad con `coverage.py`](Tema14.md#148-cobertura-y-calidad-con-coveragepy)
-    * [14.9 Estructura de carpetas y fixtures](Tema14.md#149-estructura-de-carpetas-y-fixtures)
-    * [14.10 Automatización en pipelines CI/CD](Tema14.md#1410-automatización-en-pipelines-cicd)
-  * [Bibliografía](Tema14.md#bibliografía)
+   * [Objetivos](#objetivos)
+   * [14.1 Entorno de pruebas con Pytest en FastAPI](Tema14.md#141-entorno-de-pruebas-con-pytest-en-fastapi)
+   * [14.2 Pruebas unitarias para servicios de dominio](Tema14.md#142-pruebas-unitarias-para-servicios-de-dominio)
+   * [14.3 Simulación de dependencias con `unittest.mock`](Tema14.md#143-simulación-de-dependencias-con-unittestmock)
+   * [14.4 `TestClient` para REST y WebSocket](Tema14.md#144-testclient-para-rest-y-websocket)
+   * [14.5 Pruebas de integración con DB temporal](Tema14.md#145-pruebas-de-integración-con-db-temporal)
+   * [14.6 Pruebas E2E entre microservicios](Tema14.md#146-pruebas-e2e-entre-microservicios)
+   * [14.7 Validación de eventos y colas en tests async](Tema14.md#147-validación-de-eventos-y-colas-en-tests-async)
+   * [14.8 Cobertura y calidad con `coverage.py`](Tema14.md#148-cobertura-y-calidad-con-coveragepy)
+   * [14.9 Estructura de carpetas y fixtures](Tema14.md#149-estructura-de-carpetas-y-fixtures)
+   * [14.10 Automatización en pipelines CI/CD](Tema14.md#1410-automatización-en-pipelines-cicd)
+   * [Referencias Bibliográficas](#referencias-bibliográficas)
+
+---
+## Objetivos
+
+
+* **Configurar** un entorno de pruebas básico para aplicaciones FastAPI utilizando `Pytest` y la herramienta `TestClient`.
+  **Diferenciar** entre pruebas unitarias y de integración, y aplicar técnicas de simulación de dependencias (`mocking`) con `unittest.mock`.
+*  **Escribir** pruebas para `endpoints` REST y WebSocket en FastAPI usando `TestClient`, y comprender cómo realizar pruebas de integración con bases de datos temporales.
+*  **Comprender** el propósito de las pruebas End-to-End (E2E) y la validación de la comunicación asíncrona (eventos y colas).
+*  **Utilizar** herramientas como `coverage.py` para medir la cobertura de las pruebas y aplicar buenas prácticas para organizar el código de pruebas (carpetas, `fixtures`).
+*  **Reconocer** la importancia de integrar la ejecución automática de pruebas en `pipelines` de Integración Continua y Despliegue Continuo (CI/CD).
+---
 
 
 ### 14.1 Entorno de pruebas con Pytest en FastAPI
@@ -1967,9 +1980,8 @@ Invertir en un buen `pipeline` CI/CD con `testing` automatizado robusto no es un
 
 ***
 
-## Bibliografía
+## Referencias Bibliográficas
 
-Aquí tienes algunas referencias clave y concisas para profundizar en el `testing` con Python y FastAPI:
 
 1. **FastAPI Official Documentation - Testing:**
    * _Enlace:_ [fastapi.tiangolo.com/tutorial/testing/](https://fastapi.tiangolo.com/tutorial/testing/)

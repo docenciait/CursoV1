@@ -1,6 +1,6 @@
 # Tema 9. Introducción a la mensajería con Kafka, RabbitMQ
 
-  * [Objetivos]()
+  * [Objetivos](#objetivos)
   * [9.1 Comparar Kafka vs RabbitMQ: casos de uso y diferencias clave](Tema9.md#91-comparar-kafka-vs-rabbitmq-casos-de-uso-y-diferencias-clave)
   * [9.2 Instalación y configuración de un broker básico](Tema9.md#92-instalación-y-configuración-de-un-broker-básico)
   * [9.3 Conceptos de topic, exchange, queue y binding](Tema9.md#93-conceptos-de-topic-exchange-queue-y-binding)
@@ -11,10 +11,19 @@
   * [9.8 Manejo de Errores y Reintentos en Colas: Navegando la Tormenta de la Mensajería](Tema9.md#98-manejo-de-errores-y-reintentos-en-colas-navegando-la-tormenta-de-la-mensajería)
   * [9.9 Uso de `aiokafka`, `kombu` o `pika`](Tema9.md#99-uso-de-aiokafka-kombu-o-pika)
   * [9.10 Integración con lógica de dominio en arquitectura hexagonal](Tema9.md#910-integración-con-lógica-de-dominio-en-arquitectura-hexagonal)
-  * [Referencias Bibliográfica]()
+  * [Referencias Bibliográficas](#referencias-bibliográficas)
 
 ---
 ## Objetivos
+
+
+* **Comprender** la función de los sistemas de mensajería como Kafka y RabbitMQ, y sus diferencias fundamentales para la comunicación asíncrona.
+*  **Identificar** los conceptos básicos de la mensajería: _topics_, _exchanges_, colas (_queues_), _bindings_, y cómo se producen y consumen mensajes.
+*  **Reconocer** la importancia de diseñar mensajes que sean idempotentes y trazables en sistemas distribuidos.
+*  **Familiarizarse** con el uso de bibliotecas Python comunes (como `aiokafka`, `pika`, `kombu`) para interactuar con estos brokers de mensajería.
+*  **Visualizar** cómo la mensajería asíncrona se integra en arquitecturas de microservicios, como la hexagonal, para mejorar el desacoplamiento y la resiliencia.
+
+
 ---
 
 ## 9.1 Comparar Kafka vs RabbitMQ: casos de uso y diferencias clave
@@ -1735,3 +1744,19 @@ La culminación de este viaje es entender que la mensajería, por muy potente qu
 La mensajería asíncrona, integrada de esta manera disciplinada, no es solo una herramienta técnica; es un habilitador estratégico para construir sistemas desacoplados, resilientes, escalables y, en última instancia, más valiosos. ¡Que vuestros mensajes fluyan con sabiduría y vuestros hexágonos permanezcan fuertes!
 
 ***
+
+---
+## Referencias Bibliográficas 
+
+1.  **Documentación Oficial de Apache Kafka:**
+    * Visitar: `https://kafka.apache.org/documentation/`
+    * *Fuente esencial para entender la arquitectura, conceptos y APIs de Kafka.*
+2.  **Documentación Oficial de RabbitMQ:**
+    * Visitar: `https://www.rabbitmq.com/documentation.html`
+    * *Información detallada sobre AMQP, la configuración y el uso de RabbitMQ.*
+3.  **Narkhede, N., Shapira, G., & Palino, T. (2021). *Kafka: The Definitive Guide, 2nd Edition*. O'Reilly Media.**
+    * *Considerado el libro de referencia para profundizar en Apache Kafka, sus componentes internos y mejores prácticas.*
+4.  **Artículos Comparativos y Blogs Técnicos:**
+    * Recursos de la comunidad como blogs de **Confluent (para Kafka)**, **CloudAMQP (para RabbitMQ)**, o sitios como **InfoQ**, que frecuentemente publican comparaciones, tutoriales y discusiones sobre casos de uso de diferentes sistemas de mensajería.
+    * *Útil para entender perspectivas prácticas y comparaciones directas.*
+---

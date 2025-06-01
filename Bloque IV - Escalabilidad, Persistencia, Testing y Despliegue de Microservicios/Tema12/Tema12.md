@@ -1,6 +1,6 @@
-# Tema 12. ESCALABILIDAD Y OPTIMIZACIÓN DE MICROSERVICIOS
+# Tema 12. Escalabilidad y Optimización de Microservicios
 
-
+  * [Objetivos](#objetivos)
   * [12.1 Escalado horizontal vs vertical](Tema12.md#121-escalado-horizontal-vs-vertical)
   * [12.1 Escalado Horizontal vs. Vertical: El Dilema del Crecimiento – ¿Más Músculo o Más Manos?](Tema12.md#121-escalado-horizontal-vs-vertical-el-dilema-del-crecimiento--más-músculo-o-más-manos)
   * [12.2 Caching con Redis para endpoints críticos](Tema12.md#122-caching-con-redis-para-endpoints-críticos)
@@ -15,7 +15,17 @@
   * [12.8 Kubernetes HPA (Horizontal Pod Autoscaler)](Tema12.md#128-kubernetes-hpa-horizontal-pod-autoscaler)
   * [12.9 Afinidad y políticas de tolerancia](Tema12.md#129-afinidad-y-políticas-de-tolerancia)
   * [12.10 Batching y Debouncing en concurrencia](Tema12.md#1210-batching-y-debouncing-en-concurrencia)
-  * [Referencias Bibliográficas y Recursos Adicionales Recomendados](Tema12.md#referencias-bibliográficas-y-recursos-adicionales-recomendados)
+  * [Referencias Bibliográficas](#referencias-bibliográficas)
+
+---
+## Objetivos
+*  **Diferenciar** entre escalado horizontal y vertical, comprendiendo cuándo aplicar cada estrategia para mejorar la capacidad de los microservicios.
+*  **Identificar** técnicas clave de optimización del rendimiento, como el `caching` (ej. con Redis), el balanceo de carga (ej. con NGINX/Traefik) y el desacoplamiento mediante colas para procesamiento paralelo.
+*  **Entender** la función de los `workers` asíncronos para un uso eficiente de recursos y la importancia del `profiling` para detectar cuellos de botella.
+*  **Reconocer** la necesidad y los mecanismos básicos de `throttling` y `rate limiting` para prevenir la sobrecarga de servicios.
+*  **Introducirse** a conceptos de orquestación y escalado automático en Kubernetes (como HPA, afinidad y políticas de tolerancia) y técnicas de optimización de concurrencia como `batching` y `debouncing`.
+
+---
 
 ## 12.1 Escalado horizontal vs vertical
 
@@ -1620,118 +1630,16 @@ Aquí tienes una selección de referencias, agrupadas por temas, que complementa
 
 ***
 
-## Referencias Bibliográficas y Recursos Adicionales Recomendados
+## Referencias Bibliográficas 
 
-Esta lista no es exhaustiva, pero representa un excelente punto de partida para profundizar en los conceptos y tecnologías que hemos explorado.
 
-### 1. Arquitectura de Software y Diseño General
-
-* **Evans, Eric.&#x20;**_**Domain-Driven Design: Tackling Complexity in the Heart of Software**_**. Addison-Wesley, 2003.**
-  * El libro fundamental sobre DDD. Esencial para comprender cómo modelar dominios complejos, un pilar para `microservices` y CQRS.
-* **Vernon, Vaughn.&#x20;**_**Implementing Domain-Driven Design**_**. Addison-Wesley, 2013.**
-  * Una guía más práctica para implementar los conceptos de DDD.
-* **Fowler, Martin.&#x20;**_**Patterns of Enterprise Application Architecture**_**. Addison-Wesley, 2002.**
-  * Un clásico que describe muchos patrones arquitectónicos, incluyendo algunos relevantes para `caching`, `concurrency`, y `data source` interaction.
-* **Richards, Mark, & Ford, Neal.&#x20;**_**Fundamentals of Software Architecture: An Engineering Approach**_**. O'Reilly Media, 2020.**
-  * Una visión moderna de la arquitectura, cómo analizar `trade-offs` y las diferentes características arquitectónicas (`-ilities`).
-* **Cockburn, Alistair.&#x20;**_**Hexagonal Architecture**_**. (Artículo online y discusiones).**
-  * El origen del concepto de Puertos y Adaptadores, crucial para el desacoplamiento. Busca sus escritos originales y las adaptaciones modernas.
-* **Clean Architecture: A Craftsman's Guide to Software Structure and Design. Robert C. Martin (Uncle Bob). Prentice Hall, 2017.**
-  * Principios para diseñar sistemas con bajo acoplamiento y alta cohesión, muy alineado con la Arquitectura Hexagonal.
-
-### 2. `Microservices`
-
-* **Newman, Sam.&#x20;**_**Building Microservices: Designing Fine-Grained Systems**_**. O'Reilly Media, 2nd Edition, 2021.**
-  * Una guía completa y actualizada sobre el diseño, `deployment`, y gestión de `microservices`.
-* **Wolff, Eberhard.&#x20;**_**Microservices: Flexible Software Architecture**_**. Addison-Wesley, 2016.** (También tiene material más reciente).
-  * Otra perspectiva sólida sobre la arquitectura de `microservices`.
-* **Richardson, Chris.&#x20;**_**Microservices Patterns: With examples in Java**_**. Manning, 2018.**
-  * Aunque los ejemplos son en Java, los patrones (decomposición, comunicación, `data management`, `observability`) son universales.
-
-### 3. CQRS y `Event Sourcing`
-
-* **Vernon, Vaughn.&#x20;**_**Reactive Messaging Patterns with the Actor Model: Applications and Integration in Scala and Akka**_**. Addison-Wesley, 2015.**
-  * Aunque enfocado en Actores, cubre muy bien los patrones reactivos, CQRS y `Event Sourcing`.
-* **Young, Greg.&#x20;**_**CQRS and Event Sourcing**_**. (Artículo fundamental, busca "CQRS Documents by Greg Young").**
-  * Los escritos originales de uno de los proponentes clave de CQRS y `Event Sourcing`.
-* **Microsoft Docs & Azure Architecture Center.**
-  * Tienen excelentes guías conceptuales y prácticas sobre CQRS y `Event Sourcing`.
-* **EventStoreDB Documentation.** (geteventstore.com)
-  * La documentación de una base de datos popular para `Event Sourcing` a menudo contiene buenas explicaciones de los conceptos.
-
-### 4. Diseño de APIs RESTful
-
-* **Richardson, Leonard, & Ruby, Sam.&#x20;**_**RESTful Web Services**_**. O'Reilly Media, 2007.**
-  * Un clásico que ayudó a definir y popularizar las APIs RESTful.
-* **Fielding, Roy T.&#x20;**_**Architectural Styles and the Design of Network-based Software Architectures**_**. (Tesis doctoral, 2000).**
-  * El origen de REST. Denso, pero fundamental para entender los principios.
-* **API Stylebook de Microsoft (ahora parte de las API Guidelines de Microsoft REST).**
-  * Un conjunto muy completo de guías de diseño para APIs RESTful. (Busca "Microsoft REST API Guidelines").
-* **OpenAPI Specification.** (openapis.org)
-  * El estándar en sí mismo es la mejor referencia para entender cómo describir APIs RESTful.
-
-### 5. FastAPI y Python `Async`
-
-* **FastAPI Official Documentation.** (fastapi.tiangolo.com)
-  * ¡Extremadamente completa, bien escrita y llena de ejemplos! Es el primer lugar donde buscar. Cubre Pydantic, `dependencies`, `WebSockets`, etc.
-* **Pydantic Documentation.** (pydantic-docs.helpmanual.io)
-  * Para dominar la validación, serialización y gestión de `settings`.
-* **Starlette Documentation.** (www.starlette.io)
-  * El `microframework` ASGI sobre el que se construye FastAPI. Entender Starlette ayuda a entender FastAPI.
-* **Uvicorn & Hypercorn Documentation.**
-  * Los `ASGI servers` más comunes para FastAPI.
-* **Libros sobre `Asyncio` en Python:**
-  * **Ramalho, Luciano.&#x20;**_**Fluent Python: Clear, Concise, and Effective Programming**_**. O'Reilly Media, 2nd Edition, 2022.** (Tiene capítulos excelentes sobre `asyncio`).
-  * **Serdar Yegulalp.&#x20;**_**Python Concurrency with asyncio**_**. Manning, 2022.**
-
-### 6. Sistemas de Mensajería
-
-* **RabbitMQ Documentation.** ([rabbitmq.com/documentation.html](https://www.google.com/search?q=https://rabbitmq.com/documentation.html))
-  * Muy completa, con tutoriales y explicaciones de AMQP.
-* **HSPC.&#x20;**_**RabbitMQ in Depth**_**. Manning, 2018.** (Por Gavin M. Roy, el autor de Pika)
-* **Apache Kafka Documentation.** (kafka.apache.org/documentation.html)
-  * Esencial para entender su arquitectura, `producers`, `consumers`, `streams`, etc.
-* **Narkhede, Neha; Shapira, Gwen; & Palino, Todd.&#x20;**_**Kafka: The Definitive Guide**_**. O'Reilly Media, 2nd Edition (si está disponible, o la 1ª Ed. 2017).**
-  * Escrito por ingenieros de Confluent (la empresa detrás de Kafka).
-* **`aio-pika`, `Pika`, `aiokafka`, `kafka-python`, `Kombu` - Documentación oficial de cada librería.**
-
-### 7. `WebSockets`
-
-* **RFC 6455 - The WebSocket Protocol.** (datatracker.ietf.org/doc/html/rfc6455)
-  * La especificación oficial. Técnica, pero la fuente definitiva.
-* **MDN Web Docs - WebSockets API.** (developer.mozilla.org)
-  * Excelente para entender la API `WebSocket` del lado del `client` (JavaScript).
-* **FastAPI WebSocket Documentation.** (Incluida en la documentación principal de FastAPI).
-
-### 8. `Caching` y Redis
-
-* **Redis Documentation.** (redis.io/documentation)
-  * Extremadamente bien escrita y fácil de seguir.
-* **`aioredis` Documentation.** ([github.com/redis/redis-py](https://github.com/redis/redis-py)) (La versión `async` está integrada aquí).
-* **Wilson, Andrew.&#x20;**_**The Little Redis Book**_**. (Libro corto y gratuito, buen intro).**
-
-### 9. `Load Balancing` (NGINX, Traefik)
-
-* **NGINX Documentation.** (nginx.org/en/docs/)
-  * Especialmente las secciones sobre `HTTP Upstream` y `Proxy Module`.
-* **Traefik Proxy Documentation.** (doc.traefik.io/traefik/)
-  * Muy buena para entender su configuración dinámica, `providers`, `routers`, `middlewares`.
-
-### 10. `Containerization` y `Orchestration` (Docker, Kubernetes)
-
-* **Docker Documentation.** (docs.docker.com)
-* **Kubernetes Documentation.** (kubernetes.io/docs/)
-  * Muy extensa. Para HPA, `Affinity`, `Taints/Tolerations`, buscar esas secciones específicas.
-* **Hightower, Kelsey; Burns, Brendan; & Beda, Joe.&#x20;**_**Kubernetes: Up and Running**_**. O'Reilly Media, 3rd Edition (o la más reciente).**
-  * Una excelente introducción práctica a Kubernetes de sus creadores.
-* **KEDA (Kubernetes Event-driven Autoscaling) Documentation.** (keda.sh)
-  * Si se quiere escalar `Pods` basados en `event sources` como `message queues`.
-
-### 11. `Profiling` y Optimización
-
-* **Python `cProfile`, `pstats` documentation.** (docs.python.org)
-* **Documentación de herramientas específicas:** `SnakeViz`, `Py-Spy`, `Yappi`, `Scalene`.
-* **Brendan Gregg's website/blog y libros (ej.&#x20;**_**BPF Performance Tools**_**,&#x20;**_**Systems Performance**_**).**
-  * Una autoridad mundial en `performance analysis` y `profiling` a nivel de sistema, muy relevante si necesitas profundizar.
-
-***
+1.  **Kleppmann, Martin. (2017). *Designing Data-Intensive Applications*. O'Reilly Media.**
+    * *Un libro fundamental que cubre en profundidad muchos conceptos de escalabilidad, `caching`, particionamiento y sistemas distribuidos relevantes para este tema.*
+2.  **Newman, Sam. (2021). *Building Microservices: Designing Fine-Grained Systems (2nd Edition)*. O'Reilly Media.**
+    * *Excelente recurso que aborda la escalabilidad como uno de los pilares del diseño de microservicios, incluyendo patrones de comunicación y despliegue.*
+3.  **Documentación Oficial de Kubernetes - Escalado y Programación de `Pods`:**
+    * Consultar secciones como `Horizontal Pod Autoscaler (HPA)` y `Assigning Pods to Nodes` en: `https://kubernetes.io/docs/`
+    * *Esencial para entender las herramientas que Kubernetes ofrece para la escalabilidad automática y el control del emplazamiento de las cargas de trabajo.*
+4.  **Documentación Oficial de Redis - `Caching`:**
+    * Explorar guías y patrones de `caching` en: `https://redis.io/docs/` (especialmente secciones sobre casos de uso o patrones de diseño).
+    * *Información directa sobre cómo utilizar Redis eficazmente para estrategias de `caching`.*

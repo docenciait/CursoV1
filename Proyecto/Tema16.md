@@ -1,4 +1,5 @@
-# Tema 16. PROYECTO FINAL: APLICACIÓN COMPLETA BASADA EN MICROSERVICIOS CON FASTAPI
+# Tema 16. Proyecto Final: Aplicación completa basada en microservicios con FastAPI
+
 
 
    * [16.1 Definición de dominio y bounded contexts](Tema16.md#161-definición-de-dominio-y-bounded-contexts)
@@ -752,11 +753,11 @@ Ambos ayudan a gestionar la complejidad inherente a las arquitecturas distribuid
 
 ***
 
-### 16.6 Integración de DB relacional y no relacional
+## 16.6 Integración de DB relacional y no relacional
 
 La idea es mostrar cómo diferentes `microservices` de ParkWise pueden elegir la tecnología de base de datos que mejor se adapte a sus necesidades (`polyglot persistence`), y cómo `Docker Compose` facilita tener estas bases de datos funcionando localmente para el desarrollo y las pruebas de integración.
 
-***
+
 
 En ParkWise, no todos los `microservices` tendrán las mismas necesidades de persistencia de datos. Algunos se beneficiarán de la estructura y las garantías ACID de una base de datos relacional (MariaDB será nuestra elección principal aquí), mientras que otros podrían requerir la flexibilidad o las capacidades de `query` específicas de una base de datos NoSQL (como MongoDB o Redis). Esto es la **persistencia políglota (`polyglot persistence`)**.
 
@@ -1271,40 +1272,40 @@ Para el proyecto ParkWise, el objetivo es desplegar nuestros `microservices` (co
 **Diagrama `Mermaid`: `Pipeline` CI/CD con GitOps para un `Microservice` ParkWise**
 
 ```mermaid
-graph TD
-    A[Dev push a App Repo (BookingService)] --> B{CI Pipeline (GitHub Actions)}
-    B --> B1[1. Checkout + Tests + Coverage]
-    B1 -->|OK| B2[2. Build Docker Image v1.1.0]
-    B2 -->|OK| B3[3. Push al Container Registry]
-    B3 -->|OK| B4[4. Update Config Repo a v1.1.0]
-    B4 -->|Push| C[GitOps Config Repo]
+  graph TD
+      A[Dev push a App Repo (BookingService)] --> B{CI Pipeline (GitHub Actions)}
+      B --> B1[1. Checkout + Tests + Coverage]
+      B1 -->|OK| B2[2. Build Docker Image v1.1.0]
+      B2 -->|OK| B3[3. Push al Container Registry]
+      B3 -->|OK| B4[4. Update Config Repo a v1.1.0]
+      B4 -->|Push| C[GitOps Config Repo]
 
-    C -->|Cambio detectado| D[ArgoCD Controller]
-    D -->|Git vs Estado real| K8s_API[Kubernetes API Server]
-    K8s_API -->|Estado actual| D
-    D -->|OutOfSync → Sync| K8s_API
-    K8s_API -->|Aplica cambios| K8s_Cluster[Cluster Kubernetes]
+      C -->|Cambio detectado| D[ArgoCD Controller]
+      D -->|Git vs Estado real| K8s_API[Kubernetes API Server]
+      K8s_API -->|Estado actual| D
+      D -->|OutOfSync → Sync| K8s_API
+      K8s_API -->|Aplica cambios| K8s_Cluster[Cluster Kubernetes]
 
-    K8s_Cluster -->|Estado post-deploy| Monitor[Prometheus]
+      K8s_Cluster -->|Estado post-deploy| Monitor[Prometheus]
 
-    Note right of K8s_Cluster: Rolling update a BookingService v1.1.0
+      Note right of K8s_Cluster: Rolling update a BookingService v1.1.0
 
-    Monitor -->|Métricas o Alertas| Feedback{Feedback Loop}
-    Feedback -->|Falla| RB1[Rollback: revertir commit en Config Repo]
-    Feedback -->|Falla| RB2[Rollback: sync versión anterior]
+      Monitor -->|Métricas o Alertas| Feedback{Feedback Loop}
+      Feedback -->|Falla| RB1[Rollback: revertir commit en Config Repo]
+      Feedback -->|Falla| RB2[Rollback: sync versión anterior]
 
-    B1 -->|Falla| CI_Fail[Notificar fallo CI]
-    B2 -->|Falla| CI_Fail
-    B3 -->|Falla| CI_Fail
-    B4 -->|Falla| CI_Fail
-    RB2 -->|Falla rollback| CD_Fail[Notificar fallo despliegue]
+      B1 -->|Falla| CI_Fail[Notificar fallo CI]
+      B2 -->|Falla| CI_Fail
+      B3 -->|Falla| CI_Fail
+      B4 -->|Falla| CI_Fail
+      RB2 -->|Falla rollback| CD_Fail[Notificar fallo despliegue]
 
-    style A fill:#D5F5E3,stroke:#2ECC71
-    style C fill:#FFF9C4,stroke:#F1C40F
-    style D fill:#AED6F1,stroke:#3498DB
-    style K8s_Cluster fill:#E8DAEF,stroke:#8E44AD
-    style CI_Fail fill:#FFCDD2,stroke:#C62828
-    style CD_Fail fill:#FFCDD2,stroke:#C62828
+      style A fill:#D5F5E3,stroke:#2ECC71
+      style C fill:#FFF9C4,stroke:#F1C40F
+      style D fill:#AED6F1,stroke:#3498DB
+      style K8s_Cluster fill:#E8DAEF,stroke:#8E44AD
+      style CI_Fail fill:#FFCDD2,stroke:#C62828
+      style CD_Fail fill:#FFCDD2,stroke:#C62828
 
 
 

@@ -1,5 +1,6 @@
-# Tema 10. INTRODUCCIÓN A LOS WEBSOCKETS Y PUB/SUB EN SISTEMAS DISTRIBUIDOS
+# Tema 10. Introducción a los websockets y pub/sub en sistemas distribuidos
 
+  * [Objetivos](#objetivos)
   * [10.1 Casos de uso reales para WebSockets](Tema10.md#101-casos-de-uso-reales-para-websockets)
   * [10.2 Servidor WebSocket con FastAPI](Tema10.md#102-servidor-websocket-con-fastapi)
   * [10.3 Gestión de clientes conectados y salas lógicas](Tema10.md#103-gestión-de-clientes-conectados-y-salas-lógicas)
@@ -10,6 +11,19 @@
   * [10.8 Reconexiones, heartbeats y expiración](Tema10.md#108-reconexiones-heartbeats-y-expiración)
   * [10.9 Seguridad de canales con JWT o API Keys](Tema10.md#109-seguridad-de-canales-con-jwt-o-api-keys)
   * [10.10 Patrones reactivos para tiempo real](Tema10.md#1010-patrones-reactivos-para-tiempo-real)
+  * [Referencias bibliográficas](#referencias-bibliográficas)
+
+---
+
+## Objetivos
+
+*  **Comprender** qué son los WebSockets, sus casos de uso principales y cómo facilitan la comunicación bidireccional en tiempo real.
+*  **Implementar** un servidor WebSocket básico utilizando FastAPI para gestionar conexiones persistentes y el intercambio de mensajes.
+*  **Identificar** estrategias fundamentales para la gestión de múltiples clientes conectados, incluyendo la organización en salas lógicas.
+*  **Introducirse** al concepto de Publish/Subscribe (Pub/Sub) y cómo sistemas como Redis o Kafka pueden servir de `backend` para escalar aplicaciones WebSocket y habilitar el `push` de eventos desde el servidor.
+*  **Reconocer** la importancia de la seguridad, la gestión del ciclo de vida de la conexión (reconexiones, `heartbeats`) y los patrones reactivos básicos en el diseño de sistemas WebSocket robustos.
+
+---
 
 ## 10.1 Casos de uso reales para WebSockets
 
@@ -1599,3 +1613,19 @@ Al combinar el poder de `WebSockets` para la comunicación instantánea, la flex
 ¡Que vuestros `streams` fluyan y vuestros sistemas reaccionen con gracia y poder! Ha sido un placer explorar estos temas avanzados contigo.
 
 ***
+
+
+## Referencias Bibliográficas 
+
+1.  **MDN Web Docs - WebSockets API:**
+    * Consultar en: `https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API`
+    * *Documentación fundamental sobre el estándar WebSockets y su API en el navegador.*
+2.  **Documentación de FastAPI - WebSockets:**
+    * Consultar en: `https://fastapi.tiangolo.com/advanced/websockets/`
+    * *Guía oficial para implementar WebSockets utilizando el framework FastAPI.*
+3.  **Documentación de Redis - Pub/Sub:**
+    * Consultar en: `https://redis.io/docs/manual/pubsub/`
+    * *Explicación del mecanismo Publish/Subscribe en Redis, útil como ejemplo de backend para escalar WebSockets.*
+4.  **Kleppmann, Martin. (2017). *Designing Data-Intensive Applications*. O'Reilly Media.**
+    * *Aunque es un libro amplio, los capítulos relacionados con sistemas de mensajería, replicación y consistencia eventual son muy relevantes para entender los fundamentos detrás de los sistemas Pub/Sub y las arquitecturas en tiempo real.*
+---

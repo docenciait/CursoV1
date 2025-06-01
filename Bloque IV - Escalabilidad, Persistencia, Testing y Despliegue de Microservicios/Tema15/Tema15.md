@@ -1,17 +1,29 @@
-# Tema 15. BUENAS PRÁCTICAS Y AUTOMATIZACIÓN DE DESPLIEGUES
+# Tema 15. Buenas prácticas y automatización de despliegues
 
+  
+   * [Objetivos](#objetivos)
+   * [15.1 Dockerfiles eficientes para microservicios](Tema15.md#151-dockerfiles-eficientes-para-microservicios)
+   * [15.2 Imágenes versionadas semánticamente](Tema15.md#152-imágenes-versionadas-semánticamente)
+   * [15.3 `docker-compose` para entorno local](Tema15.md#153-docker-compose-para-entorno-local)
+   * [15.4 Despliegue en Kubernetes con Helm/Kustomize](Tema15.md#154-despliegue-en-kubernetes-con-helmkustomize)
+   * [15.5 Pipelines CI/CD en GitHub Actions/GitLab CI](Tema15.md#155-pipelines-cicd-en-github-actionsgitlab-ci)
+   * [15.6 GitOps con ArgoCD o FluxCD](Tema15.md#156-gitops-con-argocd-o-fluxcd)
+   * [15.7 Trazabilidad y logging con `structlog`/`loguru`](Tema15.md#157-trazabilidad-y-logging-con-structlogloguru)
+   * [15.8 Métricas con Prometheus y Grafana](Tema15.md#158-métricas-con-prometheus-y-grafana)
+   * [15.9 Logs centralizados con ELK o Loki](Tema15.md#159-logs-centralizados-con-elk-o-loki)
+   * [15.10 Rollout y rollback automático](Tema15.md#1510-rollout-y-rollback-automático)
+   * [Referencias Bibliográficas](Tema15.md#bibliografía)
 
-    * [15.1 Dockerfiles eficientes para microservicios](Tema15.md#151-dockerfiles-eficientes-para-microservicios)
-    * [15.2 Imágenes versionadas semánticamente](Tema15.md#152-imágenes-versionadas-semánticamente)
-    * [15.3 `docker-compose` para entorno local](Tema15.md#153-docker-compose-para-entorno-local)
-    * [15.4 Despliegue en Kubernetes con Helm/Kustomize](Tema15.md#154-despliegue-en-kubernetes-con-helmkustomize)
-    * [15.5 Pipelines CI/CD en GitHub Actions/GitLab CI](Tema15.md#155-pipelines-cicd-en-github-actionsgitlab-ci)
-    * [15.6 GitOps con ArgoCD o FluxCD](Tema15.md#156-gitops-con-argocd-o-fluxcd)
-    * [15.7 Trazabilidad y logging con `structlog`/`loguru`](Tema15.md#157-trazabilidad-y-logging-con-structlogloguru)
-    * [15.8 Métricas con Prometheus y Grafana](Tema15.md#158-métricas-con-prometheus-y-grafana)
-    * [15.9 Logs centralizados con ELK o Loki](Tema15.md#159-logs-centralizados-con-elk-o-loki)
-    * [15.10 Rollout y rollback automático](Tema15.md#1510-rollout-y-rollback-automático)
-  * [Bibliografía](Tema15.md#bibliografía)
+---
+## Objetivos
+
+* **Aplicar** buenas prácticas para la creación de `Dockerfiles` eficientes y la gestión de imágenes de contenedores mediante versionado semántico.
+*  **Utilizar** `docker-compose` para la configuración de entornos de desarrollo local y comprender los fundamentos del despliegue en Kubernetes utilizando herramientas como Helm o Kustomize.
+*  **Diseñar** e implementar `pipelines` básicos de Integración Continua y Entrega Continua (CI/CD), por ejemplo, con GitHub Actions, y entender los principios de GitOps para la gestión de despliegues (ej. con ArgoCD).
+*  **Implementar** estrategias de `logging` estructurado (ej. con `structlog`) y configurar la recolección de métricas (ej. con Prometheus/Grafana) y `logs` centralizados para la observabilidad de los microservicios.
+*  **Reconocer** la importancia y los mecanismos básicos para las estrategias de `rollout` (despliegue progresivo) y `rollback` (reversión) automáticos en los procesos de despliegue.
+
+---
 
 
 ### 15.1 Dockerfiles eficientes para microservicios

@@ -1,6 +1,7 @@
-# Tema 13. PERSISTENCIA DE DATOS EN MICROSERVICIOS
+# Tema 13. Persistencia de Datos en Microservicios
 
 
+  * [Objetivos](#objetivos)
   * [13.1 Integración de SQLAlchemy ORM](Tema13.md#131-integración-de-sqlalchemy-orm)
   * [13.2 Modelos desacoplados del dominio (DTO vs Entity)](Tema13.md#132-modelos-desacoplados-del-dominio-dto-vs-entity)
   * [13.3 Patrones de Repositorio con SQLAlchemy: Guardianes Elegantes de Tu Persistencia](Tema13.md#133-patrones-de-repositorio-con-sqlalchemy-guardianes-elegantes-de-tu-persistencia)
@@ -13,11 +14,18 @@
   * [13.9 Bases de Datos por Servicio y Separación de Datos: Autonomía y Desacoplamiento en la Persistencia de `Microservices`](Tema13.md#139-bases-de-datos-por-servicio-y-separación-de-datos-autonomía-y-desacoplamiento-en-la-persistencia-de-microservices)
   * [13.10 Pools de conexión y timeouts](Tema13.md#1310-pools-de-conexión-y-timeouts)
   * [13.10 `Pools` de Conexión y `Timeouts`: Optimizando el Flujo Ininterrumpido de Datos](Tema13.md#1310-pools-de-conexión-y-timeouts-optimizando-el-flujo-ininterrumpido-de-datos)
-  * [Bibliografía](Tema13.md#bibliografía)
+  * [Referencias bibliográficas](#referencias-bibliograficas)
+  
+---
+## Objetivos
+*  **Comprender** cómo integrar herramientas de persistencia como SQLAlchemy (ORM para SQL) y Motor (driver asíncrono para MongoDB) en aplicaciones FastAPI.
+*  **Aplicar** el desacoplamiento entre modelos de API (DTOs) y modelos de base de datos (Entidades), y utilizar el patrón Repositorio para abstraer la lógica de acceso a datos.
+*  **Gestionar** transacciones locales para asegurar la atomicidad en operaciones de base de datos y reconocer los desafíos y patrones principales (Sagas, Outbox) para la consistencia en transacciones distribuidas.
+*  **Valorar** la importancia del principio de "base de datos por servicio" para la autonomía y el desacoplamiento en arquitecturas de microservicios.
+*  **Identificar** la relevancia de configurar y gestionar eficientemente los `pools` de conexiones y los `timeouts` para optimizar la interacción con las bases de datos.
+---
 
 ## 13.1 Integración de SQLAlchemy ORM
-
-***
 
 En el desarrollo de `microservices` robustos con FastAPI, la persistencia de datos es un pilar. Cuando se trata de bases de datos relacionales (como PostgreSQL, MySQL, SQLite), **SQLAlchemy** se erige como la biblioteca Python por excelencia, ofreciendo un poderoso **Object Relational Mapper (ORM)**. Esta sección se enfoca en su integración **asíncrona** con FastAPI, una sinergia crucial para construir aplicaciones `backend` de alto rendimiento y no bloqueantes.
 
@@ -1966,75 +1974,17 @@ Aquí te presento una **Bibliografía Compacta y Estratégica**, seleccionada pa
 
 ***
 
-## Bibliografía
+## Referencias bibliograficas
 
-Esta selección no pretende ser exhaustiva, sino ofrecer puntos de partida de alta calidad para la autoformación continua y la consulta experta.
 
-**I. SQLAlchemy (Persistencia Relacional Asíncrona)**
-
-1. **SQLAlchemy Official Documentation (especialmente la sección 2.0 y AsyncIO):**
-   * _Enlace:_ [www.sqlalchemy.org/docs/](https://www.sqlalchemy.org/docs/) (Navegar a la "SQLAlchemy 2.0 ORM" y "Asynchronous IO (aio)" sections).
-   * _Por qué:_ La referencia definitiva. La documentación de SQLAlchemy 2.0 es excelente para entender el nuevo estilo de `querying` y el soporte `async`. Relevante para el Tema 13.1, 13.3, 13.4, 13.10.
-2. **Libro: "Essential SQLAlchemy, 2nd Edition"** (por Jason Myers y Rick Copeland, aunque puede que no cubra el `async` más reciente en profundidad, los conceptos ORM son sólidos).
-   * _Por qué:_ Aunque la documentación es clave, un libro bien estructurado puede ayudar a asentar conceptos ORM fundamentales. Verificar la cobertura de `async` o complementar con la documentación.
-
-**II. MongoDB y `Motor` (Persistencia NoSQL Asíncrona)**
-
-1. **MongoDB Official Documentation:**
-   * _Enlace:_ [www.mongodb.com/docs/](https://www.mongodb.com/docs/)
-   * _Por qué:_ Para entender los conceptos de MongoDB, su `query language`, `aggregation framework`, `indexing`, y `schema design` (flexible). Relevante para el Tema 13.7, 13.8, 13.10.
-2. **`Motor` Official Documentation:**
-   * _Enlace:_ [motor.readthedocs.io](https://motor.readthedocs.io/)
-   * _Por qué:_ La guía esencial para el `driver` asíncrono oficial de MongoDB para Python. Cubre la API completa, ejemplos y mejores prácticas. Relevante para 13.7, 13.10.
-
-**III. Diseño de APIs y Principios RESTful**
-
-1. **Libro: "REST API Design Rulebook"** (por Mark Masse)
-   * _Por qué:_ Ofrece un conjunto de reglas y directrices concisas para el diseño de APIs RESTful. Muy práctico. Relevante para el Tema 11.1, 11.2, 11.6.
-2. **Microsoft REST API Guidelines:**
-   * _Enlace:_ [github.com/microsoft/api-guidelines](https://github.com/microsoft/api-guidelines)
-   * _Por qué:_ Un conjunto muy completo y bien razonado de directrices para el diseño de APIs REST, mantenido por un equipo con mucha experiencia. Cubre `versioning`, `collections`, errores, etc.
-3. **OpenAPI Specification Documentation:**
-   * _Enlace:_ [spec.openapis.org/oas/v3.1.0.html](https://spec.openapis.org/oas/v3.1.0.html) (o la última versión)
-   * _Por qué:_ Para entender el estándar que FastAPI usa para generar la documentación. Relevante para 11.4.
-
-**IV. `Microservices`, Patrones de Datos y Mensajería**
-
-1. **Libro: "Building Microservices"** (por Sam Newman)
-   * _Enlace:_ O'Reilly
-   * _Por qué:_ Un clásico que cubre los principios fundamentales, desafíos y patrones para construir arquitecturas de `microservices`. Relevante para el contexto general y temas como "Database per Service" (13.9), Sagas (13.5).
-2. **Libro: "Designing Data-Intensive Applications"** (por Martin Kleppmann)
-   * _Enlace:_ O'Reilly
-   * _Por qué:_ Una obra maestra que profundiza en los fundamentos de los sistemas de datos, incluyendo transacciones, consistencia, replicación, `event sourcing`, y `stream processing`. Esencial para entender los `trade-offs` en persistencia y sistemas distribuidos. Relevante para 10.7, 13.4, 13.5, 13.6.
-3. **Microservices.io (Patrones de Diseño):**
-   * _Enlace:_ [microservices.io/patterns/](https://microservices.io/patterns/) (especialmente las secciones de `data management` y `communication`).
-   * _Por qué:_ Una excelente colección online de patrones de diseño para `microservices`, incluyendo `Database per Service`, Sagas, `Transactional Outbox`, `API Composition`, CQRS, `Event Sourcing`.
-4. **Kafka Official Documentation:**
-   * _Enlace:_ [kafka.apache.org/documentation/](https://kafka.apache.org/documentation/)
-   * _Por qué:_ Para profundizar en Kafka, sus conceptos (`topics`, `partitions`, `brokers`, `consumer groups`), y su ecosistema. Relevante para el Tema 9 y partes del 10.
-5. **RabbitMQ Official Documentation:**
-   * _Enlace:_ [www.rabbitmq.com/documentation.html](https://www.rabbitmq.com/documentation.html)
-   * _Por qué:_ Para aprender sobre AMQP, `exchanges`, `queues`, `bindings`, y las `features` avanzadas de RabbitMQ. Relevante para el Tema 9 y partes del 10.
-
-**V. `WebSockets` y Comunicación en Tiempo Real**
-
-1. **MDN Web Docs - WebSockets:**
-   * _Enlace:_ [developer.mozilla.org/en-US/docs/Web/API/WebSockets\_API](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API)
-   * _Por qué:_ Una referencia excelente y accesible para la API `WebSocket` del lado del `client` (JavaScript) y los conceptos del protocolo. Relevante para el Tema 10 y 11.
-2. **RFC 6455 - The WebSocket Protocol:**
-   * _Enlace:_ [tools.ietf.org/html/rfc6455](https://tools.ietf.org/html/rfc6455)
-   * _Por qué:_ El estándar oficial. Para una comprensión profunda del protocolo subyacente (más técnico).
-
-**VI. Seguridad de APIs**
-
-1. **OWASP API Security Top 10:**
-   * _Enlace:_ [owasp.org/API-Security/](https://owasp.org/API-Security/) (buscar la lista más reciente)
-   * _Por qué:_ Para estar al tanto de las vulnerabilidades más comunes en APIs y cómo mitigarlas. Relevante para 11.8, 11.7, 10.9.
-2. **JWT.io (Introduction to JSON Web Tokens):**
-   * _Enlace:_ [jwt.io/introduction/](https://jwt.io/introduction/)
-   * _Por qué:_ Una buena introducción a los `JWTs`, su estructura y casos de uso. Relevante para 11.8.
-3. **OAuth 2.0 Official Website:**
-   * _Enlace:_ [oauth.net/2/](https://oauth.net/2/)
-   * _Por qué:_ Para entender el `framework` OAuth2 en profundidad. Relevante para 11.8.
-
-***
+1.  **Documentación Oficial de SQLAlchemy:**
+    * Visitar: `https://www.sqlalchemy.org/library.html#tutorials` (especialmente la sección del ORM y el uso asíncrono).
+    * *Referencia fundamental para el uso de SQLAlchemy, incluyendo la definición de modelos, sesiones y el motor asíncrono.*
+2.  **Documentación Oficial de Motor (Driver Asíncrono de MongoDB para Python):**
+    * Visitar: `https://motor.readthedocs.io/en/stable/`
+    * *Guía esencial para conectar y operar con MongoDB de forma asíncrona desde Python.*
+3.  **Newman, Sam. (2021). *Building Microservices: Designing Fine-Grained Systems (2nd Edition)*. O'Reilly Media.**
+    * *Cubre extensamente las estrategias de persistencia en microservicios, incluyendo el patrón "Database per Service" y la gestión de transacciones distribuidas.*
+4.  **Richardson, Chris. (2018). *Microservices Patterns*. Manning Publications.**
+    * *Explica en detalle patrones cruciales para la persistencia y la consistencia de datos en microservicios, como Sagas, Event Sourcing y el patrón Transactional Outbox.*
+---
