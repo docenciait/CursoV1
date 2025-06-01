@@ -549,11 +549,18 @@ Aquí es donde la goma se encuentra con el camino. Analicemos situaciones donde 
 | **FinTech / SaaS**       | Rápida evolución, complejidad de dominio, fiabilidad. | **Agilidad**, **Mantenibilidad**, **Aislamiento**.           |
 | **Modernización Legado** | Riesgo y coste de migrar monolitos antiguos.          | **Migración Gradual** (Strangler Fig), **Reducción Riesgo**. |
 
-***
+**5. Ejemplo Uber Monolito a Microservicios:**
+
+*Uber Monolito*:
+
+[](img/mono_hexagonal.PNG)
+
+*Uber a Microservicios*:
+
+[](img/mono_to_ms.PNG)
 
 ¡Genial! Hemos hablado de la evolución, las ventajas/desventajas y hemos aclarado la diferencia con SOA. Ahora llegamos a un punto crucial que conecta directamente con el corazón de este curso: **¿Qué pinta el Diseño Orientado a Dominio (DDD) en todo este universo de microservicios?** La respuesta es: ¡Pinta, y mucho! Es, de hecho, una de las herramientas más potentes para diseñar microservicios _correctamente_.
 
-***
 
 ## 1.5 Distinción entre Microservicios y SOA (Service-Oriented Architecture)
 
@@ -1066,7 +1073,6 @@ graph TB
 
 ***
 
-***
 
 ## 1.11 Introducción a Patrones Clave: API Gateway, Service Registry y Service Discovery
 
