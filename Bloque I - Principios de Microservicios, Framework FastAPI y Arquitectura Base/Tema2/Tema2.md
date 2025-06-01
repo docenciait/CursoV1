@@ -2039,7 +2039,7 @@ La preparación para producción no es un *afterthought*, es una **disciplina**.
     * *Documentación oficial para la validación de datos, serialización y configuración con Pydantic, incluyendo `BaseModel` y `Field`.*
 
 * **[3] Pydantic-Settings Documentation.** (s.f.). Pydantic.
-    * Recuperado de [https://docs.pydantic.dev/pydantic-settings/](https://docs.pydantic.dev/pydantic-settings/)
+    * Recuperado de [https://docs.pydantic.dev/latest/api/pydantic_settings/](https://docs.pydantic.dev/latest/api/pydantic_settings/)
     * *Para la gestión de configuraciones con `BaseSettings`, como se describe en la sección 2.10.*
 
 * **[4] Starlette Official Documentation.** (s.f.). Encode.
