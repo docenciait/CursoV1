@@ -1590,7 +1590,7 @@ def get_user(user_id: int):
     return JSONResponse(status_code=404, content={"detail": "User not found"})
 ```
 
-🎯 FastAPI **extiende automáticamente** el OpenAPI con esta información.
+> FastAPI **extiende automáticamente** el OpenAPI con esta información.
 
 ---
 
@@ -1689,13 +1689,13 @@ Se utilizan para tareas **"Fire and Forget"** (dispara y olvida) o **no crítica
 
 **Casos de Uso Ideales:**
 
-* **Notificaciones 📧:** Enviar emails (bienvenida, confirmación) o SMS.
-* **Logging Extendido ✍️:** Registrar eventos detallados que no son críticos para la respuesta.
-* **Limpieza Simple 🧹:** Eliminar archivos temporales.
-* **Actualizaciones Menores 📊:** Incrementar un contador en Redis, actualizar estadísticas no vitales.
-* **Llamadas a Webhooks 🎣:** Notificar a otros sistemas sin esperar su respuesta.
+* **Notificaciones :** Enviar emails (bienvenida, confirmación) o SMS.
+* **Logging Extendido :** Registrar eventos detallados que no son críticos para la respuesta.
+* **Limpieza Simple :** Eliminar archivos temporales.
+* **Actualizaciones Menores :** Incrementar un contador en Redis, actualizar estadísticas no vitales.
+* **Llamadas a Webhooks :** Notificar a otros sistemas sin esperar su respuesta.
 
-#### 2. ¡La Advertencia Crucial! ⚠️ (Rigor Ante Todo)
+#### 2. ¡La Advertencia Crucial!
 
 `BackgroundTasks` tiene una característica fundamental que **debes entender perfectamente**:
 
@@ -2141,7 +2141,7 @@ Ya establecimos que Gunicorn actúa como *manager* y Uvicorn como *worker*. Prof
     * **Misión:** Ejecutar *eficientemente* nuestra aplicación FastAPI asíncrona dentro de cada proceso gestionado por Gunicorn.
     * **Threads (`--threads`):** **Generalmente NO los necesitarás (ni querrás)** si tu código (¡incluyendo el driver de MariaDB!) es **totalmente asíncrono**. Uvicorn y FastAPI brillan en un modelo de *un solo hilo por proceso* con `asyncio`. Añadir hilos puede complicar las cosas y es para *casos específicos* de código síncrono bloqueante que no puedes evitar. **Nuestro objetivo es usar un driver MariaDB async (ej: `aiomysql` o `asyncmy`)**.
 
-#### 2. Docker: Creando Nuestro Contenedor de Batalla 🐳
+#### 2. Docker: Creando Nuestro Contenedor de Batalla 
 
 Docker nos da **portabilidad y consistencia**. Nuestra aplicación correrá igual en la máquina del dev, en CI y en producción.
 
@@ -2202,7 +2202,7 @@ EXPOSE 8000
 CMD ["gunicorn", "-c", "gunicorn_conf.py", "app.main:app"]
 ```
 
-#### 3. Docker Compose: Orquestación Local 🎶
+#### 3. Docker Compose: Orquestación Local 
 
 Para desarrollo y pruebas locales, `docker-compose` nos permite levantar nuestro stack completo (API + MariaDB) con un solo comando.
 
@@ -2250,7 +2250,7 @@ volumes:
 
 * **Clave:** La API (`api`) y la BBDD (`db`) están en la misma red (`app_network`). La API se conectará a MariaDB usando el nombre del servicio: `db`. Tu `DATABASE_URL` en `.env` será algo como: `mariadb+aiomysql://user:password@db:3306/my_db`.
 
-#### 4. Preparados para CI/CD (Continuous Integration / Continuous Deployment) 🔄
+#### 4. Preparados para CI/CD (Continuous Integration / Continuous Deployment) 
 
 Esta estructura Dockerizada es **ideal para CI/CD**:
 
