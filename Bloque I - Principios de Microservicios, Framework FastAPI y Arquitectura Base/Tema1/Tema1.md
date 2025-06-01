@@ -121,7 +121,7 @@ Aquí vemos algunos ejemplos de enfoques de diseño actuales:
 | ---------------------- | ---------------------------- | -------------------------------------------------------- | ---------------------------------------------------------------------------------- | ----------------- |
 | **Enfoque de Diseño**  | **Filosófico / Estratégico** | **¿Por qué y en qué nos centramos?** (El _Porqué_)       | Guía la mentalidad, los principios y las prioridades generales del diseño.         | DDD               |
 | **Arquitectura de SW** | **Estructural / Alto Nivel** | **¿Cuál es la forma general del sistema?** (El _Qué_)    | Define la estructura fundamental, los componentes principales y sus interacciones. | Microservicios    |
-| **Patrón de Arq.**     | **Táctico / Específico**     | **¿Cómo resolvemos este problema concreto?** (El _Cómo_) | Ofrece soluciones probadas y reutilizables a problemas de diseño comunes.          | CQRS              |
+| **Patrón de Arq.**     | **Táctico / Específico**     | **¿Cómo resolvemos este problema concreto?** (El _Cómo_) | Ofrece soluciones probadas y reutilizables a problemas de diseño comunes.          | CQRS / Hexagonal          |
 
 ***
 
