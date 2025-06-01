@@ -29,14 +29,7 @@
 
 ***
 
-La seguridad en arquitecturas de microservicios es un desafío\
-multifacético pero crítico. La naturaleza distribuida de los\
-microservicios introduce nuevas superficies de ataque y complejidades en\
-comparación con los monolitos. Adoptar un enfoque de "defensa en\
-profundidad", donde múltiples capas de seguridad se complementan, es\
-esencial. Este tema cubre los aspectos fundamentales de la seguridad y\
-las buenas prácticas para construir microservicios robustos y\
-protegidos, con ejemplos y consideraciones para FastAPI.
+!!! Info La seguridad en arquitecturas de microservicios es un desafío multifacético pero crítico. La naturaleza distribuida de los microservicios introduce nuevas superficies de ataque y complejidades en comparación con los monolitos. Adoptar un enfoque de "defensa en profundidad", donde múltiples capas de seguridad se complementan, es esencial. Este tema cubre los aspectos fundamentales de la seguridad y las buenas prácticas para construir microservicios robustos y protegidos, con ejemplos y consideraciones para FastAPI.
 
 ## 5.1 Autenticación basada en JWT con FastAPI
 
