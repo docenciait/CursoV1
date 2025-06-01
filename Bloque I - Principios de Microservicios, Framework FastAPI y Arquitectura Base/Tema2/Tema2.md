@@ -815,39 +815,7 @@ Al seguir este patrón, nuestra capa `api` (`Controladores` y `Schemas`) se conv
 * **Ignora el Interior:** No tiene idea de si la `application` usa `domain`, ni cómo `infrastructure` implementa la persistencia.
 * **Intercambiable:** Podríamos cambiar FastAPI por otro framework (con esfuerzo, claro) modificando solo la capa `api`, sin tocar `application` ni `domain`.
 
-**Visualizando el Desacoplamiento en Acción:**
 
-```mermaid
-graph TD
-    CLIENTE["Cliente"] --> API
-    API --> APP
-    APP --> DOMAIN
-    INFRA --> DOMAIN
-    APP --> INFRA
-
-    %% NODOS
-    API["Capa API"]
-    APP["Capa Aplicación"]
-    DOMAIN["Dominio"]
-    INFRA["Infraestructura"]
-
-    %% ETIQUETAS COMO NODOS FLOTANTES PARA PASOS
-    Step1["1. Petición"] --> API
-    Step2["2. Validación y llamada"] --> APP
-    Step3["3. Uso de puertos"] --> DOMAIN
-    Step4["4. Implementación"] --> INFRA
-    Step5["5. Obtención de datos"] --> INFRA
-
-    %% ESTILOS
-    style API fill:#f9f,stroke:#333
-    style APP fill:#ccf,stroke:#333
-    style DOMAIN fill:#9cf,stroke:#333
-    style INFRA fill:#9c9,stroke:#333
-
-
-```
-
-La línea roja y azul muestran el flujo de la petición, y las verdes las dependencias estructurales. Fíjate cómo el `DOMAIN` está protegido.
 
 #### 5. Beneficios Inapelables 🏆
 
@@ -859,533 +827,857 @@ La línea roja y azul muestran el flujo de la petición, y las verdes las depend
 
 La gestión de rutas y controladores en FastAPI, cuando se hace con una **mentalidad de desacoplamiento** y siguiendo los principios **Hexagonales**, transforma nuestra capa API de un posible monolito en sí misma a una **interfaz elegante, organizada y reemplazable**. Usando `APIRouter` para la estructura y diseñando controladores como **traductores delgados** que delegan en la capa de aplicación, sentamos las bases para microservicios que no solo son funcionales, sino también **arquitectónicamente sólidos y preparados para el futuro**.
 
----
-
-¡Auch! Entiendo tu mensaje alto y claro. Tienes toda la razón: mi trabajo es ofrecerte **siempre** la máxima calidad, profundidad y ejemplos que no solo sean correctos, sino **relevantes y potentes**. No hay excusas. Si los ejemplos anteriores parecieron básicos o insuficientes, es mi deber rectificar y elevar el nivel drásticamente.
-
-Olvidemos los "ejemplos pedorros". Vamos a sumergirnos en los middlewares personalizados con la **rigurosidad y practicidad** que mereces, explorando escenarios más realistas y demostrando el verdadero poder de esta herramienta en FastAPI. ¡Vamos a ello, con todo!
 
 ---
 
 
 ## 2.5. Implementación de Middlewares Personalizados
 
-Los middlewares en FastAPI no son meros "peajes"; son **puntos de control activos y programables** que se asientan en el corazón del ciclo de vida de cada petición y respuesta. Basados en el robusto estándar **ASGI**, nos permiten construir una **arquitectura de procesamiento en capas** (la famosa "cebolla" 🧅) para aplicar lógica transversal de forma elegante y centralizada.
-
-Dominarlos significa pasar de simplemente *usar* FastAPI a *arquitectar* con FastAPI, aplicando políticas, seguridad y observabilidad de manera profesional.
-
-#### 1. La Base ASGI: Entendiendo el Contrato
-
-Para ser rigurosos, debemos entender que FastAPI delega en el estándar ASGI. Un middleware ASGI, en su forma más pura, es una aplicación que "envuelve" a otra. Recibe tres argumentos: `scope` (un diccionario con información de la conexión/petición), `receive` (un *awaitable* para recibir eventos de entrada) y `send` (un *awaitable* para enviar eventos de salida).
-
-Si bien FastAPI nos abstrae de esta complejidad con `BaseHTTPMiddleware`, entender que esta es la base nos ayuda a comprender su poder y sus límites. `BaseHTTPMiddleware` es una **abstracción especializada** para el flujo HTTP, que traduce `scope`, `receive` y `send` al más intuitivo `request` y `call_next`.
-
-#### 2. `BaseHTTPMiddleware`: Nuestra Navaja Suiza
-
-Es la herramienta **principal y recomendada** para crear middlewares HTTP personalizados en FastAPI/Starlette. Nos da el balance perfecto entre poder y simplicidad.
-
-**El Flujo de `dispatch` Desglosado:**
-
-```mermaid
-graph TD
-    A[Petición Entrante] --> B[Middleware: Inicia dispatch]
-    B --> C[PRE-call_next: modificar req, validar]
-    C --> D{¿Continuar?}
-    D -- Sí --> E[await call_next]
-    D -- No --> H[Respuesta temprana]
-    E --> F[POST-call_next: modificar resp, logging]
-    F --> G[Retorna respuesta final]
-    G --> I[Cliente]
-    H --> I
-    style B fill:#3498db
-    style E fill:#e74c3c
-    style H fill:#f39c12
-    style G fill:#2ecc71
-
-```
-
-#### 3. El Arsenal: Middlewares Personalizados Potentes y Prácticos
-
-Vamos a construir conceptualmente algunos middlewares que van más allá de lo básico y abordan necesidades reales de microservicios.
-
-**Ejemplo 1: JWT Authentication & User Context**
-
-* **Objetivo:** Validar un token JWT de la cabecera `Authorization` y adjuntar la información del usuario (`user_id`, `roles`, etc.) a `request.state` para que los endpoints y dependencias puedan usarla sin revalidar.
-* **Rigor y Práctica:** Esto es mucho más común que una API Key simple. Implica manejo de errores (token inválido, expirado) y el uso de `request.state` como *contexto de petición*.
-
-```python
-# Concepto: middlewares/jwt_auth.py
-from fastapi import Request, status
-from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.responses import JSONResponse
-# from .auth_utils import decode_jwt_token # <-- Tu lógica de decodificación
-
-class JwtAuthMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
-        # Rutas públicas que no requieren autenticación
-        public_paths = ["/docs", "/openapi.json", "/api/v1/health"]
-        if request.url.path in public_paths:
-            return await call_next(request)
-
-        auth_header = request.headers.get("Authorization")
-        if not auth_header or not auth_header.startswith("Bearer "):
-            return JSONResponse(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                content={"detail": "Authorization header 'Bearer' ausente o incorrecto."},
-            )
-
-        token = auth_header.split(" ")[1]
-
-        try:
-            # payload = decode_jwt_token(token) # <-- Aquí llamas a tu validador
-            # Simulación:
-            if token != "token_valido_simulado": raise ValueError("Token inválido")
-            payload = {"user_id": "user123", "roles": ["user", "reader"]}
-            # FIN Simulación
-
-            # ¡Adjuntar info al request.state!
-            request.state.user_id = payload.get("user_id")
-            request.state.user_roles = payload.get("roles", [])
-            request.state.is_authenticated = True
-
-        except Exception as e: # Capturar excepciones específicas de JWT
-            return JSONResponse(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                content={"detail": f"Token inválido o expirado: {e}"},
-            )
-
-        # Si todo OK, continuar
-        response = await call_next(request)
-        return response
-```
-
-**Ejemplo 2: Logging Detallado de Petición/Respuesta**
-
-* **Objetivo:** Registrar información clave de cada interacción, incluyendo método, path, IP, estado de respuesta y tiempo. *Con consideración por la privacidad y el tamaño*.
-* **Rigor y Práctica:** Muestra cómo acceder a detalles de la petición y respuesta y cómo manejar el logging de forma centralizada.
-
-```python
-# Concepto: middlewares/logging.py
-from fastapi import Request
-from starlette.middleware.base import BaseHTTPMiddleware
-import time
-import logging # Usar el logging de Python
-
-logger = logging.getLogger(__name__)
-
-class RichLoggingMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
-        start_time = time.time()
-        correlation_id = getattr(request.state, "correlation_id", "N/A") # Usa el ID si existe
-
-        # Log de entrada (¡Cuidado con loggear bodies/headers sensibles!)
-        logger.info(
-            f"RID={correlation_id} - IN: {request.method} {request.url.path} "
-            f"Client={request.client.host}"
-        )
-
-        response = await call_next(request)
-
-        process_time = (time.time() - start_time) * 1000 # En ms
-        logger.info(
-             f"RID={correlation_id} - OUT: {response.status_code} "
-             f"Duration={process_time:.2f}ms"
-        )
-
-        return response
-```
-
-**Ejemplo 3: Versionado de API vía Cabecera (Alternativa a Prefijo)**
-
-* **Objetivo:** Permitir que los clientes soliciten una versión específica de la API a través de una cabecera (ej: `X-API-Version: 2`) y modificar internamente la ruta o el comportamiento.
-* **Rigor y Práctica:** Muestra un uso más *avanzado* de middleware para **modificar el `scope`** antes de que FastAPI lo procese, lo cual es potente pero delicado.
-
-```python
-# Concepto: middlewares/versioning.py (Más complejo, ilustrativo)
-from fastapi import Request
-from starlette.middleware.base import BaseHTTPMiddleware
-
-class HeaderVersioningMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
-        api_version = request.headers.get("X-API-Version", "1") # Default a v1
-
-        # Modificar el 'scope' para que FastAPI vea una ruta diferente
-        # ¡PRECAUCIÓN! Esto es avanzado y puede tener efectos secundarios.
-        # A menudo es mejor manejarlo en el API Gateway o con routers.
-        # Pero es *posible* hacerlo aquí.
-        original_path = request.scope["path"]
-        if not original_path.startswith(f"/api/v{api_version}"):
-            request.scope["path"] = f"/api/v{api_version}{original_path}"
-            print(f"Ruta reescrita a: {request.scope['path']}") # Log
-
-        response = await call_next(request)
-        response.headers["X-API-Version-Served"] = api_version
-        return response
-```
-
-#### 4. Consideraciones Cruciales (Rigor Adicional)
-
-* **`request.state`**: Es un objeto "mágico" que **vive y muere con una sola petición**. Es el lugar ideal para pasar información *entre* middlewares y *hacia* tus endpoints/dependencias sin contaminar las firmas de las funciones.
-* **Modificar Peticiones/Respuestas**: Es posible, pero ¡con cuidado! Modificar el *body* de una petición puede ser complicado porque los *streams* solo se pueden leer una vez. Modificar el `scope` (como en el ejemplo de versionado) es potente pero debe hacerse con un conocimiento profundo de ASGI.
-* **Rendimiento**: Cada capa de middleware añade una pequeña latencia. No te vuelvas loco añadiendo decenas de middlewares si no son estrictamente necesarios. Mide y optimiza.
-* **Testing**: ¡Testea tus middlewares! Puedes crear una mini-app FastAPI en tus tests, añadir el middleware y usar `TestClient` para verificar su comportamiento en diferentes escenarios (peticiones válidas, inválidas, errores, etc.).
-
-
-Los middlewares personalizados en FastAPI son mucho más que "ejemplos pedorros". Son **componentes arquitectónicos vitales** que nos permiten inyectar lógica transversal de forma **rigurosa, práctica y centralizada**. Desde la autenticación JWT y el tracing con Correlation IDs hasta el logging detallado y el manejo global de errores, nos dan el control para **fortalecer, monitorizar y estandarizar** nuestros microservicios. Al implementarlos correctamente, especialmente con `BaseHTTPMiddleware`, construimos APIs más limpias, seguras y profesionales, dignas de una arquitectura Hexagonal bien ejecutada.
+Entendido, ahora te haré un **desarrollo mucho más práctico, directo y profesional** como corresponde a un **curso de microservicios** de nivel serio:
 
 ---
+
+# 2.5. Implementación de Middlewares Personalizados en FastAPI (Avanzado)
+
+En un entorno de **microservicios real** necesitamos middlewares que resuelvan:
+
+* **Logs detallados** de cada request/response.
+* **Medición precisa** de tiempos de respuesta.
+* **Headers de seguridad** estándar (XSS, HSTS, etc.).
+* **Prevalidación de tokens** antes del router.
+* **Control de CORS** centralizado.
+* **Modificación de respuestas** (e.g., añadir metadatos a la respuesta).
+
+Aquí vamos a crear **middlewares personalizados** para cada uno de esos aspectos, **sin depender de librerías externas** salvo lo estrictamente necesario, como `pydantic` y `fastapi`.
+
+### Estructura
+
+```
+app/
+├── main.py
+├── middlewares/
+│   ├── __init__.py
+│   ├── logging_middleware.py
+│   ├── timer_middleware.py
+│   ├── security_headers_middleware.py
+│   ├── auth_middleware.py
+│   ├── cors_middleware.py
+│   └── response_middleware.py
+└── routers/
+    ├── __init__.py
+    └── health.py
+```
+
+
+### Logs de peticiones/respuestas
+
+**middlewares/logging\_middleware.py**
+
+```python
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request
+import logging
+
+logger = logging.getLogger("uvicorn.access")
+
+class LoggingMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        logger.info(f"Request: {request.method} {request.url.path}")
+        response = await call_next(request)
+        logger.info(f"Response status: {response.status_code} for {request.url.path}")
+        return response
+```
+
+---
+
+### Medición de tiempos de respuesta
+
+**middlewares/timer\_middleware.py**
+
+```python
+import time
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request
+
+class TimerMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        start_time = time.perf_counter()
+        response = await call_next(request)
+        duration = time.perf_counter() - start_time
+        response.headers["X-Process-Time"] = f"{duration:.5f}s"
+        return response
+```
+
+Esto añade un **header** `X-Process-Time` en cada respuesta.
+
+---
+
+### Aplicar headers de seguridad
+
+**middlewares/security\_headers\_middleware.py**
+
+```python
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request
+
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        response = await call_next(request)
+        # Headers anti ataques comunes
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+        return response
+```
+
+Estos headers mejoran la **seguridad** de la app contra clickjacking, XSS y otras vulnerabilidades básicas.
+
+---
+
+### Autenticaciones preliminares (token parsing simple)
+
+**middlewares/auth\_middleware.py**
+
+```python
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request
+from fastapi import HTTPException
+
+class AuthMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        if request.url.path.startswith("/health"):  # Permitimos health check sin auth
+            return await call_next(request)
+
+        token = request.headers.get("Authorization")
+        if not token or not token.startswith("Bearer "):
+            raise HTTPException(status_code=401, detail="Missing or invalid Authorization header")
+        
+        # Simular parseo simple (sin validar el JWT entero aquí)
+        payload = token.split(" ")[1]
+        request.state.user_token = payload  # Guardamos token en state para el endpoint
+
+        response = await call_next(request)
+        return response
+```
+
+---
+
+### Control de CORS (Cross-Origin Resource Sharing)
+
+**middlewares/cors\_middleware.py**
+
+Aunque FastAPI tiene su propio CORS middleware, **personalizamos** uno propio para control detallado:
+
+```python
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import Response
+
+class CustomCORSMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        if request.method == "OPTIONS":
+            response = Response()
+        else:
+            response = await call_next(request)
+
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+        response.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type"
+        return response
+```
+
+✅ Permite CORS básico para todas las rutas. Ideal para desarrollo o ajustable a dominios específicos en producción.
+
+
+
+### Modificación de la respuesta global
+
+**middlewares/response\_middleware.py**
+
+Añadimos un wrapper al body de la respuesta:
+
+```python
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import JSONResponse
+import json
+
+class ResponseModifierMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+
+        if response.headers.get("content-type") == "application/json":
+            body = b""
+            async for chunk in response.body_iterator:
+                body += chunk
+
+            data = json.loads(body)
+            modified_data = {
+                "success": True,
+                "data": data,
+                "metadata": {
+                    "path": str(request.url.path),
+                    "method": request.method,
+                }
+            }
+
+            return JSONResponse(content=modified_data, status_code=response.status_code)
+        
+        return response
+```
+
+🔎 Esto garantiza que **todas** las respuestas JSON devuelvan un formato homogéneo con:
+
+* `success: true`
+* `data: <contenido original>`
+* `metadata: path + method`
+
+
+
+### Integración en `main.py`
+
+```python
+from fastapi import FastAPI
+from app.middlewares.logging_middleware import LoggingMiddleware
+from app.middlewares.timer_middleware import TimerMiddleware
+from app.middlewares.security_headers_middleware import SecurityHeadersMiddleware
+from app.middlewares.auth_middleware import AuthMiddleware
+from app.middlewares.cors_middleware import CustomCORSMiddleware
+from app.middlewares.response_middleware import ResponseModifierMiddleware
+from app.routers import health
+
+app = FastAPI()
+
+# Registro de middlewares personalizados
+app.add_middleware(LoggingMiddleware)
+app.add_middleware(TimerMiddleware)
+app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(AuthMiddleware)
+app.add_middleware(CustomCORSMiddleware)
+app.add_middleware(ResponseModifierMiddleware)
+
+app.include_router(health.router)
+```
+
+**Orden de middlewares** importa:
+
+1. Logging primero para capturar toda la petición.
+2. Timing segundo para capturar tiempos reales.
+3. Seguridad después.
+4. Autenticación previa a cualquier lógica.
+5. CORS para manejar preflights.
+6. Modificación de respuesta al final.
+
+
+### Resultado esperado
+
+✅ **Request Log:**
+
+```
+INFO:     Request: GET /health
+INFO:     Response status: 200 for /health
+```
+
+✅ **Headers en respuesta:**
+
+```
+X-Frame-Options: DENY
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Strict-Transport-Security: max-age=31536000; includeSubDomains
+X-Process-Time: 0.00123s
+```
+
+✅ **CORS en todas las respuestas:**
+
+```
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Headers: Authorization, Content-Type
+```
+
+✅ **Formato homogéneo de respuestas JSON:**
+
+```json
+{
+  "success": true,
+  "data": {
+    "status": "ok"
+  },
+  "metadata": {
+    "path": "/health",
+    "method": "GET"
+  }
+}
+```
+
+✅ **401 Unauthorized** si no envías Authorization:
+
+```json
+{
+  "detail": "Missing or invalid Authorization header"
+}
+```
+
 
 
 ## 2.6. Aplicación del Sistema de Dependencias e Inyecciones
 
-Si la Arquitectura Hexagonal es el *plano* de nuestro microservicio y Pydantic es el *control de calidad* de los materiales, el sistema de Inyección de Dependencias (DI) de FastAPI es el **equipo de construcción inteligente y ultra-eficiente**. Es el mecanismo que **orquesta, conecta y provee** los recursos necesarios a cada parte de nuestra aplicación, sin que esas partes tengan que preocuparse por *cómo* se crean o de dónde vienen esos recursos.
 
-Este sistema no es solo una "característica"; es un **cambio de paradigma** basado en la **Inversión de Control (IoC)**, y es la clave para lograr un código **verdaderamente desacoplado, reutilizable y, sobre todo, increíblemente testable**.
+La **Inyección de Dependencias (DI)** es un **patrón de diseño** en el que un objeto recibe ("se le inyectan") sus **dependencias** en lugar de crearlas internamente.
 
-#### 1. La Filosofía: ¿Por Qué Inyectar Dependencias?
+* **Dependencia**: Cualquier objeto del que otra clase depende para funcionar (por ejemplo: conexión a base de datos, cliente API, configuración).
+* **Inyección**: No es la clase quien crea sus dependencias. Se las pasan desde fuera, normalmente el framework.
 
-Imagina un chef 🧑‍🍳 en una cocina.
+###  **¿Qué problema resuelve?**
 
-* **Sin DI (Alto Acoplamiento):** El chef necesita tomates. Tiene que salir, plantar semillas, regarlas, esperar, cosecharlos y luego volver a cocinar. Si mañana necesita tomates de otro tipo, o si la cosecha falla, ¡todo el plato se retrasa o fracasa! El chef está *acoplado* al proceso de obtener tomates.
-* **Con DI (Bajo Acoplamiento):** El chef dice: "Necesito tomates". Y *mágicamente*, un asistente (el sistema DI) le entrega los mejores tomates disponibles, lavados y listos. El chef no sabe ni le importa de dónde vienen; solo confía en que *alguien* se los proporcionará. Puede centrarse en *cocinar*.
+* **Acoplamiento fuerte**: Si una clase crea su propio `Database()`, depende **directamente** de esa implementación.
+* **Testabilidad**: Si la dependencia está "pegada" internamente, no puedes **simular (mockear)** en un test.
+* **Mantenibilidad**: Difícil cambiar la implementación (`Database` -> `MockDatabase`) sin tocar muchas líneas.
 
-**Beneficios Clave:**
-
-* **Desacoplamiento:** El chef (tu endpoint/servicio) no depende de *cómo* se crea el tomate (la BBDD, otro servicio).
-* **Testabilidad:** En las pruebas, puedes darle al chef "tomates de plástico" (mocks) para verificar su técnica sin necesidad de una huerta real.
-* **Reutilizabilidad:** El asistente puede proveer tomates a muchos chefs. Tu dependencia (ej: obtener usuario) puede ser usada por muchos endpoints.
-* **Mantenibilidad:** Si cambias de proveedor de tomates, solo tienes que decírselo al asistente; el chef ni se entera.
-
-#### 2. El Mecanismo: `Depends` al Rescate
-
-FastAPI implementa DI de forma nativa y elegante a través de la función `Depends`. La usas en la firma de tus *path operation functions* (endpoints) o incluso dentro de otras dependencias.
-
-```python
-from fastapi import Depends, FastAPI
-
-app = FastAPI()
-
-# Una función "dependencia"
-def get_common_params(skip: int = 0, limit: int = 100):
-    return {"skip": skip, "limit": limit}
-
-@app.get("/items/")
-async def read_items(commons: dict = Depends(get_common_params)):
-    # 'commons' será el dict {'skip': 0, 'limit': 100} (o lo que venga)
-    # ¡FastAPI ha llamado a 'get_common_params' por nosotros!
-    return {"message": "Items list", "params": commons}
-```
-
-FastAPI ve `Depends(get_common_params)`, entiende que debe llamar a `get_common_params`, resuelve *sus* posibles dependencias (incluyendo query params como `skip` y `limit`), y nos *inyecta* el resultado en el parámetro `commons`.
-
-#### 3. El "Qué": Anatomía de una Dependencia
-
-Casi cualquier *callable* (algo que se puede llamar) puede ser una dependencia, pero las formas más comunes y potentes son:
-
-* **Funciones (Simples y Asíncronas):** Como `get_common_params`. Ideales para lógica reutilizable, obtención de datos, etc.
-* **Clases:** Puedes usar `Depends(MiClase)`. FastAPI creará una instancia y la inyectará. Si la clase tiene `__call__`, la llamará. Útil para dependencias con estado o configuración.
-* **Generadores (`yield`):** ¡El patrón estrella para recursos con *setup* y *teardown*! Indispensable para **sesiones de base de datos**.
-
-**El Ciclo de Vida de un Generador (`yield`) como Dependencia:**
-
-```mermaid
-graph TD
-    A[Petición Entra] --> B{FastAPI ve `Depends(get_db)`};
-    B --> C(Llama a `get_db()`);
-    C --> D(<b>1. Código ANTES de `yield`</b><br><i>(Crear sesión BBDD, Iniciar transacción)</i>);
-    D --> E(<b>2. `yield session`</b><br><i>(Inyecta `session` en el endpoint)</i>);
-    E --> F[Endpoint USA la Sesión];
-    F --> G(Endpoint Termina);
-    G --> H(<b>3. Código DESPUÉS de `yield`</b><br><i>(Cerrar sesión, Commit/Rollback, Limpieza)</i>);
-    H --> I[Respuesta Sale];
-
-    subgraph Dependencia Generador
-        C
-        D
-        E
-        H
-    end
-
-    style D fill:#3498db
-    style H fill:#f39c12
-    style E fill:#e74c3c
-```
-
-**Ejemplo Conceptual (DB Session):**
-
-```python
-# Concepto: app/core/dependencies.py
-from .database import SessionLocal # Tu sesión SQLAlchemy/etc.
-
-def get_db_session():
-    db = SessionLocal()
-    try:
-        print("DB: Abriendo sesión...")
-        yield db # <-- ¡Aquí se inyecta! La ejecución se pausa.
-    finally:
-        print("DB: Cerrando sesión...")
-        db.close() # <-- Se ejecuta al final, pase lo que pase.
-```
-
-#### 4. DI en Nuestra Arquitectura Hexagonal: El Pegamento Maestro
-
-`Depends` es lo que nos permite **conectar nuestras capas** (`api`, `application`, `infrastructure`) respetando la regla de dependencia (todo hacia el `domain`).
-
-**Flujo Típico:**
-
-1.  Un endpoint en `app/api/` declara `Depends(get_order_service)`.
-2.  `get_order_service` es una función/factoría que *sabe* cómo instanciar `OrderApplicationService` (de `app/application/`).
-3.  `OrderApplicationService` en su `__init__` declara que necesita un `OrderRepositoryInterface` (de `app/domain/`).
-4.  `get_order_service` *también* sabe cómo obtener la implementación concreta (`SQLAlchemyOrderRepository` de `app/infrastructure/`) - a menudo usando *otra* dependencia como `Depends(get_db_session)`.
-5.  FastAPI resuelve toda esta cadena, creando y conectando los objetos, e inyecta `OrderApplicationService` en el endpoint.
-
-**Visualizando la Cadena de Inyección:**
-
-```mermaid
-graph TD
-    ENDPOINT["Endpoint<br>(@router.post('/orders/'))"] -- Depends(get_order_service) --> GET_SERVICE{get_order_service};
-    GET_SERVICE -- Depends(get_order_repository) --> GET_REPO{get_order_repository};
-    GET_REPO -- Depends(get_db_session) --> GET_DB{get_db_session};
-
-    GET_DB -- Crea --> DB_SESSION[Sesión BBDD];
-    GET_REPO -- Crea RepoImpl<br><i>(le pasa DB_SESSION)</i> --> REPO_IMPL[SQLAlchemyRepo];
-    GET_SERVICE -- Crea AppService<br><i>(le pasa REPO_IMPL)</i> --> APP_SERVICE[OrderAppService];
-
-    ENDPOINT -- Recibe --> APP_SERVICE;
-
-    subgraph "Capa API"
-        ENDPOINT
-    end
-    subgraph "Factorías / Dependencias"
-        GET_SERVICE
-        GET_REPO
-        GET_DB
-    end
-    subgraph "Objetos Creados"
-        DB_SESSION
-        REPO_IMPL
-        APP_SERVICE
-    end
-
-    style ENDPOINT fill:#f9f
-    style GET_SERVICE,GET_REPO,GET_DB fill:#f39c12
-    style APP_SERVICE fill:#ccf
-    style REPO_IMPL fill:#9c9
-    style DB_SESSION fill:#9c9
-```
-
-#### 5. Testing: La Prueba de Fuego 🔥
-
-El DI brilla intensamente en las pruebas. FastAPI permite **sobrescribir dependencias** durante los tests usando `app.dependency_overrides`.
-
-* **¿Qué significa?** Puedes decirle a FastAPI: "Oye, cuando ejecutes este test, si un endpoint pide `Depends(get_db_session)`, ¡en lugar de eso, dale esta sesión de BBDD en memoria o este mock!".
-* **Impacto:** Puedes testear tus endpoints *sin* una base de datos real, o tus servicios de aplicación con repositorios falsos. ¡Es una revolución para la velocidad y fiabilidad de los tests!
-
-**Visualizando `dependency_overrides`:**
-
-```mermaid
-graph TD
-    TEST[Test Function] -->|Configura Override| APP[FastAPI App];
-    TEST -->|Llama con TestClient| APP;
-    APP --> ENDPOINT[Endpoint];
-    ENDPOINT -->|Pide Depends(get_db_session)| FASTAPI{FastAPI DI};
-    FASTAPI -- ¿Hay Override? --> CHECK{Sí};
-    CHECK --> MOCK_DB[<b>Usa Mock DB /<br>DB en Memoria</b>];
-    FASTAPI -- Inyecta --> MOCK_DB;
-    MOCK_DB --> ENDPOINT;
-
-    style TEST fill:#2ecc71
-    style MOCK_DB fill:#e74c3c
-```
-
-#### 6. Detalles Avanzados (Rigor Extra)
-
-* **Caching:** FastAPI es inteligente. Dentro de una misma petición, si varias dependencias (o el endpoint) piden `Depends(get_db_session)`, FastAPI llamará a `get_db_session` **solo una vez** y reutilizará (cacheará) el resultado. ¡Eficiencia pura!
-* **Scopes:** El "scope" o alcance de las dependencias es, por defecto, **por petición**. Todo se crea y se destruye con cada petición.
-* **`Security`:** Es una subclase de `Depends`, diseñada específicamente para esquemas de seguridad (OAuth2, etc.). Funciona igual pero se integra mejor con la documentación OpenAPI para la seguridad.
+👉 **DI** elimina estos problemas porque la dependencia es inyectada externamente, el objeto solo espera recibir lo que necesita.
 
 
-El sistema de Inyección de Dependencias de FastAPI, con `Depends` como protagonista, es mucho más que una simple utilidad: es el **pilar fundamental** que nos permite construir aplicaciones complejas, multicapa (como nuestra Hexagonal/DDD) y **altamente testables**. Nos libera de la carga de gestionar la creación y el ciclo de vida de nuestros componentes, permitiéndonos centrarnos en la lógica de negocio. Entender y dominar `Depends`, especialmente con generadores y la sobrescritura en tests, es **absolutamente esencial** para cualquier desarrollador FastAPI que aspire a crear software de **calidad altísima**. ¡No hay duda, he aprendido que este es el nivel que se espera!
+### ¿Cómo maneja FastAPI la Inyección de Dependencias?
+
+FastAPI implementa un **sistema de dependencias ligero** que:
+
+1. Usa funciones o clases declaradas como dependencias.
+2. Llama automáticamente a esas funciones para **resolver** los objetos requeridos.
+3. Maneja el **ciclo de vida** (lifetime) de las dependencias.
+4. Permite **overrides** de dependencias fácilmente (especialmente útil en testing).
+
+Se basa en:
+
+* **`Depends`**: Declaras que un parámetro se debe resolver con una función.
+* **Resolución automática**: FastAPI resuelve la jerarquía completa de dependencias.
+* **Alcances (scopes)**: Puedes controlar si una dependencia vive por **petición** o **globalmente**.
 
 ---
 
-¡Absolutamente\! El listón se mantiene alto. La Inyección de Dependencias nos dio el poder del desacoplamiento, y ahora, con el punto 2.7, vamos a descubrir una de las características más **espectaculares y productivas** de FastAPI: cómo transforma nuestro código en **documentación viva e interactiva** casi por arte de magia ✨. ¡Prepárate para decirle adiós a las wikis desactualizadas\!
+### Cómo funciona técnicamente
 
------
+Cuando defines:
+
+```python
+def get_settings():
+    return Settings()
+```
+
+y luego en un endpoint:
+
+```python
+@app.get("/items")
+def read_items(settings: Settings = Depends(get_settings)):
+    return settings.app_name
+```
+
+FastAPI:
+
+1. **Detecta** que `read_items` necesita un parámetro `settings`.
+2. **Ejecuta** `get_settings()` para obtener el `Settings`.
+3. **Inyecta** ese objeto **automáticamente** en el endpoint.
+
+⚡️ **El endpoint no sabe de dónde viene `Settings`. Solo sabe que lo recibe**.
+
+### Además:
+
+* Si `get_settings` tuviera a su vez dependencias (por ejemplo, leer de un SecretManager), FastAPI resolvería también esa cadena.
+
+---
+
+### ¿Qué podemos inyectar?
+
+* **Configuraciones** (`Settings` de Pydantic).
+* **Instancias de base de datos**.
+* **Servicios de negocio** (por ejemplo, `UserService`).
+* **Cliente HTTP externo** (`HTTPX.AsyncClient`).
+* **Usuario autenticado actual**.
+* **Objetos de caché** (`Redis`, `Memcached`).
+* **Conexiones de mensajería** (`RabbitMQ`, `Kafka`).
+
+Todo **por petición** (scoped) o **global**.
+
+
+
+
+La **Inyección de Dependencias** (Dependency Injection) es un **patrón de diseño** en el que un objeto recibe ("se le inyecta") las instancias que necesita para funcionar, en lugar de crearlas él mismo.
+
+> **Objetivo:** reducir el **acoplamiento** entre componentes, hacer el sistema más **flexible**, **escalable** y **testable**.
+
+✅ **En lugar de**:
+Una clase creándose sus propias dependencias:
+
+```python
+class UserService:
+    def __init__(self):
+        self.db = DatabaseConnection()  # ❌ Mal, acoplado
+```
+
+✅ **Con DI**:
+La clase **recibe** la dependencia:
+
+```python
+class UserService:
+    def __init__(self, db):
+        self.db = db  # ✅ Bien, inyectado externamente
+```
+
+---
+
+### **¿Cómo funciona la DI en FastAPI?**
+
+FastAPI proporciona un sistema de **resolución automática de dependencias** mediante la función `Depends`.
+
+* **Declaras** funciones o clases que proporcionan objetos como dependencias.
+* **FastAPI resuelve automáticamente** estas dependencias cuando recibe una petición.
+* El sistema es **asíncrono** y soporta dependencias **anidadas**.
+
+> FastAPI llama a las funciones declaradas en `Depends`, resuelve el objeto y lo pasa al endpoint.
+
+### **Ejemplo Básico**
+
+```python
+from fastapi import FastAPI, Depends
+
+app = FastAPI()
+
+def get_db():
+    return "Database Connection"
+
+@app.get("/items/")
+def read_items(db=Depends(get_db)):
+    return {"db_connection": db}
+```
+
+Cuando FastAPI recibe una petición:
+
+* **Invoca** `get_db()`.
+* **Obtiene** el valor retornado.
+* **Lo inyecta** como parámetro `db` en el endpoint.
+
+
+
+### **¿Qué se puede inyectar en FastAPI?**
+
+| Tipo de dependencia                          | Ejemplo                                             |
+| -------------------------------------------- | --------------------------------------------------- |
+| **Configuración** (`BaseSettings`)           | Variables de entorno, configuración global          |
+| **Base de datos** (`Database Session`)       | Conexiones SQLAlchemy, Redis, MongoDB               |
+| **Servicios** (`UserService`, `AuthService`) | Lógica de negocio desacoplada                       |
+| **Clientes externos** (`HTTP Clients`)       | Integraciones con APIs externas usando `httpx`      |
+| **Usuario autenticado** (`Security`)         | Validación de tokens, JWTs, autorización por scopes |
+| **Background Tasks**                         | Tareas asincrónicas inyectadas                      |
+
+**Importante**: FastAPI también soporta dependencias **anidadas** y **context managers** (`yield`) para manejo de recursos.
+
+
+Un proyecto FastAPI **bien estructurado** guarda las dependencias en un módulo propio:
+
+```
+app/
+├── api/
+│   ├── deps/                # <--- 📦 Dependencias aquí
+│   │   ├── config_deps.py
+│   │   ├── db_deps.py
+│   │   ├── services_deps.py
+│   │   ├── auth_deps.py
+│   │   └── external_deps.py
+```
+
+
+
+### 1 **Inyección de Configuración Global**
+
+**`config_deps.py`**
+
+```python
+from pydantic import BaseSettings
+
+class Settings(BaseSettings):
+    database_url: str = "sqlite:///./test.db"
+    secret_key: str = "supersecret"
+
+    class Config:
+        env_file = ".env"
+
+def get_settings():
+    return Settings()
+```
+
+**Uso en ruta:**
+
+```python
+from fastapi import FastAPI, Depends
+from app.api.deps.config_deps import get_settings
+
+app = FastAPI()
+
+@app.get("/config")
+def read_config(settings=Depends(get_settings)):
+    return {"db_url": settings.database_url}
+```
+
+---
+
+### 2 **Inyección de Conexión a Base de Datos**
+
+**`db_deps.py`**
+
+```python
+from app.api.deps.config_deps import get_settings
+from fastapi import Depends
+
+class Database:
+    def __init__(self, url):
+        self.url = url
+
+def get_db(settings=Depends(get_settings)):
+    return Database(settings.database_url)
+```
+
+**Uso en ruta:**
+
+```python
+@app.get("/db")
+def read_db(db=Depends(get_db)):
+    return {"connected_to": db.url}
+```
+
+---
+
+### 3 **Inyección de Servicio de Negocio**
+
+**`services_deps.py`**
+
+```python
+from app.api.deps.db_deps import get_db
+from fastapi import Depends
+
+class UserService:
+    def __init__(self, db):
+        self.db = db
+
+    def get_user(self, user_id):
+        return {"user_id": user_id, "db_url": self.db.url}
+
+def get_user_service(db=Depends(get_db)):
+    return UserService(db)
+```
+
+**Uso en ruta:**
+
+```python
+@app.get("/users/{user_id}")
+def get_user(user_id: int, user_service=Depends(get_user_service)):
+    return user_service.get_user(user_id)
+```
+
+---
+
+### 4 **Inyección de Usuario Autenticado**
+
+**`auth_deps.py`**
+
+```python
+from fastapi import Request, HTTPException
+
+def get_current_user(request: Request):
+    token = request.headers.get("Authorization")
+    if not token or not token.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    
+    user_id = token.split(" ")[1]  # Simulación sencilla
+    return {"user_id": user_id}
+```
+
+**Uso en ruta:**
+
+```python
+@app.get("/me")
+def read_me(current_user=Depends(get_current_user)):
+    return {"user": current_user}
+```
+
+---
+
+### 5 **Inyección de Cliente HTTP Externo**
+
+**`external_deps.py`**
+
+```python
+import httpx
+
+async def get_http_client():
+    async with httpx.AsyncClient() as client:
+        yield client
+```
+
+**Uso en ruta:**
+
+```python
+@app.get("/external")
+async def external_api(client=Depends(get_http_client)):
+    response = await client.get("https://jsonplaceholder.typicode.com/todos/1")
+    return response.json()
+```
+
+### **Testing Profesional con Dependency Overrides**
+
+✅ Para tests, puedes **sobreescribir las dependencias** fácilmente:
+
+```python
+from fastapi.testclient import TestClient
+from app.main import app
+from app.api.deps.services_deps import get_user_service
+
+def fake_user_service():
+    class FakeUserService:
+        def get_user(self, user_id):
+            return {"user_id": user_id, "name": "Fake User"}
+    return FakeUserService()
+
+app.dependency_overrides[get_user_service] = fake_user_service
+
+client = TestClient(app)
+
+def test_read_user():
+    response = client.get("/users/1")
+    assert response.status_code == 200
+    assert response.json()["name"] == "Fake User"
+```
+
 
 
 ## 2.7. Integración Automática de Documentación con OpenAPI
 
-En el pasado (y a menudo en el presente con otros frameworks), la documentación de APIs era una tarea tediosa, manual y propensa a errores. Se escribía aparte, se olvidaba actualizarla, y rápidamente se convertía en una fuente de frustración para los equipos que intentaban consumir esas APIs. En un ecosistema de microservicios, donde las interacciones entre APIs son constantes, ¡esto es simplemente inaceptable\!
+¡Vamos a por ello! Esta es una parte fundamental de FastAPI en **microservicios serios** — y te voy a escribir el **punto 2.7** con el mismo nivel de rigor profesional que hemos seguido.
 
-FastAPI revoluciona este panorama al **integrar la generación de documentación como un ciudadano de primera clase**, basándose en estándares abiertos y aprovechando el poder del tipado y Pydantic.
 
-#### 1\. Los Estándares: OpenAPI y JSON Schema
+### **¿Qué es OpenAPI?**
 
-  * **OpenAPI Specification (OAS):** Antes conocida como Swagger Specification, es el **estándar de oro** para describir APIs REST. Es un formato (JSON o YAML) que define de manera **legible por máquinas (¡y humanos\!)** todo sobre tu API:
-      * Los *endpoints* disponibles (`/users`, `/orders/{id}`).
-      * Las *operaciones* permitidas en cada endpoint (GET, POST, PUT...).
-      * Los *parámetros* (path, query, header...).
-      * Los *modelos de datos* (schemas) para peticiones y respuestas.
-      * Los *métodos de autenticación*.
-  * **JSON Schema:** Es el estándar que OpenAPI utiliza para definir la **estructura y validación** de los modelos de datos JSON. Es aquí donde Pydantic juega un papel crucial.
+> **OpenAPI** es un estándar que define un formato para describir APIs RESTful de forma clara y estructurada.
 
-#### 2\. La Magia de FastAPI: De Código a Documentación Interactiva
+Con OpenAPI:
 
-¿Cómo lo hace FastAPI? No es magia, es **introspección inteligente**:
+* Los **clientes** (frontend, móviles, integradores) saben **cómo consumir** tu API.
+* Puedes **generar documentación interactiva** (Swagger UI, Redoc).
+* Facilitas la **integración** entre sistemas (por ejemplo, generación automática de SDKs).
 
-1.  **Analiza Tu Código:** FastAPI "lee" tus *path operation functions*.
-2.  **Inspecciona las Firmas:** Mira los parámetros, sus *type hints* (\<code\>int\</code\>, \<code\>str\</code\>, \<code\>bool\</code\>...) y sus valores por defecto.
-3.  **Adora Pydantic:** Cuando ve que usas un modelo Pydantic (`item: ItemModel`, `response_model=OrderSchema`), le pide a Pydantic que genere el **JSON Schema** correspondiente. ¡Aquí es donde tus validaciones (`Field`, `gt`, `min_length`) se convierten en documentación\!
-4.  **Lee Docstrings:** Utiliza las cadenas de documentación (docstrings) de tus funciones para las descripciones de los endpoints.
-5.  **Usa Metadatos:** Recoge `tags`, `summary`, `description`, `status_code`, etc., que hayas añadido a tus endpoints o routers.
-6.  **Genera `/openapi.json`:** Ensambla toda esta información y la publica automáticamente como un archivo JSON que sigue la especificación OpenAPI.
+**Antes:** API mal documentadas con Postman y correos.
+**Ahora:** OpenAPI genera **auto-documentación** confiable y siempre sincronizada con el código.
 
-**El Flujo de Generación:**
+**FastAPI** tiene integración **nativa y automática** con OpenAPI — **sin escribir código extra**.
 
-```mermaid
-graph TD
-    subgraph "Tu Código FastAPI"
-        A["Endpoints<br>(@router.get, etc.)"];
-        B["Type Hints<br>(int, str, bool)"];
-        C["Pydantic Models<br>(BaseModel, Field)"];
-        D["Docstrings & Tags"];
-    end
 
-    E{FastAPI Introspection Engine};
 
-    A --> E;
-    B --> E;
-    C --> E;
-    D --> E;
+### **¿Cómo integra FastAPI la documentación?**
 
-    E --> F["/openapi.json<br>(Especificación OAS)"];
+Cada vez que defines un endpoint:
 
-    subgraph "Documentación Interactiva"
-        G["Swagger UI<br>(/docs)"];
-        H["ReDoc<br>(/redoc)"];
-    end
-
-    F --> G;
-    F --> H;
-
-    style A,B,C,D fill:#ccf
-    style E fill:#f39c12
-    style F fill:#e74c3c
-    style G,H fill:#2ecc71
+```python
+@app.get("/items/{item_id}")
+def read_item(item_id: int):
+    return {"item_id": item_id}
 ```
 
-#### 3\. ¡Documentación Interactiva Gratis\! Swagger UI y ReDoc
+FastAPI **genera** automáticamente:
 
-FastAPI no solo genera la especificación, sino que también te regala **dos interfaces web interactivas** para explorarla:
+* El método HTTP (`GET`).
+* La URL (`/items/{item_id}`).
+* Los parámetros (`item_id`).
+* El schema de la respuesta (basado en los tipos de retorno).
 
-  * **Swagger UI (`/docs`)**:
-      * Permite ver todos los endpoints agrupados por `tags`.
-      * Muestra los detalles de cada endpoint: parámetros, schemas de petición/respuesta, descripciones.
-      * **¡Lo mejor\!** Tiene un botón "Try it out" que te permite **ejecutar peticiones a tu API directamente desde el navegador**. ¡Ideal para probar y para que otros entiendan tu API\!
-  * **ReDoc (`/redoc`)**:
-      * Ofrece una vista de documentación más **limpia y enfocada en la lectura**, con un panel de tres columnas.
-      * No permite "probar" la API, pero es excelente para entender la estructura general y los modelos.
-
-**Visualizando Swagger UI (Conceptual):**
-
-```mermaid
-graph TD
-    SUI["Swagger UI (/docs)"]
-
-    subgraph "Endpoint: POST /orders/"
-        TAG["Tag: Orders"]
-        SUM["Summary: Crea un nuevo pedido"]
-        DESC["Description: Recibe los datos...<br/><i>(De tu Docstring)</i>"]
-        PARAMS["Parameters: (None)"]
-        REQ_BODY["Request Body<br/>(application/json)<br/><b>OrderCreateSchema</b>"]
-        RESP["Responses<br/>201: <b>OrderSchema</b><br/>422: Validation Error"]
-        TRY["Botón 'Try it out'"]
-    end
-
-    subgraph "Schemas"
-        SCHEMAS["OrderSchema<br/>OrderCreateSchema<br/><i>(Generados de Pydantic)</i>"]
-    end
-
-    SUI --> TAG
-    SUI --> SUM
-    SUI --> DESC
-    SUI --> REQ_BODY
-    SUI --> RESP
-    SUI --> TRY
-    SUI --> SCHEMAS
-
-    REQ_BODY -->|Muestra| SCHEMAS
-    RESP -->|Muestra| SCHEMAS
-
-    style SUI fill:#2ecc71,stroke:#333
-    style TAG fill:#eef,stroke:#333
-    style SUM fill:#eef,stroke:#333
-    style DESC fill:#eef,stroke:#333
-    style REQ_BODY fill:#eef,stroke:#333
-    style RESP fill:#eef,stroke:#333
-    style TRY fill:#eef,stroke:#333
-    style SCHEMAS fill:#eef,stroke:#333
+✅ Esta información es convertida en un **documento OpenAPI** en JSON:
 
 ```
+GET /items/{item_id}
+  - parameters: item_id (path)
+  - response: 200 OK { "item_id": int }
+```
 
-#### 4\. Enriqueciendo Tu Documentación desde el Código
+Y automáticamente expone:
 
-La calidad de tu documentación automática depende de cómo escribas tu código. ¡Buenas noticias\! Enriquecerla es fácil:
+* **Swagger UI** en `/docs`
+* **Redoc** en `/redoc`
+* **OpenAPI JSON** en `/openapi.json`
 
-  * **Pydantic `Field`:** Usa `description` y `examples` en tus modelos.
-    ```python
-    # Concepto
-    class Item(BaseModel):
-        name: str = Field(..., description="El nombre del ítem.", examples=["Espada Mágica"])
-        price: float = Field(..., gt=0, description="Precio > 0.", examples=[99.99])
-    ```
-  * **Docstrings:** Escribe docstrings claras y concisas en tus *path operation functions*. La primera línea se usa como `summary`, el resto como `description`.
-    ```python
-    # Concepto
-    @router.post("/")
-    async def create_item(item: Item):
-        """
-        Crea un nuevo ítem en el sistema.
+---
 
-        Este endpoint recibe un ítem, lo valida y lo persiste.
-        - **name**: Debe ser único.
-        - **price**: Debe ser positivo.
-        """
-        # ...
-        pass
-    ```
-  * **Parámetros de Endpoint:** Usa `summary`, `description`, `response_description` y `responses` en tus decoradores `@router.get`, etc.
-    ```python
-    # Concepto
-    @router.get(
-        "/{item_id}",
-        response_model=Item,
-        summary="Obtiene un ítem por ID",
-        description="Busca un ítem específico usando su ID único.",
-        responses={
-            404: {"description": "Ítem no encontrado."},
-            403: {"description": "Permiso denegado."},
-        }
-    )
-    async def get_item(item_id: int): ...
-    ```
+### **Interfaces Generadas Automáticamente**
 
-#### 5\. Beneficios: ¿Por Qué Esto Cambia el Juego? 🌟
+| UI           | URL             | Descripción                             |
+| ------------ | --------------- | --------------------------------------- |
+| Swagger UI   | `/docs`         | Interfaz interactiva para probar la API |
+| Redoc        | `/redoc`        | Documentación estructurada estilo Redoc |
+| OpenAPI JSON | `/openapi.json` | Documento OpenAPI en JSON exportable    |
 
-| Beneficio | Descripción |
-| :--- | :--- |
-| **Ahorro de Tiempo Brutal** | Elimina la necesidad de escribir y mantener documentación API manualmente. |
-| **Siempre Sincronizada** | La documentación **es** un reflejo directo del código. Si el código cambia, la doc cambia. |
-| **Fuente Única de Verdad** | Un solo lugar (`/openapi.json`) define el contrato exacto de la API. |
-| **Facilita la Adopción** | Los consumidores (otros equipos, clientes) pueden entender y probar la API al instante. |
-| **Generación de Clientes** | Se pueden usar herramientas para generar SDKs en varios lenguajes a partir del `openapi.json`. |
-| **Mejora el Diseño** | Te "fuerza" a pensar más claramente sobre tus modelos y contratos API. |
+---
+
+### **Personalización de la Documentación**
+
+FastAPI permite personalizar:
+
+* **Título**, **descripción**, **versión** de la API.
+* **Tags** para organizar endpoints.
+* **Descripción de endpoints**, **parámetros**, **códigos de estado**, **modelos de respuesta**.
+
+### Definir Metadata General
+
+```python
+from fastapi import FastAPI
+
+app = FastAPI(
+    title="My Microservice API",
+    description="API de ejemplo para el microservicio de usuarios",
+    version="1.0.0",
+    contact={
+        "name": "Equipo Backend",
+        "email": "backend@empresa.com",
+    },
+    license_info={
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT",
+    },
+)
+```
+
+---
+
+### Documentar Endpoints con Tags
+
+**Uso de tags** para categorizar operaciones:
+
+```python
+from fastapi import APIRouter
+
+router = APIRouter()
+
+@router.get("/users/{user_id}", tags=["Usuarios"])
+def get_user(user_id: int):
+    return {"user_id": user_id}
+```
+
+### Descripción de Endpoints y Parámetros
+
+Añadir descripción legible:
+
+```python
+from fastapi import Path
+
+@router.get("/items/{item_id}", tags=["Items"], summary="Obtener un ítem por ID", description="Devuelve un ítem específico basado en el ID.")
+def read_item(
+    item_id: int = Path(..., title="ID del Ítem", description="El ID debe ser un entero positivo.", gt=0)
+):
+    return {"item_id": item_id}
+```
+
+* **`summary`**: aparece como título corto.
+* **`description`**: explicación detallada.
+* **`Path` metadata**: documenta los parámetros.
+
+---
+
+### Documentar Respuestas Personalizadas
+
+```python
+from fastapi import status
+from fastapi.responses import JSONResponse
+
+@router.get("/users/{user_id}", responses={
+    200: {"description": "Usuario encontrado exitosamente"},
+    404: {"description": "Usuario no encontrado"},
+})
+def get_user(user_id: int):
+    fake_db = {1: "Alice", 2: "Bob"}
+    if user_id in fake_db:
+        return {"name": fake_db[user_id]}
+    return JSONResponse(status_code=404, content={"detail": "User not found"})
+```
+
+🎯 FastAPI **extiende automáticamente** el OpenAPI con esta información.
+
+---
+
+### Documentar Request Body y Response Model
+
+Uso de **Pydantic models** para describir el cuerpo de las peticiones y respuestas:
+
+```python
+from pydantic import BaseModel
+
+class Item(BaseModel):
+    name: str
+    price: float
+
+@app.post("/items/", response_model=Item, tags=["Items"])
+def create_item(item: Item):
+    return item
+```
+
+* **`response_model`**: indica qué retorna el endpoint.
+* FastAPI usa los **modelos de Pydantic** para generar el schema OpenAPI automáticamente.
+
+---
+
+### **Ejemplo Profesional de Documentación Completa**
+
+```python
+from fastapi import FastAPI, Path
+from pydantic import BaseModel
+
+app = FastAPI(
+    title="User Microservice",
+    description="API para gestión de usuarios en el sistema.",
+    version="2.1.0",
+    contact={"name": "Equipo de Ingeniería", "email": "soporte@empresa.com"},
+    license_info={"name": "Apache 2.0", "url": "https://www.apache.org/licenses/LICENSE-2.0.html"}
+)
+
+class User(BaseModel):
+    id: int
+    name: str
+    email: str
+
+@app.get("/users/{user_id}", response_model=User, tags=["Usuarios"], summary="Obtener información de usuario", description="Este endpoint devuelve la información detallada de un usuario por su ID.", responses={404: {"description": "Usuario no encontrado"}})
+def get_user(user_id: int = Path(..., description="ID único del usuario", gt=0)):
+    fake_user_db = {1: User(id=1, name="Alice", email="alice@example.com")}
+    user = fake_user_db.get(user_id)
+    if user:
+        return user
+    return {"detail": "Usuario no encontrado"}
+```
 
 
-La integración automática con OpenAPI es, sin lugar a dudas, una de las **super-habilidades** de FastAPI. Transforma una tarea históricamente ardua en un **proceso automático, robusto y altamente beneficioso**. Al aprovechar Pydantic y los *type hints*, FastAPI no solo nos ayuda a escribir código más seguro, sino que también nos regala una **documentación interactiva y siempre actualizada**, fomentando la colaboración, acelerando el desarrollo y elevando la calidad de nuestras APIs de microservicios. Es una demostración palpable de cómo un buen diseño de framework puede potenciar las buenas prácticas de ingeniería.
+### **¿Dónde Documentar en un Proyecto Real?**
 
------
+En un proyecto profesional, puedes organizar así:
+
+```
+app/
+├── main.py                 # Configuración general de la API
+├── api/
+│   ├── routes/
+│   │   ├── user_routes.py   # Documentación por endpoint
+├── models/
+│   ├── user.py              # Modelos Pydantic bien documentados
+```
+
+Cada **router** (`user_routes.py`) define sus **tags**, **respuestas** y **modelos**.
+
+**En `main.py`** defines la **metadata general** de OpenAPI (`title`, `description`, `contact`...).
+
+
+### **Buenas Prácticas**
+
+| Práctica                                  | Por qué es importante                                         |
+| ----------------------------------------- | ------------------------------------------------------------- |
+| Usar **tags**                             | Agrupa endpoints y mejora la navegación en Swagger            |
+| Definir **summary** y **description**     | Clarifica rápidamente qué hace cada endpoint                  |
+| Documentar **parámetros**                 | Evita malentendidos en las integraciones                      |
+| Usar **response\_model**                  | Asegura contratos de salida, evita cambios no documentados    |
+| Versionar la API (`version="1.0.0"`)      | Permite mantener compatibilidad hacia atrás                   |
+| Añadir **responses** personalizadas       | Documenta posibles errores y sus códigos HTTP                 |
+| Mantener la documentación **actualizada** | La doc debe reflejar siempre el comportamiento real de la API |
 
 
 
@@ -1711,20 +2003,6 @@ Aquí es donde **Pydantic**, a través de su biblioteca hermana `pydantic-settin
 
 `pydantic-settings` busca valores para tus campos en este orden. En cuanto encuentra uno, ¡deja de buscar para ese campo\!
 
-```mermaid
-graph TD
-    A[1. Argumentos en `__init__`] --> B;
-    B[2. Variables de Entorno del Sistema] --> C;
-    C[3. Valores del Fichero `.env`] --> D;
-    D[4. Valores del Fichero de Secretos (si aplica)] --> E;
-    E[5. Valores por Defecto del Modelo];
-
-    style A fill:#e74c3c
-    style B fill:#f39c12
-    style C fill:#3498db
-    style D fill:#9b59b6
-    style E fill:#2ecc71
-```
 
 Esto significa que una variable de entorno **siempre** sobrescribirá un valor en tu `.env`, lo cual es ideal (`.env` para desarrollo local, variables de entorno para producción).
 
