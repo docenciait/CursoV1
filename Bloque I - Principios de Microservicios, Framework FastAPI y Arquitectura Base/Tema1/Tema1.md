@@ -989,73 +989,75 @@ Para navegar la complejidad descrita en el punto 1.9, necesitamos un arsenal de 
 Podemos visualizar estas herramientas como capas que se construyen unas sobre otras:
 
 ```mermaid
-    graph TD
+  %%{ init: { "theme": "default", "themeVariables": { "fontSize": "200px" }, "flowchart": { "diagramPadding": 20, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 50 } } }%%
+graph TD
 
-        DevEx["Experiencia del Desarrollador\n(Portales, Backstage)"] --> Py
-        DevEx --> Go
-        DevEx --> Java
-        DevEx --> Node
-        DevEx --> OtelSDK
-        DevEx --> DDDLibs
+    DevEx["Experiencia del Desarrollador\n(Portales, Backstage)"] --> Py
+    DevEx --> Go
+    DevEx --> Java
+    DevEx --> Node
+    DevEx --> OtelSDK
+    DevEx --> DDDLibs
 
-        %% Capa de Aplicación
-        Py["Python / FastAPI"] --> CICD
-        Go["Go / Gin"] --> CICD
-        Java["Java / Spring"] --> CICD
-        Node["Node.js / Express"] --> CICD
-        OtelSDK["SDK OpenTelemetry"] --> Observability
-        DDDLibs["Librerías DDD / Hexagonal"] --> CICD
+    %% Capa de Aplicación
+    Py["Python / FastAPI"] --> CICD
+    Go["Go / Gin"] --> CICD
+    Java["Java / Spring"] --> CICD
+    Node["Node.js / Express"] --> CICD
+    OtelSDK["SDK OpenTelemetry"] --> Observability
+    DDDLibs["Librerías DDD / Hexagonal"] --> CICD
 
-        %% CI/CD
-        CICD["CI/CD y GitOps"]
-        CICD --> Source["Git\n(GitHub / GitLab)"]
-        CICD --> Build["CI Tools\n(Actions, Jenkins, GitLab CI)"]
-        CICD --> Registry["Registros\n(Docker Hub, ECR)"]
-        CICD --> Deploy["CD Tools\n(ArgoCD, Flux)"]
+    %% CI/CD
+    CICD["CI/CD y GitOps"]
+    CICD --> Source["Git\n(GitHub / GitLab)"]
+    CICD --> Build["CI Tools\n(Actions, Jenkins, GitLab CI)"]
+    CICD --> Registry["Registros\n(Docker Hub, ECR)"]
+    CICD --> Deploy["CD Tools\n(ArgoCD, Flux)"]
 
-        %% Observabilidad
-        Observability["Observabilidad"]
-        Observability --> Logs["Logging\n(Fluentd → Loki / ELK)"]
-        Observability --> Metrics["Métricas\n(Prometheus → Grafana)"]
-        Observability --> Tracing["Tracing\n(Jaeger / Zipkin ← OTel)"]
+    %% Observabilidad
+    Observability["Observabilidad"]
+    Observability --> Logs["Logging\n(Fluentd → Loki / ELK)"]
+    Observability --> Metrics["Métricas\n(Prometheus → Grafana)"]
+    Observability --> Tracing["Tracing\n(Jaeger / Zipkin ← OTel)"]
 
-        %% Comunicación
-        Comms["Comunicación y Red"]
-        Comms --> Gateway["API Gateway\n(Kong, Traefik)"]
-        Comms --> Mesh["Service Mesh\n(Istio, Linkerd)"]
-        Comms --> Messaging["Mensajería\n(Kafka, RabbitMQ)"]
+    %% Comunicación
+    Comms["Comunicación y Red"]
+    Comms --> Gateway["API Gateway\n(Kong, Traefik)"]
+    Comms --> Mesh["Service Mesh\n(Istio, Linkerd)"]
+    Comms --> Messaging["Mensajería\n(Kafka, RabbitMQ)"]
 
-        %% Conexiones hacia Orquestación
-        CICD --> Orchestration
-        Observability --> Orchestration
-        Comms --> Orchestration
+    %% Conexiones hacia Orquestación
+    CICD --> Orchestration
+    Observability --> Orchestration
+    Comms --> Orchestration
 
-        %% Orquestación
-        Orchestration["Orquestación y Runtimes"]
-        Orchestration --> K8s["Kubernetes\n(EKS, GKE, AKS)"]
-        Orchestration --> Docker["Container Runtime\n(Docker, containerd)"]
-        Orchestration --> Storage["Almacenamiento\n(Ceph, Portworx)"]
-        Orchestration --> Network["Redes CNI\n(Calico, Cilium)"]
+    %% Orquestación
+    Orchestration["Orquestación y Runtimes"]
+    Orchestration --> K8s["Kubernetes\n(EKS, GKE, AKS)"]
+    Orchestration --> Docker["Container Runtime\n(Docker, containerd)"]
+    Orchestration --> Storage["Almacenamiento\n(Ceph, Portworx)"]
+    Orchestration --> Network["Redes CNI\n(Calico, Cilium)"]
 
-        %% Infraestructura
-        Orchestration --> Infra
-        Infra["Infraestructura Física / Cloud"]
-        Infra --> AWS
-        Infra --> GCP
-        Infra --> Azure
-        Infra --> OnPrem
+    %% Infraestructura
+    Orchestration --> Infra
+    Infra["Infraestructura Física / Cloud"]
+    Infra --> AWS
+    Infra --> GCP
+    Infra --> Azure
+    Infra --> OnPrem
 
-        AWS[AWS]
-        GCP[Google Cloud]
-        Azure[Azure]
-        OnPrem[On-Premise]
+    AWS[AWS]
+    GCP[Google Cloud]
+    Azure[Azure]
+    OnPrem[On-Premise]
 
-        %% Estilos por capa
-        style CICD fill:#FCF3CF
-        style Observability fill:#FADBD8
-        style Comms fill:#E8DAEF
-        style Orchestration fill:#D4E6F1
-        style Infra fill:#E5E7E9
+    %% Estilos por capa
+    style CICD fill:#FCF3CF
+    style Observability fill:#FADBD8
+    style Comms fill:#E8DAEF
+    style Orchestration fill:#D4E6F1
+    style Infra fill:#E5E7E9
+
 
 ```
 
