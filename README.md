@@ -17,7 +17,7 @@ Desarrolladores backend con experiencia en Python que quieran especializarseen m
 - Desarrollar microservicios escalables con FastAPI, aplicando arquitectura hexagonal, DDD y CQRS.
 - Implementar APIs REST y WebSockets eficientes, con autenticación seguramediante OAuth2 y JWT.
 - Gestionar comunicación entre microservicios con RabbitMQ, Kafka y Pub/Sub para sistemas distribuidos.
-- Optimizar el rendimiento y la escalabilidad, utilizando caching, balanceo decarga y transacciones distribuidas.
+- Optimizar el rendimiento y la escalabilidad, utilizando caching, balanceo de carga y transacciones distribuidas.
 - Automatizar despliegues en Docker y Kubernetes, asegurando CI/CD, monitoreo con Prometheus y logs centralizados.
 
 # Requisitos

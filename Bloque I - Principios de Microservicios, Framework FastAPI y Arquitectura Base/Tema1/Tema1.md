@@ -1183,32 +1183,35 @@ Cuando pasamos de un monolito a múltiples microservicios, surgen nuevos desafí
 
 ## Referencias Bibliográficas
 
+* **[1] Richards, M., & Ford, N. (2020).** _Fundamentals of Software Architecture: An Engineering Approach_. O'Reilly Media_ (3rd ed.). Addison-Wesley Professional.
+    * *Mencionado en la sección conceptos previos*
 
-* **[1] Bass, L., Clements, P., & Kazman, R. (2012).** _Software Architecture in Practice_ (3rd ed.). Addison-Wesley Professional.
+
+* **[2] Bass, L., Clements, P., & Kazman, R. (2012).** _Software Architecture in Practice_ (3rd ed.). Addison-Wesley Professional.
     * *Mencionado en la sección "1.0 Conceptos Previos" como una definición de patrón de arquitectura.*
 
-* **[2] Fowler, M. (2004).** _Strangler Fig Application_. MartinFowler.com.
+* **[3] Fowler, M. (2004).** _Strangler Fig Application_. MartinFowler.com.
     * Recuperado de [https://martinfowler.com/bliki/OriginalStranglerFigApplication.html](https://martinfowler.com/bliki/OriginalStranglerFigApplication.html)
     * *Mencionado en la sección "1.4 Casos de Uso Reales donde los Microservicios Aportan Valor" en relación con la modernización de sistemas legados.*
 
-* **[3] Evans, E. (2003).** _Domain-Driven Design: Tackling Complexity in the Heart of Software_. Addison-Wesley Professional.
+* **[4] Evans, E. (2003).** _Domain-Driven Design: Tackling Complexity in the Heart of Software_. Addison-Wesley Professional.
     * *Referenciado implícitamente por `[^5^]` en la sección "1.6 La Importancia del Diseño Orientado a Dominio (DDD) en este Contexto", en relación con Bounded Contexts.*
 
-* **[4] Brandolini, A.** _Introducing EventStorming_. Leanpub.
+* **[5] Brandolini, A.** _Introducing EventStorming_. Leanpub.
     * Ver también: [EventStorming.com](https://www.eventstorming.com/)
     * *Referenciado implícitamente por `[^9^]` en la sección "1.7 Bounded Context y Separación de Responsabilidades" como una técnica para identificar Bounded Contexts.*
 
-* **[5] Conway, M. E. (1968).** How Do Committees Invent?. _Datamation_, _14_(5), 28-31.
+* **[6] Conway, M. E. (1968).** How Do Committees Invent?. _Datamation_, _14_(5), 28-31.
     * Disponible en múltiples fuentes online, por ejemplo: [melconway.com](http://www.melconway.com/Home/Committees_Paper.html)
     * *Referenciado implícitamente por `[^10^]` en la sección "1.8 Distribución de los Equipos en torno a Microservicios" como la Ley de Conway.*
 
-* **[6] Skelton, M., & Pais, M. (2019).** _Team Topologies: Organizing Business and Technology Teams for Fast Flow_. IT Revolution Press.
+* **[7] Skelton, M., & Pais, M. (2019).** _Team Topologies: Organizing Business and Technology Teams for Fast Flow_. IT Revolution Press.
     * *Referenciado implícitamente por `[^11^]` en la sección "1.8 Distribución de los Equipos en torno a Microservicios" en relación con "Stream-Aligned Teams".*
 
-* **[7] Netflix Technology Blog.**
+* **[8] Netflix Technology Blog.**
     * Recuperado de [https://netflixtechblog.com/](https://netflixtechblog.com/) (o [https://research.netflix.com/](https://research.netflix.com/) para el área de investigación)
     * *Mencionado en la sección "1.4 Casos de Uso Reales donde los Microservicios Aportan Valor" como ejemplo de una empresa pionera en microservicios.*
 
-* **[8] FastAPI Event Handlers (Startup/Shutdown).** _FastAPI Documentation_.
+* **[9] FastAPI Event Handlers (Startup/Shutdown).** _FastAPI Documentation_.
     * Recuperado de [https://fastapi.tiangolo.com/advanced/events/](https://fastapi.tiangolo.com/advanced/events/)
     * *Mencionado en la sección "1.11 Introducción a Patrones Clave" en el contexto de cómo los servicios FastAPI podrían registrarse/desregistrarse en un Service Registry.*
