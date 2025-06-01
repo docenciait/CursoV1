@@ -989,58 +989,48 @@ Para navegar la complejidad descrita en el punto 1.9, necesitamos un arsenal de 
 Podemos visualizar estas herramientas como capas que se construyen unas sobre otras:
 
 ```mermaid
-  %%{ init: { "theme": "default", "themeVariables": { "fontSize": "200px" }, "flowchart": { "diagramPadding": 20, "htmlLabels": true, "nodeSpacing": 50, "rankSpacing": 50 } } }%%
-graph TD
+  
+  %%{ init: { "theme": "default", "themeVariables": { "fontSize": "30px" }, "flowchart": { "diagramPadding": 20, "htmlLabels": true, "nodeSpacing": 20, "rankSpacing": 20 } } }%%
+graph TB
 
-    DevEx["Experiencia del Desarrollador\n(Portales, Backstage)"] --> Py
-    DevEx --> Go
-    DevEx --> Java
-    DevEx --> Node
-    DevEx --> OtelSDK
-    DevEx --> DDDLibs
+    DevEx["Experiencia del Desarrollador(Portales, Backstage)"] --> AppLayer
+    AppLayer["Capa de Aplicación"] --> Py["Python / FastAPI"]
+    AppLayer --> Go["Go / Gin"]
+    AppLayer --> Java["Java / Spring"]
+    AppLayer --> Node["Node.js / Express"]
+    AppLayer --> OtelSDK["SDK OpenTelemetry"]
+    AppLayer --> DDDLibs["Librerías DDD / Hexagonal"]
 
-    %% Capa de Aplicación
-    Py["Python / FastAPI"] --> CICD
-    Go["Go / Gin"] --> CICD
-    Java["Java / Spring"] --> CICD
-    Node["Node.js / Express"] --> CICD
-    OtelSDK["SDK OpenTelemetry"] --> Observability
-    DDDLibs["Librerías DDD / Hexagonal"] --> CICD
+    Py --> CICD
+    Go --> CICD
+    Java --> CICD
+    Node --> CICD
+    OtelSDK --> Observability
+    DDDLibs --> CICD
 
-    %% CI/CD
-    CICD["CI/CD y GitOps"]
-    CICD --> Source["Git\n(GitHub / GitLab)"]
-    CICD --> Build["CI Tools\n(Actions, Jenkins, GitLab CI)"]
-    CICD --> Registry["Registros\n(Docker Hub, ECR)"]
-    CICD --> Deploy["CD Tools\n(ArgoCD, Flux)"]
+    CICD["CI/CD y GitOps"] --> Source["Git(GitHub / GitLab)"]
+    Source --> Build["CI Tools(Actions, Jenkins, GitLab CI)"]
+    Build --> Registry["Registros(Docker Hub, ECR)"]
+    Registry --> Deploy["CD Tools(ArgoCD, Flux)"]
 
-    %% Observabilidad
-    Observability["Observabilidad"]
-    Observability --> Logs["Logging\n(Fluentd → Loki / ELK)"]
-    Observability --> Metrics["Métricas\n(Prometheus → Grafana)"]
-    Observability --> Tracing["Tracing\n(Jaeger / Zipkin ← OTel)"]
+    Observability["Observabilidad"] --> Logs["Logging\n(Fluentd → Loki / ELK)"]
+    Logs --> Metrics["Métricas(Prometheus → Grafana)"]
+    Metrics --> Tracing["Tracing(Jaeger / Zipkin ← OTel)"]
 
-    %% Comunicación
-    Comms["Comunicación y Red"]
-    Comms --> Gateway["API Gateway\n(Kong, Traefik)"]
-    Comms --> Mesh["Service Mesh\n(Istio, Linkerd)"]
-    Comms --> Messaging["Mensajería\n(Kafka, RabbitMQ)"]
+    Deploy --> Orchestration
+    Tracing --> Orchestration
 
-    %% Conexiones hacia Orquestación
-    CICD --> Orchestration
-    Observability --> Orchestration
-    Comms --> Orchestration
+    Comms["Comunicación y Red"] --> Gateway["API Gateway(Kong, Traefik)"]
+    Gateway --> Mesh["Service Mesh(Istio, Linkerd)"]
+    Mesh --> Messaging["Mensajería(Kafka, RabbitMQ)"]
+    Messaging --> Orchestration
 
-    %% Orquestación
-    Orchestration["Orquestación y Runtimes"]
-    Orchestration --> K8s["Kubernetes\n(EKS, GKE, AKS)"]
-    Orchestration --> Docker["Container Runtime\n(Docker, containerd)"]
-    Orchestration --> Storage["Almacenamiento\n(Ceph, Portworx)"]
-    Orchestration --> Network["Redes CNI\n(Calico, Cilium)"]
+    Orchestration["Orquestación y Runtimes"] --> K8s["Kubernetes(EKS, GKE, AKS)"]
+    K8s --> Docker["Container Runtime(Docker, containerd)"]
+    Docker --> Storage["Almacenamiento(Ceph, Portworx)"]
+    Storage --> Network["Redes CNI(Calico, Cilium)"]
 
-    %% Infraestructura
-    Orchestration --> Infra
-    Infra["Infraestructura Física / Cloud"]
+    Network --> Infra["Infraestructura Física / Cloud"]
     Infra --> AWS
     Infra --> GCP
     Infra --> Azure
