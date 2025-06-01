@@ -553,11 +553,11 @@ Aquí es donde la goma se encuentra con el camino. Analicemos situaciones donde 
 
 *Uber Monolito*:
 
-[](img/mono_hexagonal.PNG)
+![](img/mono_hexagonal.PNG)
 
 *Uber a Microservicios*:
 
-[](img/mono_to_ms.PNG)
+![](img/mono_to_ms.PNG)
 
 ¡Genial! Hemos hablado de la evolución, las ventajas/desventajas y hemos aclarado la diferencia con SOA. Ahora llegamos a un punto crucial que conecta directamente con el corazón de este curso: **¿Qué pinta el Diseño Orientado a Dominio (DDD) en todo este universo de microservicios?** La respuesta es: ¡Pinta, y mucho! Es, de hecho, una de las herramientas más potentes para diseñar microservicios _correctamente_.
 
