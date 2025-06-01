@@ -1,5 +1,6 @@
-# Tema 7. INTRODUCCIÓN A DOMAIN-DRIVEN DESIGN (DDD)
+# Tema 7. Introducción a Domain-Driven Design (DDD)
 
+  * [Ojetivos]()
   * [7.1 Bloques tácticos y estratégicos del DDD](Tema7.md#71-bloques-tácticos-y-estratégicos-del-ddd)
   * [7.2 Rol de Aggregates, Entities y Value Objects](Tema7.md#72-rol-de-aggregates-entities-y-value-objects)
   * [7.3 Definición de Bounded Contexts y sus fronteras](Tema7.md#73-definición-de-bounded-contexts-y-sus-fronteras)
@@ -10,10 +11,18 @@
   * [7.8 Desarrollo de Ubiquitous Language](Tema7.md#78-desarrollo-de-ubiquitous-language)
   * [7.9 Capa de aplicación sobre la lógica de dominio](Tema7.md#79-capa-de-aplicación-sobre-la-lógica-de-dominio)
   * [7.10 Refactorización de dominio en capas desacopladas](Tema7.md#710-refactorización-de-dominio-en-capas-desacopladas)
-  * [Bibliografía](Tema7.md#bibliografía)
+  * [Bibliografía](#referencias-bibliográficas)
 
+---
 
-### 7.1 Bloques tácticos y estratégicos del DDD
+## Objetivos
+* Comprender qué es Domain-Driven Design (DDD) y su importancia para desarrollar software centrado en la lógica de negocio.
+* Diferenciar entre los conceptos de diseño estratégico (como Contextos Delimitados y Lenguaje Ubicuo) y diseño táctico (como Entidades, Objetos de Valor y Agregados) en DDD.
+* Identificar el rol fundamental de los principales bloques de construcción tácticos de DDD: Entidades, Objetos de Valor y Agregados.
+* Reconocer la importancia de desarrollar un Lenguaje Ubicuo y definir Contextos Delimitados claros para un modelado efectivo del dominio.
+* Visualizar cómo los principios de DDD pueden aplicarse en la práctica para estructurar aplicaciones, incluyendo su posible integración con frameworks como FastAPI.
+---
+## 7.1 Bloques tácticos y estratégicos del DDD
 
 Domain-Driven Design (DDD) es una metodología para el desarrollo de software que se enfoca en modelar el software para que coincida con un dominio o negocio complejo. Para abordar esta complejidad, DDD se divide en dos conjuntos principales de patrones o "bloques": **Estratégicos** y **Tácticos**.
 
@@ -172,7 +181,7 @@ Al dominar ambos conjuntos de patrones, los desarrolladores pueden construir sis
 
 ***
 
-### 7.2 Rol de Aggregates, Entities y Value Objects
+## 7.2 Rol de Aggregates, Entities y Value Objects
 
 El Domain-Driven Design (DDD) es un enfoque para el desarrollo de software que se centra en modelar el software para que coincida con un dominio o negocio subyacente. Para lograr esto, DDD se divide en dos conjuntos principales de herramientas o "bloques": los **Bloques Estratégicos** y los **Bloques Tácticos**. Ambos son cruciales para construir aplicaciones complejas, como las que desarrollaréis con FastAPI, que sean mantenibles, escalables y alineadas con las necesidades del negocio.
 
@@ -398,7 +407,7 @@ Comprender y aplicar ambos conjuntos de herramientas es esencial para aprovechar
 
 ***
 
-### 7.3 Definición de Bounded Contexts y sus fronteras
+## 7.3 Definición de Bounded Contexts y sus fronteras
 
 En el punto 7.1 introdujimos los Bounded Contexts (Contextos Delimitados) como un pilar del diseño estratégico en DDD. Ahora, profundizaremos en qué son exactamente, por qué son cruciales y, lo más importante, cómo podemos empezar a definir sus fronteras en nuestros sistemas. Esta comprensión es fundamental para estructurar vuestras aplicaciones FastAPI de manera que reflejen y sirvan eficazmente al dominio de negocio.
 
@@ -521,7 +530,7 @@ Como se mencionó, los Bounded Contexts son un precursor natural de los microser
 
 La definición clara de Bounded Contexts y sus fronteras os permitirá diseñar sistemas FastAPI que no solo son técnicamente sólidos, sino que también están profundamente alineados con la estructura y las necesidades del negocio, facilitando su evolución y mantenimiento a largo plazo.
 
-### 7.4 Diseño de Domain Services
+## 7.4 Diseño de Domain Services
 
 En el modelado de dominios complejos, a veces nos encontramos con operaciones o lógica de negocio que no encajan de forma natural como una responsabilidad de una Entidad o un Objeto de Valor. Cuando una acción significativa del dominio involucra múltiples objetos de dominio, o cuando la operación en sí misma es un concepto central sin un estado propio, recurrimos a los **Servicios de Dominio (Domain Services)**. Estos son un componente esencial de la capa de dominio en DDD.
 
@@ -683,7 +692,7 @@ Los Servicios de Dominio son una herramienta poderosa para encapsular lógica de
 
 ***
 
-### 7.5 Repositorios como abstracción de persistencia
+## 7.5 Repositorios como abstracción de persistencia
 
 Dentro de los patrones tácticos de Domain-Driven Design, el **Repositorio (Repository)** juega un papel crucial al actuar como una capa de abstracción entre la lógica de dominio y los mecanismos de persistencia de datos. Su correcta implementación es vital para construir aplicaciones (como las que desarrollaréis con FastAPI) que sean robustas, mantenibles y fáciles de probar, al desacoplar el "qué" del dominio del "cómo" de la infraestructura de datos.
 
@@ -814,7 +823,7 @@ El patrón Repositorio es una piedra angular en DDD para lograr un diseño desac
 
 ***
 
-### 7.6 Integración de DDD con FastAPI y Pydantic
+## 7.6 Integración de DDD con FastAPI y Pydantic
 
 Hasta ahora, hemos explorado los bloques estratégicos y tácticos de DDD. Ahora veremos cómo estos conceptos se integran de manera efectiva en el desarrollo de aplicaciones web API robustas y mantenibles utilizando el framework FastAPI y la librería de validación de datos Pydantic. Esta combinación ofrece un entorno potente para construir sistemas centrados en el dominio.
 
@@ -1077,7 +1086,7 @@ FastAPI, con su moderno sistema de tipos basado en Pydantic y su potente inyecci
 
 ***
 
-### 7.7 Creación de factories para entidades complejas
+## 7.7 Creación de factories para entidades complejas
 
 Cuando nuestras Entidades y, especialmente, nuestros Agregados se vuelven complejos, su proceso de creación puede implicar múltiples pasos, validaciones y la necesidad de asegurar que se cumplan todas las invariantes desde el momento de la instanciación. Simplemente usar un constructor puede llevar a constructores sobrecargados o a que el código cliente se vea obligado a conocer demasiados detalles internos de la creación. Aquí es donde el patrón **Fábrica (Factory)** en DDD nos ofrece una solución elegante y robusta.
 
@@ -1276,7 +1285,7 @@ Las Fábricas son un patrón táctico de DDD invaluable para gestionar la creaci
 
 **Ejemplo Conceptual de Código (Python):**
 
-### 7.8 Desarrollo de Ubiquitous Language
+## 7.8 Desarrollo de Ubiquitous Language
 
 En el corazón de Domain-Driven Design yace un concepto aparentemente simple pero profundamente poderoso: el **Lenguaje Ubicuo (Ubiquitous Language)**. No es solo una colección de términos de negocio, sino el fundamento sobre el cual se construye un entendimiento compartido y un modelo de dominio preciso. Su correcto desarrollo y aplicación son cruciales para el éxito de cualquier proyecto que aspire a reflejar fielmente la complejidad del negocio, incluyendo vuestras aplicaciones FastAPI.
 
@@ -1423,7 +1432,7 @@ Es fundamental recordar (como vimos en 7.3) que el **Lenguaje Ubicuo es específ
 
 El desarrollo y mantenimiento de un Lenguaje Ubicuo es una inversión, no un costo. Es la base para construir software que no solo funciona, sino que también es comprensible, mantenible y verdaderamente alineado con las necesidades y la realidad del negocio. Para los profesionales que desarrollan aplicaciones FastAPI con un enfoque DDD, dominar el arte de cultivar este lenguaje es una habilidad esencial que diferenciará la calidad y la longevidad de sus soluciones.
 
-### 7.9 Capa de aplicación sobre la lógica de dominio
+## 7.9 Capa de aplicación sobre la lógica de dominio
 
 En una arquitectura DDD bien estructurada, la **Capa de Aplicación (Application Layer)** actúa como un director de orquesta. No toca los instrumentos (es decir, no contiene la lógica de negocio en sí misma), pero dirige a los músicos (los objetos de dominio) para interpretar una melodía completa (un caso de uso de la aplicación). Esta capa es esencial para mantener el Modelo de Dominio puro y enfocado, y para exponer de manera clara las capacidades del software.
 
@@ -1632,7 +1641,7 @@ La Capa de Aplicación es el pegamento que une la interfaz de usuario/API con la
 
 ***
 
-### 7.10 Refactorización de dominio en capas desacopladas
+## 7.10 Refactorización de dominio en capas desacopladas
 
 A lo largo de este tema, hemos explorado los bloques de construcción y los principios estratégicos de Domain-Driven Design. Sin embargo, aplicar estos conceptos a un sistema nuevo es una cosa, y refactorizar un sistema existente (o uno que ha crecido orgánicamente sin una arquitectura clara) hacia un diseño en capas desacopladas es otra. Este punto se centra en las estrategias y técnicas para llevar a cabo esta refactorización, transformando el código en una estructura más mantenible, testeable y alineada con el dominio.
 
@@ -1795,9 +1804,9 @@ La refactorización es un proceso, no un evento. Aquí algunas estrategias:
 
 Refactorizar un dominio hacia capas desacopladas es una inversión estratégica en la calidad, mantenibilidad y longevidad de vuestro software. Aunque puede presentar desafíos, los beneficios de tener un Modelo de Dominio claro y protegido, una lógica de aplicación explícita y una infraestructura intercambiable son inmensos. Este proceso no solo mejora la estructura del código, sino que también profundiza la comprensión del dominio por parte del equipo, reforzando los principios de DDD en la práctica. Es un viaje continuo de mejora y adaptación.
 
-### Bibliografía
+## Referencias Bibliográficas
 
-## Libros Fundamentales y de Referencia
+### Libros Fundamentales y de Referencia
 
 1. **Evans, Eric.** _Domain-Driven Design: Tackling Complexity in the Heart of Software_. Addison-Wesley Professional, 2003.
    * Este es el libro fundacional de DDD. Aunque denso, es la fuente principal para entender en profundidad los conceptos estratégicos (Ubiquitous Language, Bounded Contexts, Context Maps) y tácticos (Entities, Value Objects, Aggregates, Repositories, Domain Services, Factories). Cubre prácticamente todos los puntos del temario, excepto la integración específica con FastAPI y Pydantic.
@@ -1810,7 +1819,7 @@ Refactorizar un dominio hacia capas desacopladas es una inversión estratégica 
 
 ***
 
-## Recursos Adicionales y Específicos
+### Recursos Adicionales y Específicos
 
 * **Para Patrones Tácticos (7.1, 7.2, 7.4, 7.5, 7.7):**
   * Además de los libros de Evans y Vernon, muchos blogs y artículos online profundizan en Aggregates, Entities, Value Objects, Domain Services y Repositories. Busca en comunidades como DDDCommunity.org o artículos de Martin Fowler.
@@ -1826,7 +1835,7 @@ Refactorizar un dominio hacia capas desacopladas es una inversión estratégica 
 
 ***
 
-## Comunidades y Sitios Web
+### Comunidades y Sitios Web
 
 * **DDD Community:** [dddcommunity.org](https://dddcommunity.org/) - Un buen lugar para encontrar artículos, discusiones y recursos.
 * **Martin Fowler's Blog:** [martinfowler.com](https://martinfowler.com/) - Contiene muchos artículos influyentes sobre diseño de software, patrones arquitectónicos y conceptos relacionados con DDD.

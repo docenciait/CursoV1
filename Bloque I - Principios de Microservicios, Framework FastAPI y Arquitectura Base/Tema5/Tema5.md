@@ -1,5 +1,6 @@
-# Tema 5. SEGURIDAD Y BUENAS PRÁCTICAS EN MICROSERVICIOS
+# Tema 5. Seguridad y buenas prácticas en Microservicios
 
+  * [Objetivos](#objetivos)
   * [5.1 Autenticación basada en JWT con FastAPI](Tema5.md#51-autenticación-basada-en-jwt-con-fastapi)
   * [5.2 Autorización por roles y scopes (RBAC)](Tema5.md#52-autorización-por-roles-y-scopes-rbac)
   * [5.3 Comunicación segura con HTTPS y certificados](Tema5.md#53-comunicación-segura-con-https-y-certificados)
@@ -11,7 +12,20 @@
   * [5.9 Análisis de vulnerabilidades OWASP](Tema5.md#59-análisis-de-vulnerabilidades-owasp)
   * [5.10 Auditoría y trazabilidad de usuarios](Tema5.md#510-auditoría-y-trazabilidad-de-usuarios)
   * [5.11 Configuración de rate limiting](Tema5.md#511-configuración-de-rate-limiting)
-  * [Referencias](Tema5.md#referencias)
+  * [Referencias](#referencias)
+
+***
+## Objetivos
+
+* Comprender los principios fundamentales de seguridad aplicables a arquitecturas de microservicios.
+
+* Implementar mecanismos de autenticación y autorización robustos, como JWT y RBAC, en aplicaciones FastAPI.
+
+* Aplicar buenas prácticas para asegurar la comunicación, la validación de datos y la gestión de secretos en microservicios.
+
+* Identificar y mitigar vulnerabilidades comunes en APIs, tomando como referencia el Top 10 de OWASP.
+
+* Establecer estrategias para la auditoría, trazabilidad y limitación de tasa en los servicios.
 
 ***
 
@@ -1923,36 +1937,31 @@ esto si usas otros middlewares que también interactúan con`request.state`.
 La implementación efectiva de rate limiting es una combinación de elegir\
 el algoritmo y el punto de aplicación correctos (gateway vs.\
 aplicación), y comunicar claramente los límites a los consumidores de la\
-API. \`\`\`
+API. 
 
-## Referencias
+---
 
-1. [https://github.com/JorgeRomeroC/tasks](https://github.com/JorgeRomeroC/tasks)
-2. [https://www.machinet.net/tutorial-es/jwtdecoder-comprehensive-guide-java-developers](https://www.machinet.net/tutorial-es/jwtdecoder-comprehensive-guide-java-developers)
-3. [https://github.com/Craxti/FastMongoAuth](https://github.com/Craxti/FastMongoAuth)
-4. [https://github.com/xmigrate/xmigrate](https://github.com/xmigrate/xmigrate) subject to Apache - 2.0
-5. [https://github.com/ComputerSocietyVITC/Archive-Sahaay](https://github.com/ComputerSocietyVITC/Archive-Sahaay) subject to MIT
-6. [https://github.com/beda-app/beda-backend](https://github.com/beda-app/beda-backend)
-7. [https://github.com/ShahriyarR/hexagonal-fastapi-jobboard](https://github.com/ShahriyarR/hexagonal-fastapi-jobboard) subject to MIT
-8. [https://blog.csdn.net/Innocence\_0/article/details/139207480](https://blog.csdn.net/Innocence_0/article/details/139207480)
-9. [https://github.com/AliSayyah/FastAPI-Piccolo-Template](https://github.com/AliSayyah/FastAPI-Piccolo-Template)
-10. [https://github.com/tiangolo/fastapi/issues/5219](https://github.com/tiangolo/fastapi/issues/5219)
-11. [https://github.com/Akmaljon2002/fastapi-template](https://github.com/Akmaljon2002/fastapi-template)
-12. [https://github.com/HighlandersFRC/2021-vrum-api](https://github.com/HighlandersFRC/2021-vrum-api)
-13. [https://github.com/95Marmite/MicroServiceTemplate](https://github.com/95Marmite/MicroServiceTemplate)
-14. [https://github.com/chi0310/BlackJack](https://github.com/chi0310/BlackJack)
-15. [https://github.com/rychanya/arya\_backend](https://github.com/rychanya/arya_backend)
-16. [https://github.com/AESMatias/ConnectX-Backend](https://github.com/AESMatias/ConnectX-Backend)
-17. [https://github.com/Doreapp/skillect](https://github.com/Doreapp/skillect) subject to MIT
-18. [https://stackoverflow.com/questions/75534277/fastapi-grant-type-refresh-token](https://stackoverflow.com/questions/75534277/fastapi-grant-type-refresh-token)
-19. [https://github.com/space-logistics-org/spacenet](https://github.com/space-logistics-org/spacenet) subject to MIT
-20. [https://community.letsencrypt.org/t/update-request-for-etc-letsencrypt-options-ssl-nginx-conf/160859](https://community.letsencrypt.org/t/update-request-for-etc-letsencrypt-options-ssl-nginx-conf/160859)
-21. [https://cloud.google.com/community/tutorials/https-load-balancing-nginx?hl=es](https://cloud.google.com/community/tutorials/https-load-balancing-nginx?hl=es)
-22. [https://ichi.pro/es/owasp-2020-261705957706193](https://ichi.pro/es/owasp-2020-261705957706193)
-23. [https://mtechsystems.io/es/trust-center/](https://mtechsystems.io/es/trust-center/)
-24. [https://www.inforc.lat/post/top10-seguridad-apps-owasp](https://www.inforc.lat/post/top10-seguridad-apps-owasp)
-25. [https://github.com/MohammadZeineddine/my\_sentiment\_analysis](https://github.com/MohammadZeineddine/my_sentiment_analysis)
-26. [https://github.com/djaheny-ledger/knowledge\_bot](https://github.com/djaheny-ledger/knowledge_bot)
-27. [https://github.com/krjadhav/contract-draft](https://github.com/krjadhav/contract-draft)
+## Referencias 
 
-\`\`\`
+
+
+1.  **Guía sobre JWT (JSON Web Tokens):**
+    * `https://www.machinet.net/tutorial-es/jwtdecoder-comprehensive-guide-java-developers` (Aunque enfocado a Java, explica los conceptos de JWT que son universales y aplicables a la autenticación en microservicios).
+2.  **Ejemplo de Autenticación en FastAPI (FastMongoAuth):**
+    * `https://github.com/Craxti/FastMongoAuth` (Un proyecto que implementa autenticación, útil para ver un ejemplo práctico con FastAPI).
+3.  **Discusión sobre Refresh Tokens en FastAPI:**
+    * `https://stackoverflow.com/questions/75534277/fastapi-grant-type-refresh-token` (Pregunta específica en Stack Overflow sobre un aspecto importante de la autenticación con tokens).
+4.  **Configuración de SSL/TLS con Nginx y Let's Encrypt (Comunidad Let's Encrypt):**
+    * `https://community.letsencrypt.org/t/update-request-for-etc-letsencrypt-options-ssl-nginx-conf/160859` (Relevante para la sección de comunicación segura con HTTPS y certificados).
+5.  **Tutorial sobre Balanceo de Carga HTTPS con Nginx (Google Cloud):**
+    * `https://cloud.google.com/community/tutorials/https-load-balancing-nginx?hl=es` (Útil para entender la configuración de HTTPS en un entorno de producción con un reverse proxy).
+6.  **Artículo sobre el Top 10 de Seguridad de OWASP (Inforc.lat):**
+    * `https://www.inforc.lat/post/top10-seguridad-apps-owasp` (Referencia clave para el análisis de vulnerabilidades OWASP).
+7.  **Discusión sobre un aspecto de FastAPI (GitHub Issue):**
+    * `https://github.com/tiangolo/fastapi/issues/5219` (Podría contener información específica sobre la implementación o problemas de seguridad en FastAPI, dependiendo del contenido del issue).
+8.  **Ejemplo de Aplicación FastAPI con Arquitectura Hexagonal:**
+    * `https://github.com/ShahriyarR/hexagonal-fastapi-jobboard` (Un proyecto más completo que puede servir de ejemplo para la estructura general y la implementación de buenas prácticas de seguridad en FastAPI).
+9.  **Ejemplo General de Proyecto con FastAPI (tasks):**
+    * `https://github.com/JorgeRomeroC/tasks` (Uno de los proyectos base referenciados, podría ilustrar configuraciones iniciales o algunos de los conceptos de forma simple).
+10. **Plantilla de FastAPI con Piccolo ORM:**
+    * `https://github.com/AliSayyah/FastAPI-Piccolo-Template` (Las plantillas de proyecto suelen incluir configuraciones básicas de seguridad o una estructura que facilita su implementación).

@@ -1,5 +1,6 @@
-# Tema 8. PATRÓN CQRS EN MICROSERVICIOS
+# Tema 8. Patrón CQRS en Microservicios
 
+  - [Objetivos](#objetivos)
   - [8.1 Explicación del patrón CQRS y diferencias con CRUD tradicional](#81-explicación-del-patrón-cqrs-y-diferencias-con-crud-tradicional)
   - [8.2 Diseño de Comandos y Queries como Elementos Separados: Formalización de la Interacción](#82-diseño-de-comandos-y-queries-como-elementos-separados-formalización-de-la-interacción)
   - [8.3 Implementación de CommandHandlers desacoplados de controladores](#83-implementación-de-commandhandlers-desacoplados-de-controladores)
@@ -10,9 +11,18 @@
   - [8.8 Uso de FastAPI como gateway para coordinar comandos y queries](#88-uso-de-fastapi-como-gateway-para-coordinar-comandos-y-queries)
   - [8.9 Desacoplamiento de Servicios Mediante Colas o Buses de Eventos](#89-desacoplamiento-de-servicios-mediante-colas-o-buses-de-eventos)
   - [8.10 Análisis de Pros y Contras de CQRS en Sistemas Reales](#810-análisis-de-pros-y-contras-de-cqrs-en-sistemas-reales)
-  - [Bibliografía](#bibliografía)
+  - [Referencias Bibliográficas](#referncias-bibliográficas)
   
- 
+ ---
+ ## Objetivos
+* Comprender el concepto fundamental del patrón CQRS (Segregación de Responsabilidad de Comandos y Consultas) y sus diferencias clave con el enfoque CRUD tradicional.
+* Identificar y diseñar los elementos centrales de una arquitectura CQRS: Comandos (para modificar el estado) y Consultas (para leer el estado) como objetos separados.
+* Entender el papel de los CommandHandlers y QueryHandlers y cómo se implementan de forma desacoplada para procesar dichas operaciones.
+* Reconocer las implicaciones y estrategias para gestionar la separación entre los modelos de datos de escritura y los modelos de lectura.
+* Introducirse al concepto de Persistencia por Evento (Event Sourcing) y su relación sinérgica con el patrón CQRS.
+* Visualizar cómo FastAPI puede actuar como un gateway o fachada para recibir solicitudes HTTP y coordinar el despacho de Comandos y Consultas.
+* Analizar los pros y contras de aplicar el patrón CQRS, identificando los escenarios donde aporta mayores beneficios.
+---
 
 
 ## 8.1 Explicación del patrón CQRS y diferencias con CRUD tradicional
@@ -1566,7 +1576,8 @@ Para los profesionales que desarrollan aplicaciones FastAPI y se enfrentan a dom
 -----
 
 
-## Bibliografía
+## Referncias bibliográficas
+
 **Libros Fundamentales y de Referencia**
 
 1.  **Newman, Sam.** *Building Microservices: Designing Fine-Grained Systems*. O'Reilly Media, 2021 (2ª Edición).

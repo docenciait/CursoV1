@@ -1,5 +1,6 @@
-# Tema 9. INTRODUCCIÓN A LA MENSAJERÍA CON KAFKA, RABBITMQ
+# Tema 9. Introducción a la mensajería con Kafka, RabbitMQ
 
+  * [Objetivos]()
   * [9.1 Comparar Kafka vs RabbitMQ: casos de uso y diferencias clave](Tema9.md#91-comparar-kafka-vs-rabbitmq-casos-de-uso-y-diferencias-clave)
   * [9.2 Instalación y configuración de un broker básico](Tema9.md#92-instalación-y-configuración-de-un-broker-básico)
   * [9.3 Conceptos de topic, exchange, queue y binding](Tema9.md#93-conceptos-de-topic-exchange-queue-y-binding)
@@ -10,6 +11,11 @@
   * [9.8 Manejo de Errores y Reintentos en Colas: Navegando la Tormenta de la Mensajería](Tema9.md#98-manejo-de-errores-y-reintentos-en-colas-navegando-la-tormenta-de-la-mensajería)
   * [9.9 Uso de `aiokafka`, `kombu` o `pika`](Tema9.md#99-uso-de-aiokafka-kombu-o-pika)
   * [9.10 Integración con lógica de dominio en arquitectura hexagonal](Tema9.md#910-integración-con-lógica-de-dominio-en-arquitectura-hexagonal)
+  * [Referencias Bibliográfica]()
+
+---
+## Objetivos
+---
 
 ## 9.1 Comparar Kafka vs RabbitMQ: casos de uso y diferencias clave
 

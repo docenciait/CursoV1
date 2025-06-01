@@ -555,9 +555,9 @@ El Patrón Retry con Backoff Exponencial y Jitter es una **técnica de resilienc
 
 ¡Absolutamente! Con la noche española como telón de fondo y el objetivo de la **máxima calidad**, nos adentramos en el punto 4.5. Si los reintentos eran nuestra primera línea de defensa, ahora desplegamos la **artillería pesada de la resiliencia**: los patrones **Circuit Breaker** y **Bulkhead**. Estas no son solo técnicas, son **filosofías de diseño** para construir sistemas que no solo sobreviven a las tormentas, ¡sino que lo hacen con inteligencia y gracia!
 
----
 
-## 4.5. Introducción a Patrones Circuit Breaker y Bulkhead: Los Pretores de la Resiliencia
+
+## 4.5. Introducción a Patrones Circuit Breaker y Bulkhead
 
 Hemos aprendido a ser persistentes con el patrón Retry (4.4). Pero, ¿qué sucede cuando un servicio dependiente no sufre un *glitch* momentáneo, sino un **fallo sostenido**? ¿O cuando una avalancha de peticiones a *un* servicio amenaza con ahogar *toda* nuestra aplicación? Insistir con reintentos en estos casos es como echar gasolina al fuego 🔥.
 
@@ -829,12 +829,7 @@ sequenceDiagram
 
 `pybreaker` nos proporciona una herramienta **práctica y eficaz** para implementar el patrón Circuit Breaker en Python. Al integrarlo en nuestra capa de **Infraestructura**, añadimos una **capa crucial de autoprotección y resiliencia** a nuestros microservicios. Nos permite **fallar rápido**, **dar respiro** a los servicios dependientes y **mejorar la estabilidad general** del sistema. Configurados dinámicamente y monitorizados a través de listeners, los Circuit Breakers dejan de ser un concepto teórico para convertirse en **guardianes activos y visibles** de la salud de nuestra arquitectura distribuida. ¡Calidad y resiliencia en acción!
 
----
 
-
-¡Excelente! Mantenemos la inercia y la **calidad estelar** mientras nos adentramos en el punto 4.7. Hemos forjado nuestras defensas (Retries, Circuit Breakers) y definido nuestros protocolos de crisis (Handlers). Ahora, es el momento de **diseñar nuestros endpoints**, nuestros puntos de contacto con el mundo, para que sean **verdaderos baluartes de resiliencia**. No basta con tener un escudo; hay que saber cómo y cuándo usarlo. ¡Vamos a diseñar APIs que no se desmoronan ante la primera adversidad! 🛡️
-
----
 
 ## 4.7. Diseño de Endpoints Resilientes a Fallos de Servicios Externos
 
