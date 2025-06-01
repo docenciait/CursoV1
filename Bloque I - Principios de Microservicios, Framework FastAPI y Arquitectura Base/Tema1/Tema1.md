@@ -813,13 +813,13 @@ Al usar los Bounded Contexts como guía para definir nuestros microservicios, no
 
 ## 1.8 Distribución de los Equipos en torno a Microservicios
 
-Existe una observación muy famosa en el mundo del software conocida como la **Ley de Conway** \[^10^]. En esencia, dice:
+Existe una observación muy famosa en el mundo del software conocida como la **Ley de Conway**. En esencia, dice:
 
 > "Las organizaciones que diseñan sistemas (...) están destinadas a producir diseños que son copias de las estructuras de comunicación de estas organizaciones."
 
 ¿Qué significa esto para nosotros? Que **tu arquitectura de software tenderá a reflejar cómo están organizados tus equipos (y viceversa)**. Si quieres una arquitectura de microservicios exitosa (modular, independiente), necesitas equipos que trabajen de forma modular e independiente.
 
-**El Modelo Tradicional (Orientado a Monolitos/Capas): горизонтальный**
+**El Modelo Tradicional (Orientado a Monolitos/Capas): *
 
 En muchas organizaciones tradicionales, los equipos se estructuran por _capas tecnológicas_:
 
@@ -859,14 +859,14 @@ En muchas organizaciones tradicionales, los equipos se estructuran por _capas te
 
 Este modelo _refuerza_ la arquitectura monolítica.
 
-**El Modelo Microservicios (Orientado a Capacidades): Вертикальный**
+**El Modelo Microservicios (Orientado a Capacidades):**
 
 La arquitectura de microservicios promueve (y se beneficia enormemente) de una estructura de equipos **vertical**, alineada con las **capacidades de negocio** (¡nuestros Bounded Contexts!).
 
 * Cada equipo es **multifuncional** (cross-functional).
 * Contiene (o tiene acceso directo a) todas las habilidades necesarias: Frontend, Backend, Datos, QA, Ops.
 * Es **dueño de uno o varios microservicios** de principio a fin (You Build It, You Run It!).
-* A menudo se les llama "Equipos de Flujo" (Stream-Aligned Teams \[^11^]) o, popularmente, "Equipos de Dos Pizzas" (suficientemente pequeños para ser alimentados con dos pizzas).
+* A menudo se les llama "Equipos de Flujo" (Stream-Aligned Teams ) o, popularmente, "Equipos de Dos Pizzas" (suficientemente pequeños para ser alimentados con dos pizzas).
 
 **Visualicemos esto:**
 
