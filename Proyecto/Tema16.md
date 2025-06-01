@@ -1103,7 +1103,7 @@ Este enfoque integral de seguridad, validación y `testing` es fundamental para 
 
 
 
-### 16.8 Colas con Kafka y WebSockets para real-time
+## 16.8 Colas con Kafka y WebSockets para real-time
 
 
 
@@ -1216,7 +1216,7 @@ Este `setup` con `Docker Compose` permitirá a los desarrolladores de ParkWise:
 * Asegurar que la configuración de conexión a Kafka y otros `backing services` sea correcta desde las primeras etapas.
 
 
-### 16.9 Despliegue automatizado con CI/CD en Kubernetes
+## 16.9 Despliegue automatizado con CI/CD en Kubernetes
 
 Habiendo definido cómo ParkWise utilizará Kafka y `WebSockets` dentro de un entorno `Docker Compose` para desarrollo (16.8), el siguiente paso es llevar esta complejidad a un entorno de producción o `staging` de manera automatizada y escalable. Esto nos lleva al despliegue en **Kubernetes** gestionado por `pipelines` de **CI/CD**.
 
@@ -1272,41 +1272,41 @@ Para el proyecto ParkWise, el objetivo es desplegar nuestros `microservices` (co
 **Diagrama `Mermaid`: `Pipeline` CI/CD con GitOps para un `Microservice` ParkWise**
 
 ```mermaid
-  graph TD
-      A[Dev push a App Repo (BookingService)] --> B{CI Pipeline (GitHub Actions)}
-      B --> B1[1. Checkout + Tests + Coverage]
-      B1 -->|OK| B2[2. Build Docker Image v1.1.0]
-      B2 -->|OK| B3[3. Push al Container Registry]
-      B3 -->|OK| B4[4. Update Config Repo a v1.1.0]
-      B4 -->|Push| C[GitOps Config Repo]
+flowchart TD
+    A["Dev push<br/>App Repo<br/>(BookingService)"] --> B{"CI Pipeline<br/>(GitHub Actions)"}
+    B --> B1["Checkout<br/>Tests<br/>Coverage"]
+    B1 -->|OK| B2["Build Docker Image<br/>v1.1.0"]
+    B2 -->|OK| B3["Push al<br/>Container Registry"]
+    B3 -->|OK| B4["Update Config Repo<br/>v1.1.0"]
+    B4 -->|Push| C["GitOps Config Repo"]
 
-      C -->|Cambio detectado| D[ArgoCD Controller]
-      D -->|Git vs Estado real| K8s_API[Kubernetes API Server]
-      K8s_API -->|Estado actual| D
-      D -->|OutOfSync → Sync| K8s_API
-      K8s_API -->|Aplica cambios| K8s_Cluster[Cluster Kubernetes]
+    C -->|Cambio detectado| D["ArgoCD Controller"]
+    D -->|Git vs<br/>Estado real| K8s_API["Kubernetes API Server"]
+    K8s_API -->|Estado actual| D
+    D -->|"OutOfSync → Sync"| K8s_API
+    K8s_API -->|Aplica cambios| K8s_Cluster["Kubernetes Cluster"]
 
-      K8s_Cluster -->|Estado post-deploy| Monitor[Prometheus]
+    K8s_Cluster -->|Estado post-deploy| RU["Rolling update<br/>BookingService v1.1.0"]
+    RU --> Monitor["Prometheus"]
 
-      Note right of K8s_Cluster: Rolling update a BookingService v1.1.0
+    Monitor -->|Métricas o Alertas| Feedback{"Feedback Loop"}
+    Feedback -->|Falla| RB1["Rollback:<br/>Revertir commit<br/>en Config Repo"]
+    Feedback -->|Falla| RB2["Rollback:<br/>Sync versión anterior"]
 
-      Monitor -->|Métricas o Alertas| Feedback{Feedback Loop}
-      Feedback -->|Falla| RB1[Rollback: revertir commit en Config Repo]
-      Feedback -->|Falla| RB2[Rollback: sync versión anterior]
+    B1 -->|Falla| CI_Fail["Notificar<br/>fallo CI"]
+    B2 -->|Falla| CI_Fail
+    B3 -->|Falla| CI_Fail
+    B4 -->|Falla| CI_Fail
+    RB2 -->|Falla rollback| CD_Fail["Notificar<br/>fallo despliegue"]
 
-      B1 -->|Falla| CI_Fail[Notificar fallo CI]
-      B2 -->|Falla| CI_Fail
-      B3 -->|Falla| CI_Fail
-      B4 -->|Falla| CI_Fail
-      RB2 -->|Falla rollback| CD_Fail[Notificar fallo despliegue]
-
-      style A fill:#D5F5E3,stroke:#2ECC71
-      style C fill:#FFF9C4,stroke:#F1C40F
-      style D fill:#AED6F1,stroke:#3498DB
-      style K8s_Cluster fill:#E8DAEF,stroke:#8E44AD
-      style CI_Fail fill:#FFCDD2,stroke:#C62828
-      style CD_Fail fill:#FFCDD2,stroke:#C62828
-
+    %% Styling
+    style A fill:#D5F5E3,stroke:#2ECC71
+    style C fill:#FFF9C4,stroke:#F1C40F
+    style D fill:#AED6F1,stroke:#3498DB
+    style K8s_Cluster fill:#E8DAEF,stroke:#8E44AD
+    style RU fill:#E8DAEF,stroke:#8E44AD,stroke-dasharray: 5 5
+    style CI_Fail fill:#FFCDD2,stroke:#C62828
+    style CD_Fail fill:#FFCDD2,stroke:#C62828
 
 
 
@@ -1317,4 +1317,167 @@ Este `pipeline` automatizado para ParkWise asegura que cada cambio de código en
 
 ***
 
-### 16.10 Documentación y repositorio versionado
+## 16.10 Documentación y repositorio versionado
+
+Hemos llegado al final de la construcción de nuestra aplicación completa basada en microservicios. Hemos definido el dominio, dividido en servicios, diseñado APIs, implementado lógica de negocio y persistencia, asegurado y desplegado. Ahora, es el momento de asegurar que este complejo sistema no sea una "caja negra" y que su evolución sea gestionable. Esto se logra a través de dos pilares: una **documentación exhaustiva** y un **repositorio de código versionado y bien organizado**.
+
+Estos no son tareas para "después del proyecto"; son parte integral del ciclo de vida y del profesionalismo en el desarrollo de software.
+
+### 1. Documentación del Proyecto Final: La Brújula para Navegantes Actuales y Futuros 🧭
+
+La documentación es la narrativa que explica el "qué", el "por qué" y el "cómo" de tu proyecto. Es esencial para el `onboarding` de nuevos miembros, para la colaboración entre equipos, para la operación y mantenimiento, y para la toma de decisiones futuras.
+
+#### A. Tipos de Documentación Esenciales:
+
+Para un proyecto de microservicios como el que hemos concebido, considera estos niveles de documentación:
+
+1.  **Documentación de Arquitectura de Alto Nivel:**
+    * **Propósito:** Describe la visión general del sistema, las decisiones arquitectónicas clave, y cómo los diferentes microservicios interactúan.
+    * **Contenido Típico:**
+        * Objetivos del proyecto y alcance.
+        * Diagrama de arquitectura general (ej. usando C4 Model - Contexto, Contenedores, Componentes).
+        * Definición de los `Bounded Contexts` y su mapeo a microservicios (ref. 16.1, 16.2).
+        * Principales patrones de comunicación entre servicios (REST, eventos, gRPC) y por qué se eligieron (ref. 16.3).
+        * Decisiones tecnológicas clave (lenguajes, `frameworks`, bases de datos por servicio, `brokers` de mensajería, etc.).
+        * Estrategia de seguridad general.
+    * **Formato:** Markdown en el `README` principal del proyecto o en una sección `/docs` del repositorio, diagramas (Mermaid, draw.io).
+
+2.  **Documentación Específica de cada Microservicio:**
+    * **Propósito:** Detallar el funcionamiento interno y la interfaz externa de cada microservicio individual.
+    * **Contenido Típico por Servicio:**
+        * **API Externa:**
+            * Documentación OpenAPI generada por FastAPI (Swagger UI / ReDoc) para `endpoints` REST (ref. 11.4). Esto es fundamental y mayormente automático.
+            * Definición de los `events` que produce y consume (con sus `schemas`).
+            * Definición de los servicios gRPC que expone o consume (archivos `.proto` y su explicación).
+        * **Lógica Interna (si es compleja):**
+            * Breve descripción de su responsabilidad y `Bounded Context`.
+            * Diagramas de componentes internos si la lógica hexagonal o DDD es compleja (ref. 16.4).
+            * Cómo configurar el servicio (variables de entorno).
+            * Dependencias clave (otros servicios, bases de datos).
+    * **Formato:** `README.md` en el directorio de cada microservicio, y la documentación OpenAPI/gRPC generada.
+
+3.  **Guías de Despliegue y Operación:**
+    * **Propósito:** Instrucciones para desplegar, configurar, monitorizar y mantener el sistema.
+    * **Contenido Típico:**
+        * Cómo construir las imágenes Docker (ref. 15.1).
+        * Cómo usar `docker-compose` para el entorno local (ref. 15.3).
+        * Instrucciones para desplegar en Kubernetes (usando los `manifests`, `Helm charts` o configuraciones Kustomize - ref. 15.4).
+        * Configuración de `pipelines` CI/CD (ref. 15.5).
+        * Estrategias de `logging` y `metrics`, y cómo acceder a ellas (Prometheus, Grafana, ELK/Loki - ref. 15.7, 15.8, 15.9).
+        * Procedimientos de `rollback` y `backup/restore` (ref. 15.10).
+    * **Formato:** Sección `/ops` o `/docs/deployment` en el repositorio, wikis.
+
+4.  **Documentación para Contribuidores/Desarrolladores:**
+    * **Propósito:** Ayudar a otros desarrolladores (o a tu yo futuro) a entender cómo contribuir al proyecto.
+    * **Contenido Típico:**
+        * Cómo clonar el repositorio y configurar el entorno de desarrollo local.
+        * Guía para ejecutar los `tests` (unitarios, integración, E2E - ref. Tema 14).
+        * Convenciones de código y estilo.
+        * Proceso para proponer cambios (`Pull Requests`, revisiones de código).
+        * Estructura del proyecto y dónde encontrar qué.
+    * **Formato:** `CONTRIBUTING.md`, `DEVELOPMENT.md` en la raíz del repositorio.
+
+#### B. Herramientas y Formatos para la Documentación:
+
+* **Markdown:** El estándar de facto para documentación ligera, `READMEs`, y contenido en wikis.
+* **FastAPI (OpenAPI):** Automáticamente genera Swagger UI (`/docs`) y ReDoc (`/redoc`) para tus APIs REST. Asegúrate de enriquecer tus `path operations` y modelos Pydantic con `summaries`, `descriptions`, y `examples` (ref. 11.4).
+* **Diagramas como Código:**
+    * **Mermaid:** Para diagramas de secuencia, flujo, clases, C4 (contexto/contenedores), etc., directamente en tus archivos Markdown. Mantiene los diagramas versionados con el código.
+    * Otras herramientas: PlantUML, Structurizr (para C4 Model).
+* **Wikis del Repositorio:** GitHub, GitLab, Bitbucket ofrecen wikis integradas para documentación más colaborativa o que cambia frecuentemente.
+* **Generadores de Documentación Estática:** Sphinx (para Python), MkDocs, Docusaurus, si necesitas un sitio web de documentación más elaborado.
+
+#### C. Buenas Prácticas de Documentación:
+
+* **Mantenla Actualizada:** La documentación desactualizada es peor que no tenerla. Integra la actualización de la documentación como parte de tu proceso de desarrollo (ej. en `Pull Requests`).
+* **Dirigida a la Audiencia:** Escribe para quien va a leerla (otros desarrolladores, operadores, `product owners`).
+* **Clara y Concisa:** Evita la jerga innecesaria. Sé directo y ve al grano.
+* **Visual:** Usa diagramas para explicar conceptos complejos.
+* **Accesible:** Asegúrate de que la documentación sea fácil de encontrar y navegar.
+* **Versionada con el Código:** Siempre que sea posible (especialmente para documentación técnica y de API), que la documentación viva en el mismo repositorio que el código.
+
+### 2. Repositorio Versionado del Proyecto Final: El Pilar de la Colaboración y la Evolución 🏛️
+
+El control de versiones (con Git) y una estructura de repositorio bien pensada son la base sobre la cual se construye todo desarrollo de software colaborativo y evolutivo.
+
+#### A. Control de Versiones con Git: No Negociable
+
+* **Git es el Estándar:** Si no lo estás usando, empieza ya.
+* **`Commits` Atómicos y Significativos:**
+    * Cada `commit` debe representar un cambio lógico pequeño y completo.
+    * Los mensajes de `commit` deben ser claros y seguir una convención (ej. [Conventional Commits](https://www.conventionalcommits.org/)). Esto facilita la revisión del historial y la automatización (ej. para generar `changelogs` o `SemVer bumps`).
+* **Estrategia de Ramificación (`Branching Strategy`):**
+    * **GitFlow:** Una estrategia robusta con `branches` `main`/`master`, `develop`, `feature/*`, `release/*`, `hotfix/*`. Puede ser un poco compleja para proyectos más pequeños o con `Continuous Deployment`.
+    * **GitHub Flow / GitLab Flow:** Más simples. `main` es siempre desplegable. Se crean `feature branches` desde `main` y se fusionan de nuevo a `main` a través de `Pull/Merge Requests` después de pasar `tests` y revisiones. Ideal para `Continuous Delivery/Deployment`.
+    * Elige una y sé consistente.
+* **`Pull/Merge Requests (PRs/MRs)`:**
+    * Todo cambio (excepto `hotfixes` urgentes, quizás) debe pasar por un PR/MR.
+    * Requiere revisión de código por al menos otro miembro del equipo.
+    * Los `pipelines` CI deben ejecutarse y pasar en el PR/MR antes de permitir el `merge`.
+
+#### B. Estructura del Repositorio: ¿Monorepo o Multi-repo?
+
+Para un proyecto de microservicios, esta es una decisión arquitectónica importante:
+
+* **Monorepo:** Todo el código de todos los microservicios reside en un único repositorio Git.
+    * **Pros:**
+        * Más fácil de realizar cambios atómicos que afectan a múltiples servicios.
+        * Visibilidad completa del sistema.
+        * Simplifica la compartición de código común (librerías, `DTOs`, `interfaces`).
+        * Una única `toolchain` de `build` y `testing` (potencialmente).
+    * **Cons:**
+        * El repositorio puede volverse muy grande.
+        * Los `builds` y `tests` pueden ser más lentos si no se configuran para ejecutar solo lo afectado.
+        * La gestión de permisos puede ser más compleja.
+        * Requiere herramientas para gestionar dependencias y `builds` parciales (ej. Bazel, Pants, Nx, o `scripts` personalizados).
+* **Multi-repo (Un Repositorio por Microservicio):** Cada microservicio tiene su propio repositorio Git.
+    * **Pros:**
+        * Repositorios más pequeños y enfocados.
+        * `Builds` y `tests` más rápidos por repositorio.
+        * Autonomía total del equipo para su servicio.
+        * Más fácil de gestionar permisos.
+    * **Cons:**
+        * La compartición de código común es más difícil (requiere versionar y publicar librerías compartidas).
+        * Los cambios que abarcan múltiples servicios requieren coordinación entre repositorios (múltiples PRs).
+        * Más complejo para obtener una visión general del sistema.
+        * Descubrimiento de servicios y sus APIs puede ser más difícil.
+
+* **Elección:** No hay una respuesta única. Depende del tamaño del equipo, la cultura, las herramientas y la complejidad del sistema. Los monorepos están ganando popularidad con herramientas que mitigan sus contras.
+
+#### C. Versionado Semántico (SemVer) del Proyecto y Componentes (Ref. 15.2)
+
+* **Microservicios como Unidades Versionables:** Cada microservicio (su API, su imagen Docker) debe seguir el Versionado Semántico (`MAJOR.MINOR.PATCH`).
+* **`Git Tags` para `Releases`:** Usa `git tags` (ej. `v1.2.3`, `orders-service/v0.5.1`) para marcar puntos de `release` específicos. Tu `pipeline` CI/CD debe usar estos `tags` para construir y etiquetar los artefactos de `release` (como las imágenes Docker).
+* **API Gateway y Versiones de API:** El API Gateway podría exponer `/v1/orders` y `/v2/orders`, enrutando a diferentes versiones de tu `Orders Service` desplegado.
+
+#### D. Gestión de Dependencias y Artefactos
+
+* **Dependencias de Código:**
+    * Python: `requirements.txt` (fijando versiones `==`) o, preferiblemente, `pyproject.toml` con Poetry o PDM para una gestión de dependencias más robusta y bloqueos reproducibles (`poetry.lock`, `pdm.lock`).
+* **Artefactos de `Build`:**
+    * **Imágenes Docker:** Almacenadas en un `Container Registry` (Docker Hub, GHCR, ECR, GCR, ACR), versionadas con `SemVer` y/o `git SHA` (ref. 15.2).
+    * **Librerías Compartidas (si aplica):** Publicadas en un `package repository` (PyPI, Artifactory).
+
+#### E. `README.md`: La Puerta de Entrada a Tu Proyecto
+
+El `README.md` en la raíz de tu repositorio (o de cada microservicio en un `multi-repo`) es crucial. Debe ser conciso y útil, proporcionando:
+
+* Una breve descripción del proyecto/servicio.
+* Prerrequisitos.
+* Instrucciones para la configuración del entorno de desarrollo.
+* Cómo ejecutar la aplicación localmente.
+* Cómo ejecutar los `tests`.
+* Enlaces a documentación más detallada (API docs, arquitectura, etc.).
+* Información de contacto o cómo obtener ayuda.
+
+---
+### Conclusión del Tema 16 y del Curso 
+
+Llegar al final de este "Proyecto Final" y, por extensión, de este curso, significa que han recorrido un camino inmenso. Desde los fundamentos de FastAPI, pasando por arquitecturas complejas como la Hexagonal y DDD, la comunicación asíncrona con WebSockets y `message brokers`, hasta las prácticas profesionales de `testing`, escalabilidad, y despliegue automatizado.
+
+El **Tema 16** ha sido la culminación, un lienzo donde aplicar todas estas habilidades para concebir y estructurar una aplicación completa basada en microservicios. La **documentación y un repositorio versionado** no son meros apéndices; son la prueba de la madurez del proyecto y del equipo. Son los artefactos que permiten que el sistema viva, evolucione y sea comprendido por otros.
+
+* **Documentar** es un acto de comunicación y de previsión.
+* **Versionar** es un acto de disciplina y control.
+
+Al abrazar estas prácticas, no solo entregan un proyecto funcional, sino un producto de software profesional, mantenible y preparado para el futuro. Este conocimiento es la base sobre la cual podrán construir soluciones aún más ambiciosas y robustas.
