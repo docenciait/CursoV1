@@ -1,7 +1,7 @@
 # Table of contents
 
 * [Presentación del Curso](README.md)
-* [Requerimientos Previos](<Requerimientos Previos.md>)
+* [Requerimientos Previos](Requerimientos%20Previos.md)
 * [Proyecto Final](<Proyecto/Tema16.md>)
 * [Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base](bloque-i-principios-de-microservicios-framework-fastapi-y-arquitectura-base/README.md)
   * [Tema 1. Introducción a la Arquitectura de Microservicios](<Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base/Tema1/Tema1.md>)
