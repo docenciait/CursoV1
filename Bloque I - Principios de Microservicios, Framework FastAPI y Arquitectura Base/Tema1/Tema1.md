@@ -816,9 +816,6 @@ Al usar los Bounded Contexts como guía para definir nuestros microservicios, no
 
 ***
 
-¡Vamos a por ello! Hemos hablado de tecnología, arquitectura y diseño, pero los microservicios tienen un impacto profundo en algo igual o más importante: **las personas y cómo se organizan**. Si intentas implementar microservicios sin adaptar la estructura de tus equipos, te encontrarás con muchos obstáculos.
-
-***
 
 ## 1.8 Distribución de los Equipos en torno a Microservicios
 

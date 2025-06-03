@@ -68,14 +68,3 @@
 
 ***
 
-## 📦 Resultado final tras Bloque 1
-
-Un sistema distribuido con:
-
-* 🔐 Seguridad básica
-* 🛡️ Resiliencia básica
-* 🌐 Comunicación REST
-* 📦 Despliegue profesional en Docker Compose
-
-***
-
