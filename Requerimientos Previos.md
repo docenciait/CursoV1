@@ -1,4 +1,3 @@
-# 🛠 Requerimientos 
 
 Este manual describe cómo instalar y configurar todo el entorno necesario para trabajar en los laboratorios del curso de **Microservicios, FastAPI, DDD, Hexagonal, CQRS**.
 
