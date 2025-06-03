@@ -3,7 +3,7 @@ Este manual describe cómo instalar y configurar todo el entorno necesario para 
 
 ---
 
-## ✅ Requisitos
+## ✅ Requerimientos
 
 * Windows 10/11 
 * Ubuntu WSL
