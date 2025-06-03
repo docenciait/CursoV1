@@ -537,7 +537,7 @@ Aquí es donde la goma se encuentra con el camino. Analicemos situaciones donde 
 **4. Modernización de Sistemas Legados (El Patrón "Strangler Fig")**
 
 * **El Desafío:** Tienes un monolito enorme, antiguo, frágil y difícil de cambiar. Reescribirlo todo de golpe es demasiado arriesgado y costoso.
-* **¿Por qué Microservicios?** El **Patrón Strangler Fig** (Figura Estranguladora), acuñado por Martin Fowler , propone "estrangular" gradualmente el monolito. Creas nuevos microservicios alrededor del monolito, interceptando llamadas y redirigiéndolas. Poco a poco, la funcionalidad se migra a los nuevos servicios hasta que el monolito original puede ser "apagado".
+* **¿Por qué Microservicios?** El **Patrón Strangler Fig**, acuñado por Martin Fowler , propone "estrangular" gradualmente el monolito. Creas nuevos microservicios alrededor del monolito, interceptando llamadas y redirigiéndolas. Poco a poco, la funcionalidad se migra a los nuevos servicios hasta que el monolito original puede ser "apagado".
 * **Visualicemos el Strangler Fig:**
 
 **Tabla Resumen de Casos de Uso:**
