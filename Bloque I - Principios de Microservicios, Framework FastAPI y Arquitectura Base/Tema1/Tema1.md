@@ -810,7 +810,7 @@ Identificar Bounded Contexts es un arte y una ciencia (y un taller de DDD comple
 * **Busca Diferencias Lingüísticas:** ¿Cuándo los expertos usan la misma palabra pero quieren decir cosas distintas? ¡Ahí hay una frontera!
 * **Analiza Procesos de Negocio:** ¿Qué departamentos o roles intervienen? ¿Qué información maneja cada uno?
 * **Observa las Dependencias:** ¿Qué partes del sistema necesitan cambiar juntas con frecuencia?
-* **Usa Talleres Colaborativos:** Técnicas como **Event Storming** \[^9^] son extremadamente útiles para visualizar el dominio y descubrir estos contextos de forma colaborativa.
+* **Usa Talleres Colaborativos:** Técnicas como **Event Storming** son extremadamente útiles para visualizar el dominio y descubrir estos contextos de forma colaborativa.
 
 Al usar los Bounded Contexts como guía para definir nuestros microservicios, no solo logramos una separación técnica, sino una **separación alineada con el negocio**, lo que resulta en sistemas más robustos, mantenibles y evolutivos.
 
