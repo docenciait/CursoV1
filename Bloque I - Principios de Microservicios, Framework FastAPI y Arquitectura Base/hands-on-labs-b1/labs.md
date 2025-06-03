@@ -4,8 +4,14 @@
 > 🧱 **Proyecto base:** App de e-commerce (usuarios, productos, pedidos) en FastAPI + MariaDB
 
 ***
+## Repositorio Base
+
+- Aquí estarán todos los labs del Bloque 1: [Repo Base](https://github.com/docenciait/fa-training-labs-alumnos)
+
 
 ## 🔹 LAB 1 – Monolito Base: FastAPI + MariaDB
+
+
 
 | Item            | Detalles                                                                          |
 | --------------- | --------------------------------------------------------------------------------- |
