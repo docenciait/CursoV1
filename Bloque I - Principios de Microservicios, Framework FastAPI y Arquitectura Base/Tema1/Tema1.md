@@ -644,7 +644,7 @@ Como ya sabéis de nuestro curso, DDD es un enfoque para el desarrollo de softwa
 
 **El "Match" Perfecto: Bounded Contexts ❤️ Microservices**
 
-La conexión más fuerte y vital entre DDD y los microservicios es el concepto de **Bounded Context**. [^4^]
+La conexión más fuerte y vital entre DDD y los microservicios es el concepto de **Bounded Context**. 
 
 > **Un Bounded Context es, a menudo, el candidato ideal para convertirse en un microservicio.**
 
