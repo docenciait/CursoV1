@@ -540,6 +540,8 @@ Aquí es donde la goma se encuentra con el camino. Analicemos situaciones donde 
 * **¿Por qué Microservicios?** El **Patrón Strangler Fig**, acuñado por Martin Fowler , propone "estrangular" gradualmente el monolito. Creas nuevos microservicios alrededor del monolito, interceptando llamadas y redirigiéndolas. Poco a poco, la funcionalidad se migra a los nuevos servicios hasta que el monolito original puede ser "apagado".
 * **Visualicemos el Strangler Fig:**
 
+![alt text](image.png)
+
 **Tabla Resumen de Casos de Uso:**
 
 | Caso de Uso              | Desafío Principal                                     | Beneficio Clave de Microservicios                            |
