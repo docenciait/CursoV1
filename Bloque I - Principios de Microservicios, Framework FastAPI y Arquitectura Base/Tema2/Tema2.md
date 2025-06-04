@@ -816,7 +816,7 @@ Al seguir este patrón, nuestra capa `api` (`Controladores` y `Schemas`) se conv
 
 
 
-#### 5. Beneficios Inapelables 🏆
+#### 5. Beneficios Inapelables 
 
 * **Flexibilidad:** Cambia tu API sin romper el núcleo.
 * **Mantenibilidad:** Código fácil de encontrar, entender y modificar.
@@ -832,7 +832,7 @@ La gestión de rutas y controladores en FastAPI, cuando se hace con una **mental
 
 ## 2.5. Implementación de Middlewares Personalizados
 
-Entendido, ahora te haré un **desarrollo mucho más práctico, directo y profesional** como corresponde a un **curso de microservicios** de nivel serio:
+!!! Info Un middleware es un componente de software que se sitúa "en medio" de otros dos componentes, interceptando y procesando la comunicación entre ellos. Piensa en él como una serie de "peajes" o "estaciones de procesamiento" por las que una solicitud (request) y su respuesta (response) deben pasar.
 
 En un entorno de **microservicios real** necesitamos middlewares que resuelvan:
 
