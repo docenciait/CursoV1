@@ -707,7 +707,7 @@ Imagina nuestro microservicio como una fortaleza medieval (nuestro Dominio Hexag
 
 Este punto trata sobre cómo construir esa fachada con FastAPI, usando `APIRouter` y diseñando controladores que sean **guardianes ejemplares**, no señores feudales, asegurando un **desacoplamiento total** con nuestro núcleo.
 
-#### 1. REST: El Protocolo Diplomático de Nuestras APIs 📜
+#### 1. REST: El Protocolo Diplomático de Nuestras APIs 
 
 Para que nuestros microservicios hablen un idioma universal en la web, nos apoyamos en los principios REST (Representational State Transfer). Es como el latín de las APIs: aunque no siempre se hable puro, entender sus bases nos permite comunicarnos eficazmente.
 
@@ -832,7 +832,7 @@ La gestión de rutas y controladores en FastAPI, cuando se hace con una **mental
 
 ## 2.5. Implementación de Middlewares Personalizados
 
-!!! Info Un middleware es un componente de software que se sitúa "en medio" de otros dos componentes, interceptando y procesando la comunicación entre ellos. Piensa en él como una serie de "peajes" o "estaciones de procesamiento" por las que una solicitud (request) y su respuesta (response) deben pasar.
+> Un **middleware** es un componente de software que se sitúa "en medio" de otros dos componentes, interceptando y procesando la comunicación entre ellos. Piensa en él como una serie de "peajes" o "estaciones de procesamiento" por las que una solicitud (request) y su respuesta (response) deben pasar.
 
 En un entorno de **microservicios real** necesitamos middlewares que resuelvan:
 
