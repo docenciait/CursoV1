@@ -1,4 +1,4 @@
-# Tema 3. INTRODUCCIÓN A LA COMUNICACIÓN ENTRE MICROSERVICIOS SÍNCRONA Y ASÍNCRONA 
+# Tema 3. Introdución a la comunicación entre microservicios síncrona y asíncrona 
   - [Objetivos](#objetivos)
   - [3.1. Distinción entre comunicación síncrona y asíncrona](#31-distinción-entre-comunicación-síncrona-y-asíncrona)
   - [3.2. Análisis del uso de REST, gRPC o mensajería por eventos](#32-análisis-del-uso-de-rest-grpc-o-mensajería-por-eventos)
@@ -24,9 +24,6 @@
 ---
 
 
-
-
-En el paradigma de microservicios, las aplicaciones se construyen como un conjunto de servicios pequeños y autónomos que se comunican entre sí. La elección del mecanismo de comunicación es crucial y tiene un impacto significativo en la resiliencia, escalabilidad y acoplamiento del sistema. Esta sección explora los diferentes enfoques para la comunicación entre microservicios, tanto síncrona como asíncrona, en el contexto de un curso de FastAPI.
 
 ## 3.1. Distinción entre comunicación síncrona y asíncrona
 
