@@ -1416,36 +1416,9 @@ async def external_api(client=Depends(get_http_client)):
     return response.json()
 ```
 
-### **Testing Profesional con Dependency Overrides**
-
-✅ Para tests, puedes **sobreescribir las dependencias** fácilmente:
-
-```python
-from fastapi.testclient import TestClient
-from app.main import app
-from app.api.deps.services_deps import get_user_service
-
-def fake_user_service():
-    class FakeUserService:
-        def get_user(self, user_id):
-            return {"user_id": user_id, "name": "Fake User"}
-    return FakeUserService()
-
-app.dependency_overrides[get_user_service] = fake_user_service
-
-client = TestClient(app)
-
-def test_read_user():
-    response = client.get("/users/1")
-    assert response.status_code == 200
-    assert response.json()["name"] == "Fake User"
-```
-
 
 
 ## 2.7. Integración Automática de Documentación con OpenAPI
-
-¡Vamos a por ello! Esta es una parte fundamental de FastAPI en **microservicios serios** — y te voy a escribir el **punto 2.7** con el mismo nivel de rigor profesional que hemos seguido.
 
 
 ### **¿Qué es OpenAPI?**
@@ -2111,11 +2084,6 @@ La configuración es la columna vertebral invisible de cualquier aplicación. Us
 
 -----
 
-¡Entendido! Acepto la crítica constructiva. Mi objetivo es la **excelencia** y si la explicación anterior pareció superficial o de broma, es inaceptable y te pido disculpas. Agradezco enormemente que me proporciones el **stack tecnológico específico** (Python 3.12, Pydantic, FastAPI, MariaDB, Docker, Docker Compose) y la **visión de CI/CD**. Esto es oro puro y me permite enfocar la respuesta con la **profundidad, rigor y practicidad** que la preparación para producción *realmente* exige.
-
-No "flojearemos". Vamos a construir una visión robusta del despliegue para *nuestro* stack.
-
----
 
 ## 2.11. Preparación para Despliegue en Producción con `uvicorn` y `gunicorn` 
 
