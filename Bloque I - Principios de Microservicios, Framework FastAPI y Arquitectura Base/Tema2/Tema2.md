@@ -2,7 +2,6 @@
 
 
   - [Objetivos](#objetivos)
-  - [Contenidos](#contenidos)
   - [2.1. Presentación de FastAPI y ventajas frente a Flask o Django](#21-presentación-de-fastapi-y-ventajas-frente-a-flask-o-django)
   - [2.2. Uso de Pydantic para validación y tipado estricto](#22-uso-de-pydantic-para-validación-y-tipado-estricto)
   - [2.3. Creación de una estructura base escalable para un microservicio](#23-creación-de-una-estructura-base-escalable-para-un-microservicio)
@@ -19,12 +18,12 @@
 
 ## Objetivos
 
-* Conocer FastAPI y sus ventajas como framework Python moderno para el desarrollo * de microservicios.
+* Conocer FastAPI y sus ventajas como framework Python moderno para el desarrollo de microservicios.
 * Dominar las características clave de FastAPI para la creación eficiente de APIs, como la validación con Pydantic, la inyección de dependencias y el enrutamiento.
 * Aprender a estructurar y configurar un microservicio FastAPI de manera escalable, desde el desarrollo local hasta la preparación para producción.
 * Utilizar funcionalidades avanzadas de FastAPI como middlewares, tareas en segundo plano y manejo de excepciones para construir servicios robustos.
 
-## Contenidos
+---
 
 ## 2.1. Presentación de FastAPI y ventajas frente a Flask o Django
 
