@@ -2306,7 +2306,7 @@ services:
 
 ---
 
-## 🚀 Buenas Prácticas
+#### Buenas Prácticas
 
 * **Separar entornos**: Dockerfile y compose distintos para **dev** y **prod**.
 * **Gunicorn + UvicornWorker**: siempre en producción.
