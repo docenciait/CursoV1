@@ -723,7 +723,7 @@ Para que nuestros microservicios hablen un idioma universal en la web, nos apoya
 
 Usar REST nos da **previsibilidad** y nos permite aprovechar la infraestructura web (caches, proxies).
 
-#### 2. `APIRouter`: ¡Organizando a los Guardianes! 🗂️
+#### 2. `APIRouter`
 
 Un castillo no tiene una sola puerta gigante; tiene varias, cada una para un propósito. `APIRouter` es la herramienta de FastAPI para **organizar nuestras rutas** en módulos lógicos, evitando un `main.py` monstruoso.
 
@@ -764,7 +764,7 @@ Un castillo no tiene una sola puerta gigante; tiene varias, cada una para un pro
 
 Esto nos da **modularidad y claridad**. Cada `APIRouter` es un "puesto de guardia" especializado.
 
-#### 3. El Controlador Ideal: Un Traductor Delgado y Eficiente 👨‍💻👩‍💻
+#### 3. El Controlador Ideal
 
 El **"Controlador"** en nuestro contexto es la **función Python decorada** con `@router.get`, `@router.post`, etc. Su *única* misión es:
 
