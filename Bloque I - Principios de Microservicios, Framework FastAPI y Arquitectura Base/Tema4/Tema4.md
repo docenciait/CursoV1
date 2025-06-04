@@ -1,4 +1,4 @@
-# Tema 4. MANEJO DE ERRORES Y CIRCUIT BREAKERS EN MICROSERVICIOS
+# Tema 4. Manejo de errores y Circuit Breakers en Microservicios
 
   - [Objetivos](#objetivos)
   - [4.1 Diseño de estrategia global de manejo de errores](#41-diseño-de-estrategia-global-de-manejo-de-errores)
@@ -17,1403 +17,1091 @@
 ## Objetivos
 
 
-
-  * **Diseñar e implementar una estrategia global y robusta para el manejo de errores** en microservicios, distinguiendo entre errores de negocio y técnicos.
-  * **Dominar la aplicación de patrones de resiliencia clave**, como Retry (con backoff exponencial) y Circuit Breaker, para proteger los servicios contra fallos transitorios y sostenidos de sus dependencias.
-  * **Construir endpoints resilientes en FastAPI**, capaces de degradarse con gracia y comunicar fallos de manera efectiva.
-  * **Implementar un sistema de observabilidad avanzado** para errores, mediante logging estructurado y contextualizado, tracing distribuido y dashboards estratégicos, que permita la detección, diagnóstico y análisis eficaz de incidentes.
-  * **Validar la resiliencia del sistema** a través de pruebas de simulación de fallos y degradación controlada, adoptando principios de Ingeniería del Caos.
-
-
+* **Diseñar un escudo anti-errores** para tus APIs FastAPI, distinguiendo problemas del cliente de fallos internos, ¡y comunicándolos con clase!
+* **Implementar Exception Handlers personalizados en FastAPI** que capturen errores específicos y devuelvan respuestas JSON estandarizadas y útiles.
+* **Aplicar el patrón Retry con `tenacity`** en tus llamadas a servicios externos desde FastAPI, para superar fallos temporales como un campeón.
+* **Desplegar Circuit Breakers con `pybreaker`** para proteger tus endpoints FastAPI de servicios dependientes que fallan en cascada.
+* **Construir endpoints FastAPI que no se vienen abajo**, sino que se degradan con elegancia cuando las cosas se ponen feas.
+* **Inyectar `trace_id` en tus logs y peticiones FastAPI** para seguir la pista a los problemas como un detective experto, usando logging estructurado.
+* **Idear dashboards que te cuenten la verdad** sobre los errores de tus servicios, sin ahogarte en datos.
+* **Jugar al "Ingeniero del Caos" (¡en pequeñito!)** simulando fallos en tus tests FastAPI para probar tus defensas.
 
 ---
 
 
-## 4.1. Diseño de Estrategia Global de Manejo de Errores
 
-En la ingeniería de sistemas distribuidos, **el optimismo es el enemigo**. Debemos asumir que los fallos *ocurrirán*. La red fallará, los servicios se ralentizarán, las bases de datos se bloquearán y la lógica de negocio encontrará condiciones inesperadas. Una **estrategia global de manejo de errores** no es un plan B, es **parte integral del diseño del plan A**. Su objetivo es **estandarizar, comunicar, aislar y aprender** de cada fallo, garantizando que el sistema, como un todo, sea predecible y resiliente.
+## 4.1. Estrategia Global de Errores: Tu Plan Maestro Anti-Caos
 
-Diseñar esta estrategia implica tomar decisiones **concretas y vinculantes** que afectarán a todos nuestros microservicios.
+Imagina que eres el arquitecto de un rascacielos. No esperas a que haya un incendio para pensar en salidas de emergencia. ¡Lo mismo con los errores!
 
-#### 1. Principios Fundamentales del Diseño
+**Principios Prácticos para FastAPI:**
 
-Antes de definir los detalles, establecemos nuestros principios rectores:
+1.  **Errores Claros, No Silencios Raros:** Si algo falla, FastAPI debe decirlo alto y claro.
+2.  **Contratos de Error:** Tu OpenAPI (`/docs`) debe insinuar (o definir) cómo se ven tus errores.
+3.  **Aislar el Fuego:** Un fallo en un endpoint no debe tumbar todo el server FastAPI.
+4.  **Todo Queda Registrado (con Contexto):** Cada error importante, un log. ¡Con `trace_id`!
 
-* **Claridad sobre Silencio:** Es preferible un error claro y controlado que un comportamiento inesperado o un silencio ambiguo.
-* **Contratos Explícitos:** Los errores son parte del contrato de una API. Deben ser predecibles y estar documentados (implícita o explícitamente).
-* **Aislamiento del Impacto:** Un fallo en un componente no debe desencadenar una avalancha (fallo en cascada).
-* **Observabilidad Total:** Cada error significativo debe ser visible (loggeado, trazado, medible).
-* **Contexto es Rey:** Los mensajes de error deben proporcionar suficiente contexto para entender el problema, tanto para máquinas como para humanos (¡y especialmente para el equipo de SRE/DevOps!).
+**Paso Práctico 1: Clasifica Tus Errores (La Tabla de Diagnóstico Rápido)**
 
-#### 2. Paso 1: Taxonomía y Clasificación de Errores 🔬
+| Quién Falla   | Qué Pasa                                   | Código HTTP | ¿Reintentar? | Ejemplo FastAPI                                 |
+| :------------ | :----------------------------------------- | :---------- | :----------- | :---------------------------------------------- |
+| **Cliente** | Datos malformados (Pydantic no valida)     | 422         | ¡NO!         | Falta un campo en el JSON.                      |
+|               | Datos no válidos (pero bien formados)      | 400         | ¡NO!         | Pides 1000 items, y el máx es 100.              |
+|               | No autenticado                             | 401         | ¡NO!         | Token JWT chungo.                               |
+|               | No autorizado                              | 403         | ¡NO!         | Eres user, no admin.                            |
+|               | Recurso no existe                          | 404         | ¡NO!         | Buscas `GET /items/999` y 999 no está.          |
+| **Servidor** | Regla de negocio rota                      | 409 / 400   | ¡NO!         | "Email ya existe", "Stock insuficiente".        |
+|               | ¡Ups! Un bug en *mi* código FastAPI        | 500         | NO (hasta arreglar) | `variable_none.metodo()`                   |
+|               | Servicio externo (BBDD, otra API) KO       | 503 / 504   | **¡SÍ!** (con cabeza) | La API de pagos no responde.                 |
 
-El primer paso es **crear un lenguaje común para hablar de errores**. No todos los fallos son iguales. Necesitamos una clasificación robusta.
+**Paso Práctico 2: El Formato JSON de Error Universal (¡Tu Comunicado Oficial!)**
 
-| Categoría | Subcategoría | Descripción | ¿Puede el Cliente Solucionarlo? | Código HTTP Típico | Ejemplo |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Errores de Cliente** | **Validación (Sintaxis)** | La petición no cumple el formato esperado (Pydantic). | **Sí** (Corrigiendo la petición) | 422 | Falta campo obligatorio. |
-| | **Validación (Semántica)** | La petición es válida, pero los datos son incorrectos. | **Sí** (Corrigiendo los datos) | 400 | Fecha fin anterior a fecha inicio. |
-| | **Autenticación** | El cliente no ha probado quién es. | **Sí** (Proporcionando credenciales) | 401 | Token JWT ausente o inválido. |
-| | **Autorización** | El cliente es válido, pero no tiene permisos. | **No** (Necesita cambio de permisos) | 403 | Usuario no puede borrar pedidos. |
-| | **Recurso No Encontrado** | El recurso solicitado no existe. | **Sí** (Usando un ID válido) | 404 | Pedido con ID 'XYZ' no existe. |
-| **Errores de Servidor** | **Regla de Negocio** | La acción viola una regla de negocio interna. | **No** (Es una condición del sistema) | 409 / 400 | Stock insuficiente / Email ya existe. |
-| | **Técnico (Interno)** | Fallo inesperado en el código (bug, `None` no esperado). | **No** | 500 | `NullPointerException`. |
-| | **Técnico (Externo)** | Fallo en una dependencia (BBDD, otra API). | **No** | 503 / 500 / 504 | Timeout BBDD / API externa caída. |
-| | **Técnico (Transitorio)**| Fallo temporal que *podría* resolverse reintentando. | **No** | 503 / 504 | Glitch momentáneo de red. |
-
-Esta clasificación nos permitirá **automatizar y estandarizar** el manejo posterior.
-
-#### 3. Paso 2: El Contrato JSON de Error Estándar 📜
-
-¡Decisión Crítica! **Todos** nuestros microservicios deben devolver errores con la **misma estructura JSON**. Esto es innegociable para la consistencia y el procesamiento automático.
-
-**Propuesta de Estructura Estándar:**
+Cualquier error que devuelva FastAPI, que tenga esta pinta:
 
 ```json
 {
-  "trace_id": "uuid-v4-del-request", // SIEMPRE: Para trazar el error end-to-end.
-  "error_code": "STOCK_INSUFFICIENTE", // SIEMPRE: Código único, legible por máquina.
-  "message": "Stock insuficiente para el producto 'P001'. Solicitado: 10, Disponible: 5.", // SIEMPRE: Mensaje claro y humano.
-  "status_code": 409, // SIEMPRE: El código HTTP reflejado.
-  "timestamp": "2025-05-26T23:30:00Z", // SIEMPRE: Cuándo ocurrió.
-  "service_name": "servicio-pedidos", // RECOMENDADO: Qué servicio originó el error.
-  "context": { // OPCIONAL: Datos adicionales para depuración.
-    "product_id": "P001",
-    "requested": 10,
-    "available": 5
-  },
-  "documentation_url": "https://docs.miempresa.com/errors/STOCK_INSUFFICIENTE" // OPCIONAL: Enlace a más info.
+  "trace_id": "un-uuid-super-unico-por-peticion",
+  "error_code": "STOCK_INSUFICIENTE", // Un código tuyo, para máquinas
+  "message": "No hay suficiente 'SuperPocion'. Pediste: 10, Quedan: 2.", // Para humanos
+  "status_code": 409, // El HTTP que es
+  "service_name": "mi-servicio-fastapi", // Quién soy yo
+  "context": {"item_id": "SuperPocion", "solicitado": 10, "disponible": 2} // Chicha extra
 }
 ```
+**¡Manos a la Obra (Mental)!** Define 2-3 `error_code` que usarías en una API de gestión de tareas (ej: `TAREA_NO_ENCONTRADA`, `FECHA_INVALIDA`).
 
-Definir esta estructura es **responsabilidad del equipo de arquitectura**.
+---
 
-#### 4. Paso 3: Mapeo Riguroso a Códigos HTTP ↔️
+## 4.2. Exception Handlers en FastAPI: Tus Porteros de Discoteca para Errores
 
-Debemos ser **consistentes y semánticos** al usar códigos HTTP. La tabla anterior da una idea, pero debemos formalizarlo.
+FastAPI te deja poner "porteros" (Exception Handlers) que atrapan excepciones específicas y deciden cómo responder, ¡usando tu formato JSON estándar!
 
-* **4xx (Errores del Cliente):** Indican que el cliente hizo algo mal. **No deberían** generar alertas críticas, pero sí monitorizarse (¿Alguien está atacando? ¿Un frontend tiene un bug?).
-* **5xx (Errores del Servidor):** Indican que *nosotros* tenemos un problema. **SIEMPRE deben** generar alertas y ser investigados.
-
-#### 5. Paso 4: Definir Políticas de Resiliencia 🛡️
-
-La estrategia debe predefinir cómo se aplicarán los patrones de resiliencia (que veremos en 4.4 y 4.5):
-
-* **Política de Reintentos:**
-    * **¿Cuándo?** *Solo* para errores **Técnicos Transitorios** (timeouts de red, 503). ¡Nunca para errores de negocio o 4xx!
-    * **¿Cuántos?** 3 reintentos es un punto de partida común.
-    * **¿Cómo?** *Siempre* con **Backoff Exponencial con Jitter** (esperar 1s, luego 2s, luego 4s, añadiendo un poco de aleatoriedad para evitar tormentas de reintentos).
-* **Política de Circuit Breaker:**
-    * **¿Dónde?** En *toda* llamada síncrona a un servicio externo (otra API, BBDD crítica si es propensa a fallos).
-    * **¿Umbrales?** Definir umbrales de fallo (ej: 50% de fallos en 1 minuto) y tiempos de apertura (ej: 30 segundos).
-
-#### 6. Paso 5: Estrategia de Observabilidad (Logging y Tracing) 📊
-
-* **Trace ID / Correlation ID:** **Obligatorio**. Debe generarse (o propagarse si viene de fuera) al inicio de la petición (Middleware) y **viajar con CADA log y CADA llamada** interna y externa.
-* **Logs Estructurados:** **Obligatorio** usar JSON. Facilita la ingesta y análisis.
-* **Niveles de Log:**
-    * `INFO/WARN`: Para errores 4xx (son "normales" hasta cierto punto).
-    * `ERROR/CRITICAL`: Para errores 5xx (¡requieren acción!).
-* **Contexto en Logs:** Loggear siempre el `trace_id`, `error_code`, servicio, y contexto relevante. **¡NUNCA loggear datos sensibles en claro!** (Usa `SecretStr` de Pydantic).
-* **Stack Traces:** *Solo* para errores 5xx.
-
-#### 7. Visualizando la Implementación de la Estrategia
-
-```mermaid
-    graph TD
-        A[Request + TraceID] --> B{API Layer (FastAPI)};
-        B --> C{App Layer};
-        C --> D{Domain Layer};
-        D -- Lanza<br>BusinessRuleViolationError --> C;
-        C -- Propaga --> B;
-        B -- Captura --> E{Global Handlers (4.2)};
-        E -- Usa Mapeo<br>(4.3, 4.4) --> F(Decide: 409, No Retry);
-        F -- Usa Formato<br>(4.2) --> G[Crea JSONResponse Estándar];
-        G -- Paralelo --> H[Log WARNING<br>(JSON + TraceID) (4.8)];
-        G --> I[Response 409];
-        I --> J[Cliente];
-
-        B -- Llama --> K{Infra Layer (HTTP Client)};
-        K -- Llama --> L{Servicio Externo};
-        L -- Falla (503) --> K;
-        K -- Lanza<br>ExternalServiceError --> B;
-        B -- Captura --> E;
-        E -- Usa Mapeo --> M(Decide: 503, Retriable);
-        M -- Aplica Política<br>(4.5) --> N{Retry + Circuit Breaker};
-        N -- Falla Definitivo --> O[Crea JSONResponse 503];
-        O -- Paralelo --> P[Log ERROR<br>(JSON + TraceID + StackTrace) (4.8)];
-        O --> I;
-
-        style H,P fill:#9c9
-        style B,E,G,I,J,O fill:#f9f
-        style C fill:#ccf
-        style D fill:#9cf
-        style K,L fill:#9c9
-        style M,N fill:#f39c12
-```
-
-Diseñar una estrategia global de manejo de errores **no es una opción, es una obligación profesional** en el desarrollo de microservicios. Es el **ADN de la resiliencia y la observabilidad**. Al definir **explícitamente** cómo clasificamos, comunicamos, manejamos y observamos los errores, establecemos una base sólida sobre la cual construir un sistema distribuido que pueda **navegar las inevitables tormentas de la producción** con previsibilidad y control. Este diseño es nuestro **manifiesto de calidad y compromiso** con la robustez.
-
-
-
-## 4.2. Implementación de Controladores de Excepciones Personalizados en FastAPI
-
-Ya hemos diseñado nuestra estrategia global (4.1): tenemos una taxonomía de errores, un formato JSON estándar y un mapeo a códigos HTTP. Ahora, necesitamos **enseñarle a FastAPI cómo ejecutar este plan**. Aquí es donde entran los **Controladores de Excepciones Personalizados** (Exception Handlers).
-
-Piensa en ellos como los **expertos en comunicación de crisis** de tu API. Cuando salta una alarma (una excepción), ellos toman el control, evalúan la situación y emiten un comunicado oficial (la respuesta HTTP) siguiendo el protocolo establecido.
-
-#### 1. La Herramienta Maestra: `@app.exception_handler()`
-
-FastAPI nos proporciona un mecanismo increíblemente elegante y potente para interceptar excepciones específicas y definir cómo responder a ellas: el decorador `@app.exception_handler(ExceptionType)`.
-
-* **¿Qué hace?** Le dice a FastAPI: "Cuando *esta* `ExceptionType` (o cualquiera de sus clases hijas, si no hay un handler más específico) llegue hasta la capa superior sin ser capturada, ¡no entres en pánico ni devuelvas un 500 genérico! En su lugar, **ejecuta esta función que te voy a dar**".
-* **La Firma:** La función que decoremos debe tener esta firma (o ser compatible):
-  ```python
-  async def my_exception_handler(request: Request, exc: ExceptionType) -> Response:
-      # ... Lógica para construir y devolver una Response ...
-  ```
-    * `request: Request`: Nos da acceso a la petición original (URL, headers, `request.state` para nuestro `trace_id`, etc.).
-    * `exc: ExceptionType`: ¡Es la **instancia** de la excepción que se lanzó! Podemos acceder a sus atributos (`exc.detail`, `exc.resource_id`, etc.) para construir una respuesta rica en contexto.
-    * `-> Response`: **Debe** devolver un objeto `Response` de Starlette/FastAPI, casi siempre será una `JSONResponse`.
-
-#### 2. Construyendo Nuestros Handlers: Del Diseño al Código
-
-Basándonos en nuestra estrategia (4.1), implementemos conceptualmente algunos handlers. Asumimos que tenemos nuestro formato JSON estándar y nuestras excepciones personalizadas (`ResourceNotFoundError`, `EmailAlreadyExistsError`).
+**La Magia: `@app.exception_handler(MiErrorCustom)`**
 
 ```python
-# Concepto: app/api/exception_handlers.py
-
-from fastapi import Request, status
+# main.py (o donde definas tu app FastAPI)
+from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
-import logging
-# from app.domain.exceptions import ( # Importamos nuestras excepciones
-#     ResourceNotFoundError,
-#     EmailAlreadyExistsError,
-#     BaseAppError
-# )
-# from app.core.config import settings # Para saber el nombre del servicio
-
-logger = logging.getLogger(__name__)
-
-# --- Handler para "Recurso No Encontrado" ---
-async def handle_resource_not_found(request: Request, exc: ResourceNotFoundError):
-    trace_id = getattr(request.state, "correlation_id", "N/A")
-    status_code = status.HTTP_404_NOT_FOUND
-    error_code = "RESOURCE_NOT_FOUND"
-
-    logger.info(f"RID={trace_id} - Resource Not Found: {exc.detail}")
-
-    return JSONResponse(
-        status_code=status_code,
-        content={
-            "trace_id": trace_id,
-            "error_code": error_code,
-            "message": exc.detail,
-            "status_code": status_code,
-            "timestamp": "...", # Generar timestamp actual
-            "service_name": "servicio-x", # settings.SERVICE_NAME,
-            "context": getattr(exc, "context", {}),
-        },
-    )
-
-# --- Handler para "Email Ya Existe" (Más Específico) ---
-async def handle_email_exists(request: Request, exc: EmailAlreadyExistsError):
-    trace_id = getattr(request.state, "correlation_id", "N/A")
-    status_code = status.HTTP_409_CONFLICT
-    error_code = "EMAIL_ALREADY_EXISTS"
-
-    logger.warning(f"RID={trace_id} - Conflict - Email Exists: {exc.detail}")
-
-    return JSONResponse(
-        status_code=status_code,
-        content={
-            "trace_id": trace_id,
-            "error_code": error_code,
-            "message": exc.detail,
-            "status_code": status_code,
-            "timestamp": "...",
-            "service_name": "servicio-x",
-            "context": getattr(exc, "context", {}),
-        },
-    )
-
-# --- Handler Genérico para Errores de Negocio (Fallback) ---
-async def handle_business_error(request: Request, exc: BaseAppError):
-    trace_id = getattr(request.state, "correlation_id", "N/A")
-    status_code = status.HTTP_400_BAD_REQUEST # Un default razonable
-    error_code = "BUSINESS_ERROR"
-
-    logger.warning(f"RID={trace_id} - Business Error (Generic): {exc.detail}")
-
-    return JSONResponse(
-        status_code=status_code,
-        content={
-            "trace_id": trace_id,
-            "error_code": error_code,
-            "message": exc.detail,
-            "status_code": status_code,
-            "timestamp": "...",
-            "service_name": "servicio-x",
-            "context": {},
-        },
-    )
-```
-
-#### 3. El Registro: Conectando los Handlers
-
-La forma más limpia es centralizar el registro en nuestro `main.py` o un fichero de setup, usando `app.add_exception_handler()`:
-
-```python
-# Concepto: app/main.py
-from fastapi import FastAPI
-from .api import exception_handlers as eh # Nuestro módulo de handlers
-from .domain.exceptions import ( # Nuestras excepciones
-    ResourceNotFoundError,
-    EmailAlreadyExistsError,
-    BaseAppError # ¡La base!
-)
-from fastapi.exceptions import RequestValidationError # Para sobrescribir
-from starlette.exceptions import HTTPException as StarletteHTTPException # Para sobrescribir
-import logging
-
-# ... (Configurar logging aquí, idealmente JSON)
-
-app = FastAPI(title="Mi Microservicio", ...)
-
-# --- ¡El Orden Importa! De más específico a más genérico ---
-app.add_exception_handler(EmailAlreadyExistsError, eh.handle_email_exists)
-app.add_exception_handler(ResourceNotFoundError, eh.handle_resource_not_found)
-app.add_exception_handler(BaseAppError, eh.handle_business_error) # Fallback para negocio
-
-# --- Sobrescribir Defaults para Consistencia ---
-# app.add_exception_handler(RequestValidationError, eh.handle_validation_error)
-# app.add_exception_handler(StarletteHTTPException, eh.handle_http_exception) # Para capturar HTTPException
-
-# --- ¡El Último Recurso! ---
-# app.add_exception_handler(Exception, eh.handle_generic_exception) # Captura TODO lo demás como 500
-```
-
-**Visualizando la Selección del Handler:**
-
-```mermaid
-    graph TD
-        A["Excepción Lanzada<br/><i>EmailAlreadyExistsError</i>"] --> B["FastAPI Core"]
-        B --> C["¿Hay handler para<br/>EmailAlreadyExistsError?"]
-        C -->|Sí| D["Usa handle_email_exists"]
-        C -->|No| E["¿Hay handler para<br/>BusinessRuleViolationError?"]
-        E -->|Sí| F["Usa handle_business_rule"]
-        E -->|No| G["¿Hay handler para<br/>DomainError?"]
-        G -->|No| H["¿Hay handler para<br/>BaseAppError?"]
-        H -->|Sí| I["Usa handle_business_error"]
-        H -->|No| J["¿Hay handler para<br/>Exception?"]
-        J -->|Sí| K["Usa handle_generic_exception"]
-        J -->|No| L["FastAPI Default 500"]
-
-        D --> Z["Respuesta HTTP 409"]
-        I --> Z
-        K --> Z
-        L --> Z
-
-        style D fill:#2ecc71,stroke:#333
-        style I fill:#2ecc71,stroke:#333
-        style K fill:#2ecc71,stroke:#333
-        style L fill:#e74c3c,stroke:#333
-
-```
-FastAPI busca el handler más específico que coincida con el tipo de la excepción.
-
-#### 4. Tabla de Implementación: Resumen
-
-| Tarea | Herramienta FastAPI | Lugar Sugerido (Nuestra Estructura) | Objetivo |
-| :--- | :--- | :--- | :--- |
-| **Definir Excepciones** | Clases Python (`Exception`) | `app/domain/exceptions.py` | Modelar errores de negocio/técnicos. |
-| **Crear Handlers** | Funciones `async` | `app/api/exception_handlers.py` | Traducir Excepción -> `JSONResponse`. |
-| **Registrar Handlers** | `app.add_exception_handler()` | `app/main.py` | Conectar Excepciones con sus Handlers. |
-| **Obtener TraceID** | `request.state.correlation_id`| Dentro de los Handlers. | Asegurar trazabilidad en errores. |
-| **Loggear Errores** | `logging` (Python) | Dentro de los Handlers. | Centralizar y estandarizar logs. |
-
-
-La implementación de controladores de excepciones personalizados es donde nuestra **estrategia global cobra vida**. Es el mecanismo técnico que nos permite **traducir la semántica de nuestro dominio** en respuestas HTTP **claras, consistentes y profesionales**. Al dominar `app.exception_handler` y diseñarlos cuidadosamente para reflejar nuestra taxonomía y formato de error, no solo mejoramos la experiencia del consumidor de nuestra API, sino que también construimos un sistema **más fácil de depurar, monitorizar y mantener**. Es la **fontanería de alta calidad** que asegura que, incluso cuando las tuberías se rompen, el daño se contiene y se comunica eficazmente.
-
-
-
-## 4.3. Definición de Errores de Negocio vs. Errores Técnicos: El Diagnóstico Preciso
-
-En la medicina de nuestros microservicios, el **diagnóstico correcto** lo es todo. No tratamos igual un resfriado común que un fallo cardiaco. De la misma manera, nuestra estrategia de errores debe **distinguir con absoluta claridad** entre dos grandes familias de fallos: los **Errores de Negocio** y los **Errores Técnicos**. Esta distinción no es un mero ejercicio académico; es la **piedra angular** que define cómo **respondemos, alertamos, reintentamos y aprendemos** de cada desviación.
-
-#### 1. Errores de Negocio (4xx): Las Reglas del Juego ♟️
-
-Los Errores de Negocio, también llamados *errores funcionales* o *errores del dominio*, son aquellos que ocurren cuando una petición, aunque técnicamente válida, **viola una regla o una invariante definida por la lógica de negocio**. En esencia, el sistema está funcionando *correctamente* al **prevenir una acción inválida o un estado inconsistente**.
-
-* **Origen Típico:** Capas `Domain` y `Application`.
-* **Causa Frecuente:** Entradas del cliente que, aunque sintácticamente correctas (pasan Pydantic), no son válidas en el contexto actual del negocio.
-* **¿Puede el Cliente Solucionarlo?** **A menudo, SÍ**. El cliente puede cambiar su petición (usar otro email, pedir menos stock, usar un ID válido).
-* **¿Es Inesperado?** **No realmente**. Son "caminos infelices" *previstos* por las reglas.
-* **Impacto HTTP:** Generalmente, se mapean a códigos **4xx**.
-* **Acción Requerida:** Informar al cliente con un mensaje **claro y específico**. Loggear a nivel `INFO` o `WARNING`. **NO** despertar al equipo de SRE a las 3 AM. **NO** reintentar (¡no tendría sentido!).
-
-**Categorías y Ejemplos de Alto Nivel:**
-
-| Subcategoría | Código HTTP | Ejemplo de Excepción (Nuestra Jerarquía) | Escenario |
-| :--- | :--- | :--- | :--- |
-| **Recurso No Encontrado** | 404 | `PedidoNotFoundError(pedido_id)` | Se busca un pedido con un ID que no existe. |
-| **Conflicto de Estado** | 409 | `EmailAlreadyExistsError(email)` | Se intenta registrar un email que ya está en uso. |
-| **Violación Regla Negocio** | 409 / 400 | `StockInsuficienteError(prod_id, cant)` | No hay suficiente stock para completar el pedido. |
-| **Validación Semántica** | 400 | `FechaReservaInvalidaError(fecha)` | La fecha de reserva es anterior a hoy. |
-| **Permisos Insuficientes** | 403 | `AccionNoAutorizadaError(user_id, accion)` | Un usuario intenta realizar una acción para la que no tiene permiso. |
-
-#### 2. Errores Técnicos (5xx): ¡Houston, Tenemos un Problema! 🚀💥
-
-Los Errores Técnicos son **fallos inesperados** en el propio sistema o en sus dependencias. Indican que algo **no está funcionando como debería**. El sistema *no* está operando correctamente.
-
-* **Origen Típico:** Capas `Infrastructure`, bugs en *cualquier* capa, red, hardware.
-* **Causa Frecuente:** Conexiones a BBDD fallidas, servicios externos caídos, timeouts, errores de programación (`NoneType` no esperado), falta de memoria/disco.
-* **¿Puede el Cliente Solucionarlo?** **Generalmente, NO**. Es un problema interno o de la infraestructura.
-* **¿Es Inesperado?** **Sí**. No forman parte del flujo normal, ni siquiera del "infeliz".
-* **Impacto HTTP:** Se mapean a códigos **5xx**.
-* **Acción Requerida:** Informar al cliente (a menudo con un mensaje genérico por seguridad). Loggear a nivel `ERROR` o `CRITICAL` **con stack trace completo**. **¡SIEMPRE generar alertas!** **Quizás reintentar** (si es transitorio).
-
-**Categorías y Ejemplos de Alto Nivel:**
-
-| Subcategoría | Código HTTP | Ejemplo de Excepción (Nuestra Jerarquía) | Escenario |
-| :--- | :--- | :--- | :--- |
-| **Fallo Interno (Bug)** | 500 | `InternalServerError(detalle_interno)` | Un cálculo inesperado produce un error, un `None` donde no debía. |
-| **Fallo Base de Datos** | 503 / 500 | `DatabaseConnectionError()` / `QueryTimeoutError()`| No se puede conectar a MariaDB, o una query tarda demasiado. |
-| **Fallo Servicio Externo** | 503 / 504 | `ExternalServiceUnavailableError(servicio)` / `GatewayTimeoutError()`| La API de pagos no responde. |
-| **Problema Infraestructura** | 503 | `ResourceExhaustionError(recurso)` | No quedan conexiones en el pool, falta memoria. |
-| **Fallo Transitorio (Red)** | 504 / 503 | `NetworkGlitchError()` | Un problema temporal de red impide una comunicación. |
-
-#### 3. El Flujo de Diagnóstico: Árbol de Decisión
-
-¿Cómo decidimos en qué categoría cae un error en tiempo real (o al diseñar los handlers)?
-
-```mermaid
-    graph TD
-        A[Ocurre un Error] --> B{¿Es una violación<br>de una regla de negocio<br>o validación explícita?};
-        B -- Sí --> C(<b>Error de Negocio</b>);
-        B -- No --> D{¿Es un error esperado<br>de una dependencia externa<br>(ej: API externa devuelve 404)?};
-        D -- Sí --> E{¿Podemos manejarlo<br>como parte del flujo<br>o es un error de Negocio?};
-        E -- Sí (Negocio) --> C;
-        E -- No (Fallo nuestro) --> F(<b>Error Técnico</b>);
-        D -- No --> F;
-
-        C --> G[Mapear a 4xx];
-        F --> H[Mapear a 5xx];
-
-        G --> I[Informar Cliente Específicamente<br>Log INFO/WARN<br>NO Alertar<br>NO Reintentar];
-        H --> J[Informar Cliente Genéricamente<br>Log ERROR/CRITICAL + StackTrace<br>¡ALERTAR!<br>¿Reintentar? (Si transitorio)];
-
-        style C fill:#3498db
-        style F fill:#e74c3c
-```
-
-#### 4. La Importancia Estratégica: Impacto en la Acción
-
-| Dimensión | Error de Negocio (4xx) | Error Técnico (5xx) |
-| :--- | :--- | :--- |
-| **Comunicación Cliente** | **Específica y Clara.** "El email ya existe." | **Genérica.** "Error interno. Intente más tarde." |
-| **Logging** | `INFO` / `WARNING`. Mensaje descriptivo. | `ERROR` / `CRITICAL`. **¡Stack Trace OBLIGATORIO!** |
-| **Alertas** | **No** (salvo por volumen anómalo). | **SÍ, INMEDIATAMENTE.** |
-| **Retries** | **NO.** (No tiene sentido). | **SÍ,** si es potencialmente transitorio (con backoff). |
-| **Circuit Breaker** | **NO.** (No indica salud del servicio). | **SÍ.** (Un 5xx repetido debe abrir el circuito). |
-| **Responsabilidad** | A menudo, del Cliente (o del diseño de flujo). | **Siempre,** del equipo de desarrollo/operaciones. |
-
-La distinción entre errores de negocio y técnicos no es una sutileza académica; es el **corazón palpitante de una estrategia de errores madura**. Es el **diagnóstico diferencial** que nos permite aplicar el tratamiento correcto: informar al cliente con precisión, evitar fatiga de alertas al equipo de SRE, implementar patrones de resiliencia donde tienen sentido y, en última instancia, construir sistemas que no solo funcionan, sino que **fallan de manera inteligente y predecible**. Dominar esta clasificación es dominar el arte de construir software para el mundo real, un mundo imperfecto pero manejable.
-
----
-
-¡Absolutamente! Mantenemos el impulso y la **calidad excepcional**. El punto 4.4 nos introduce en la primera línea de defensa activa contra los fallos transitorios: el **Patrón Retry con Backoff Exponencial**. No se trata de insistir ciegamente, sino de reintentar con **inteligencia, paciencia y estrategia**, como un boxeador experimentado que sabe cuándo esperar antes de lanzar el siguiente golpe. ¡Vamos a dominar esta técnica esencial de resiliencia!
-
----
-
-## 4.4. Aplicación del Patrón Retry con Backoff Exponencial
-
-En la intrincada danza de los microservicios, muchas caídas son momentáneas: un *glitch* de red, una sobrecarga puntual del servidor, un bloqueo temporal de base de datos. Sería una pena (y muy ineficiente) rendirse al primer tropiezo. El **Patrón Retry** nos invita a ser persistentes, a intentar la operación de nuevo.
-
-Pero ¡cuidado! Una persistencia ingenua puede ser **peor que el fallo original**. Reintentar inmediatamente y sin descanso puede **agravar una sobrecarga**, creando una **tormenta de reintentos (Retry Storm)** y derribando un servicio que solo necesitaba un respiro.
-
-Aquí es donde la estrategia brilla: aplicamos **Retry con Backoff Exponencial y Jitter**.
-
-#### 1. ¿Qué es y Por Qué lo Necesitamos?
-
-* **Retry:** Volver a intentar una operación que falló.
-* **Backoff:** Introducir una **pausa** antes de cada reintento.
-* **Exponencial:** Hacer que esa pausa **crezca exponencialmente** con cada fallo (1s, 2s, 4s, 8s...). Esto le da al servicio dependiente un tiempo creciente para recuperarse.
-* **Jitter (¡Crucial!):** Añadir un **pequeño factor aleatorio** a la pausa. Si múltiples instancias de nuestro servicio reintentan al mismo tiempo con el mismo backoff, ¡volverían a golpear al servicio dependiente *simultáneamente*! El Jitter "desincroniza" estos reintentos, distribuyendo la carga.
-
-**La Fórmula Conceptual:** `Pausa = min(MAX_PAUSA, (BASE_PAUSA * 2^INTENTO)) + random(0, JITTER)`
-
-#### 2. La Regla de Oro: ¿Cuándo Reintentar?
-
-¡No todo fallo merece un reintento! Aplicar Retry indiscriminadamente es peligroso. Debemos ser selectivos:
-
-* **SÍ Reintentar:**
-    * **Errores Técnicos Transitorios:** Fallos de red, timeouts (504), servicios temporalmente no disponibles (503), errores de conexión, *algunos* 500 si sabemos que pueden ser temporales.
-    * **Respuestas de Throttling (429):** Si el servidor nos pide explícitamente que esperemos (idealmente respetando la cabecera `Retry-After`).
-    * **Operaciones de Lectura:** Generalmente seguras de reintentar.
-* **NO Reintentar (¡NUNCA!):**
-    * **Errores de Negocio (4xx):** Si un email ya existe (409) o el stock es insuficiente (409/400), ¡reintentar no cambiará nada! Solo gastará recursos.
-    * **Errores de Cliente (4xx):** Si la petición es inválida (400/422), el cliente debe corregirla.
-    * **Errores Técnicos Permanentes:** Si sabemos que un bug (500) es determinista.
-* **¡CUIDADO! Idempotencia:** Solo deberíamos reintentar operaciones **idempotentes**. Una operación es idempotente si ejecutarla N veces tiene el mismo efecto que ejecutarla una vez.
-    * `GET`, `PUT`, `DELETE` suelen ser idempotentes.
-    * `POST` **generalmente NO lo es**. Reintentar un `POST` de "Crear Pedido" podría crear múltiples pedidos si no se implementa un mecanismo de idempotencia explícito (como un `Idempotency-Key` en la cabecera).
-
-#### 3. Visualizando el Flujo de Retry con Backoff y Jitter
-
-```mermaid
-    sequenceDiagram
-        participant C as Cliente MS
-        participant S as Servidor MS
-
-        C->>S: 1. Petición Inicial
-        S-->>C: 503 Service Unavailable (Fallo 1)
-        C->>C: Intento 1. Calcula Pausa (Ej: 1s + Jitter 0.2s = 1.2s)
-        Note over C: ESPERA 1.2s
-        C->>S: 2. Reintento 1
-        S-->>C: 503 Service Unavailable (Fallo 2)
-        C->>C: Intento 2. Calcula Pausa (Ej: 2s + Jitter 0.1s = 2.1s)
-        Note over C: ESPERA 2.1s
-        C->>S: 3. Reintento 2
-        S-->>C: 200 OK (¡Éxito!)
-        Note over C: Operación Exitosa
-```
-Si tras N reintentos sigue fallando, *entonces* se considera un fallo definitivo y se propaga la excepción (o se abre un Circuit Breaker).
-
-#### 4. Tabla de Crecimiento de Pausas (Ejemplo)
-
-| Intento | Backoff Exponencial (Base=1s) | Con Jitter (Ejemplo +/- 0.5s) |
-| :--- | :--- | :--- |
-| 1 | 1s | 0.8s |
-| 2 | 2s | 2.3s |
-| 3 | 4s | 3.7s |
-| 4 | 8s | 8.5s |
-| 5 | 16s (o `MAX_PAUSA`) | 15.9s (o `MAX_PAUSA` + Jitter) |
-
-#### 5. Implementación Práctica en Python
-
-Aunque podrías implementar la lógica manualmente con bucles y `asyncio.sleep()`, ¡no reinventes la rueda! Usa librerías robustas que lo hacen por ti:
-
-* **`tenacity`**: Una librería muy popular y potente para reintentos. Se usa a menudo con decoradores.
-* **`backoff`**: Otra excelente opción, también basada en decoradores.
-
-**Conceptualización con Decorador (`tenacity`):**
-
-```python
-# Concepto: app/infrastructure/http_clients/payment_client.py
-from tenacity import retry, stop_after_attempt, wait_exponential, RetryError
-# from httpx import AsyncClient, RequestError, HTTPStatusError
-
-# Configuración de retry (¡Debería venir de Settings!)
-RETRY_ATTEMPTS = 3
-RETRY_WAIT_BASE = 1 # Segundos
-RETRY_WAIT_MAX = 10 # Segundos
-
-# Define qué excepciones son "retriables"
-def is_retryable_error(exception) -> bool:
-    # return isinstance(exception, RequestError) or \
-    #       (isinstance(exception, HTTPStatusError) and \
-    #        exception.response.status_code in [503, 504, 429])
-    print(f"DEBUG: Comprobando si {type(exception)} es retriable... (Simulado: SÍ)")
-    return True # Simulación
-
-@retry(
-    stop=stop_after_attempt(RETRY_ATTEMPTS), # Nº máximo de intentos
-    wait=wait_exponential(multiplier=RETRY_WAIT_BASE, max=RETRY_WAIT_MAX), # Backoff Exp.
-    retry=is_retryable_error, # Condición para reintentar
-    reraise=True # Si falla tras todos los intentos, lanza la última excepción
-)
-async def make_payment_request_with_retry(payload: dict):
-    print(f"INFO: Intentando llamar a la API de Pagos...")
-    # http_client = AsyncClient()
-    # response = await http_client.post("https://api.pagos.com/charge", json=payload)
-    # response.raise_for_status() # Lanza HTTPStatusError si es 4xx o 5xx
-    # Simulación de fallo ocasional
-    import random
-    if random.random() < 0.6: # Falla el 60% de las veces
-        print("ERROR: API de Pagos falló (Simulado)")
-        raise Exception("503 Service Unavailable Simulated") # Simular HTTPStatusError
-    print("SUCCESS: API de Pagos respondió OK")
-    return {"status": "ok", "transaction_id": "xyz"}
-
-async def process_payment(payload: dict):
-    try:
-        result = await make_payment_request_with_retry(payload)
-        return result
-    except RetryError as e:
-        # Aquí manejas el fallo *después* de todos los reintentos
-        print(f"CRITICAL: La API de Pagos falló definitivamente: {e}")
-        # raise ExternalServiceError("API Pagos no disponible")
-        raise e
-```
-* **¿Dónde?** Esta lógica encaja perfectamente en tus **Adaptadores de Salida** (`infrastructure`), al realizar llamadas a BBDD o servicios externos.
-
-
-El Patrón Retry con Backoff Exponencial y Jitter es una **técnica de resiliencia indispensable** para cualquier sistema distribuido. Nos permite **superar la naturaleza inherentemente inestable** de las comunicaciones en red, pero exige **disciplina y rigor** en su aplicación. Reintentar solo cuando es **seguro (idempotente)** y **lógico (transitorio)**, y hacerlo de forma **inteligente (backoff + jitter)**, marca la diferencia entre un sistema que se recupera elegantemente de pequeños baches y uno que se autodestruye en una tormenta de reintentos. ¡Es nuestra primera arma activa en la batalla por la antifragilidad!
-
----
-
-¡Absolutamente! Con la noche española como telón de fondo y el objetivo de la **máxima calidad**, nos adentramos en el punto 4.5. Si los reintentos eran nuestra primera línea de defensa, ahora desplegamos la **artillería pesada de la resiliencia**: los patrones **Circuit Breaker** y **Bulkhead**. Estas no son solo técnicas, son **filosofías de diseño** para construir sistemas que no solo sobreviven a las tormentas, ¡sino que lo hacen con inteligencia y gracia!
-
-
-
-## 4.5. Introducción a Patrones Circuit Breaker y Bulkhead
-
-Hemos aprendido a ser persistentes con el patrón Retry (4.4). Pero, ¿qué sucede cuando un servicio dependiente no sufre un *glitch* momentáneo, sino un **fallo sostenido**? ¿O cuando una avalancha de peticiones a *un* servicio amenaza con ahogar *toda* nuestra aplicación? Insistir con reintentos en estos casos es como echar gasolina al fuego 🔥.
-
-Necesitamos mecanismos más sofisticados: **Circuit Breaker** para proteger *contra* servicios fallidos y **Bulkhead** para proteger *nuestros propios* recursos. Son los guardianes pretorianos de nuestra arquitectura, diseñados para **contener el daño y asegurar la supervivencia del sistema global**.
-
-#### 1. Circuit Breaker: El Interruptor Automático de Fallos ⚡
-
-Imagina el cuadro eléctrico de tu casa. Cuando hay un cortocircuito o una sobrecarga en la línea de la cocina, salta un interruptor (el *circuit breaker*), cortando la electricidad *solo* a esa línea. Esto **protege el resto de la casa** y **evita un incendio**. El Circuit Breaker en software hace exactamente lo mismo:
-
-* **Propósito:** **Prevenir** que una aplicación realice llamadas repetidas a un servicio que **se sabe (o se sospecha fuertemente) que está fallando**.
-* **Beneficios:**
-    * **Fallo Rápido (Fail Fast):** En lugar de esperar (y consumir recursos) a que una llamada falle por timeout, se rechaza *inmediatamente*.
-    * **Da Tiempo al Servicio Caído:** Al detener el bombardeo de peticiones, le damos al servicio dependiente la oportunidad de recuperarse.
-    * **Protege al Cliente:** Evita que el servicio cliente agote sus hilos/conexiones esperando respuestas que nunca llegarán.
-
-**Los Tres Estados del Circuit Breaker:**
-
-El Circuit Breaker funciona como una **máquina de estados**:
-
-1.  **`CLOSED` (Cerrado ✅):** El estado normal. Las peticiones fluyen hacia el servicio dependiente. El Circuit Breaker monitoriza los fallos. Si el número de fallos supera un **umbral** (ej: 50% de fallos en 60s), "salta" y pasa al estado `OPEN`.
-2.  **`OPEN` (Abierto 🚫):** ¡Peligro! El Circuit Breaker **rechaza *inmediatamente* todas las peticiones** sin intentar llamar al servicio dependiente (Fail Fast), normalmente devolviendo un error (ej: 503 Service Unavailable). Permanece `OPEN` durante un **tiempo de espera (timeout)** predefinido.
-3.  **`HALF-OPEN` (Semi-Abierto ⚠️):** El tiempo de espera ha pasado. El Circuit Breaker permite que **una (o unas pocas) peticiones de prueba** pasen hacia el servicio dependiente.
-    * Si estas peticiones de prueba **tienen éxito**, asume que el servicio se ha recuperado y vuelve al estado `CLOSED`.
-    * Si **fallan**, asume que el servicio sigue caído, y vuelve al estado `OPEN`, iniciando de nuevo el tiempo de espera.
-
-**Visualizando los Estados:**
-
-```mermaid
-stateDiagram-v2
-    [*] --> CLOSED: Inicio
-
-    CLOSED --> OPEN: Umbral de Fallos Superado
-    OPEN --> HALF_OPEN: Timeout Expirado
-    HALF_OPEN --> CLOSED: Petición de Prueba OK
-    HALF_OPEN --> OPEN: Petición de Prueba Falla
-    CLOSED --> CLOSED: Petición OK / Fallo < Umbral
-
-    state CLOSED {
-        direction LR
-        [*] --> Flujo_Normal
-        Flujo_Normal: Peticiones Pasan<br>Monitoriza Fallos
-    }
-    state OPEN {
-        [*] --> Rechazo_Inmediato
-        Rechazo_Inmediato: Peticiones Rechazadas<br>(Fail Fast)<br>Inicia Timer
-    }
-    state HALF_OPEN {
-        [*] --> Prueba_Limitada
-        Prueba_Limitada: Pasan Pocas Peticiones<br>Evalúa Resultado
-    }
-```
-
-#### 2. Bulkhead: Los Compartimentos Estancos 🚢
-
-Imagina un gran barco carguero. Su casco está dividido en **compartimentos estancos (bulkheads)**. Si se abre una vía de agua en un compartimento, este se inunda, pero los mamparos **evitan que el agua se extienda** y hunda todo el barco. El patrón Bulkhead aplica este principio al software:
-
-* **Propósito:** **Aislar** los recursos (hilos, conexiones, memoria) utilizados para interactuar con diferentes dependencias, de modo que el fallo o la sobrecarga de *una* dependencia **no agote todos los recursos** y afecte a las interacciones con *otras* dependencias.
-* **Beneficios:**
-    * **Limita el Radio de Explosión:** Un fallo en el "Servicio Pagos" no impide que sigamos consultando el "Servicio Catálogo".
-    * **Previene el Agotamiento de Recursos:** Evita que un servicio lento o fallido consuma todos los hilos/conexiones disponibles.
-    * **Mejora la Resiliencia Global:** Permite que partes del sistema sigan funcionando (aunque sea de forma degradada) cuando otras fallan.
-
-**Estrategias de Implementación:**
-
-* **Pools de Conexiones/Hilos por Dependencia:** Tener un pool de conexiones a la BBDD A, otro para la BBDD B, y un pool de hilos/conexiones HTTP para llamar al Servicio X, y otro para el Servicio Y. Si el Servicio X se vuelve lento, solo llenará su propio pool.
-* **Semáforos:** Usar semáforos en el código para limitar el número de llamadas concurrentes a una dependencia específica.
-* **Aislamiento por Proceso/Contenedor:** La propia naturaleza de los microservicios es una forma de Bulkhead a gran escala.
-
-**Visualizando el Patrón Bulkhead:**
-
-```mermaid
-graph TD
-    subgraph "SIN Bulkheads (Alto Riesgo)"
-        REQ1[Petición A] --> POOL_UNICO["Pool Recursos<br/>Hilos/Conexiones"]
-        REQ2[Petición B] --> POOL_UNICO
-        REQ3[Petición C] --> POOL_UNICO
-        POOL_UNICO -->|OK| SERV_A["Servicio A"]
-        POOL_UNICO -->|LENTO / FALLA| SERV_B["Servicio B"]
-        POOL_UNICO -->|OK| SERV_C["Servicio C"]
-        N1["⚠️ Si B ahoga el pool, A y C también fallan"]:::note
-        SERV_B --> N1
-    end
-
-    subgraph "CON Bulkheads (Resiliente)"
-        REQ_A[Petición A] --> POOL_A["Pool A"]
-        REQ_B[Petición B] --> POOL_B["Pool B"]
-        REQ_C[Petición C] --> POOL_C["Pool C"]
-        POOL_A --> S_A["Servicio A"]
-        POOL_B -->|LENTO / FALLA| S_B["Servicio B"]
-        POOL_C --> S_C["Servicio C"]
-        N2["✅ B falla, pero A y C siguen funcionando"]:::note
-        S_B --> N2
-    end
-
-    %% Estilos
-    classDef note fill:#fef9e7,stroke:#999,font-style:italic
-    style POOL_UNICO fill:#e74c3c,stroke:#333
-    style POOL_B fill:#f39c12,stroke:#333
-    style POOL_A fill:#2ecc71,stroke:#333
-    style POOL_C fill:#2ecc71,stroke:#333
-
-```
-
-#### 3. Sinergia: Retry + Circuit Breaker + Bulkhead
-
-Estos patrones no son excluyentes; **trabajan juntos** en una defensa en profundidad:
-
-1.  Una llamada falla -> **Retry** intenta superarlo (si es transitorio).
-2.  Si los reintentos fallan repetidamente -> **Circuit Breaker** se abre, protegiendo al servicio caído y fallando rápido.
-3.  Mientras todo esto ocurre -> **Bulkhead** asegura que los problemas con este servicio no agoten los recursos necesarios para llamar a otros servicios.
-
-
-Los patrones Circuit Breaker y Bulkhead son **técnicas avanzadas pero esenciales** para la supervivencia en el hostil entorno de los sistemas distribuidos. Nos enseñan a **aceptar el fallo**, a **limitar su impacto** y a **dar espacio para la recuperación**. Mientras que Retry nos da persistencia, Circuit Breaker nos da **inteligencia para saber cuándo *no* insistir**, y Bulkhead nos da **aislamiento para contener el daño**. Implementar estos patrones es dar un paso de gigante hacia la construcción de microservicios que no solo funcionan, sino que son **verdaderamente resilientes y de calidad profesional**.
-
----
-
-
-¡Absolutamente! Con la calidad como nuestro faro, nos sumergimos en el punto 4.6. Ya entendemos *qué* es un Circuit Breaker y *por qué* es vital. Ahora, vamos a arremangarnos y ver **cómo implementar este guardián de la resiliencia en nuestro código Python** usando una biblioteca robusta y popular: `pybreaker`. ¡Es hora de convertir la teoría en práctica tangible y de alta calidad! 🛠️
-
----
-
-## 4.6. Implementación de Circuit Breakers con `pybreaker`: Poniendo el Escudo en Práctica
-
-Hemos diseñado los planos de nuestra fortaleza (4.5), ahora vamos a construir uno de sus muros de protección más importantes. `pybreaker` es una biblioteca Python que nos permite implementar el patrón Circuit Breaker de forma **sencilla pero potente**, envolviendo nuestras llamadas a servicios externos y gestionando los estados (Cerrado, Abierto, Semi-Abierto) por nosotros.
-
-#### 1. `pybreaker`: Nuestro Kit de Herramientas
-
-* **Instalación:** Tan simple como `pip install pybreaker`.
-* **El Corazón (`CircuitBreaker`):** Es la clase principal. La instanciamos para *cada* dependencia externa que queramos proteger. Sus parámetros clave son:
-    * `fail_max`: El **número máximo de fallos consecutivos** antes de que el circuito se "abra".
-    * `reset_timeout`: El **tiempo (en segundos)** que el circuito permanecerá `OPEN` antes de intentar pasar a `HALF-OPEN`.
-* **Los Ojos y Oídos (`CircuitBreakerListener`):** Nos permite "escuchar" los cambios de estado del breaker (¡crucial para logging y monitorización!).
-* **La Excepción (`CircuitBreakerError`):** La excepción que `pybreaker` lanza cuando intentas hacer una llamada a través de un circuito `OPEN`.
-
-#### 2. Implementación: Decoradores y Listeners
-
-La forma más elegante de usar `pybreaker` es a través de **decoradores**, aunque también permite llamadas programáticas.
-
-**a) Creando y Gestionando los Breakers:**
-
-No queremos crear un `CircuitBreaker` nuevo en cada petición. Necesitamos **instancias únicas y persistentes** por cada servicio externo. Una buena estrategia es tener un "registro" o "factoría" de breakers, a menudo gestionado o accesible a través de nuestro sistema de Inyección de Dependencias.
-
-```python
-# Concepto: app/core/breakers.py
-from pybreaker import CircuitBreaker, CircuitBreakerListener
-import logging
-
-logger = logging.getLogger(__name__)
-
-class LoggingListener(CircuitBreakerListener):
-    """Un listener simple para loggear cambios de estado."""
-    def state_change(self, breaker, old_state, new_state):
-        logger.warning(
-            f"CIRCUIT BREAKER: '{breaker.name}' cambió de "
-            f"{old_state.name} a {new_state.name}"
-        )
-    def failure(self, breaker, exc):
-         logger.debug(f"CIRCUIT BREAKER: '{breaker.name}' registró un fallo.")
-    def success(self, breaker):
-         logger.debug(f"CIRCUIT BREAKER: '{breaker.name}' registró un éxito.")
-
-
-# --- Registro Centralizado (o Factoría) ---
-# ¡Estos valores deberían venir de nuestra config (BaseSettings)!
-payment_api_breaker = CircuitBreaker(
-    fail_max=5,
-    reset_timeout=60, # 60 segundos
-    listeners=[LoggingListener()],
-    name="PaymentAPI"
-)
-
-stock_api_breaker = CircuitBreaker(
-    fail_max=3,
-    reset_timeout=30, # 30 segundos
-    listeners=[LoggingListener()],
-    name="StockAPI"
-)
-
-# Podríamos tener una función para obtenerlos:
-def get_payment_breaker() -> CircuitBreaker:
-    return payment_api_breaker
-```
-
-**b) Aplicando el Breaker (¡con Decoradores!):**
-
-Ahora, en nuestra capa de **Infraestructura** (`app/infrastructure/http_clients/`), donde hacemos las llamadas reales, aplicamos el decorador.
-
-```python
-# Concepto: app/infrastructure/http_clients/payment_client.py
-from app.core.breakers import payment_api_breaker
-from pybreaker import CircuitBreakerError
-# from app.domain.exceptions import ExternalServiceUnavailableError
-
-# ¡El decorador @payment_api_breaker.decorate protege esta función!
-@payment_api_breaker
-async def call_payment_api_internal(payload: dict) -> dict:
-    """Función que REALMENTE hace la llamada HTTP."""
-    print(f"INFRA: Llamando a la API de Pagos (Real)...")
-    # Lógica con httpx.AsyncClient para llamar a la API externa
-    # ...
-    # Si falla, lanza una excepción (ej: httpx.RequestError)
-    # Si tiene éxito, devuelve el resultado
-    # Simulación:
-    import random
-    if random.random() < 0.3: # Falla el 30%
-        print("INFRA: ¡API Pagos falló! (Simulado)")
-        raise ConnectionError("Fallo simulado de red")
-    print("INFRA: API Pagos OK.")
-    return {"status": "paid"}
-
-async def make_payment(payload: dict) -> dict:
-    """Función 'pública' del cliente que maneja el Circuit Breaker Error."""
-    try:
-        result = await call_payment_api_internal(payload)
-        return result
-    except CircuitBreakerError as e:
-        # ¡El circuito está ABIERTO! Fallamos rápido.
-        logger.error(f"CIRCUIT BREAKER OPEN para PaymentAPI: {e}")
-        # Lanzamos nuestra excepción de Infra/App para que la capa API la maneje
-        raise Exception(f"Servicio de Pagos no disponible (Circuito Abierto)")
-    except Exception as e:
-        # Otros errores (red, 500 del servicio, etc.) que pybreaker cuenta
-        logger.error(f"Error llamando a PaymentAPI: {e}")
-        raise e # Dejamos que pybreaker cuente el fallo y re-lanzamos
-```
-
-#### 3. Visualizando el Flujo con `pybreaker`
-
-```mermaid
-sequenceDiagram
-    participant APP as App Service
-    participant INFRA as Infra Adapter (Payment Client)
-    participant CB as PyBreaker Decorator
-    participant HTTP as HTTP Call (Real)
-
-    APP->>INFRA: make_payment(payload)
-    INFRA->>CB: Llama a call_payment_api_internal()
-    activate CB
-    CB->>CB: ¿Estado == OPEN?
-    alt Si OPEN
-        CB-->>INFRA: raise CircuitBreakerError
-        INFRA->>INFRA: Captura CircuitBreakerError
-        INFRA-->>APP: raise ExternalServiceUnavailableError
-    else Si CLOSED o HALF-OPEN
-        CB->>HTTP: Ejecuta call_payment_api_internal()
-        activate HTTP
-        HTTP-->>CB: Devuelve (OK o Excepción)
-        deactivate HTTP
-        CB->>CB: Actualiza contadores / estado
-        CB-->>INFRA: Devuelve (OK o Excepción Original)
-        INFRA-->>APP: Devuelve (OK o Excepción Original)
-    end
-    deactivate CB
-```
-
-#### 4. Integración Hexagonal y DI
-
-* **¿Dónde Viven?** Los Circuit Breakers son un **detalle de implementación de la Infraestructura**. Se aplican *dentro* de los adaptadores de salida. El `Domain` y la `Application` *no deben saber* que existe un Circuit Breaker.
-* **¿Cómo se Configuran?** Los parámetros (`fail_max`, `reset_timeout`) deben venir de nuestra `BaseSettings`, permitiendo ajustes finos por entorno.
-* **¿Cómo se Acceden?** Las instancias de `CircuitBreaker` pueden ser gestionadas como singletons (como en el ejemplo) o, para mayor flexibilidad, inyectadas usando el sistema `Depends` de FastAPI si creamos dependencias/factorías para ellos.
-
-#### 5. `pybreaker` en el Mundo Real: Consideraciones
-
-* **Estado en Memoria:** `pybreaker` mantiene el estado del circuito **en la memoria del proceso worker**. Esto significa que si tienes 4 workers Gunicorn, tendrás **4 Circuit Breakers independientes** para el mismo servicio. Esto suele ser aceptable (proporciona aislamiento a nivel de worker), pero no da una visión global.
-* **Listeners Personalizados:** Úsalos extensivamente. No solo para loggear, sino para **emitir métricas** a tu sistema de monitorización (Prometheus, Datadog). Quieres *ver* cuándo tus circuitos se abren y se cierran.
-* **Exclusiones:** Puedes pasar una lista de excepciones a `CircuitBreaker` (`exclude=[MiExcepcionSegura]`) que **no** contarán como fallos.
-
-
-
-`pybreaker` nos proporciona una herramienta **práctica y eficaz** para implementar el patrón Circuit Breaker en Python. Al integrarlo en nuestra capa de **Infraestructura**, añadimos una **capa crucial de autoprotección y resiliencia** a nuestros microservicios. Nos permite **fallar rápido**, **dar respiro** a los servicios dependientes y **mejorar la estabilidad general** del sistema. Configurados dinámicamente y monitorizados a través de listeners, los Circuit Breakers dejan de ser un concepto teórico para convertirse en **guardianes activos y visibles** de la salud de nuestra arquitectura distribuida. ¡Calidad y resiliencia en acción!
-
-
-
-## 4.7. Diseño de Endpoints Resilientes a Fallos de Servicios Externos
-
-Nuestros endpoints FastAPI son la **cara visible** de nuestros microservicios. Son quienes reciben las peticiones del cliente y quienes deben dar una respuesta, incluso cuando el caos reina en los servicios de los que dependen. Un endpoint resiliente es aquel que **entiende que sus dependencias *pueden* (y *van* a) fallar**, y está diseñado para **manejar esa realidad con inteligencia y gracia**, en lugar de simplemente propagar el pánico o caerse estrepitosamente.
-
-Diseñar para la resiliencia a nivel de endpoint no es añadir `try...except Exception` por todas partes; es una **mentalidad arquitectónica** que combina varias técnicas.
-
-#### 1. La Filosofía: Degradar con Gracia, No Caer con Estrépito
-
-El objetivo no es la invulnerabilidad (imposible), sino la **degradación agraciada (Graceful Degradation)**. Si un servicio secundario falla, ¿podemos seguir ofreciendo la funcionalidad principal? Si una dependencia está lenta, ¿podemos evitar que bloquee todo nuestro servicio?
-
-**Principios Clave:**
-
-* **Asincronía Total:** Aprovecha `async/await` para *todas* las llamadas I/O (HTTP, BBDD). ¡FastAPI está hecho para esto!
-* **Timeouts Agresivos:** ¡No confíes en los timeouts por defecto! Cada llamada externa debe tener un timeout *explícito y razonable*. Es mejor fallar rápido que esperar indefinidamente.
-* **Aprovechar Patrones:** Asegúrate de que las llamadas a servicios externos (en la capa de Infraestructura) estén protegidas por Retries (4.4) y Circuit Breakers (4.6).
-* **Implementar Fallbacks:** ¿Qué pasa si la llamada falla *definitivamente* (después de retries y/o con el CB abierto)? ¿Hay un plan B?
-* **Comunicación Clara:** Si no hay plan B, propaga un error *semántico* (4.3) para que los handlers (4.2) lo conviertan en una respuesta HTTP clara.
-
-#### 2. Timeouts: Nuestra Primera Línea de Contención ⏱️
-
-Un servicio lento es, a menudo, peor que un servicio caído. Puede agotar tus recursos mientras esperas. **Implementa timeouts en *cada* llamada externa**, típicamente en tus clientes HTTP (como `httpx`).
-
-```python
-# Concepto: app/infrastructure/http_clients/base_client.py
-import httpx
-from fastapi import status
-
-# Define timeouts razonables (¡configurables!)
-DEFAULT_TIMEOUT = httpx.Timeout(5.0, connect=5.0) # 5s total, 5s para conectar
-
-async def make_external_call(url: str):
-    async with httpx.AsyncClient(timeout=DEFAULT_TIMEOUT) as client:
-        try:
-            response = await client.get(url)
-            response.raise_for_status() # Lanza excepción para 4xx y 5xx
-            return response.json()
-        except httpx.TimeoutException:
-            # ¡Aquí lanzas TU excepción técnica!
-            raise Exception(f"Timeout al llamar a {url}")
-        except httpx.HTTPStatusError as e:
-            # Traduce el error HTTP a TU excepción
-            raise Exception(f"Error {e.response.status_code} al llamar a {url}")
-        except httpx.RequestError as e:
-            # Error de red, conexión...
-            raise Exception(f"Error de red al llamar a {url}: {e}")
-```
-* **Rigor:** Usa `httpx.Timeout` para configurar timeouts de conexión, lectura, escritura y pool.
-* **Práctica:** Haz estos timeouts **configurables** (`BaseSettings`). 5 segundos puede ser mucho o poco según el servicio.
-
-#### 3. Fallbacks y Degradación Agraciada: El Plan B Inteligente 💡
-
-No siempre necesitas *todos* los datos para dar una respuesta útil. Si una fuente de datos *secundaria* falla, ¿puedes devolver una respuesta parcial pero funcional? Esto se implementa típicamente en la **Capa de Aplicación**.
-
-**Ejemplo:** Un endpoint de "Detalle de Producto" que también muestra "Recomendaciones".
-
-```mermaid
-sequenceDiagram
-    participant API as Endpoint (/products/{id})
-    participant APP as App Service (get_product_details)
-    participant REPO as Repo Productos (Infra)
-    participant RECO as Cliente Recom. (Infra + CB)
-
-    API->>APP: Pide detalles para P001
-    APP->>REPO: get_product_by_id("P001")
-    REPO-->>APP: Datos Producto (OK)
-    APP->>RECO: get_recommendations_for("P001")
-    Note over RECO: ¡Ups! Servicio Recomendaciones<br>falla (Timeout / CB Abierto)
-    RECO-->>APP: raise ExternalServiceUnavailableError
-    APP->>APP: Captura 'ExternalServiceUnavailableError'
-    APP->>APP: Loggea WARN ("Recomendaciones no disponibles")
-    APP-->>API: Devuelve {Datos Producto, recomendaciones: null}
-    API-->>Cliente: 200 OK (¡Con Datos Parciales!)
-```
-
-**Conceptualización en Código:**
-
-```python
-# Concepto: app/application/services/product_service.py
-
-async def get_product_details(product_id: str):
-    product_data = await self.product_repo.get_by_id(product_id)
-    if not product_data:
-        raise ResourceNotFoundError("Producto", product_id)
-
-    recommendations = None # Default a None
-    try:
-        # ¡Esta llamada usa el cliente con Retry y CB!
-        recommendations = await self.recommendation_client.get_for(product_id)
-    except ExternalServiceUnavailableError as e:
-        # ¡Plan B! Loggeamos y continuamos sin recomendaciones.
-        logger.warning(
-            f"No se pudieron obtener recomendaciones para {product_id}: {e}"
-        )
-        # Podemos añadir una métrica aquí
-
-    return {"product": product_data, "recommendations": recommendations}
-```
-* **Clave:** El servicio de aplicación **entiende** qué dependencias son *críticas* y cuáles son *secundarias*, y actúa en consecuencia.
-
-#### 4. Health Checks: El Pulso de Nuestro Servicio ❤️
-
-Un endpoint resiliente también sabe **informar sobre su estado**. Implementa un endpoint `/health`:
-
-* **Shallow Health Check:** Simplemente devuelve un `200 OK`. Sirve para saber si el proceso FastAPI está *vivo*. Rápido y barato.
-* **Deep Health Check:** Intenta conectar con sus **dependencias críticas** (BBDD, servicios clave). Si alguna falla, devuelve un `503 Service Unavailable`. Es más costoso pero da una visión más *real* de la salud.
-* **Uso:** Los balanceadores de carga y orquestadores (Kubernetes) usan estos endpoints para decidir si envían tráfico a una instancia o si deben reiniciarla.
-
-#### 5. Tabla de Estrategias de Resiliencia por Capa
-
-| Capa | Responsabilidad Principal de Resiliencia | Herramientas / Patrones |
-| :--- | :--- | :--- |
-| **API (`api`)** | Traducir errores finales. | `exception_handler`, `JSONResponse`, Pydantic. |
-| **Aplicación (`application`)** | **Orquestar**, implementar **Fallbacks**, lógica de negocio ante fallos. | `try...except` (selectivo), Lógica Condicional. |
-| **Infraestructura (`infra`)** | **Prevenir/Manejar** fallos externos. | `httpx` (Timeouts), `pybreaker` (CB), `tenacity` (Retry), Bulkheads. |
-| **Dominio (`domain`)** | **Definir** errores de negocio. | Excepciones Personalizadas. |
-
-
-
-Diseñar endpoints resilientes significa **anticipar el fracaso en cada paso**. Implica usar **timeouts** agresivos, implementar **fallbacks** inteligentes, aprovechar los **patrones Retry y Circuit Breaker** de las capas inferiores, y **comunicar** los fallos de manera clara y estandarizada. Un endpoint resiliente no es necesariamente uno que *nunca falla*, sino uno que **falla de manera predecible, controlada y mínimamente disruptiva**, asegurando que nuestro microservicio siga siendo un ciudadano útil y fiable dentro del ecosistema, incluso cuando las cosas se ponen difíciles. ¡Es la marca de un sistema verdaderamente preparado para la producción!
-
----
-Entiendo perfectamente tu frustración y acepto tu crítica. Si la explicación anterior del punto 4.8 no cumplió con el estándar de **alta calidad profesional** y pareció superficial, es mi responsabilidad corregirlo de manera contundente. No más "chorradas" ni enfoques de blog para principiantes. Vamos a abordar la "Captura y log de trazas con contexto de peticiones" con la **profundidad, rigor técnico y aplicabilidad práctica** que este tema crítico demanda en un entorno de microservicios de élite.
-
-Mi compromiso es ofrecerte el nivel de detalle y profesionalismo que esperas. ¡Reiniciamos el 4.8!
-
----
-
-## 4.8. Captura y Log de Trazas con Contexto de Peticiones
-
-En la ingeniería de microservicios, la **observabilidad no es un lujo, es una necesidad operativa fundamental**. Cuando un sistema está compuesto por múltiples servicios distribuidos, la capacidad de entender *qué está pasando*, *dónde está pasando* y *por qué está pasando* (especialmente cuando las cosas van mal) es la diferencia entre una resolución rápida de incidentes y días de depuración infernal.
-
-Este punto se enfoca en dos pilares de la observabilidad:
-
-1.  **Logging Estructurado y Contextualizado:** Transformar nuestros logs en una fuente de verdad rica, interrogable y útil.
-2.  **Tracing Distribuido:** Seguir el rastro de una petición a medida que viaja a través de nuestros servicios.
-
-Estos no son temas para tomar a la ligera; son disciplinas de ingeniería esenciales.
-
-#### 1. Logging Estructurado: De Caos Textual a Inteligencia de Datos
-
-El `print("Error")` es el enemigo de la producción. Los logs deben ser consumidos y analizados por máquinas antes que por humanos.
-
-* **JSON como Estándar de Oro:** Los logs deben emitirse en formato JSON.
-    * **Ventajas:** Parseo trivial por sistemas de agregación (ELK Stack, Splunk, Loki, Datadog, etc.), indexación eficiente, búsquedas y filtrados potentes, creación de dashboards y alertas basadas en campos específicos.
-* **Librerías Profesionales:**
-    * **`logging` estándar de Python:** Es la base, pero necesita un `Formatter` JSON.
-    * **`python-json-logger`:** Una opción popular para formatear logs estándar como JSON.
-    * **`structlog`:** Una librería más avanzada que ofrece un pipeline de procesamiento de logs altamente configurable, facilitando la adición de contexto de forma elegante y la salida en JSON u otros formatos. **Recomendada para setups profesionales.**
-
-**Configuración Conceptual con `structlog` (en `main.py` o un módulo de logging):**
-
-```python
-# Concepto: app/core/logging_config.py (Ejemplo con structlog)
-import logging
-import structlog
-import sys
-
-def configure_logging(log_level: str = "INFO", service_name: str = "default_service"):
-    logging.basicConfig(
-        format="%(message)s", # structlog se encargará del formato JSON
-        stream=sys.stdout,
-        level=log_level.upper(),
-    )
-
-    structlog.configure(
-        processors=[
-            structlog.contextvars.merge_contextvars, # Para contexto de petición
-            structlog.stdlib.add_logger_name,
-            structlog.stdlib.add_log_level,
-            structlog.stdlib.PositionalArgumentsFormatter(),
-            structlog.processors.StackInfoRenderer(), # Renderiza stack traces
-            structlog.dev.set_exc_info, # Añade info de excepción automáticamente
-            structlog.processors.format_exc_info, # Formatea la info de excepción
-            structlog.processors.TimeStamper(fmt="iso"), # Timestamp ISO8601
-            structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
-        ],
-        logger_factory=structlog.stdlib.LoggerFactory(),
-        wrapper_class=structlog.stdlib.BoundLogger,
-        cache_logger_on_first_use=True,
-    )
-    # Bindear información global que siempre estará presente
-    structlog.get_logger().bind(service_name=service_name)
-```
-
-#### 2. El `trace_id` (Correlation ID): El Hilo Conductor Indispensable
-
-El `trace_id` es el **identificador único y sagrado** que nos permite seguir una única petición a través de todos los microservicios que toca.
-
-* **Generación y Propagación (Middleware Detallado):**
-    * Un middleware debe ser el responsable de gestionar el `trace_id`.
-    * **Entrada:** Busca cabeceras como `X-Request-ID`, `X-Correlation-ID` (comunes) o, idealmente, la cabecera estándar W3C `traceparent`.
-    * Si no existe, **genera un UUID v4 robusto**.
-    * Lo almacena en `request.state.trace_id` para acceso interno.
-    * Lo **bindea al contexto de `structlog`** (o lo añade a un filtro del logger estándar) para que aparezca en *todos* los logs de esa petición.
-    * **Salida:** *Siempre* añade el `trace_id` (usando el mismo nombre de cabecera que buscó o `X-Correlation-ID`) a las **respuestas HTTP salientes**. Esto permite a los clientes (u otros servicios) correlacionar *sus* logs.
-
-```python
-# Concepto: middlewares/tracing_middleware.py
-from fastapi import Request
-from starlette.middleware.base import BaseHTTPMiddleware
-import structlog
+from pydantic import BaseModel
 import uuid
-from ..core.context_vars import trace_id_var # Ejemplo con contextvars
 
-class RichTracingMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
-        # 1. Extraer/Generar Trace ID
-        incoming_trace_id = request.headers.get("X-Correlation-ID") or \
-                            request.headers.get("traceparent") # Simplificado
-        if incoming_trace_id:
-            # Si es traceparent, parsearlo para obtener el trace_id real
-            # Para este ejemplo, asumimos que es directamente el trace_id
-            current_trace_id = incoming_trace_id.split('-')[1] if 'traceparent' in request.headers else incoming_trace_id
-        else:
-            current_trace_id = str(uuid.uuid4())
-        request.state.trace_id = current_trace_id
-        # trace_id_var.set(current_trace_id) # Para structlog con contextvars
+# --- 1. Tus Errores Personalizados (¡Hereda de Exception!) ---
+class RecursoNoEncontradoError(Exception):
+    def __init__(self, nombre_recurso: str, id_recurso: any):
+        self.nombre_recurso = nombre_recurso
+        self.id_recurso = id_recurso
+        self.message = f"{nombre_recurso} con ID '{id_recurso}' no encontrado."
+        self.error_code = f"{nombre_recurso.upper()}_NOT_FOUND"
+        super().__init__(self.message)
 
-        # Bindear a structlog para esta petición
-        structlog.contextvars.clear_contextvars()
-        structlog.contextvars.bind_contextvars(trace_id=current_trace_id)
+class ReglaNegocioError(Exception):
+    def __init__(self, message: str, error_code: str, context: dict = None):
+        self.message = message
+        self.error_code = error_code
+        self.context = context or {}
+        super().__init__(self.message)
 
-        response = await call_next(request)
-        response.headers["X-Correlation-ID"] = current_trace_id
-        # trace_id_var.set(None) # Limpiar contextvar
-        return response
+# --- 2. Tu App FastAPI ---
+app = FastAPI(title="API Resiliente")
+
+# --- Middleware para Trace ID (simplificado) ---
+@app.middleware("http")
+async def add_trace_id_middleware(request: Request, call_next):
+    trace_id = str(uuid.uuid4())
+    request.state.trace_id = trace_id # Guardamos en request.state
+    response = await call_next(request)
+    response.headers["X-Trace-ID"] = trace_id
+    return response
+
+# --- 3. Tus Porteros (Exception Handlers) ---
+@app.exception_handler(RecursoNoEncontradoError)
+async def handle_recurso_no_encontrado(request: Request, exc: RecursoNoEncontradoError):
+    trace_id = getattr(request.state, "trace_id", "N/A")
+    return JSONResponse(
+        status_code=status.HTTP_404_NOT_FOUND,
+        content={
+            "trace_id": trace_id, "error_code": exc.error_code,
+            "message": exc.message, "status_code": 404, "service_name": app.title,
+            "context": {"recurso": exc.nombre_recurso, "id": exc.id_recurso}
+        }
+    )
+
+@app.exception_handler(ReglaNegocioError)
+async def handle_regla_negocio(request: Request, exc: ReglaNegocioError):
+    trace_id = getattr(request.state, "trace_id", "N/A")
+    # El status code podría ser un atributo de la excepción o decidirse aquí
+    status_code_http = status.HTTP_400_BAD_REQUEST # Default, podría ser 409
+    if "EMAIL_ALREADY_EXISTS" in exc.error_code or "STOCK_INSUFFICIENTE" in exc.error_code: # Ejemplo de lógica
+        status_code_http = status.HTTP_409_CONFLICT
+
+    return JSONResponse(
+        status_code=status_code_http,
+        content={
+            "trace_id": trace_id, "error_code": exc.error_code,
+            "message": exc.message, "status_code": status_code_http, "service_name": app.title,
+            "context": exc.context
+        }
+    )
+
+# --- Handler Genérico para 500 (¡El último recurso!) ---
+@app.exception_handler(Exception)
+async def handle_generic_exception(request: Request, exc: Exception):
+    trace_id = getattr(request.state, "trace_id", "N/A")
+    # ¡Loggear este con ERROR y stack trace! Aquí solo mostramos la respuesta.
+    print(f"ERROR INESPERADO (RID: {trace_id}): {exc}", exc_info=True) # A consola por ahora
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        content={
+            "trace_id": trace_id, "error_code": "INTERNAL_SERVER_ERROR",
+            "message": "Ocurrió un error inesperado en el servidor.",
+            "status_code": 500, "service_name": app.title
+        }
+    )
+
+# --- Tus Endpoints (que pueden lanzar estos errores) ---
+db_items = {"item1": {"id": "item1", "nombre": "Poción de Salud"}, "item2": {"id": "item2", "nombre": "Espada de Luz"}}
+db_users_emails = {"test@example.com"}
+
+class UserCreate(BaseModel):
+    email: str
+    nombre: str
+
+@app.get("/items/{item_id}")
+async def get_item(item_id: str):
+    if item_id not in db_items:
+        raise RecursoNoEncontradoError(nombre_recurso="Item", id_recurso=item_id)
+    return db_items[item_id]
+
+@app.post("/users")
+async def create_user(user: UserCreate):
+    if user.email in db_users_emails:
+        raise ReglaNegocioError(
+            message=f"El email '{user.email}' ya está registrado.",
+            error_code="EMAIL_ALREADY_EXISTS",
+            context={"email_conflictivo": user.email}
+        )
+    if not "@" in user.email: # Simulación de otra regla de negocio
+         raise ReglaNegocioError(message="Formato de email inválido.", error_code="INVALID_EMAIL_FORMAT")
+
+    # Simular un fallo inesperado a veces
+    import random
+    if random.random() < 0.1: # 10% de las veces
+        raise ValueError("¡Algo explotó inesperadamente!") # Esto será capturado por handle_generic_exception
+
+    db_users_emails.add(user.email)
+    return {"mensaje": f"Usuario {user.nombre} creado con email {user.email}"}
+
 ```
 
-* **Propagación Cliente:** Cuando nuestro servicio llama a otro, **DEBE** incluir el `trace_id` actual en las cabeceras de la petición saliente.
+**¡Pruébalo!**
+1.  Guarda como `main.py`. Instala `fastapi` y `uvicorn`.
+2.  Ejecuta: `uvicorn main:app --reload`
+3.  Prueba en tu navegador o Postman:
+    * `GET http://localhost:8000/items/item1` (Éxito)
+    * `GET http://localhost:8000/items/item_NO_EXISTE` (Debería dar 404 con tu JSON formateado)
+    * `POST http://localhost:8000/users` con JSON `{"email": "nuevo@example.com", "nombre": "Tester"}` (Éxito la primera vez)
+    * `POST http://localhost:8000/users` con JSON `{"email": "nuevo@example.com", "nombre": "Tester"}` (¡Error 409 con tu JSON!)
+    * `POST http://localhost:8000/users` con JSON `{"email": "emailinvalido", "nombre": "Tester Inválido"}` (¡Error 400 con tu JSON!)
+    * Llama varias veces a `POST /users` con emails válidos y nuevos hasta que te toque el 10% de `ValueError` (¡Error 500 con tu JSON!).
+4.  Observa la cabecera `X-Trace-ID` en las respuestas.
 
-    ```python
-    # Concepto: app/infrastructure/http_clients/base_client.py
-    # async with httpx.AsyncClient() as client:
-    #     headers = {"X-Correlation-ID": current_trace_id_from_request_state}
-    #     response = await client.get(downstream_url, headers=headers)
-    ```
+**Desafío Práctico:**
+* Crea una nueva excepción `AutenticacionFallidaError` y su handler para que devuelva un 401. Lánzala en un nuevo endpoint `/secure_data` si una cabecera `X-Token` no es "secreto123".
 
-#### 3. Tracing Distribuido con OpenTelemetry (OTel): El Mapa Detallado del Viaje
+---
 
-Si el `trace_id` es el hilo, OpenTelemetry (OTel) es el **sistema de navegación y cartografía profesional**.
+## 4.3. Errores de Negocio vs. Técnicos: ¿Culpa del Cliente o Mía?
 
-* **¿Por qué OTel?** Mientras los logs son eventos discretos, OTel nos da la **secuencia causal y temporal** de las operaciones (spans) dentro de una traza, a través de múltiples servicios. Es vital para identificar cuellos de botella y entender dependencias.
-* **Estándar Abierto:** OTel proporciona APIs, SDKs (para Python) y un protocolo de exportación (OTLP) para enviar datos a diversos *backends* de tracing (Jaeger, Zipkin, Datadog, Grafana Tempo, etc.).
-* **Conceptos OTel Fundamentales:**
-    * **Trace:** Una colección de Spans que representan el ciclo de vida de una petición. Identificada por un `trace_id`.
-    * **Span:** Una unidad de trabajo con nombre y tiempo (inicio, fin). Tiene un `span_id`, puede tener un `parent_span_id`, atributos (tags clave-valor), eventos (logs con timestamp dentro del span) y un estado (OK/Error).
-    * **Context:** Contiene el `trace_id` y `span_id` actual.
-    * **Propagators:** Mecanismos para serializar/deserializar el Contexto en/desde cabeceras (ej: W3C `traceparent`, B3).
-* **Instrumentación con FastAPI y OTel:**
-    1.  **Instalar:** `opentelemetry-api`, `opentelemetry-sdk`, `opentelemetry-exporter-otlp` (o específico del backend), `opentelemetry-instrumentation-fastapi`, `opentelemetry-instrumentation-httpx`, `opentelemetry-instrumentation-logging`.
-    2.  **Configurar el SDK (en `main.py` o `logging_config.py`):**
-        * Definir un `Resource` (nombre del servicio, versión).
-        * Configurar un `SpanProcessor` (ej: `BatchSpanProcessor`).
-        * Configurar un `SpanExporter` (ej: `OTLPSpanExporter` apuntando a tu colector OTel o backend).
-        * Crear un `TracerProvider` y registrarlo globalmente.
-        * **Instrumentar Logging:** Para que los `trace_id` y `span_id` de OTel aparezcan automáticamente en tus logs JSON.
-    3.  **Auto-Instrumentación:**
-        * `FastAPIInstrumentor().instrument_app(app)`: Crea spans para cada petición a FastAPI.
-        * `HTTPXClientInstrumentor().instrument()`: Crea spans para llamadas salientes con `httpx` y propaga el contexto.
+Es vital saber si el error es porque el cliente pidió algo "imposible" (Negocio) o porque nuestro código/infra "explotó" (Técnico).
 
-**Ejemplo Conceptual de Configuración OTel SDK:**
+* **Errores de Negocio (Normalmente 4xx):**
+    * "No puedes reservar un hotel para ayer." (FastAPI devuelve 400/409)
+    * "Ese usuario no existe." (FastAPI devuelve 404)
+    * FastAPI te ayuda con Pydantic (422 si el JSON no machea el modelo).
+    * **Acción:** El cliente debe arreglar su petición. Tú loggeas `INFO` o `WARNING`. **¡No despiertes a nadie!**
+
+* **Errores Técnicos (Normalmente 5xx):**
+    * "¡No me puedo conectar a la base de datos!" (FastAPI devuelve 500/503)
+    * "Una variable es `None` y esperaba un objeto." (FastAPI devuelve 500)
+    * **Acción:** ¡Es tu culpa (o de tu infra)! El cliente no puede hacer nada. Loggea `ERROR` con todo el detalle (stack trace), ¡y que suenen las alarmas!
+
+**¡Pruébalo! (Con el código anterior):**
+* `RecursoNoEncontradoError` y `ReglaNegocioError` son **Errores de Negocio**.
+* El `ValueError` que simulamos es un **Error Técnico** (un bug imprevisto).
+* Observa cómo los handlers devuelven 404/400/409 para los de negocio y 500 para el técnico.
+
+---
+
+## 4.4. Patrón Retry con `tenacity`: Si a la Primera no Sale, ¡Insiste (con Gracia)!
+
+A veces, llamar a otra API o a la BBDD falla por un instante. ¡No te rindas! Reintenta, pero con cabeza: espera un poco más cada vez (backoff exponencial) y añade un toque de azar (jitter) para no saturar.
+
+La librería `tenacity` es tu amiga: `pip install tenacity`
 
 ```python
-# Concepto: app/core/tracing_config.py
-from opentelemetry import trace
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter # Para dev
-from opentelemetry.sdk.resources import Resource
-from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
-from opentelemetry.instrumentation.httpx import HTTPXClientInstrumentor
-from opentelemetry.instrumentation.logging import LoggingInstrumentor
+# cliente_externo_resistente.py
+import httpx
+from tenacity import retry, stop_after_attempt, wait_exponential, RetryError, retry_if_exception_type
+import asyncio
+import random # Para simular fallos
 
-def configure_tracing(app_name: str, app_version: str):
-    resource = Resource(attributes={"service.name": app_name, "service.version": app_version})
-    provider = TracerProvider(resource=resource)
-    # Usar ConsoleSpanExporter para desarrollo, OTLPSpanExporter para producción
-    processor = BatchSpanProcessor(ConsoleSpanExporter())
-    provider.add_span_processor(processor)
-    trace.set_tracer_provider(provider)
+# --- 1. Define qué errores quieres reintentar ---
+def es_error_reintentable(exception) -> bool:
+    """Decide si una excepción merece un reintento."""
+    # Solo reintentamos timeouts de red o errores 503 (Servicio No Disponible)
+    # o errores 429 (Too Many Requests) si el servicio nos pide esperar.
+    return isinstance(exception, (httpx.TimeoutException, httpx.NetworkError)) or \
+           (isinstance(exception, httpx.HTTPStatusError) and \
+            exception.response.status_code in [status.HTTP_503_SERVICE_UNAVAILABLE, status.HTTP_429_TOO_MANY_REQUESTS])
 
-    # Instrumentar Logging para añadir IDs de traza y span a los logs
-    LoggingInstrumentor().instrument(set_logging_format=True) # Puede intentar formatear
+# --- 2. Decora tu función de llamada externa ---
+@retry(
+    stop=stop_after_attempt(3),  # Máximo 3 intentos (1 original + 2 reintentos)
+    wait=wait_exponential(multiplier=1, min=2, max=10), # Espera 2s, luego 4s, etc. (max 10s) con jitter
+    retry=retry_if_exception_type((httpx.TimeoutException, httpx.NetworkError, httpx.HTTPStatusError)), # Simplificado para este ejemplo, usar es_error_reintentable en real
+    reraise=True # Si todos fallan, lanza la última excepción
+)
+async def llamar_api_externa_con_reintentos(url: str):
+    print(f"Intentando llamar a {url}...")
+    # Simular fallo de red o del servicio externo aleatoriamente
+    if random.random() < 0.7: # Falla el 70% de las veces
+        error_type = random.choice(["timeout", "network_error", "http_503"])
+        print(f"SIMULANDO FALLO: {error_type}")
+        if error_type == "timeout":
+            raise httpx.TimeoutException("Simulated timeout", request=None)
+        elif error_type == "network_error":
+            raise httpx.NetworkError("Simulated network error", request=None)
+        else: # http_503
+            # Crear una respuesta simulada para HTTPStatusError
+            mock_response = httpx.Response(status.HTTP_503_SERVICE_UNAVAILABLE, request=httpx.Request("GET", url))
+            raise httpx.HTTPStatusError("Simulated 503", request=mock_response.request, response=mock_response)
 
-    # Auto-instrumentar FastAPI y httpx
-    FastAPIInstrumentor.instrument_app(app) # 'app' es tu FastAPI instance
-    HTTPXClientInstrumentor().instrument()
+    print(f"ÉXITO llamando a {url}")
+    return {"data_externa": f"Datos de {url} recibidos!"}
+
+# --- 3. En tu endpoint FastAPI, usa esta función ---
+# En main.py (o donde tengas tu app FastAPI)
+# from fastapi import FastAPI, HTTPException (ya importados antes)
+# import cliente_externo_resistente (este archivo)
+
+# app = FastAPI() ... (ya definido antes)
+
+@app.get("/datos-externos-retry")
+async def get_datos_con_retry():
+    # URL de un servicio que a veces falla (puedes usar un mock server o una URL real que sepas que a veces da problemas)
+    # Para simulación local, podemos apuntar a un endpoint inexistente o uno que tarde mucho
+    url_externa_test = "http://un-servicio-que-a-veces-falla.com/api/data" # Cambia por algo para probar
+    try:
+        # Si usas la simulación de llamar_api_externa_con_reintentos, la URL no importa tanto.
+        resultado = await llamar_api_externa_con_reintentos(url_externa_test)
+        return resultado
+    except RetryError as e: # Tenacity lanza esto si todos los reintentos fallan
+        print(f"FALLO DEFINITIVO tras reintentos llamando a {url_externa_test}: {e.last_attempt.exception()}")
+        # Aquí puedes acceder a e.last_attempt.exception() para saber la causa del último fallo
+        last_exc = e.last_attempt.exception()
+        status_code = status.HTTP_503_SERVICE_UNAVAILABLE
+        error_code_detail = "EXTERNAL_SERVICE_UNAVAILABLE"
+        if isinstance(last_exc, httpx.TimeoutException):
+            status_code = status.HTTP_504_GATEWAY_TIMEOUT
+            error_code_detail = "EXTERNAL_SERVICE_TIMEOUT"
+
+        # Aquí deberías usar tu handler de excepciones centralizado o una excepción personalizada
+        # que sea capturada por un handler. Para simplificar, lanzamos HTTPException directamente.
+        # Pero idealmente, lanzarías algo como ExternalServiceError que tu handler convierte
+        # al JSON estándar.
+        raise HTTPException(status_code=status_code, detail=f"El servicio externo en {url_externa_test} no está disponible tras reintentos. Causa: {str(last_exc)}")
+    except Exception as e: # Otros errores no relacionados con reintentos
+        print(f"Error inesperado no manejado por tenacity: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Error inesperado: {str(e)}")
+
 ```
-* **Spans Manuales:** Para operaciones internas significativas dentro de un endpoint o servicio, puedes crear spans manualmente:
+
+**¡Pruébalo!**
+1.  Añade el endpoint `/datos-externos-retry` a tu `main.py` de FastAPI.
+2.  Ejecuta `uvicorn main:app --reload`.
+3.  Llama a `GET http://localhost:8000/datos-externos-retry` varias veces.
+4.  **Observa la consola:** Verás los reintentos. A veces funcionará, a veces fallará después de varios intentos (por la simulación del 70% de fallo).
+5.  Presta atención a las pausas entre reintentos (serán mensajes en la consola).
+
+**Desafío Práctico:**
+* Ajusta `stop_after_attempt` y `wait_exponential` y observa cómo cambia el comportamiento.
+* Modifica `es_error_reintentable` para que *no* reintente un `HTTPStatusError` si el código es 401 (No Autorizado).
+
+---
+
+## 4.5. Circuit Breaker y Bulkhead
+
+* **Circuit Breaker (Interruptor Automático):**
+    * Si un servicio externo falla *demasiado*, ¡deja de llamarlo por un rato! Es como un fusible.
+    * Estados: **Cerrado** (pasan llamadas), **Abierto** (¡no pasa nada!, fallo rápido), **Semi-Abierto** (deja pasar una llamada de prueba a ver si ya funciona).
+    * Lo veremos en acción en 4.6.
+
+* **Bulkhead (Compartimentos Estancos):**
+    * No dejes que un servicio lento te consuma *todos* los recursos (hilos, conexiones). Aísla los recursos por cada servicio externo al que llamas.
+    * **En FastAPI/asyncio:** Es menos sobre hilos y más sobre limitar tareas concurrentes a un servicio específico (ej: usando `asyncio.Semaphore` para envolver las llamadas a un servicio X).
+
+**¡Pruébalo (Conceptual)!**
+* Imagina que llamas a 3 servicios (A, B, C). Si B se pone superlento y no tienes Bulkhead, podría acaparar todas tus "manos" (trabajadores asyncio) y ni A ni C recibirían atención. Con Bulkhead, B solo puede usar sus "manos" asignadas.
+
+---
+
+## 4.6. Circuit Breakers con `pybreaker`: El Fusible Inteligente
+
+La librería `pybreaker` es genial para esto: `pip install pybreaker`
+
+```python
+# cliente_con_circuit_breaker.py
+import httpx
+from pybreaker import CircuitBreaker, CircuitBreakerError
+import asyncio
+import random
+import logging # Importa logging
+
+# Configura un logger básico para ver los mensajes del listener
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__) # Crea un logger para este módulo
+
+# --- 1. Un Listener para ver qué hace el breaker ---
+class MiListener(pybreaker.CircuitBreakerListener):
+    def state_change(self, cb, old_state, new_state):
+        logger.warning(f"CIRCUIT BREAKER '{cb.name}': Estado cambió de {old_state.name} a {new_state.name}")
+    def failure(self, cb, exc):
+        logger.info(f"CIRCUIT BREAKER '{cb.name}': Fallo registrado. Fallos: {cb.fail_counter}")
+    def success(self, cb):
+        logger.info(f"CIRCUIT BREAKER '{cb.name}': Éxito registrado. Reseteando contador de fallos.")
+
+# --- 2. Crea tu Circuit Breaker (¡uno por servicio externo que llamas!) ---
+# Estos deberían ser globales o gestionados de forma centralizada, no recreados en cada request.
+# fail_max: Cuántos fallos seguidos para abrir.
+# reset_timeout: Cuántos segundos abierto antes de ir a semi-abierto.
+servicio_X_breaker = CircuitBreaker(
+    fail_max=3,
+    reset_timeout=20, # 20 segundos
+    listeners=[MiListener()],
+    name="ServicioX" # Dale un nombre para los logs
+)
+
+# --- 3. Decora tu función de llamada externa ---
+# O usa @servicio_X_breaker para la forma de decorador programático:
+# @servicio_X_breaker
+async def llamar_a_servicio_X_protegido(url: str):
+    print(f"Intentando llamar a {url} (protegido por Circuit Breaker)...")
+    # Simular fallo del servicio X aleatoriamente
+    if servicio_X_breaker.current_state == "open": # Solo para simulación, en real no harías esto aquí
+        print(f"SIMULACIÓN DENTRO DE FUNCIÓN: Breaker para {url} está ABIERTO. No se llamará.")
+        # La llamada ni se haría si el breaker está abierto y se usa como decorador.
+        # Si se llama programáticamente, la excepción CircuitBreakerError se lanzaría antes.
+
+    if random.random() < 0.6: # Falla el 60% de las veces
+        print(f"SIMULANDO FALLO en {url}")
+        raise httpx.RequestError(f"Simulated RequestError para {url}", request=None)
+
+    print(f"ÉXITO llamando a {url}")
+    return {"data_servicio_x": f"Datos de {url}!"}
+
+# --- 4. En tu endpoint FastAPI, usa la llamada protegida ---
+# En main.py (o donde tengas tu app FastAPI)
+# from fastapi import FastAPI, HTTPException (ya importados)
+# import cliente_con_circuit_breaker (este archivo)
+
+# app = FastAPI() ... (ya definido)
+
+@app.get("/datos-servicio-x-cb")
+async def get_datos_de_servicio_x_cb():
+    url_servicio_x = "http://servicio-x-que-falla-mucho.com/api" # Cambia por algo para probar
+    try:
+        # Forma programática de usar el breaker (más control para el ejemplo)
+        # Para el decorador, simplemente llamarías a la función decorada.
+        resultado = await servicio_X_breaker.call_async(llamar_a_servicio_X_protegido, url_servicio_x)
+        return resultado
+    except CircuitBreakerError as e:
+        logger.error(f"CIRCUIT BREAKER ABIERTO para {url_servicio_x}: {e}")
+        # Idealmente, lanzarías tu excepción de negocio/infra que el handler convierte a JSON estándar
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"Servicio X no disponible (Circuito Abierto). Intenta más tarde."
+        )
+    except httpx.RequestError as e: # Si el breaker está cerrado pero la llamada falla
+        logger.error(f"Error de red llamando a {url_servicio_x} (breaker registrará fallo): {e}")
+        # Este error será contado por el breaker. Si se repite, abrirá el circuito.
+        # Aquí también, lanzarías tu excepción centralizada.
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"Error contactando Servicio X: {str(e)}"
+        )
+    except Exception as e:
+        logger.error(f"Error inesperado llamando a {url_servicio_x}: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+```
+
+**¡Pruébalo!**
+1.  Añade el endpoint `/datos-servicio-x-cb` a tu `main.py`.
+2.  Ejecuta `uvicorn main:app --reload`.
+3.  Llama a `GET http://localhost:8000/datos-servicio-x-cb` repetidamente.
+4.  **Observa la consola (y los logs de MiListener!):**
+    * Al principio, verás intentos de llamada. Algunos fallarán (simulado).
+    * Después de `fail_max` (3) fallos, el listener te dirá: "Estado cambió de CLOSED a OPEN".
+    * Las siguientes llamadas fallarán *instantáneamente* con el error 503 del `CircuitBreakerError`.
+    * Espera `reset_timeout` (20) segundos. El listener dirá: "Estado cambió de OPEN a HALF_OPEN".
+    * La siguiente llamada se permitirá. Si tiene éxito (¡baja la probabilidad de fallo en el random.random() para probar esto!), el listener dirá "Estado cambió de HALF_OPEN a CLOSED". Si falla, volverá a OPEN.
+
+**Desafío Práctico:**
+* Juega con `fail_max` y `reset_timeout`. ¿Cómo afecta el comportamiento?
+* En `llamar_a_servicio_X_protegido`, en lugar de lanzar `httpx.RequestError`, lanza una excepción tuya (ej: `ServicioXError`). Configura `pybreaker` para que solo cuente esa excepción como fallo usando `expected_exception` en el constructor de `CircuitBreaker`.
+
+---
+## 4.7. Endpoints Resilientes
+
+Tu endpoint FastAPI es un héroe, ¡pero no invencible! Si depende de otros para funcionar, debe saber qué hacer cuando esos otros fallan.
+
+**Estrategias Prácticas:**
+
+1.  **Timeouts Agresivos (¡Ya los vimos!):** Usa `httpx.Timeout` en tus clientes. No esperes eternamente.
+2.  **Fallbacks (Plan B):** Si el servicio de recomendaciones falla, ¿puedes mostrar la página de producto sin ellas? O con recomendaciones cacheadas/por defecto?
+
     ```python
-    # tracer = trace.get_tracer(__name__)
-    # with tracer.start_as_current_span("mi_operacion_importante") as span:
-    #     span.set_attribute("parametro_clave", "valor")
-    #     # ... tu lógica ...
-    #     span.add_event("Paso_X_completado")
+    # En tu servicio de aplicación (no en el endpoint FastAPI directamente)
+    # async def get_product_page_data(product_id: str, user_id: str):
+    #     producto = await self.product_repo.get_by_id(product_id)
+    #     if not producto: raise RecursoNoEncontradoError(...)
+
+    #     try:
+    #         # Esta llamada usa cliente con Retry y Circuit Breaker
+    #         recomendaciones = await self.reco_service_client.get_for_product(product_id, user_id)
+    #     except (CircuitBreakerError, httpx.HTTPError) as e: # O tu ExternalServiceError
+    #         logger.warning(f"Recomendaciones no disponibles para {product_id}. Usando fallback. Error: {e}")
+    #         recomendaciones = [{"id": "default1", "nombre": "Producto Popular 1"}] # Fallback!
+
+    #     return {"producto": producto, "recomendaciones": recomendaciones}
     ```
+3.  **Degradación Agraciada:** Es el resultado del fallback. El servicio sigue funcionando, pero quizás con menos funcionalidades. ¡Mejor eso que un error 500 total!
+4.  **Health Checks (`/health`):**
+    * **Shallow (`/health/live`):** ¿Está FastAPI vivo? Devuelve 200 OK.
+    * **Deep (`/health/ready`):** ¿Están *mis dependencias críticas* (BBDD, API clave) vivas? Si no, devuelve 503. Kubernetes usa esto para saber si mandar tráfico o reiniciar.
 
-#### 4. Visualizando el Ecosistema de Observabilidad
+**¡Pruébalo! (Conceptual con tu código anterior):**
+* En el endpoint que llama al `servicio_X_breaker`, si se lanza `CircuitBreakerError`, en lugar de un 503, devuelve un 200 OK con `{"data_servicio_x": null, "message": "Datos de Servicio X no disponibles temporalmente"}`. ¡Eso es degradación!
 
-```mermaid
-graph LR
-    CLIENT["Cliente"] --> LB["Load Balancer o API Gateway"]
-    LB -->|Genera y propaga trace ID| SVC_A["Servicio A (FastAPI + OTel)"]
+---
 
-    subgraph SVC_A
-        MW_A["Middleware Tracing y Logging"] --> API_A["Endpoint"]
-        API_A --> APP_A["App Service"]
-        APP_A --> LOG_A["Log Estructurado"]
-        APP_A -->|Propaga contexto| HTTP_CLIENT_A["Cliente HTTPX (OTel)"]
-    end
+## 4.8. Logs con `trace_id`
 
-    HTTP_CLIENT_A --> SVC_B["Servicio B (FastAPI + OTel)"]
+Cuando tienes 1000 peticiones por segundo y algo falla, ¿cómo encuentras *esa* petición? ¡Con un `trace_id` (o Correlation ID)! Es un ID único que viaja con la petición por todos tus servicios.
 
-    subgraph SVC_B
-        MW_B["Middleware Tracing y Logging"] --> API_B["Endpoint"]
-        API_B --> APP_B["App Service"]
-        APP_B --> LOG_B["Log Estructurado"]
-    end
+**Implementación Práctica (Simplificada) en FastAPI:**
+* **Middleware (ya lo hicimos en 4.2):**
+    * Al llegar una petición: ¿Tiene cabecera `X-Trace-ID` (o `X-Correlation-ID`)? Úsala. Si no, genera un `uuid.uuid4()`.
+    * Guárdala en `request.state.trace_id`.
+    * **Importante:** ¡Añádela a TODOS tus logs!
+    * Al responder, incluye la cabecera `X-Trace-ID` en la respuesta.
+* **Logging Estructurado (JSON):** Usa `python-json-logger` o `structlog` para que tus logs sean JSON y siempre incluyan el `trace_id`.
 
-    LOG_A --> LOG_AGG["Agregador Logs (ELK / Loki)"]
-    LOG_B --> LOG_AGG
+    ```python
+    # Ejemplo de cómo usar el trace_id en un log dentro de un endpoint
+    # logger = logging.getLogger(__name__) # Configurado para JSON y con filtro/adapter para trace_id
 
-    SVC_A -->|Spans vía OTLP| TRACE_BACKEND["Backend Tracing (Jaeger / Tempo)"]
-    SVC_B -->|Spans vía OTLP| TRACE_BACKEND
+    # @app.get("/algun-endpoint")
+    # async def mi_endpoint(request: Request):
+    #     trace_id = getattr(request.state, "trace_id", "N/A")
+    #     logger.info(f"Procesando endpoint (RID: {trace_id})", extra={"trace_id_field": trace_id})
+    #     # ... tu lógica ...
+    #     if algo_malo_pero_no_excepcion:
+    #          logger.warning(f"Algo raro pasó (RID: {trace_id})", extra={"trace_id_field": trace_id, "detalle": "info extra"})
+    #     return {"ok": True}
+    ```
+* **Propagación:** Cuando tu servicio FastAPI llame a *otro* servicio, ¡pasa el `trace_id` en las cabeceras de esa nueva petición!
 
-    SRE["SRE / Dev"] -->|Consulta logs| LOG_AGG
-    SRE -->|Visualiza trazas| TRACE_BACKEND
+**¡Pruébalo!**
+* Asegúrate que el middleware de 4.2 está activo.
+* En tus endpoints, añade logs (un simple `print` con el `trace_id` de `request.state.trace_id` sirve para esta prueba rápida).
+* Llama a tus endpoints y verifica que el `trace_id` aparece en la consola y en las cabeceras de respuesta.
 
-    style MW_A fill:#f39c12,stroke:#333
-    style MW_B fill:#f39c12,stroke:#333
-    style LOG_A fill:#9c9,stroke:#333
-    style LOG_B fill:#9c9,stroke:#333
+---
 
+## 4.9. Dashboards de Errores
+
+Tus logs y métricas son oro, ¡pero necesitas un mapa del tesoro! Un dashboard (en Grafana, Kibana, Datadog...) te muestra de un vistazo:
+
+* **Tasa de Errores Global (5xx vs 4xx):** ¿Estamos ardiendo?
+* **Errores por Endpoint:** ¿Qué endpoint es el más problemático?
+* **Top N `error_code`:** ¿Qué errores de negocio son los más comunes?
+* **Latencia (P95, P99):** ¿Estamos lentos? ¡La lentitud es el nuevo downtime!
+* **Estado de Circuit Breakers:** ¿Cuántos están abiertos? ¿Cuáles?
+* **Métricas de Saturación:** CPU, memoria, tamaño de colas.
+
+**¡Pruébalo (Mentalmente)!**
+* Imagina un dashboard con un gran número rojo si la tasa de 5xx sube del 1%.
+* Otro gráfico con las barras de los 5 endpoints que más errores 404 dan.
+* Un semáforo por cada Circuit Breaker (Verde=Cerrado, Rojo=Abierto).
+
+**Herramientas Populares:**
+* **Logs:** ELK Stack (Elasticsearch, Logstash, Kibana), Grafana Loki.
+* **Métricas:** Prometheus + Grafana.
+* **Tracing Distribuido:** Jaeger, Zipkin, Grafana Tempo (con OpenTelemetry).
+
+---
+
+## 4.10. Simular Fallos
+
+¿Cómo sabes que tus Retries, Circuit Breakers y Fallbacks funcionan? ¡Provocándolos!
+
+**En FastAPI (Pruebas de Integración con `pytest`):**
+
+Usa `app.dependency_overrides` para inyectar un "cliente falso" que simule fallos cuando tu endpoint lo llame.
+
+```python
+# tests/test_resiliencia_endpoints.py (requiere pytest, httpx)
+# from fastapi.testclient import TestClient
+# from main import app # Tu app FastAPI
+# from app.dependencies import get_servicio_x_client # Tu dependencia original
+# from app.clients.base import BaseServicioXClient # Clase base de tu cliente
+
+# class MockServicioXFallaSiempre(BaseServicioXClient): # Implementa la interfaz de tu cliente real
+#     async def get_data(self, param: str) -> dict:
+#         print("MOCK SERVICIO X: Simulando fallo siempre...")
+#         raise httpx.RequestError("Mock: Fallo de red en Servicio X", request=None)
+
+# class MockServicioXFallaAlPrincipioLuegoOk(BaseServicioXClient):
+#     intentos = 0
+#     max_fallos = 2 # Falla las primeras 2 veces
+#     async def get_data(self, param: str) -> dict:
+#         MockServicioXFallaAlPrincipioLuegoOk.intentos += 1
+#         if MockServicioXFallaAlPrincipioLuegoOk.intentos <= MockServicioXFallaAlPrincipioLuegoOk.max_fallos:
+#             print(f"MOCK SERVICIO X (Falla/Ok): Intento {MockServicioXFallaAlPrincipioLuegoOk.intentos}, simulando fallo...")
+#             raise httpx.RequestError("Mock: Fallo temporal en Servicio X", request=None)
+#         print(f"MOCK SERVICIO X (Falla/Ok): Intento {MockServicioXFallaAlPrincipioLuegoOk.intentos}, simulando ÉXITO!")
+#         return {"data_mock": "Datos del mock exitosos!"}
+
+
+# client = TestClient(app)
+
+# def test_endpoint_con_servicio_x_cb_abierto():
+#     # Configura el breaker para que se abra rápido para el test
+#     # Esto es un poco más complejo de testear unitariamente sin acceso directo al breaker global.
+#     # Una opción es tener un breaker por test o resetearlo.
+#     # Para este ejemplo, asumimos que podemos manipular el breaker o que el test lo llevará a OPEN.
+
+#     app.dependency_overrides[get_servicio_x_client] = lambda: MockServicioXFallaSiempre()
+#     print("\n--- Testeando Circuit Breaker (esperamos que se abra) ---")
+#     # Llamar varias veces para abrir el circuit breaker (según fail_max del breaker)
+#     for i in range(servicio_X_breaker.fail_max + 1): # +1 para asegurar que intentó abrirse
+#         print(f"Llamada {i+1} para intentar abrir CB...")
+#         response = client.get("/datos-servicio-x-cb") # Asume que este endpoint usa el cliente que estamos mockeando
+#         if servicio_X_breaker.is_open:
+#             assert response.status_code == status.HTTP_503_SERVICE_UNAVAILABLE # CB Abierto
+#             assert "Circuito Abierto" in response.json()["detail"]
+#             print(f"CB ABIERTO como se esperaba en llamada {i+1}!")
+#             break
+#     else: # Si el bucle termina sin break
+#         assert False, f"El Circuit Breaker no se abrió después de {servicio_X_breaker.fail_max + 1} llamadas fallidas."
+
+#     app.dependency_overrides = {} # Limpiar
+
+# def test_endpoint_con_retry_y_luego_exito():
+#     # Reiniciar contador de intentos del mock para este test
+#     MockServicioXFallaAlPrincipioLuegoOk.intentos = 0
+#     # Asegúrate que el breaker esté cerrado al inicio de este test o usa un breaker diferente.
+#     # Aquí asumimos que el breaker se resetea o es diferente.
+#     # Para un test real, el estado del breaker entre tests puede ser un problema.
+#     # Resetear el breaker o usar uno nuevo por test es más robusto.
+#     # servicio_X_breaker.close() # Ejemplo de reset, si el breaker lo permite
+
+#     # Esta prueba es para el endpoint /datos-externos-retry que usa tenacity
+#     app.dependency_overrides[llamar_api_externa_con_reintentos_dependency] = lambda: MockServicioXFallaAlPrincipioLuegoOk() # Asumiendo que tienes una dependencia para esto
+#     print("\n--- Testeando Retry (esperamos éxito después de fallos) ---")
+#     response = client.get("/datos-externos-retry") # Este endpoint usa tenacity
+#     assert response.status_code == status.HTTP_200_OK
+#     assert response.json()["data_mock"] == "Datos del mock exitosos!"
+#     print(f"ÉXITO con Retry después de {MockServicioXFallaAlPrincipioLuegoOk.intentos} intentos totales.")
+#     app.dependency_overrides = {}
+```
+**(Nota: El código de testeo anterior es conceptual y avanzado. Testear Circuit Breakers y Retries de forma aislada y fiable en tests de integración requiere un buen manejo del estado de estos componentes entre tests o el uso de mocks más sofisticados. Para `tenacity`, podrías mockear `httpx.AsyncClient` directamente en el módulo donde se usa).**
+
+**Herramientas Más Pro (Fuera de FastAPI puro):**
+* **Toxiproxy:** Un proxy que pones entre tu servicio y sus dependencias para inyectar latencia, errores de red, etc., ¡sin tocar tu código!
+* **Chaos Mesh / LitmusChaos (para Kubernetes):** Para "romper" cosas a nivel de infraestructura.
+
+---
+
+¡Y eso es todo, guerrero de la resiliencia! Has pasado de entender los errores a **anticiparlos, manejarlos, aprender de ellos y probar tus defensas**. Con estas herramientas y mentalidad, tus microservicios FastAPI no solo serán funcionales, sino **auténticas fortalezas digitales**. ¡A construir con calidad y confianza!
+
+## 4.7. Diseño de Endpoints Resilientes
+
+Un endpoint resiliente no se rinde fácil. Si una dependencia falla, intenta dar la mejor respuesta posible, ¡incluso si es parcial!
+
+**Escenario Práctico:** Un endpoint que muestra detalles de un producto y, opcionalmente, opiniones de usuarios (que vienen de otro servicio). Si las opiniones fallan, ¡al menos devolvemos el producto!
+
+```python
+# main_resiliente.py
+from fastapi import FastAPI, HTTPException, Request, status
+from fastapi.responses import JSONResponse
+import httpx # pip install httpx
+import asyncio
+import random
+import uvicorn
+import uuid # Para el trace_id
+
+# --- Configuración básica de logging para ver el trace_id ---
+import logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - TRACE_ID: %(trace_id)s - %(message)s')
+logger = logging.getLogger(__name__)
+
+# --- Middleware para Trace ID (simple) ---
+@app.middleware("http")
+async def add_trace_id_middleware(request: Request, call_next):
+    # Intenta obtener el trace_id de la cabecera, o genera uno nuevo
+    trace_id = request.headers.get("X-Trace-ID") or str(uuid.uuid4())
+    request.state.trace_id = trace_id # Lo guardamos en el estado de la petición
+
+    # Adaptador para que el logger pueda acceder al trace_id de request.state
+    class RequestStateAdapter(logging.LoggerAdapter):
+        def process(self, msg, kwargs):
+            try:
+                # Intenta acceder a request.state.trace_id de forma segura
+                current_trace_id = request.state.trace_id
+            except AttributeError: # Si request.state no existe o no tiene trace_id
+                current_trace_id = "N/A" # O un valor por defecto
+            
+            # Asegura que 'extra' exista en kwargs
+            if 'extra' not in kwargs:
+                kwargs['extra'] = {}
+            kwargs['extra']['trace_id'] = current_trace_id
+            return msg, kwargs
+
+    # Usamos un logger específico adaptado para este request
+    request_logger = RequestStateAdapter(logger, {})
+
+    # Para uso dentro de los endpoints, podemos pasar el logger o el trace_id
+    # request.state.logger = request_logger # Opcional, para pasarlo directamente
+
+    response = await call_next(request)
+    response.headers["X-Trace-ID"] = trace_id
+    return response
+
+
+app = FastAPI(title="API Resiliente de Productos")
+
+# --- Simulación de Clientes a Servicios Externos ---
+async def get_product_data_from_db(product_id: str, current_trace_id: str):
+    # Simula una BBDD rápida y fiable para datos del producto
+    await asyncio.sleep(0.05)
+    if product_id == "P001":
+        return {"id": "P001", "nombre": "Super Teclado Pro", "precio": 99.99}
+    return None
+
+async def get_opiniones_from_service(product_id: str, current_trace_id: str):
+    # Simula un servicio de opiniones que a veces falla o tarda
+    # ¡Importante! Propagar X-Trace-ID si esto fuera una llamada HTTP real
+    headers = {"X-Trace-ID": current_trace_id}
+    logger.info(f"Llamando a servicio de opiniones para {product_id} (Simulado con headers: {headers})")
+
+    await asyncio.sleep(random.uniform(0.1, 0.8)) # Latencia variable
+    if random.random() < 0.4: # 40% de probabilidad de fallo
+        logger.error(f"Fallo simulado en servicio de opiniones para {product_id}")
+        raise httpx.RequestError("Fallo simulado en servicio de opiniones", request=None)
+    return [
+        {"usuario": "User123", "rating": 5, "texto": "¡Excelente!"},
+        {"usuario": "FanDelProducto", "rating": 4, "texto": "Muy bueno, lo recomiendo."},
+    ]
+
+# --- Endpoint Resiliente ---
+@app.get("/productos/{product_id}/detalles")
+async def get_producto_con_opiniones(product_id: str, request: Request):
+    trace_id = request.state.trace_id # Obtenemos el trace_id
+    request_logger = logging.LoggerAdapter(logger, {'trace_id': trace_id})
+
+
+    request_logger.info(f"Petición para detalles del producto {product_id}")
+    producto_data = await get_product_data_from_db(product_id, trace_id)
+
+    if not producto_data:
+        request_logger.warning(f"Producto {product_id} no encontrado.")
+        # Usaremos nuestro handler para RecursoNoEncontradoError si lo tuviéramos
+        # Por ahora, una HTTPException directa para simplificar
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Producto {product_id} no encontrado")
+
+    opiniones_data = [] # Fallback: lista vacía
+    mensaje_degradacion = None
+    try:
+        # Timeout agresivo para el servicio de opiniones
+        opiniones_data = await asyncio.wait_for(
+            get_opiniones_from_service(product_id, trace_id),
+            timeout=0.5 # ¡Solo 500ms de paciencia!
+        )
+        request_logger.info(f"Opiniones para {product_id} obtenidas exitosamente.")
+    except httpx.RequestError:
+        request_logger.error(f"Servicio de opiniones falló para {product_id}. Degradando respuesta.")
+        mensaje_degradacion = "Opiniones no disponibles temporalmente (fallo de servicio)."
+    except asyncio.TimeoutError:
+        request_logger.warning(f"Servicio de opiniones timed out para {product_id}. Degradando respuesta.")
+        mensaje_degradacion = "Opiniones no disponibles temporalmente (timeout)."
+    
+    respuesta_final = {"producto": producto_data, "opiniones": opiniones_data}
+    if mensaje_degradacion:
+        respuesta_final["aviso_degradacion"] = mensaje_degradacion
+        
+    request_logger.info(f"Respuesta para {product_id} ensamblada.")
+    return respuesta_final
+
+# --- Health Checks ---
+@app.get("/health/live", status_code=status.HTTP_200_OK)
+async def health_live():
+    # Shallow: Solo verifica que la app FastAPI está arriba
+    return {"status": "ok", "message": "Servicio vivo"}
+
+@app.get("/health/ready", status_code=status.HTTP_200_OK)
+async def health_ready(request: Request):
+    # Deep: Intenta una operación crítica simple para ver si está listo
+    # (Ej: ping a la BBDD o a un servicio esencial)
+    # Aquí simulamos una dependencia que debe estar ok
+    trace_id = request.state.trace_id
+    request_logger = logging.LoggerAdapter(logger, {'trace_id': trace_id})
+    try:
+        # Simula chequear una dependencia esencial (ej: el servicio de productos "P001")
+        await asyncio.wait_for(get_product_data_from_db("P001", trace_id), timeout=0.2)
+        request_logger.info("Chequeo de dependencia profunda OK.")
+        return {"status": "ok", "message": "Servicio listo y dependencias OK"}
+    except Exception as e:
+        request_logger.error(f"Chequeo de dependencia profunda FALLÓ: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"Servicio no listo, dependencia crítica falló: {str(e)}"
+        )
+
+# if __name__ == "__main__":
+#     uvicorn.run("main_resiliente:app", host="0.0.0.0", port=8000, reload=True)
 ```
 
+**¡Pruébalo!**
+1.  Guarda como `main_resiliente.py`.
+2.  Ejecuta: `uvicorn main_resiliente:app --reload`
+3.  Llama a `GET http://localhost:8000/productos/P001/detalles` varias veces:
+    * Algunas veces verás el producto Y las opiniones.
+    * Otras, verás el producto y el `aviso_degradacion` porque el servicio de opiniones falló o tardó demasiado. ¡Pero la API sigue respondiendo 200 OK con lo que tiene!
+4.  Prueba `GET http://localhost:8000/productos/P_NO_EXISTE/detalles` (dará 404).
+5.  Prueba `GET http://localhost:8000/health/live` y `GET http://localhost:8000/health/ready`.
 
-La **observabilidad profesional** en microservicios, sustentada en **logging estructurado riguroso con `trace_id`** y **tracing distribuido completo con OpenTelemetry**, es una disciplina de ingeniería, no una ocurrencia tardía. Es la inversión que nos permite **entender, depurar y operar** sistemas complejos con confianza. Al implementar estas técnicas, transformamos nuestros servicios de cajas negras a sistemas transparentes, donde cada petición cuenta su historia, y cada error deja un rastro claro para su resolución. Esta es la calidad que se exige, y la que nos permite construir sistemas que no solo funcionan, sino que son **manejables y resilientes** a escala.
+**Claves de Resiliencia Aquí:**
+* **Fallback:** `opiniones_data` inicia como `[]`.
+* **Timeout Específico:** `asyncio.wait_for` para el servicio de opiniones.
+* **Degradación Agraciada:** Si las opiniones fallan, se loggea y se añade un `aviso_degradacion`. El endpoint sigue útil.
+* **Health Checks:** Para que sistemas externos sepan si tu servicio está bien.
 
 ---
 
-¡Entendido alto y claro! Si la explicación anterior del punto 4.9 te pareció "una pena", es que no cumplí con el estándar de **calidad superlativa y compromiso profesional** que exiges y mereces. Acepto el reto con humildad y determinación. Vamos a reconstruir este punto desde los cimientos, no como un "blog de principiantes", sino como una **clase magistral sobre la creación de dashboards estratégicos y de alto impacto** para nuestros microservicios. ¡Prepárate para la **visibilidad de élite**!
+## 4.8. Captura y Log de Trazas con Contexto
 
----
+Un `trace_id` (o Correlation ID) es un ID único que se pasa entre servicios para una petición. ¡Esencial para depurar en microservicios!
+
+**Escenario Práctico:** Un middleware en FastAPI que genera/propaga un `trace_id`, y un endpoint que lo loggea.
+
+```python
+# main_trazabilidad.py
+from fastapi import FastAPI, Request
+import uuid
+import logging
+import uvicorn
+
+# --- Configuración de Logging Estructurado (Simplificado para consola) ---
+# En producción usarías python-json-logger o structlog para JSON real.
+# Este es un formateador simple para demostrar el concepto.
+class TraceIdFormatter(logging.Formatter):
+    def format(self, record):
+        # Inyecta el trace_id en el registro si está disponible
+        record.trace_id = getattr(record, 'trace_id', 'N/A')
+        return super().format(record)
+
+# Logger principal
+logger = logging.getLogger("mi_app_con_trazas")
+logger.setLevel(logging.INFO)
+handler = logging.StreamHandler() # A la consola
+formatter = TraceIdFormatter('%(asctime)s - %(levelname)s - App: %(name)s - TraceID: %(trace_id)s - %(message)s')
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+# Evitar que se propague al logger root si ya tiene handlers
+logger.propagate = False
 
 
-## 4.9. Visibilidad de Errores Mediante Dashboards
+app = FastAPI(title="API con Trazabilidad")
 
-En el complejo teatro de operaciones que es un sistema de microservicios, los dashboards no son meros adornos visuales; son el **Centro de Mando Estratégico**. Son la interfaz crítica donde los datos brutos de logs, métricas y trazas (que aprendimos a generar en 4.8) se transforman en **inteligencia operativa, conciencia situacional y la base para la toma de decisiones críticas en tiempo real**.
+# --- Middleware para Trace ID ---
+@app.middleware("http")
+async def trace_id_middleware(request: Request, call_next):
+    # 1. Busca un trace_id entrante (ej. de un API Gateway u otro servicio)
+    trace_id_entrante = request.headers.get("X-Trace-ID")
+    
+    # 2. Si no hay, genera uno nuevo
+    id_para_esta_peticion = trace_id_entrante or str(uuid.uuid4())
+    
+    # 3. Guarda el trace_id en el estado de la petición para acceso en endpoints
+    request.state.trace_id = id_para_esta_peticion
+    
+    # 4. Pasa la petición al siguiente en la cadena
+    response = await call_next(request)
+    
+    # 5. Añade el trace_id a la cabecera de la respuesta
+    response.headers["X-Trace-ID"] = id_para_esta_peticion
+    
+    return response
 
-Un dashboard mediocre es ruido. Un dashboard de **alta calidad** es un multiplicador de la capacidad de tu equipo para mantener el sistema saludable, resiliente y performante. Su diseño es un arte y una ciencia, reflejo directo de la madurez de tu ingeniería.
+# --- Cliente HTTP para simular llamada a otro servicio ---
+async def llamar_a_otro_servicio(trace_id_a_propagar: str):
+    # En una llamada real, usarías httpx y añadirías el trace_id a las cabeceras
+    logger.info(f"Llamando a servicio_externo... (Propagando TraceID: {trace_id_a_propagar})", extra={'trace_id': trace_id_a_propagar})
+    await asyncio.sleep(0.1) # Simula llamada de red
+    # Simula respuesta del servicio externo
+    logger.info(f"Respuesta de servicio_externo recibida.", extra={'trace_id': trace_id_a_propagar})
+    return {"mensaje_externo": "Datos del servicio B!", "trace_id_recibido_por_B_simulado": trace_id_a_propagar}
 
-#### 1. La Filosofía: Dashboards Orientados a Objetivos y Audiencias
+@app.get("/mi-endpoint-trazable")
+async def endpoint_trazable(request: Request):
+    # Accede al trace_id desde el estado de la petición
+    trace_id_actual = request.state.trace_id
+    
+    # Usa un diccionario para pasar el trace_id al logger via 'extra'
+    log_extra = {'trace_id': trace_id_actual}
+    
+    logger.info("Inicio del procesamiento en /mi-endpoint-trazable", extra=log_extra)
+    
+    # ... tu lógica de negocio aquí ...
+    datos_intermedios = {"info": "procesamiento local completado"}
+    logger.info(f"Datos intermedios: {datos_intermedios}", extra=log_extra)
+    
+    # Simular llamada a otro servicio, propagando el trace_id
+    respuesta_servicio_externo = await llamar_a_otro_servicio(trace_id_actual)
+    
+    logger.info("Fin del procesamiento en /mi-endpoint-trazable", extra=log_extra)
+    return {
+        "mensaje_local": "Procesamiento en mi-endpoint-trazable finalizado.",
+        "trace_id_usado": trace_id_actual,
+        "respuesta_de_otro_servicio": respuesta_servicio_externo
+    }
 
-Antes de arrastrar y soltar un solo gráfico, debemos preguntarnos:
-
-* **¿Para Quién?** (La Audiencia):
-    * **SRE/Operaciones:** Necesitan saber si el sistema está vivo, si cumple los SLOs, dónde está el incendio y qué tan grave es.
-    * **Desarrolladores (Dueños de Servicios):** ¿Cómo está funcionando *mi* servicio? ¿Mi último despliegue introdujo problemas? ¿Cómo interactúa con sus dependencias?
-    * **Líderes Técnicos/Negocio:** ¿Cuál es el impacto de los errores en la experiencia del usuario y en los KPIs clave?
-* **¿Para Qué?** (El Propósito):
-    * **Detección:** ¿Está ocurriendo algo anómalo *ahora mismo*?
-    * **Diagnóstico:** Si algo va mal, ¿*dónde* y *por qué*?
-    * **Tendencias:** ¿Cómo evoluciona la salud y el rendimiento a lo largo del tiempo?
-    * **SLO Tracking:** ¿Estamos cumpliendo nuestras promesas de fiabilidad?
-
-Un dashboard sin un propósito claro para una audiencia definida es una pérdida de tiempo y pixeles.
-
-#### 2. El Estándar de Oro: SLOs y los "Golden Signals" como Guía
-
-* **SLOs (Service Level Objectives):** Un dashboard profesional **DEBE** reflejar tus SLOs. Si tu SLO de disponibilidad es 99.9%, el dashboard debe mostrar claramente si lo estás cumpliendo. El SLO da **CONTEXTO** a las métricas. Un 1% de error puede ser aceptable o catastrófico dependiendo del SLO.
-* **Los "Golden Signals" de Google SRE:** Un marco fundamental para la monitorización de cualquier sistema:
-    1.  **Latencia:** El tiempo que tarda en servirse una petición (P50, P90, P95, P99 son cruciales).
-    2.  **Tráfico:** La demanda sobre el sistema (RPS, QPS).
-    3.  **Errores:** La tasa de peticiones que fallan (4xx, 5xx, `error_code` específicos).
-    4.  **Saturación:** Cuán "lleno" está el servicio (uso de CPU, memoria, disco, tamaño de colas, utilización de pools de conexión). ¡Un indicador adelantado de problemas!
-
-#### 3. Arquitectura de Dashboards: Un Enfoque Estratificado y Coherente
-
-No un solo dashboard para dominarlos a todos, sino una **suite coordinada**:
-
-**Nivel 1: Dashboard de Salud Global del Sistema ("El Mirador")**
-
-* **Audiencia:** SRE, Líderes.
-* **Propósito:** Visión instantánea del estado general. ¿Está todo "verde"?
-* **Contenido Esencial:**
-    * Estado de los **SLOs críticos** del sistema (ej: Disponibilidad del Checkout, Tasa de Error de Creación de Cuenta).
-    * **Tasa de Error Global (5xx):** Agregada de todos los servicios.
-    * **Latencia Clave Global (P95):** En los puntos de entrada principales (API Gateway).
-    * **Panel de Alertas Críticas Activas:** (P0/P1).
-    * **Salud de Infraestructura Core:** Estado de las BBDDs principales, Brokers de Mensajes, Kubernetes.
-* **Visualización:** Grandes números (Singlestats), semáforos (Stat Panels con umbrales), gráficos de series temporales muy agregados. Pocos paneles, alta señal.
-
-**Nivel 2: Dashboards por Microservicio ("La Sala de Máquinas")**
-
-* **Audiencia:** Dueños del servicio (Devs), SRE.
-* **Propósito:** Entender profundamente la salud, rendimiento y dependencias de *un servicio específico*.
-* **Contenido Esencial (para *nuestro* servicio FastAPI):**
-    * **Golden Signals del Servicio:** Latencia (P95, P99 para sus endpoints), Tráfico (RPS por endpoint), Tasa de Error (5xx, 4xx por endpoint y global del servicio), Saturación (CPU, Memoria del contenedor, uso del event loop de Uvicorn si es posible medirlo).
-    * **Análisis de Errores Detallado:**
-        * Top N `error_code`s (de nuestra taxonomía 4.1/4.3).
-        * Desglose de 4xx vs 5xx.
-        * Tendencia de errores específicos.
-        * **Enlaces directos a logs filtrados** por `trace_id` o `error_code`.
-    * **Salud de Dependencias Externas:**
-        * Latencia y tasa de error de llamadas HTTP *salientes* (a otros MS, APIs de terceros).
-        * Estado de los **Circuit Breakers (`pybreaker`)** que protegen estas llamadas (Abierto, Cerrado, Semi-Abierto, número de "trips").
-        * Tasas de Reintento.
-    * **Uso de Recursos:** Conexiones activas a MariaDB, tamaño de colas (si usa).
-    * **Despliegues:** Marcas en los gráficos que indican cuándo se hizo un nuevo despliegue (para correlacionar con cambios en métricas).
-* **Visualización:** Múltiples gráficos de series temporales, tablas para Top N, gauges.
-
-**Nivel 3: Dashboards de Diagnóstico / Investigación ("El Microscopio")**
-
-* **Audiencia:** SRE, Devs (durante un incidente o análisis profundo).
-* **Propósito:** Permitir exploración y correlación libre de datos para encontrar la causa raíz.
-* **Contenido:** Altamente dinámico. Permite seleccionar múltiples métricas de diferentes servicios, filtrarlas por `trace_id`, `user_id`, `endpoint`, etc., y superponerlas en gráficos. A menudo se llega aquí desde un enlace en un dashboard de Nivel 1 o 2.
-* **Integración con Tracing:** Enlaces directos desde un `trace_id` en un log de error (o un span problemático) al sistema de tracing (Jaeger, Tempo) para ver la traza completa.
-
-#### 4. El Ecosistema Visual y de Datos
-
-```mermaid
-graph TD
-    subgraph "Fuentes de Datos (4.8)"
-        LOGS["Logs Estructurados JSON<br/><i>(Loki / Elasticsearch)</i>"]
-        METRICS["Métricas<br/><i>(Prometheus / Micrometer)</i>"]
-        TRACES["Trazas Distribuidas<br/><i>(Jaeger / Tempo / OTel)</i>"]
-    end
-
-    subgraph "Plataforma de Visualización y Alertas"
-        GRAFANA["Grafana"]
-        GRAFANA -->|Consulta Logs| LOGS
-        GRAFANA -->|Consulta Métricas| METRICS
-        GRAFANA -->|Consulta Trazas| TRACES
-        GRAFANA -->|Define Alertas| ALERTS["Sistema de Alertas<br/><i>(Alertmanager / PagerDuty)</i>"]
-    end
-
-    subgraph "Dashboards Estratégicos"
-        D_GLOBAL["Nivel 1: Global<br/><i>SLOs / Errores Críticos</i>"]
-        D_SERVICE["Nivel 2: Por Servicio<br/><i>Golden Signals / Errores / Dependencias</i>"]
-        D_DIAG["Nivel 3: Diagnóstico<br/><i>Exploración Profunda</i>"]
-    end
-
-    GRAFANA --> D_GLOBAL
-    GRAFANA --> D_SERVICE
-    GRAFANA --> D_DIAG
-
-    USER["SRE / Dev / Líder"] -->|Observa y Actúa| D_GLOBAL
-    USER -->|Observa y Actúa| D_SERVICE
-    USER -->|Investiga| D_DIAG
-    ALERTS -->|Notifica| USER
-
-    style GRAFANA fill:#f39c12,stroke:#333
-    style D_GLOBAL fill:#2ecc71,stroke:#333
-    style D_SERVICE fill:#2ecc71,stroke:#333
-    style D_DIAG fill:#2ecc71,stroke:#333
-
+# if __name__ == "__main__":
+#     uvicorn.run("main_trazabilidad:app", host="0.0.0.0", port=8001, reload=True)
 ```
 
-#### 5. Principios de Diseño para Dashboards de Élite
+**¡Pruébalo!**
+1.  Guarda como `main_trazabilidad.py`.
+2.  Ejecuta: `uvicorn main_trazabilidad:app --reload --port 8001`
+3.  Abre tu navegador/Postman y llama a `GET http://localhost:8001/mi-endpoint-trazable`.
+    * Observa la consola: Verás los logs, ¡cada uno con su `TraceID`!
+    * Observa las cabeceras de la respuesta: Debería estar `X-Trace-ID`.
+4.  Ahora, llama de nuevo pero añade una cabecera `X-Trace-ID: MI-TRACE-ID-PERSONALIZADO-123` a tu petición.
+    * Observa la consola: ¡Todos los logs para esa petición ahora usan `MI-TRACE-ID-PERSONALIZADO-123`! Y la respuesta también lo tiene.
 
-* **Menos es Más (Señal > Ruido):** Cada gráfico debe responder una pregunta importante. Evita la sobrecarga de información.
-* **Consistencia Visual:** Mismos colores para mismas métricas (errores en rojo, éxito en verde), escalas consistentes, leyendas claras.
-* **Contextualización:** Un número sin contexto no dice nada. ¿Es "50ms de latencia" bueno o malo? Compara con el SLO, con la media histórica.
-* **Jerarquía y Navegación:** Permite ir de lo general (Nivel 1) a lo específico (Nivel 2, Nivel 3, logs, trazas) fácilmente.
-* **Rendimiento del Dashboard:** ¡Un dashboard lento es un dashboard inútil! Optimiza las queries a tus *data sources*.
-* **Iteración Continua:** Los dashboards son productos vivos. Revísalos, mejóralos, elimina lo que no se usa. Pide feedback a tus "usuarios".
-
-
-La visibilidad de errores (y del sistema en general) mediante dashboards **no es una tarea secundaria, es una disciplina de ingeniería de primera línea**. Un conjunto bien arquitectado de dashboards, alimentado por una sólida estrategia de logging, métricas y tracing, transforma datos crudos en **inteligencia accionable**. Son el puente de mando que permite a los equipos **navegar la complejidad de los microservicios, anticipar tormentas, responder a incidentes con celeridad y, en última instancia, construir y operar sistemas de altísima calidad** que cumplen sus promesas a los usuarios. Esto es lo que significa el compromiso con la excelencia operativa.
+**Claves de Trazabilidad Aquí:**
+* **Middleware:** Centraliza la lógica del `trace_id`.
+* `request.state`: Un buen sitio para guardar información de la petición.
+* **Logging con `extra`:** Así se pasan datos dinámicos (como el `trace_id`) a los formateadores de logs.
+* **Propagación:** Si llamas a otros servicios, ¡no olvides pasarles el `trace_id`!
 
 ---
 
-¡Absolutamente! Con la calidad como estandarte y la madrugada española como testigo de nuestra dedicación, acometemos el punto 4.10, el broche de oro del Tema 4. Hemos diseñado estrategias, implementado controladores, patrones de resiliencia y sistemas de observabilidad. Ahora, llega el momento de la verdad: **someter a prueba nuestra fortaleza**. No basta con *creer* que somos resilientes; debemos *demostrarlo* enfrentando a nuestro sistema a fallos y degradaciones controladas. ¡Es la hora del "crash test" para nuestros microservicios! 💥🚗
+## 4.9. Visibilidad de Errores con Dashboards
+
+No podemos crear un dashboard Grafana aquí, pero sí podemos generar las **métricas** que alimentarían uno. Usaremos `prometheus-client` (¡instálalo!: `pip install prometheus-client`).
+
+**Escenario Práctico:** Un endpoint FastAPI que cuenta las peticiones HTTP y los errores 5xx, exponiéndolos para Prometheus.
+
+```python
+# main_metricas.py
+from fastapi import FastAPI, Request, HTTPException, status
+from prometheus_client import Counter, Histogram, make_asgi_app # Para métricas
+import time
+import random
+import uvicorn
+import uuid # Para el trace_id (reutilizamos el middleware)
+
+# --- Middleware para Trace ID (copiado de main_trazabilidad.py para completitud) ---
+# (Opcional para este ejemplo de métricas, pero bueno para la consistencia)
+app = FastAPI(title="API con Métricas Prometheus")
+
+@app.middleware("http")
+async def trace_id_middleware_metrics(request: Request, call_next):
+    trace_id = request.headers.get("X-Trace-ID") or str(uuid.uuid4())
+    request.state.trace_id = trace_id
+    response = await call_next(request)
+    response.headers["X-Trace-ID"] = trace_id
+    return response
+
+# --- Métricas Prometheus ---
+# Contador para peticiones HTTP totales, desglosado por método y path
+PETICIONES_HTTP_TOTAL = Counter(
+    "http_requests_total_app", # Nombre de la métrica
+    "Total de peticiones HTTP recibidas por la aplicación", # Descripción
+    ["method", "path", "status_code"] # Etiquetas (dimensions)
+)
+
+# Histograma para la latencia de las peticiones
+LATENCIA_PETICIONES_HTTP_SEGUNDOS = Histogram(
+    "http_request_duration_seconds_app",
+    "Latencia de las peticiones HTTP en segundos",
+    ["method", "path"]
+)
+
+# Middleware para registrar métricas de cada petición
+@app.middleware("http")
+async def registrar_metricas_middleware(request: Request, call_next):
+    start_time = time.time()
+    
+    # Intentar obtener el path real, no el completo con parámetros
+    # Para plantillas de ruta de FastAPI, esto puede ser más complejo de obtener aquí.
+    # Starlette expone request.scope.get('route').path si hay una ruta macheada.
+    path_template = request.scope.get('path') # Default a path crudo
+    if request.scope.get('root_path') and request.scope.get('path').startswith(request.scope.get('root_path')):
+         path_template = request.scope.get('path')[len(request.scope.get('root_path')):]
+
+    if hasattr(request, "url_for") and request.scope.get('route'):
+         path_template = request.scope['route'].path # Mejor, usa la plantilla de la ruta
+
+    try:
+        response = await call_next(request)
+        status_code_for_metric = response.status_code
+        return response
+    except Exception as e:
+        # Si una excepción no manejada llega aquí (debería ser raro con buenos handlers)
+        status_code_for_metric = status.HTTP_500_INTERNAL_SERVER_ERROR
+        raise e # Relanzar para que los handlers de FastAPI la procesen
+    finally:
+        process_time = time.time() - start_time
+        # Registrar latencia
+        LATENCIA_PETICIONES_HTTP_SEGUNDOS.labels(
+            method=request.method,
+            path=path_template # Usar la plantilla de ruta
+        ).observe(process_time)
+        # Registrar contador de peticiones
+        PETICIONES_HTTP_TOTAL.labels(
+            method=request.method,
+            path=path_template, # Usar la plantilla de ruta
+            status_code=status_code_for_metric
+        ).inc()
 
 
+# --- Endpoint que a veces falla ---
+@app.get("/datos-aleatorios")
+async def get_datos_aleatorios():
+    if random.random() < 0.2: # 20% de probabilidad de error 500
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Fallo aleatorio simulado")
+    elif random.random() < 0.4: # Otro 20% (total 40% de no 200) de error 400
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Petición mala simulada")
+    return {"data": "Todo bien!", "numero_aleatorio": random.randint(1,100)}
 
-## 4.10. Pruebas para Simular Fallos y Degradación Controlada: Forjando la Antifragilidad
+# --- Montar la app de métricas de Prometheus ---
+# Esto expone un endpoint /metrics que Prometheus puede scrapear
+app_metricas_prometheus = make_asgi_app()
+app.mount("/metrics", app_metricas_prometheus)
 
-Hemos construido un impresionante castillo de resiliencia con fosos (Timeouts), murallas (Bulkheads), y torres de vigilancia (Circuit Breakers). Pero, ¿resistirá el asedio? Las **pruebas de simulación de fallos** y **degradación controlada** son nuestro campo de entrenamiento, donde intencionadamente introducimos el caos para verificar que nuestras defensas funcionan como se espera y que nuestro sistema, en lugar de colapsar, se degrada con la gracia que hemos diseñado.
-
-Esto no es testeo del "camino feliz"; es adentrarse en la **disciplina de la Ingeniería del Caos (Chaos Engineering)**: experimentar proactivamente con fallos para construir confianza en la capacidad del sistema para sobrevivir a condiciones turbulentas.
-
-#### 1. ¿Por Qué Poner a Prueba el Fracaso?
-
-* **Validar Suposiciones:** ¿Realmente se abre ese Circuit Breaker bajo las condiciones esperadas? ¿Funciona el fallback cuando el servicio X cae?
-* **Descubrir Debilidades Ocultas:** Encontrar interacciones inesperadas, puntos únicos de fallo que no habíamos considerado.
-* **Construir Confianza:** Demostrar que el sistema se comporta como se espera bajo estrés y fallos.
-* **Mejorar la Resiliencia:** Cada fallo descubierto y corregido en un entorno de prueba es un incidente evitado en producción.
-* **Practicar la Respuesta a Incidentes:** Los "GameDays" (ver más adelante) son simulacros para el equipo.
-
-#### 2. Niveles y Técnicas de Simulación de Fallos
-
-Podemos introducir fallos a diferentes niveles, desde el aislamiento de un componente hasta el caos en todo un entorno:
-
-**a) Nivel de Componente/Unidad (Pruebas de Resiliencia Local):**
-
-* **Objetivo:** Validar la lógica interna de nuestros patrones de resiliencia.
-* **Técnicas:**
-    * **Testear Circuit Breakers (`pybreaker`):** Simular una secuencia de llamadas exitosas y fallidas para verificar que los estados (CLOSED, OPEN, HALF-OPEN) cambian correctamente y que `CircuitBreakerError` se lanza cuando está OPEN.
-    * **Testear Lógica de Retry (`tenacity`):** Verificar que se realizan el número correcto de reintentos con el backoff esperado ante excepciones específicas.
-    * **Testear Exception Handlers:** Lanzar excepciones personalizadas y verificar que el handler correcto las procesa y devuelve el `JSONResponse` estandarizado con el código HTTP apropiado.
-    * **Mocking de Dependencias:** Usar mocks para simular que un cliente HTTP o un repositorio lanza las excepciones que activarían estos patrones.
-
-**b) Nivel de Servicio (Pruebas de Integración con Fallos Simulados):**
-
-* **Objetivo:** Validar cómo nuestro microservicio *completo* reacciona cuando sus dependencias *externas* fallan.
-* **Técnicas:**
-    * **`dependency_overrides` en FastAPI:** ¡Nuestra arma secreta! Para tests de integración, podemos sobrescribir las dependencias que inyectan nuestros clientes de infraestructura (ej: el cliente que llama al Servicio de Pagos) con versiones *falsas* que simulan fallos (timeouts, 503s, excepciones específicas).
-        ```python
-        # Concepto: tests/integration/test_orders_resilience.py
-        from fastapi.testclient import TestClient
-        from app.main import app
-        from app.infrastructure.http_clients.payment_client import BasePaymentClient
-        from app.domain.exceptions import ExternalServiceUnavailableError
-
-        class FailingPaymentClient(BasePaymentClient):
-            async def charge(self, amount: float, token: str) -> dict:
-                raise ExternalServiceUnavailableError("Payment Service (Mocked Failure)")
-
-        client = TestClient(app)
-
-        def test_create_order_when_payment_fails():
-            app.dependency_overrides[get_payment_client] = lambda: FailingPaymentClient() # Sobrescribe
-            response = client.post("/api/v1/orders", json={...})
-            assert response.status_code == 503 # O el código que nuestro handler devuelva
-            assert response.json()["error_code"] == "PAYMENT_SERVICE_UNAVAILABLE"
-            app.dependency_overrides = {} # Limpiar overrides
-        ```
-    * **Proxies de Caos (Toxiproxy, WireMock):** Herramientas increíblemente poderosas que se colocan *entre* nuestro servicio bajo prueba y sus dependencias reales (o mocks sofisticados). Permiten **inyectar latencia, cortar conexiones, devolver respuestas de error corruptas, etc., sin tocar el código de nuestro servicio ni el de la dependencia**. Esto es muy realista.
-
-**Visualizando Toxiproxy:**
-
-```mermaid
-graph TD
-    subgraph "Entorno de Prueba"
-        TEST_RUNNER["Test Runner (pytest)"] --> CLIENT_API["TestClient FastAPI"]
-        CLIENT_API --> SVC_A["Nuestro Servicio FastAPI"]
-        SVC_A -->|Petición HTTP| TOXIPROXY["Toxiproxy"]
-        TOXIPROXY -->|Manipula latencia o errores| SVC_B_REAL["Servicio B (Real o Mock)"]
-        SVC_B_REAL -->|Respuesta o fallo inducido| TOXIPROXY
-        TOXIPROXY -->|Respuesta modificada| SVC_A
-        SVC_A -->|Respuesta final| CLIENT_API
-        CLIENT_API -->|Assertions| TEST_RUNNER
-    end
-
-    style TOXIPROXY fill:#f39c12,stroke:#333
-
+# if __name__ == "__main__":
+#     uvicorn.run("main_metricas:app", host="0.0.0.0", port=8002, reload=True)
 ```
 
-**c) Nivel de Sistema (Ingeniería del Caos en Entornos Staging/Pre-Prod):**
+**¡Pruébalo!**
+1.  Guarda como `main_metricas.py`. Necesitas `prometheus-client`.
+2.  Ejecuta: `uvicorn main_metricas:app --reload --port 8002`
+3.  Llama a `GET http://localhost:8002/datos-aleatorios` varias veces. Algunas darán 200, otras 500, otras 400.
+4.  Ahora, ve a `http://localhost:8002/metrics` en tu navegador.
+    * Verás un montón de texto. Busca `http_requests_total_app` y `http_request_duration_seconds_app`.
+    * Verás cómo se incrementan los contadores y se registran las latencias, ¡con etiquetas (labels) para método, path y código de estado!
+    * Esto es lo que Prometheus "scrapearía" y tú visualizarías en Grafana para ver:
+        * `sum(rate(http_requests_total_app{status_code=~"5.."}[5m]))` (Tasa de errores 5xx)
+        * `histogram_quantile(0.95, sum(rate(http_request_duration_seconds_app_bucket[5m])) by (le, path))` (Latencia P95 por path)
 
-* **Objetivo:** Entender cómo se comporta el *sistema completo* (múltiples microservicios) ante fallos.
-* **Técnicas:**
-    * **Herramientas de Orquestación del Caos (Chaos Mesh, LitmusChaos para Kubernetes):** Permiten inyectar fallos a nivel de infraestructura (matar pods, saturar red/CPU/memoria, introducir latencia entre pods).
-    * **Fault Injection en Cloud Providers (AWS FIS, Azure Chaos Studio):** Servicios gestionados para realizar experimentos de caos.
-
-#### 3. Definiendo Hipótesis y Escenarios de Prueba
-
-Una buena prueba de fallo no es solo "romper cosas al azar". Se basa en **hipótesis claras**:
-
-* "Si el servicio de Autenticación tiene una latencia de 3 segundos, el Circuit Breaker del servicio de Pedidos para Autenticación debería abrirse en menos de 1 minuto, y las peticiones a Pedidos que requieren autenticación deberían fallar rápido con un 503."
-* "Si la base de datos de Usuarios está caída, el endpoint `/users` debería devolver un 503 y el log debería contener el `trace_id` y un `error_code` `DB_UNAVAILABLE`."
-* "Si el servicio de Recomendaciones falla, la página de producto debería cargarse mostrando el producto principal y un mensaje de 'Recomendaciones no disponibles' (degradación agraciada)."
-
-#### 4. Observabilidad Durante las Pruebas: ¡Verificar que Vemos!
-
-Tan importante como simular el fallo es **verificar que nuestros sistemas de observabilidad (4.8, 4.9) lo capturan correctamente**:
-
-* ¿Se generaron los **logs estructurados** correctos con el `trace_id`?
-* ¿Se crearon las **trazas distribuidas** y muestran el error donde ocurrió?
-* ¿Nuestros **dashboards** reflejan el aumento de errores, la latencia, o los Circuit Breakers abiertos?
-* ¿Se dispararon las **alertas** configuradas?
-
-#### 5. GameDays: Practicando la Respuesta a Incidentes 🚨
-
-Los GameDays son **ejercicios planificados** donde el equipo simula un incidente de producción en un entorno seguro. Se inyectan fallos y se observa cómo el sistema y el *equipo* responden.
-
-* **Objetivos:** Probar la resiliencia técnica, los runbooks/playbooks, la comunicación del equipo, y la efectividad de los dashboards y alertas.
-* **Resultado:** Aprendizaje invaluable, identificación de puntos ciegos y mejora continua de la resiliencia.
-
-
-Las pruebas de simulación de fallos y degradación controlada son el **crisol donde se forja la verdadera resiliencia**. Van más allá de las pruebas funcionales, adentrándose en el territorio de la **Ingeniería del Caos** para asegurar que nuestra arquitectura no solo es robusta en papel, sino **antifrágil en la práctica**. Al abrazar proactivamente el fallo en entornos controlados, construimos la confianza y la experiencia necesarias para operar nuestros microservicios con **calidad altísima y serenidad** frente a la inevitable turbulencia de la producción. Es el sello final de un sistema diseñado por profesionales.
+**Claves para Dashboards Aquí:**
+* **Métricas Clave:** Peticiones, errores, latencia (los Golden Signals).
+* **Etiquetas (Labels):** Permiten filtrar y agregar (ej. errores *solo* del endpoint `/datos-aleatorios`).
+* **Prometheus `make_asgi_app()`:** La forma fácil de exponer métricas en FastAPI.
 
 ---
+
+## 4.10. Pruebas de Fallos
+
+¿Cómo sabes que tu Circuit Breaker (de 4.6) o tu Fallback (de 4.7) realmente funcionan? ¡Simulando el fallo en un test! FastAPI y `pytest` son tus aliados.
+
+**Escenario Práctico:** Testear el endpoint `/productos/{product_id}/detalles` de `main_resiliente.py` (sección 4.7). Vamos a simular que el servicio de opiniones *siempre* falla o *siempre* da timeout, y verificar que el endpoint principal sigue devolviendo los datos del producto.
+
+```python
+# test_main_resiliente.py
+# Asegúrate que main_resiliente.py esté en la misma carpeta o PYTHONPATH
+# Necesitas: pip install pytest httpx
+
+from fastapi.testclient import TestClient
+from main_resiliente import app, get_opiniones_from_service # Importa la app y la función a mockear
+import httpx # Para el RequestError
+import asyncio # Para el TimeoutError
+
+client = TestClient(app)
+
+# --- Mock del servicio de opiniones que SIEMPRE falla con RequestError ---
+async def mock_opiniones_falla_request_error(product_id: str, current_trace_id: str):
+    print(f"MOCK OPINIONES (RequestError): Se pidió para {product_id}, simulando fallo.")
+    raise httpx.RequestError("Mock: Fallo de red en servicio de opiniones", request=None)
+
+# --- Mock del servicio de opiniones que SIEMPRE da Timeout ---
+async def mock_opiniones_falla_timeout(product_id: str, current_trace_id: str):
+    print(f"MOCK OPINIONES (Timeout): Se pidió para {product_id}, simulando timeout.")
+    # Para que asyncio.wait_for lance TimeoutError, la corrutina debe tardar más que el timeout
+    # Aquí, para asegurar que el wait_for del endpoint (0.5s) salte, hacemos que esta tarde un poco más.
+    await asyncio.sleep(1) # Tarda 1 segundo, el endpoint espera solo 0.5s
+    return [] # Nunca se llegará aquí si el timeout del endpoint es menor
+
+def test_producto_detalles_cuando_opiniones_fallan_con_request_error():
+    # Sobrescribimos la dependencia 'get_opiniones_from_service' con nuestro mock
+    app.dependency_overrides[get_opiniones_from_service] = mock_opiniones_falla_request_error
+    
+    response = client.get("/productos/P001/detalles")
+    
+    app.dependency_overrides = {} # ¡MUY IMPORTANTE limpiar el override después del test!
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["producto"]["id"] == "P001"
+    assert data["opiniones"] == [] # Fallback a lista vacía
+    assert "Opiniones no disponibles temporalmente (fallo de servicio)" in data["aviso_degradacion"]
+    print("TEST (RequestError): Pasó OK. Producto devuelto, opiniones degradadas.")
+
+def test_producto_detalles_cuando_opiniones_dan_timeout():
+    app.dependency_overrides[get_opiniones_from_service] = mock_opiniones_falla_timeout
+    
+    response = client.get("/productos/P001/detalles")
+    
+    app.dependency_overrides = {}
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["producto"]["id"] == "P001"
+    assert data["opiniones"] == []
+    assert "Opiniones no disponibles temporalmente (timeout)" in data["aviso_degradacion"]
+    print("TEST (Timeout): Pasó OK. Producto devuelto, opiniones degradadas por timeout.")
+
+def test_producto_no_encontrado_sigue_dando_404():
+    # No necesitamos mockear opiniones aquí porque fallará antes
+    response = client.get("/productos/P_NO_EXISTE/detalles")
+    assert response.status_code == 404
+    assert "Producto P_NO_EXISTE no encontrado" in response.json()["detail"]
+    print("TEST (404): Pasó OK. Producto no existente gestionado correctamente.")
+
+# Para ejecutar:
+# 1. Guarda este archivo como test_main_resiliente.py en la misma carpeta que main_resiliente.py
+# 2. Desde la terminal, en esa carpeta, ejecuta: pytest
+# (Asegúrate de que uvicorn NO esté corriendo main_resiliente.py mientras corres los tests,
+#  ya que TestClient inicia su propia instancia de la app)
+```
+
+**¡Pruébalo!**
+1.  Guarda `main_resiliente.py` y `test_main_resiliente.py` en la misma carpeta.
+2.  Instala `pytest`: `pip install pytest`
+3.  Desde la terminal, en esa carpeta, ejecuta: `pytest` o `pytest -s` (para ver los prints).
+4.  Verás cómo los tests pasan, demostrando que tu endpoint maneja los fallos del servicio de opiniones y se degrada correctamente.
+
+**Claves para Probar Fallos Aquí:**
+* `TestClient`: Para llamar a tu API FastAPI como si fueras un cliente HTTP.
+* `app.dependency_overrides`: El truco de FastAPI para reemplazar dependencias (como tu función `get_opiniones_from_service`) con Mocks durante los tests. Esto te da control total sobre lo que hacen tus dependencias.
+* **Aserciones Específicas:** Verifica no solo el código de estado, sino también el cuerpo de la respuesta para asegurar que la degradación o el manejo de errores es el esperado.
+
+---
+
 
 ## Referencias bibliográficas
 
