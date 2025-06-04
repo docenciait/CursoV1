@@ -139,7 +139,7 @@ Lo crucial es que Pydantic **impone estos tipos y reglas en tiempo de ejecución
   * **Fiabilidad:** Reduce drásticamente los errores debidos a datos incorrectos.
   * **Claridad:** Mejora la comprensión de cómo interactúan los servicios.
 
-Usaremos **Pydantic v2**, la versión moderna y más performante.
+Usaremos **Pydantic v2**, la versión moderna.
 
 #### ¿Cómo Usar Pydantic? Modelando Nuestros Datos
 
