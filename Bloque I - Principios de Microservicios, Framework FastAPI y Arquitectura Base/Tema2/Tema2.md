@@ -2087,187 +2087,238 @@ La configuración es la columna vertebral invisible de cualquier aplicación. Us
 
 ## 2.11. Preparación para Despliegue en Producción con `uvicorn` y `gunicorn` 
 
-Hemos llegado al umbral: nuestro microservicio FastAPI, diseñado con DDD y Hexagonal, está listo para abandonar el nido del desarrollo local. Pero la producción es un entorno exigente. Necesitamos un **blindaje industrial**, una configuración que garantice **rendimiento, escalabilidad, resiliencia** y que, además, se integre fluidamente con **Docker, Docker Compose** y esté preparada para las **automatizaciones de CI/CD**.
+**Uvicorn vs Gunicorn: Comparativa Profesional**
 
-Para nuestro stack (Python 3.12, FastAPI, MariaDB), la combinación de **Gunicorn + Uvicorn**, orquestada por Docker, es la estrategia de despliegue estándar y probada.
 
-#### 1. Gunicorn + Uvicorn: La Dupla de Producción (Visión Rigurosa)
+| |**Uvicorn**                   | **Gunicorn + Uvicorn Worker** |                                               
+| ----------------------------- | ----------------------------- | --------------------------------------------- |
+| **¿Qué es?**                  | Servidor ASGI ligero.         | Orquestador multiproceso WSGI/ASGI.           |
+| **Procesos**                  | 1 proceso, 1 core.            | N procesos, múltiples cores.                  |
+| **Concurrencia**              | Asíncrono, event loop único.  | Multiproceso + event loop por worker.         |
+| **Escalabilidad**             | Limitado a un core.           | Escalabilidad horizontal (multiproceso).      |
+| **Manejo de señales**         | Básico.                       | Correcto y controlado.                        |
+| **Uso ideal**                 | Desarrollo (`--reload`).      | Producción estable y escalable.               |
+| **Reinicio automático**       | Solo en `--reload`.           | `max_requests`, `timeout`, graceful shutdown. |
+| **Configuraciones avanzadas** | Limitadas.                    | Avanzadas (`preload_app`, `socket`, etc.).    |
 
-Ya establecimos que Gunicorn actúa como *manager* y Uvicorn como *worker*. Profundicemos:
 
-* **Gunicorn (El Gestor de Procesos):**
-    * **Misión:** Orquestar múltiples procesos *worker* Uvicorn. Es el supervisor que maneja el tráfico entrante (normalmente desde un Reverse Proxy), lo distribuye, monitoriza la salud de los workers y los reinicia si es necesario.
-    * **Workers (`-w`):** La regla `(2 * Cores) + 1` es un *punto de partida*. Para aplicaciones I/O-bound (como la mayoría de APIs web que esperan BBDD o APIs externas), puedes *aumentar* este número. La clave es **medir con pruebas de carga** en un entorno similar a producción. No hay una respuesta única.
-    * **Configuración (`-c gunicorn_conf.py`):** **Olvida los comandos largos**. En producción, *siempre* usa un fichero de configuración. Permite definir:
-        * **Logging:** crucial para CI/CD y monitorización. **Usa logs en formato JSON** para facilitar su procesamiento por herramientas como Fluentd, Logstash, Datadog, etc.
-        * **Timeouts:** (`timeout`, `graceful_timeout`) para manejar peticiones lentas y reinicios elegantes.
-        * **Worker Class:** (`worker_class = 'uvicorn.workers.UvicornWorker'`).
-        * **Binding:** (`bind = '0.0.0.0:8000'`).
-        * **Preload App (`preload_app = True`):** Puede ahorrar memoria (el código se carga una vez en el master y se *forkea*), pero puede causar problemas con conexiones (BBDD, etc.) si no se manejan con cuidado en los *hooks* de Gunicorn. Evaluar con cuidado.
-* **Uvicorn (El Worker ASGI):**
-    * **Misión:** Ejecutar *eficientemente* nuestra aplicación FastAPI asíncrona dentro de cada proceso gestionado por Gunicorn.
-    * **Threads (`--threads`):** **Generalmente NO los necesitarás (ni querrás)** si tu código (¡incluyendo el driver de MariaDB!) es **totalmente asíncrono**. Uvicorn y FastAPI brillan en un modelo de *un solo hilo por proceso* con `asyncio`. Añadir hilos puede complicar las cosas y es para *casos específicos* de código síncrono bloqueante que no puedes evitar. **Nuestro objetivo es usar un driver MariaDB async (ej: `aiomysql` o `asyncmy`)**.
+Gunicorn es un servidor HTTP **prefork**:
 
-#### 2. Docker: Creando Nuestro Contenedor de Batalla 
+* Crea un **proceso maestro** que lanza varios **workers**.
+* Cada worker maneja peticiones usando un event loop de Uvicorn.
 
-Docker nos da **portabilidad y consistencia**. Nuestra aplicación correrá igual en la máquina del dev, en CI y en producción.
+➞️ **Opciones Clave de Gunicorn**
 
-**Dockerfile Multi-Stage (Conceptual y Optimizado):**
+| Opcion                       | Descripción                                                | Recomendación            |
+| ---------------------------- | ---------------------------------------------------------- | ------------------------ |
+| `-k`, `--worker-class`       | Tipo de worker (`uvicorn.workers.UvicornWorker`).          | Obligatorio para FastAPI |
+| `-w`, `--workers`            | Número de procesos worker.                                 | `2 * CPU_CORES + 1`      |
+| `--threads`                  | Hilos por worker (no recomendado en ASGI).                 | No usar.                 |
+| `--bind`                     | IP\:puerto o socket Unix.                                  | `0.0.0.0:8000`           |
+| `--timeout`                  | Tiempo máximo de respuesta antes de matar el worker.       | 60 s                     |
+| `--graceful-timeout`         | Tiempo de shutdown controlado.                             | 30 s                     |
+| `--keep-alive`               | Tiempo de keep-alive en conexiones HTTP.                   | 5 s                      |
+| `--max-requests`             | Reinicio tras N peticiones (prevención memory leaks).      | 1000                     |
+| `--max-requests-jitter`      | Variabilidad en reinicios para evitar parones simultáneos. | 50                       |
+| `--preload`                  | Precargar app antes de fork (cuidado con conexiones).      | `False` normalmente.     |
+| `--access-logfile`           | Log de accesos (`-` para stdout).                          | `-`                      |
+| `--error-logfile`            | Log de errores (`-` para stderr).                          | `-`                      |
+| `--log-level`                | Nivel de log (`info`, `warning`, `error`).                 | `info`                   |
+| `--reload`                   | Hot reload dev (NO usar en producción).                    | ❌                        |
+| `--limit-request-line`       | Tamaño máximo de línea HTTP (bytes).                       | 4094                     |
+| `--limit-request-field_size` | Tamaño máximo de cabeceras HTTP.                           | 8190                     |
 
-```dockerfile
-# --- Stage 1: Build ---
-# Usa una imagen base completa con herramientas de build (Python 3.12)
-FROM python:3.12-slim-bookworm AS builder
+---
 
-WORKDIR /app
+####  Lanzamientos de Gunicorn
 
-# Instala Poetry (o usa requirements.txt) - Preferible Poetry para gestión
-# RUN pip install poetry
-# COPY poetry.lock pyproject.toml ./
-# RUN poetry install --no-dev --no-root
+➞️ **Lanzamiento rápido**
 
-# Alternativa con pip:
-COPY requirements.txt ./
-RUN pip wheel --no-cache-dir --no-deps --wheel-dir /wheels -r requirements.txt
-
-# Copia el código fuente
-COPY ./app /app/app
-
-# (Opcional pero recomendado en CI): Ejecutar tests aquí
-
-# --- Stage 2: Runtime ---
-# Usa una imagen slim, más pequeña y segura (Python 3.12)
-FROM python:3.12-slim-bookworm
-
-WORKDIR /app
-
-# Crea un usuario no-root por seguridad
-RUN addgroup --system app && adduser --system --group app
-
-# Copia dependencias pre-compiladas (si usaste wheel)
-# COPY --from=builder /wheels /wheels
-# COPY --from=builder /app/requirements.txt .
-# RUN pip install --no-cache /wheels/*
-
-# Alternativa (si usaste Poetry o instalaste directo):
-COPY --from=builder /root/.local /root/.local # Ajusta si usas venv o Poetry
-
-# Copia el código fuente
-COPY --from=builder /app/app /app/app
-
-# Copia la configuración de Gunicorn
-COPY gunicorn_conf.py .
-
-# Asegura que el usuario 'app' tenga permisos
-RUN chown -R app:app /app
-USER app
-
-# Puerto que expone Gunicorn (el definido en gunicorn_conf.py o -b)
-EXPOSE 8000
-
-# Comando para arrancar (¡Usa el fichero de config!)
-CMD ["gunicorn", "-c", "gunicorn_conf.py", "app.main:app"]
+```bash
+gunicorn -k uvicorn.workers.UvicornWorker app.main:app
 ```
 
-#### 3. Docker Compose: Orquestación Local 
+➞️ **Lanzamiento de producción recomendado**
 
-Para desarrollo y pruebas locales, `docker-compose` nos permite levantar nuestro stack completo (API + MariaDB) con un solo comando.
+```bash
+gunicorn -k uvicorn.workers.UvicornWorker app.main:app \
+  --workers 9 \
+  --bind 0.0.0.0:8000 \
+  --timeout 60 \
+  --keep-alive 5 \
+  --max-requests 1000 \
+  --max-requests-jitter 50 \
+  --access-logfile - \
+  --error-logfile - \
+  --log-level info
+```
 
-**`docker-compose.yml` (Conceptual):**
+---
+
+####  Gunicorn con `config_gunicorn.py`
+
+
+
+```python
+import multiprocessing
+
+bind = "0.0.0.0:8000"
+workers = multiprocessing.cpu_count() * 2 + 1
+worker_class = "uvicorn.workers.UvicornWorker"
+timeout = 60
+graceful_timeout = 30
+keepalive = 5
+max_requests = 1000
+max_requests_jitter = 50
+accesslog = "-"
+errorlog = "-"
+loglevel = "info"
+preload_app = False
+```
+
+➞️ **Lanzarlo usando config**
+
+```bash
+gunicorn -c config_gunicorn.py app.main:app
+```
+
+---
+
+#### Despliegue con Docker
+
+##### Dockerfile Multistage (Producción)
+
+```Dockerfile
+# Build Stage
+FROM python:3.12-slim AS build
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --user --no-cache-dir -r requirements.txt
+
+# Runtime Stage
+FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY --from=build /root/.local /root/.local
+ENV PATH=/root/.local/bin:$PATH
+
+COPY . .
+
+COPY config_gunicorn.py .
+
+CMD ["gunicorn", "-c", "config_gunicorn.py", "app.main:app"]
+```
+
+---
+
+#### Dockerfile.dev (Desarrollo)
+
+```Dockerfile
+FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+```
+
+---
+
+#### docker-compose.yml (Producción)
 
 ```yaml
-version: '3.9'
+version: "3.9"
 
 services:
-  api:
+  fastapi-app:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8000:8000" # Mapea el puerto del contenedor al host
-    env_file:
-      - .env         # Carga variables de entorno para la API
-    depends_on:
-      - db           # Asegura que la BBDD arranque antes
-    networks:
-      - app_network
-
-  db:
-    image: mariadb:10.11 # Usa una versión específica de MariaDB
+      - "8000:8000"
     restart: always
     environment:
-      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD} # Lee del .env local
-      MARIADB_DATABASE: ${DB_NAME}
-      MARIADB_USER: ${DB_USER}
-      MARIADB_PASSWORD: ${DB_PASSWORD}
-    volumes:
-      - mariadb_data:/var/lib/mysql # Persistencia de datos
-    ports:
-      - "3307:3306" # Expone MariaDB en 3307 para acceso local (opcional)
+      - WORKERS=9
+      - TIMEOUT=60
     networks:
-      - app_network
+      - app-network
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:10.11
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: supersecret
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: dbuser
+      MYSQL_PASSWORD: dbpassword
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - app-network
 
 networks:
-  app_network:
+  app-network:
     driver: bridge
 
 volumes:
-  mariadb_data:
+  db_data:
 ```
-
-* **Clave:** La API (`api`) y la BBDD (`db`) están en la misma red (`app_network`). La API se conectará a MariaDB usando el nombre del servicio: `db`. Tu `DATABASE_URL` en `.env` será algo como: `mariadb+aiomysql://user:password@db:3306/my_db`.
-
-#### 4. Preparados para CI/CD (Continuous Integration / Continuous Deployment) 
-
-Esta estructura Dockerizada es **ideal para CI/CD**:
-
-* **CI:**
-    1.  El pipeline detecta un *push*.
-    2.  Ejecuta `docker build` (que puede incluir tests dentro del Dockerfile o como paso previo).
-    3.  Si tiene éxito, *tagea* la imagen (ej: `mi_api:v1.2.3`, `mi_api:latest`) y la *sube* a un registro (Docker Hub, AWS ECR, GCP GCR, Azure CR).
-* **CD:**
-    1.  El pipeline (manual o automático) detecta una nueva imagen en el registro.
-    2.  Se conecta a tu entorno de producción (Kubernetes, AWS ECS, Cloud Run, etc.).
-    3.  Le ordena al orquestador que *despliegue* la nueva versión de la imagen, idealmente con estrategias como *Blue/Green* o *Canary* para minimizar riesgos.
-    4.  **Crucial:** Las configuraciones sensibles (BBDD URL, `SECRET_KEY`) **NO** van en la imagen. Se **inyectan** como variables de entorno o secretos por la plataforma de despliegue. ¡Nuestra `BaseSettings` está diseñada para esto!
-
-**Arquitectura de Despliegue con CI/CD:**
-
-```mermaid
-flowchart TD
-    DEV[Desarrollador] -->|git push| GIT[Repositorio Git]
-    GIT -->|Webhook| CI_CD[Pipeline CI/CD: Jenkins, GitHub Actions, GitLab CI]
-    CI_CD -->|Build y Test| BUILD[Docker Build más Tests]
-    BUILD -->|Push Imagen| REGISTRY[Registro Docker]
-
-    CI_CD -->|Trigger Deploy| ORCHESTRATOR[Orquestador: Kubernetes o Cloud]
-    ORCHESTRATOR -->|Pull Imagen| REGISTRY
-    ORCHESTRATOR -->|Deploy e Inyectar Config| PROD_ENV_GROUP[Entorno de Producción]
-
-    subgraph PROD_ENV_GROUP [Entorno de Producción]
-        PROXY[Reverse Proxy o Load Balancer]
-        SVC_API[Servicio API: Varios Contenedores]
-        SVC_DB[Servicio MariaDB: Gestionado o Contenedor]
-    end
-
-    PROXY --> SVC_API
-    SVC_API <--> SVC_DB
-
-    CLIENTE[Usuarios] --> PROXY
-
-    style DEV,CLIENTE fill:#9cf
-    style GIT,CI_CD,BUILD,REGISTRY,ORCHESTRATOR fill:#f39c12
-    style PROD_ENV_GROUP fill:#e74c3c
-
-
-
-```
-
-#### Conclusión del Punto 2.11
-
-La preparación para producción no es un *afterthought*, es una **disciplina**. Para nuestro stack específico, la combinación de **Gunicorn + Uvicorn**, empaquetada con **Docker** y orquestada (localmente) con **Docker Compose**, nos da una plataforma **potente, escalable y replicable**. Al diseñar esta configuración con **MariaDB** en mente y teniendo siempre presente la **automatización CI/CD** (configuración externa, logging JSON, Dockerización), no solo desplegamos nuestro microservicio FastAPI, sino que sentamos las bases para un **ciclo de vida de desarrollo y operaciones profesional y eficiente**. ¡No hay "cachondeo", solo ingeniería robusta!
 
 ---
+
+#### docker-compose.override.yml (Desarrollo)
+
+```yaml
+version: "3.9"
+
+services:
+  fastapi-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=development
+```
+
+---
+
+#### Healthcheck en docker-compose (opcional)
+
+```yaml
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+```
+
+---
+
+## 🚀 Buenas Prácticas
+
+* **Separar entornos**: Dockerfile y compose distintos para **dev** y **prod**.
+* **Gunicorn + UvicornWorker**: siempre en producción.
+* **Hot Reload** (`--reload`) solo en desarrollo.
+* **Multistage build**: reduce tamaño de imagen en producción.
+* **Healthchecks**: permiten detectar y reparar fallos automáticamente.
+* **Preload con precaución**: usar `preload_app = False` salvo que esté controlado.
+* **Max Requests + Jitter**: evita memory leaks y reinicios masivos simultáneos.
+
+---
+
+
 
 ## Referencias Bibliográficas
 
