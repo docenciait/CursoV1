@@ -68,11 +68,11 @@ Cualquier error que devuelva FastAPI, que tenga esta pinta:
   "context": {"item_id": "SuperPocion", "solicitado": 10, "disponible": 2} // Chicha extra
 }
 ```
-**¡Manos a la Obra (Mental)!** Define 2-3 `error_code` que usarías en una API de gestión de tareas (ej: `TAREA_NO_ENCONTRADA`, `FECHA_INVALIDA`).
+> Ejemplo; `error_code` que usarías en una API de gestión de tareas (ej: `TAREA_NO_ENCONTRADA`, `FECHA_INVALIDA`).
 
 ---
 
-## 4.2. Exception Handlers en FastAPI: Tus Porteros de Discoteca para Errores
+## 4.2. Exception Handlers en FastAPI
 
 FastAPI te deja poner "porteros" (Exception Handlers) que atrapan excepciones específicas y deciden cómo responder, ¡usando tu formato JSON estándar!
 
