@@ -13,7 +13,7 @@
   - [4.10 Pruebas para simular fallos y degradación controlada](#410-pruebas-para-simular-fallos-y-degradación-controlada)
   - [Referencias Bibliográficas](#referencias-bibliográficas)
 ---
-
+ 
 ## Objetivos
 
 
@@ -74,7 +74,7 @@ Cualquier error que devuelva FastAPI, que tenga esta pinta:
 
 ## 4.2. Exception Handlers en FastAPI
 
-FastAPI te deja poner "porteros" (Exception Handlers) que atrapan excepciones específicas y deciden cómo responder, ¡usando tu formato JSON estándar!
+FastAPI te deja poner (*Exception Handlers*) que atrapan excepciones específicas y deciden cómo responder
 
 **La Magia: `@app.exception_handler(MiErrorCustom)`**
 
