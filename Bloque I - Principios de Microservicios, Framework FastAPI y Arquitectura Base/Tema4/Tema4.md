@@ -232,7 +232,7 @@ Es vital saber si el error es porque el cliente pidió algo "imposible" (Negocio
 
 ---
 
-## 4.4. Patrón Retry con `tenacity`: Si a la Primera no Sale, ¡Insiste (con Gracia)!
+## 4.4. Patrón Retry con `tenacity`: 
 
 A veces, llamar a otra API o a la BBDD falla por un instante. ¡No te rindas! Reintenta, pero con cabeza: espera un poco más cada vez (backoff exponencial) y añade un toque de azar (jitter) para no saturar.
 

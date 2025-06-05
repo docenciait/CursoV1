@@ -376,25 +376,25 @@ En la comunicación síncrona, es crucial manejar adecuadamente los problemas de
         * **Timeout de lectura/respuesta:** Tiempo para recibir la respuesta una vez establecida la conexión.
     * **Implementación (ej. con `httpx` en FastAPI):**
         ```python
-        import httpx
-        from fastapi import FastAPI, HTTPException # FastAPI para HTTPException
+            import httpx
+            from fastapi import FastAPI, HTTPException # FastAPI para HTTPException
 
-        # Suponiendo que esta función se usa dentro de un endpoint FastAPI
-        # app = FastAPI()
-        # @app.get("/some-endpoint")
-        async def call_remote_service(): # Definición de la función
-            try:
-                # Timeout de 5 segundos para conexión, 10 para lectura
-                timeout_config = httpx.Timeout(5.0, read=10.0)
-                async with httpx.AsyncClient(timeout=timeout_config) as client:
-                    response = await client.get("http://remote-service/data")
-                    response.raise_for_status()
-                    return response.json()
-            except httpx.TimeoutException:
-                raise HTTPException(status_code=504, detail="Gateway Timeout: The remote service took too long to respond.")
-            except httpx.RequestError as exc:
-                # ... manejo de otros errores de red
-                raise HTTPException(status_code=503, detail=f"Service unavailable: {str(exc)}")
+            # Suponiendo que esta función se usa dentro de un endpoint FastAPI
+            app = FastAPI()
+            @app.get("/some-endpoint")
+            async def call_remote_service(): # Definición de la función
+                try:
+                    # Timeout de 5 segundos para conexión, 10 para lectura
+                    timeout_config = httpx.Timeout(5.0, read=10.0)
+                    async with httpx.AsyncClient(timeout=timeout_config) as client:
+                        response = await client.get("http://remote-service/data")
+                        response.raise_for_status()
+                        return response.json()
+                except httpx.TimeoutException:
+                    raise HTTPException(status_code=504, detail="Gateway Timeout: The remote service took too long to respond.")
+                except httpx.RequestError as exc:
+                    # ... manejo de otros errores de red
+                    raise HTTPException(status_code=503, detail=f"Service unavailable: {str(exc)}")
         ```
     * **Importancia:** Evitan que los hilos queden bloqueados indefinidamente, liberando recursos y permitiendo fallar rápido.
 
