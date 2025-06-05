@@ -234,98 +234,125 @@ Es vital saber si el error es porque el cliente pidió algo "imposible" (Negocio
 
 ## 4.4. Patrón Retry con `tenacity`: 
 
-A veces, llamar a otra API o a la BBDD falla por un instante. ¡No te rindas! Reintenta, pero con cabeza: espera un poco más cada vez (backoff exponencial) y añade un toque de azar (jitter) para no saturar.
+A veces, llamar a otra API o a la BBDD falla por un instante. Reintenta, pero con cabeza: espera un poco más cada vez (backoff exponencial) y añade un toque de azar (jitter) para no saturar.
 
 La librería `tenacity` es tu amiga: `pip install tenacity`
 
+De acuerdo, entiendo que el ejemplo anterior tenía bastantes detalles. Vamos a simplificarlo significativamente para que los conceptos básicos de Tenacity y el manejo de errores sean más fáciles de seguir. También simplificaremos el desafío.
+
+### Ejemplo Simplificado de Cliente Resistente
+
+Nos centraremos en:
+1.  Reintentar solo `TimeoutException`, `NetworkError` y un `HTTPStatusError` específico (503).
+2.  Menos intentos y una estrategia de espera más simple por defecto.
+3.  Simulación de menos tipos de error.
+4.  Manejo de excepciones en el endpoint un poco más directo.
+
 ```python
-# cliente_externo_resistente.py
+# cliente_externo_simple.py
+from fastapi import FastAPI, HTTPException, status
 import httpx
-from tenacity import retry, stop_after_attempt, wait_exponential, RetryError, retry_if_exception_type
-import asyncio
-import random # Para simular fallos
+import uvicorn
+from tenacity import retry, stop_after_attempt, wait_fixed, RetryError, retry_if_exception
+import random
 
-# --- 1. Define qué errores quieres reintentar ---
-def es_error_reintentable(exception) -> bool:
-    """Decide si una excepción merece un reintento."""
-    # Solo reintentamos timeouts de red o errores 503 (Servicio No Disponible)
-    # o errores 429 (Too Many Requests) si el servicio nos pide esperar.
-    return isinstance(exception, (httpx.TimeoutException, httpx.NetworkError)) or \
-           (isinstance(exception, httpx.HTTPStatusError) and \
-            exception.response.status_code in [status.HTTP_503_SERVICE_UNAVAILABLE, status.HTTP_429_TOO_MANY_REQUESTS])
+# --- 0. Definición de la App FastAPI ---
+app = FastAPI(title="Cliente Externo Simple")
 
-# --- 2. Decora tu función de llamada externa ---
+# --- 1. Define qué errores quieres reintentar (versión simplificada) ---
+def es_error_reintentable_simple(exception: Exception) -> bool:
+    """Decide si una excepción merece un reintento (lógica simplificada)."""
+    if isinstance(exception, (httpx.TimeoutException, httpx.NetworkError)):
+        print(f"DEBUG: Reintentando por Timeout/Network: {type(exception).__name__}")
+        return True
+    
+    if isinstance(exception, httpx.HTTPStatusError):
+        # Solo reintentamos errores 503 (Servicio No Disponible)
+        if exception.response.status_code == status.HTTP_503_SERVICE_UNAVAILABLE:
+            print(f"DEBUG: Reintentando por HTTPStatusError 503: Código {exception.response.status_code}")
+            return True
+            
+    print(f"DEBUG: NO se reintenta: {type(exception).__name__} - {str(exception)}")
+    return False
+
+# --- 2. Decora tu función de llamada externa (parámetros simplificados) ---
 @retry(
-    stop=stop_after_attempt(3),  # Máximo 3 intentos (1 original + 2 reintentos)
-    wait=wait_exponential(multiplier=1, min=2, max=10), # Espera 2s, luego 4s, etc. (max 10s) con jitter
-    retry=retry_if_exception_type((httpx.TimeoutException, httpx.NetworkError, httpx.HTTPStatusError)), # Simplificado para este ejemplo, usar es_error_reintentable en real
-    reraise=True # Si todos fallan, lanza la última excepción
+    stop=stop_after_attempt(2),  # Máximo 2 intentos (1 original + 1 reintento)
+    wait=wait_fixed(1),          # Espera fija de 1 segundo entre reintentos
+    retry=retry_if_exception(es_error_reintentable_simple),
+    reraise=True
 )
-async def llamar_api_externa_con_reintentos(url: str):
+async def llamar_api_externa_simple(url: str, client: httpx.AsyncClient):
     print(f"Intentando llamar a {url}...")
-    # Simular fallo de red o del servicio externo aleatoriamente
-    if random.random() < 0.7: # Falla el 70% de las veces
-        error_type = random.choice(["timeout", "network_error", "http_503"])
+    
+    # Simular fallo aleatoriamente (50% de probabilidad)
+    if random.random() < 0.6: # Falla el 60% de las veces para ver reintentos
+        # Elige un tipo de error para simular (lista simplificada)
+        error_type = random.choice(["timeout", "http_503", "http_400"]) 
         print(f"SIMULANDO FALLO: {error_type}")
+        
+        mock_request = httpx.Request("GET", url)
+
         if error_type == "timeout":
-            raise httpx.TimeoutException("Simulated timeout", request=None)
-        elif error_type == "network_error":
-            raise httpx.NetworkError("Simulated network error", request=None)
-        else: # http_503
-            # Crear una respuesta simulada para HTTPStatusError
-            mock_response = httpx.Response(status.HTTP_503_SERVICE_UNAVAILABLE, request=httpx.Request("GET", url))
-            raise httpx.HTTPStatusError("Simulated 503", request=mock_response.request, response=mock_response)
+            raise httpx.TimeoutException("Timeout simulado", request=mock_request)
+        elif error_type == "http_503": # Error reintentable
+            mock_response = httpx.Response(status.HTTP_503_SERVICE_UNAVAILABLE, request=mock_request, content=b"Servicio no disponible")
+            raise httpx.HTTPStatusError("503 Servicio No Disponible simulado", request=mock_request, response=mock_response)
+        elif error_type == "http_400": # Error NO reintentable
+            mock_response = httpx.Response(status.HTTP_400_BAD_REQUEST, request=mock_request, content=b"Peticion incorrecta")
+            raise httpx.HTTPStatusError("400 Bad Request simulado", request=mock_request, response=mock_response)
 
     print(f"ÉXITO llamando a {url}")
     return {"data_externa": f"Datos de {url} recibidos!"}
 
-# --- 3. En tu endpoint FastAPI, usa esta función ---
-# En main.py (o donde tengas tu app FastAPI)
-# from fastapi import FastAPI, HTTPException (ya importados antes)
-# import cliente_externo_resistente (este archivo)
+# --- 3. Endpoint FastAPI (manejo de errores simplificado) ---
+@app.get("/datos-externos-simple")
+async def get_datos_simple():
+    url_externa_test = "http://servicio-simulado-simple.com/api/data"
+    
+    async with httpx.AsyncClient() as client:
+        try:
+            resultado = await llamar_api_externa_simple(url_externa_test, client)
+            return resultado
+        except RetryError as e: 
+            last_exc = e.last_attempt.exception()
+            print(f"FALLO DEFINITIVO tras {e.attempt_number} intentos. Última excepción: {type(last_exc).__name__} - {str(last_exc)}")
+            
+            # Devolvemos un 503 genérico si todos los reintentos fallaron
+            # Podrías inspeccionar last_exc para un código más específico si quisieras
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE, 
+                detail=f"Servicio externo no disponible tras reintentos. Causa final: {str(last_exc)}"
+            )
+        except httpx.HTTPStatusError as e_http: 
+            # Captura HTTPStatusError que no fueron reintentados (ej. el 400 simulado)
+            print(f"Error HTTP no reintentado: {e_http.response.status_code} - {e_http}")
+            raise HTTPException(status_code=e_http.response.status_code, detail=str(e_http))
+        except Exception as e: 
+            # Otros errores inesperados
+            print(f"Error inesperado: {type(e).__name__} - {e}")
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error inesperado en el servidor.")
 
-# app = FastAPI() ... (ya definido antes)
-
-@app.get("/datos-externos-retry")
-async def get_datos_con_retry():
-    # URL de un servicio que a veces falla (puedes usar un mock server o una URL real que sepas que a veces da problemas)
-    # Para simulación local, podemos apuntar a un endpoint inexistente o uno que tarde mucho
-    url_externa_test = "http://un-servicio-que-a-veces-falla.com/api/data" # Cambia por algo para probar
-    try:
-        # Si usas la simulación de llamar_api_externa_con_reintentos, la URL no importa tanto.
-        resultado = await llamar_api_externa_con_reintentos(url_externa_test)
-        return resultado
-    except RetryError as e: # Tenacity lanza esto si todos los reintentos fallan
-        print(f"FALLO DEFINITIVO tras reintentos llamando a {url_externa_test}: {e.last_attempt.exception()}")
-        # Aquí puedes acceder a e.last_attempt.exception() para saber la causa del último fallo
-        last_exc = e.last_attempt.exception()
-        status_code = status.HTTP_503_SERVICE_UNAVAILABLE
-        error_code_detail = "EXTERNAL_SERVICE_UNAVAILABLE"
-        if isinstance(last_exc, httpx.TimeoutException):
-            status_code = status.HTTP_504_GATEWAY_TIMEOUT
-            error_code_detail = "EXTERNAL_SERVICE_TIMEOUT"
-
-        # Aquí deberías usar tu handler de excepciones centralizado o una excepción personalizada
-        # que sea capturada por un handler. Para simplificar, lanzamos HTTPException directamente.
-        # Pero idealmente, lanzarías algo como ExternalServiceError que tu handler convierte
-        # al JSON estándar.
-        raise HTTPException(status_code=status_code, detail=f"El servicio externo en {url_externa_test} no está disponible tras reintentos. Causa: {str(last_exc)}")
-    except Exception as e: # Otros errores no relacionados con reintentos
-        print(f"Error inesperado no manejado por tenacity: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Error inesperado: {str(e)}")
-
+# --- Para ejecutar este script directamente ---
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
 ```
 
-**¡Pruébalo!**
-1.  Añade el endpoint `/datos-externos-retry` a tu `main.py` de FastAPI.
-2.  Ejecuta `uvicorn main:app --reload`.
-3.  Llama a `GET http://localhost:8000/datos-externos-retry` varias veces.
-4.  **Observa la consola:** Verás los reintentos. A veces funcionará, a veces fallará después de varios intentos (por la simulación del 70% de fallo).
-5.  Presta atención a las pausas entre reintentos (serán mensajes en la consola).
 
-**Desafío Práctico:**
-* Ajusta `stop_after_attempt` y `wait_exponential` y observa cómo cambia el comportamiento.
-* Modifica `es_error_reintentable` para que *no* reintente un `HTTPStatusError` si el código es 401 (No Autorizado).
+### Desafío Práctico Simplificado
+
+Ahora, basado en este código más simple:
+
+**Desafío 1: Observar el Número de Intentos**
+
+1.  Ejecuta el script `cliente_externo_simple.py`.
+2.  Llama al endpoint `http://localhost:8000/datos-externos-simple` varias veces hasta que veas que ocurre un error reintentable (como "Timeout simulado" o "503 Servicio No Disponible simulado") y luego falla definitivamente.
+3.  **Observa la consola del servidor**: ¿Cuántas veces se imprime "Intentando llamar a..." antes de que aparezca "FALLO DEFINITIVO"? Debería ser 2 veces (el intento original + 1 reintento).
+4.  **Modifica** la línea `@retry( stop=stop_after_attempt(2), ...)` para que sea `@retry( stop=stop_after_attempt(4), ...)`.
+5.  Vuelve a ejecutar y prueba. Ahora, ¿cuántas veces se intenta antes del fallo definitivo? (Debería ser 4).
+
+
+
 
 ---
 
@@ -349,106 +376,208 @@ async def get_datos_con_retry():
 
 La librería `pybreaker` es genial para esto: `pip install pybreaker`
 
-```python
-# cliente_con_circuit_breaker.py
-import httpx
-from pybreaker import CircuitBreaker, CircuitBreakerError
-import asyncio
-import random
-import logging # Importa logging
 
-# Configura un logger básico para ver los mensajes del listener
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__) # Crea un logger para este módulo
+Cuando un servicio externo falla repetidamente, es mejor **detener las llamadas** para no saturarlo y proteger nuestro sistema. Para esto usamos un **Circuit Breaker**.
 
-# --- 1. Un Listener para ver qué hace el breaker ---
-class MiListener(pybreaker.CircuitBreakerListener):
-    def state_change(self, cb, old_state, new_state):
-        logger.warning(f"CIRCUIT BREAKER '{cb.name}': Estado cambió de {old_state.name} a {new_state.name}")
-    def failure(self, cb, exc):
-        logger.info(f"CIRCUIT BREAKER '{cb.name}': Fallo registrado. Fallos: {cb.fail_counter}")
-    def success(self, cb):
-        logger.info(f"CIRCUIT BREAKER '{cb.name}': Éxito registrado. Reseteando contador de fallos.")
+### ¿Qué es un Circuit Breaker?
 
-# --- 2. Crea tu Circuit Breaker (¡uno por servicio externo que llamas!) ---
-# Estos deberían ser globales o gestionados de forma centralizada, no recreados en cada request.
-# fail_max: Cuántos fallos seguidos para abrir.
-# reset_timeout: Cuántos segundos abierto antes de ir a semi-abierto.
-servicio_X_breaker = CircuitBreaker(
-    fail_max=3,
-    reset_timeout=20, # 20 segundos
-    listeners=[MiListener()],
-    name="ServicioX" # Dale un nombre para los logs
-)
+Es un *patrón de resiliencia* que:
 
-# --- 3. Decora tu función de llamada externa ---
-# O usa @servicio_X_breaker para la forma de decorador programático:
-# @servicio_X_breaker
-async def llamar_a_servicio_X_protegido(url: str):
-    print(f"Intentando llamar a {url} (protegido por Circuit Breaker)...")
-    # Simular fallo del servicio X aleatoriamente
-    if servicio_X_breaker.current_state == "open": # Solo para simulación, en real no harías esto aquí
-        print(f"SIMULACIÓN DENTRO DE FUNCIÓN: Breaker para {url} está ABIERTO. No se llamará.")
-        # La llamada ni se haría si el breaker está abierto y se usa como decorador.
-        # Si se llama programáticamente, la excepción CircuitBreakerError se lanzaría antes.
+* **CLOSED (cerrado)**: deja pasar llamadas normalmente.
+* **OPEN (abierto)**: bloquea las llamadas tras un número de fallos.
+* **HALF-OPEN (semiabierto)**: prueba si el servicio ha vuelto y reabre si tiene éxito.
 
-    if random.random() < 0.6: # Falla el 60% de las veces
-        print(f"SIMULANDO FALLO en {url}")
-        raise httpx.RequestError(f"Simulated RequestError para {url}", request=None)
+---
 
-    print(f"ÉXITO llamando a {url}")
-    return {"data_servicio_x": f"Datos de {url}!"}
+### Instalación
 
-# --- 4. En tu endpoint FastAPI, usa la llamada protegida ---
-# En main.py (o donde tengas tu app FastAPI)
-# from fastapi import FastAPI, HTTPException (ya importados)
-# import cliente_con_circuit_breaker (este archivo)
-
-# app = FastAPI() ... (ya definido)
-
-@app.get("/datos-servicio-x-cb")
-async def get_datos_de_servicio_x_cb():
-    url_servicio_x = "http://servicio-x-que-falla-mucho.com/api" # Cambia por algo para probar
-    try:
-        # Forma programática de usar el breaker (más control para el ejemplo)
-        # Para el decorador, simplemente llamarías a la función decorada.
-        resultado = await servicio_X_breaker.call_async(llamar_a_servicio_X_protegido, url_servicio_x)
-        return resultado
-    except CircuitBreakerError as e:
-        logger.error(f"CIRCUIT BREAKER ABIERTO para {url_servicio_x}: {e}")
-        # Idealmente, lanzarías tu excepción de negocio/infra que el handler convierte a JSON estándar
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail=f"Servicio X no disponible (Circuito Abierto). Intenta más tarde."
-        )
-    except httpx.RequestError as e: # Si el breaker está cerrado pero la llamada falla
-        logger.error(f"Error de red llamando a {url_servicio_x} (breaker registrará fallo): {e}")
-        # Este error será contado por el breaker. Si se repite, abrirá el circuito.
-        # Aquí también, lanzarías tu excepción centralizada.
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail=f"Error contactando Servicio X: {str(e)}"
-        )
-    except Exception as e:
-        logger.error(f"Error inesperado llamando a {url_servicio_x}: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
-
+```bash
+pip install fastapi uvicorn httpx pybreaker
 ```
 
-**¡Pruébalo!**
-1.  Añade el endpoint `/datos-servicio-x-cb` a tu `main.py`.
-2.  Ejecuta `uvicorn main:app --reload`.
-3.  Llama a `GET http://localhost:8000/datos-servicio-x-cb` repetidamente.
-4.  **Observa la consola (y los logs de MiListener!):**
-    * Al principio, verás intentos de llamada. Algunos fallarán (simulado).
-    * Después de `fail_max` (3) fallos, el listener te dirá: "Estado cambió de CLOSED a OPEN".
-    * Las siguientes llamadas fallarán *instantáneamente* con el error 503 del `CircuitBreakerError`.
-    * Espera `reset_timeout` (20) segundos. El listener dirá: "Estado cambió de OPEN a HALF_OPEN".
-    * La siguiente llamada se permitirá. Si tiene éxito (¡baja la probabilidad de fallo en el random.random() para probar esto!), el listener dirá "Estado cambió de HALF_OPEN a CLOSED". Si falla, volverá a OPEN.
+¡Perfecto! Vamos a montarlo todo bien, en dos archivos: uno será el **Mock API** y otro tu **Breaker con FastAPI**.
 
-**Desafío Práctico:**
-* Juega con `fail_max` y `reset_timeout`. ¿Cómo afecta el comportamiento?
-* En `llamar_a_servicio_X_protegido`, en lugar de lanzar `httpx.RequestError`, lanza una excepción tuya (ej: `ServicioXError`). Configura `pybreaker` para que solo cuente esa excepción como fallo usando `expected_exception` en el constructor de `CircuitBreaker`.
+---
+**PASO 1: Mock API que falla aleatoriamente**
+
+**Crea un archivo `mock_service.py`:**
+
+```python
+# mock_service.py
+
+from fastapi import FastAPI, HTTPException
+import random
+
+app = FastAPI()
+
+@app.get("/unstable")
+def unstable_service():
+    if random.random() < 0.5:  # 50% de probabilidades de fallo
+        raise HTTPException(status_code=500, detail="Fallo simulado")
+    return {"message": "Todo OK"}
+```
+
+---
+
+
+**PASO 2: FastAPI + PyBreaker**
+
+**Crea un archivo `main.py`:**
+
+```python
+# main.py
+
+from fastapi import FastAPI, HTTPException
+import httpx
+import pybreaker
+import logging
+
+# Configuración de logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Listener para ver el estado del breaker
+class MyListener(pybreaker.CircuitBreakerListener):
+    def state_change(self, cb, old_state, new_state):
+        logger.warning(f"Circuit Breaker {cb.name} cambió de {old_state.name} a {new_state.name}")
+
+# Circuit Breaker configuración
+breaker = pybreaker.CircuitBreaker(
+    fail_max=3,            # Máximo 3 fallos para abrir
+    reset_timeout=10,      # 10 segundos antes de HALF-OPEN
+    listeners=[MyListener()],
+    name="MockServiceBreaker"
+)
+
+app = FastAPI()
+
+URL = "http://localhost:9000/unstable"  # Nuestro servicio inestable
+
+# Función protegida
+@breaker
+def call_mock_service():
+    response = httpx.get(URL, timeout=2.0)
+    response.raise_for_status()  # Lanza excepción en error HTTP
+    return response.json()
+
+# Endpoint para probar
+@app.get("/call-external")
+def get_mock_service():
+    try:
+        data = call_mock_service()
+        return {"status": "ok", "data": data}
+    except pybreaker.CircuitBreakerError:
+        logger.error("Circuit Breaker ABIERTO. Servicio Mock NO disponible.")
+        raise HTTPException(status_code=503, detail="Servicio no disponible (Circuito Abierto).")
+    except Exception as e:
+        logger.error(f"Error contactando servicio Mock: {e}")
+        raise HTTPException(status_code=502, detail="Error contactando servicio externo.")
+
+# Endpoint para ver el estado del breaker
+@app.get("/breaker-status")
+def breaker_status():
+    return {
+        "state": breaker.current_state.name,
+        "failures": breaker.fail_counter
+    }
+```
+
+---
+
+**Corre tu FastAPI:**
+
+```bash
+uvicorn main:app --reload
+```
+
+---
+
+**PASO 3: Atacar el sistema**
+
+Un pequeño script para hacer **muchas llamadas** rápidas:
+
+**Crea un `attack.py`:**
+
+```python
+# attack.py
+
+import requests
+import time
+
+URL = "http://localhost:8000/call-external"
+
+for i in range(20):
+    try:
+        response = requests.get(URL)
+        print(f"{i+1:02d} --> {response.status_code} | {response.json()}")
+    except Exception as e:
+        print(f"{i+1:02d} --> ERROR: {e}")
+    time.sleep(0.5)  # medio segundo entre llamadas
+```
+
+Lanza este script:
+
+```bash
+python attack.py
+```
+
+---
+
+**¿Qué vas a ver?**
+
+* **Al principio**: respuestas `200 OK` o fallos `502 Bad Gateway`.
+* **Cuando falle 3 veces seguidas**:
+  El breaker se pone en **OPEN** y empiezas a recibir **503 Service Unavailable** instantáneamente.
+* **Después de 10 segundos**:
+  El breaker entra en **HALF-OPEN**.
+* **Una llamada de prueba**:
+
+  * Si sale bien → vuelve a **CLOSED**.
+  * Si falla → vuelve a **OPEN**.
+
+✅ Además, puedes consultar en cualquier momento el estado del breaker:
+
+```bash
+curl http://localhost:8000/breaker-status
+```
+
+Te dirá:
+
+```json
+{
+  "state": "CLOSED",
+  "failures": 0
+}
+```
+
+o
+
+```json
+{
+  "state": "OPEN",
+  "failures": 3
+}
+```
+
+o
+
+```json
+{
+  "state": "HALF_OPEN",
+  "failures": 3
+}
+```
+
+---
+
+
+
+* Cómo el **Circuit Breaker** protege tu app:
+  Evita seguir llamando a un servicio roto.
+* Cómo hace **reintentos** controlados (`HALF-OPEN`) para ver si ya se recuperó.
+* **Evita** que tu API explote por servicios inestables externos.
+
+
 
 ---
 ## 4.7. Endpoints Resilientes
@@ -462,18 +591,18 @@ Tu endpoint FastAPI es un héroe, ¡pero no invencible! Si depende de otros para
 
     ```python
     # En tu servicio de aplicación (no en el endpoint FastAPI directamente)
-    # async def get_product_page_data(product_id: str, user_id: str):
-    #     producto = await self.product_repo.get_by_id(product_id)
-    #     if not producto: raise RecursoNoEncontradoError(...)
+     async def get_product_page_data(product_id: str, user_id: str):
+         producto = await self.product_repo.get_by_id(product_id)
+         if not producto: raise RecursoNoEncontradoError(...)
 
-    #     try:
-    #         # Esta llamada usa cliente con Retry y Circuit Breaker
-    #         recomendaciones = await self.reco_service_client.get_for_product(product_id, user_id)
-    #     except (CircuitBreakerError, httpx.HTTPError) as e: # O tu ExternalServiceError
-    #         logger.warning(f"Recomendaciones no disponibles para {product_id}. Usando fallback. Error: {e}")
-    #         recomendaciones = [{"id": "default1", "nombre": "Producto Popular 1"}] # Fallback!
+         try:
+             # Esta llamada usa cliente con Retry y Circuit Breaker
+             recomendaciones = await self.reco_service_client.get_for_product(product_id, user_id)
+         except (CircuitBreakerError, httpx.HTTPError) as e: # O tu ExternalServiceError
+             logger.warning(f"Recomendaciones no disponibles para {product_id}. Usando fallback. Error: {e}")
+             recomendaciones = [{"id": "default1", "nombre": "Producto Popular 1"}] # Fallback!
 
-    #     return {"producto": producto, "recomendaciones": recomendaciones}
+         return {"producto": producto, "recomendaciones": recomendaciones}
     ```
 3.  **Degradación Agraciada:** Es el resultado del fallback. El servicio sigue funcionando, pero quizás con menos funcionalidades. ¡Mejor eso que un error 500 total!
 4.  **Health Checks (`/health`):**
@@ -499,16 +628,16 @@ Cuando tienes 1000 peticiones por segundo y algo falla, ¿cómo encuentras *esa*
 
     ```python
     # Ejemplo de cómo usar el trace_id en un log dentro de un endpoint
-    # logger = logging.getLogger(__name__) # Configurado para JSON y con filtro/adapter para trace_id
+     logger = logging.getLogger(__name__) # Configurado para JSON y con filtro/adapter para trace_id
 
-    # @app.get("/algun-endpoint")
-    # async def mi_endpoint(request: Request):
-    #     trace_id = getattr(request.state, "trace_id", "N/A")
-    #     logger.info(f"Procesando endpoint (RID: {trace_id})", extra={"trace_id_field": trace_id})
-    #     # ... tu lógica ...
-    #     if algo_malo_pero_no_excepcion:
-    #          logger.warning(f"Algo raro pasó (RID: {trace_id})", extra={"trace_id_field": trace_id, "detalle": "info extra"})
-    #     return {"ok": True}
+     @app.get("/algun-endpoint")
+     async def mi_endpoint(request: Request):
+         trace_id = getattr(request.state, "trace_id", "N/A")
+         logger.info(f"Procesando endpoint (RID: {trace_id})", extra={"trace_id_field": trace_id})
+         # ... tu lógica ...
+         if algo_malo_pero_no_excepcion:
+              logger.warning(f"Algo raro pasó (RID: {trace_id})", extra={"trace_id_field": trace_id, "detalle": "info extra"})
+         return {"ok": True}
     ```
 * **Propagación:** Cuando tu servicio FastAPI llame a *otro* servicio, ¡pasa el `trace_id` en las cabeceras de esa nueva petición!
 
@@ -552,69 +681,69 @@ Usa `app.dependency_overrides` para inyectar un "cliente falso" que simule fallo
 
 ```python
 # tests/test_resiliencia_endpoints.py (requiere pytest, httpx)
-# from fastapi.testclient import TestClient
-# from main import app # Tu app FastAPI
-# from app.dependencies import get_servicio_x_client # Tu dependencia original
-# from app.clients.base import BaseServicioXClient # Clase base de tu cliente
+ from fastapi.testclient import TestClient
+ from main import app # Tu app FastAPI
+ from app.dependencies import get_servicio_x_client # Tu dependencia original
+ from app.clients.base import BaseServicioXClient # Clase base de tu cliente
 
-# class MockServicioXFallaSiempre(BaseServicioXClient): # Implementa la interfaz de tu cliente real
-#     async def get_data(self, param: str) -> dict:
-#         print("MOCK SERVICIO X: Simulando fallo siempre...")
-#         raise httpx.RequestError("Mock: Fallo de red en Servicio X", request=None)
+ class MockServicioXFallaSiempre(BaseServicioXClient): # Implementa la interfaz de tu cliente real
+     async def get_data(self, param: str) -> dict:
+         print("MOCK SERVICIO X: Simulando fallo siempre...")
+         raise httpx.RequestError("Mock: Fallo de red en Servicio X", request=None)
 
-# class MockServicioXFallaAlPrincipioLuegoOk(BaseServicioXClient):
-#     intentos = 0
-#     max_fallos = 2 # Falla las primeras 2 veces
-#     async def get_data(self, param: str) -> dict:
-#         MockServicioXFallaAlPrincipioLuegoOk.intentos += 1
-#         if MockServicioXFallaAlPrincipioLuegoOk.intentos <= MockServicioXFallaAlPrincipioLuegoOk.max_fallos:
-#             print(f"MOCK SERVICIO X (Falla/Ok): Intento {MockServicioXFallaAlPrincipioLuegoOk.intentos}, simulando fallo...")
-#             raise httpx.RequestError("Mock: Fallo temporal en Servicio X", request=None)
-#         print(f"MOCK SERVICIO X (Falla/Ok): Intento {MockServicioXFallaAlPrincipioLuegoOk.intentos}, simulando ÉXITO!")
-#         return {"data_mock": "Datos del mock exitosos!"}
+ class MockServicioXFallaAlPrincipioLuegoOk(BaseServicioXClient):
+     intentos = 0
+     max_fallos = 2 # Falla las primeras 2 veces
+     async def get_data(self, param: str) -> dict:
+         MockServicioXFallaAlPrincipioLuegoOk.intentos += 1
+         if MockServicioXFallaAlPrincipioLuegoOk.intentos <= MockServicioXFallaAlPrincipioLuegoOk.max_fallos:
+             print(f"MOCK SERVICIO X (Falla/Ok): Intento {MockServicioXFallaAlPrincipioLuegoOk.intentos}, simulando fallo...")
+             raise httpx.RequestError("Mock: Fallo temporal en Servicio X", request=None)
+         print(f"MOCK SERVICIO X (Falla/Ok): Intento {MockServicioXFallaAlPrincipioLuegoOk.intentos}, simulando ÉXITO!")
+         return {"data_mock": "Datos del mock exitosos!"}
 
 
-# client = TestClient(app)
+ client = TestClient(app)
 
-# def test_endpoint_con_servicio_x_cb_abierto():
-#     # Configura el breaker para que se abra rápido para el test
-#     # Esto es un poco más complejo de testear unitariamente sin acceso directo al breaker global.
+ def test_endpoint_con_servicio_x_cb_abierto():
+     # Configura el breaker para que se abra rápido para el test
+     # Esto es un poco más complejo de testear unitariamente sin acceso directo al breaker global.
 #     # Una opción es tener un breaker por test o resetearlo.
 #     # Para este ejemplo, asumimos que podemos manipular el breaker o que el test lo llevará a OPEN.
 
-#     app.dependency_overrides[get_servicio_x_client] = lambda: MockServicioXFallaSiempre()
-#     print("\n--- Testeando Circuit Breaker (esperamos que se abra) ---")
+     app.dependency_overrides[get_servicio_x_client] = lambda: MockServicioXFallaSiempre()
+     print("\n--- Testeando Circuit Breaker (esperamos que se abra) ---")
 #     # Llamar varias veces para abrir el circuit breaker (según fail_max del breaker)
-#     for i in range(servicio_X_breaker.fail_max + 1): # +1 para asegurar que intentó abrirse
-#         print(f"Llamada {i+1} para intentar abrir CB...")
-#         response = client.get("/datos-servicio-x-cb") # Asume que este endpoint usa el cliente que estamos mockeando
-#         if servicio_X_breaker.is_open:
-#             assert response.status_code == status.HTTP_503_SERVICE_UNAVAILABLE # CB Abierto
-#             assert "Circuito Abierto" in response.json()["detail"]
-#             print(f"CB ABIERTO como se esperaba en llamada {i+1}!")
-#             break
-#     else: # Si el bucle termina sin break
-#         assert False, f"El Circuit Breaker no se abrió después de {servicio_X_breaker.fail_max + 1} llamadas fallidas."
+     for i in range(servicio_X_breaker.fail_max + 1): # +1 para asegurar que intentó abrirse
+         print(f"Llamada {i+1} para intentar abrir CB...")
+         response = client.get("/datos-servicio-x-cb") # Asume que este endpoint usa el cliente que estamos mockeando
+         if servicio_X_breaker.is_open:
+             assert response.status_code == status.HTTP_503_SERVICE_UNAVAILABLE # CB Abierto
+             assert "Circuito Abierto" in response.json()["detail"]
+             print(f"CB ABIERTO como se esperaba en llamada {i+1}!")
+             break
+     else: # Si el bucle termina sin break
+         assert False, f"El Circuit Breaker no se abrió después de {servicio_X_breaker.fail_max + 1} llamadas fallidas."
 
-#     app.dependency_overrides = {} # Limpiar
+     app.dependency_overrides = {} # Limpiar
 
-# def test_endpoint_con_retry_y_luego_exito():
-#     # Reiniciar contador de intentos del mock para este test
-#     MockServicioXFallaAlPrincipioLuegoOk.intentos = 0
+ def test_endpoint_con_retry_y_luego_exito():
+      # Reiniciar contador de intentos del mock para este test
+     MockServicioXFallaAlPrincipioLuegoOk.intentos = 0
 #     # Asegúrate que el breaker esté cerrado al inicio de este test o usa un breaker diferente.
 #     # Aquí asumimos que el breaker se resetea o es diferente.
 #     # Para un test real, el estado del breaker entre tests puede ser un problema.
 #     # Resetear el breaker o usar uno nuevo por test es más robusto.
-#     # servicio_X_breaker.close() # Ejemplo de reset, si el breaker lo permite
+     servicio_X_breaker.close() # Ejemplo de reset, si el breaker lo permite
 
 #     # Esta prueba es para el endpoint /datos-externos-retry que usa tenacity
-#     app.dependency_overrides[llamar_api_externa_con_reintentos_dependency] = lambda: MockServicioXFallaAlPrincipioLuegoOk() # Asumiendo que tienes una dependencia para esto
-#     print("\n--- Testeando Retry (esperamos éxito después de fallos) ---")
-#     response = client.get("/datos-externos-retry") # Este endpoint usa tenacity
-#     assert response.status_code == status.HTTP_200_OK
-#     assert response.json()["data_mock"] == "Datos del mock exitosos!"
-#     print(f"ÉXITO con Retry después de {MockServicioXFallaAlPrincipioLuegoOk.intentos} intentos totales.")
-#     app.dependency_overrides = {}
+     app.dependency_overrides[llamar_api_externa_con_reintentos_dependency] = lambda: MockServicioXFallaAlPrincipioLuegoOk() # Asumiendo que tienes una dependencia para esto
+     print("\n--- Testeando Retry (esperamos éxito después de fallos) ---")
+     response = client.get("/datos-externos-retry") # Este endpoint usa tenacity
+     assert response.status_code == status.HTTP_200_OK
+     assert response.json()["data_mock"] == "Datos del mock exitosos!"
+     print(f"ÉXITO con Retry después de {MockServicioXFallaAlPrincipioLuegoOk.intentos} intentos totales.")
+     app.dependency_overrides = {}
 ```
 **(Nota: El código de testeo anterior es conceptual y avanzado. Testear Circuit Breakers y Retries de forma aislada y fiable en tests de integración requiere un buen manejo del estado de estos componentes entre tests o el uso de mocks más sofisticados. Para `tenacity`, podrías mockear `httpx.AsyncClient` directamente en el módulo donde se usa).**
 
