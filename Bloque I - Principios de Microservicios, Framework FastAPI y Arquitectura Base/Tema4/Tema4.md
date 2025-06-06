@@ -580,7 +580,7 @@ o
 
 
 ---
-## 4.7. Endpoints Resilientes
+## 4.7. Diseño de endpoints resilientes a fallos de servicios externos
 
 Tu endpoint FastAPI es un héroe, ¡pero no invencible! Si depende de otros para funcionar, debe saber qué hacer cuando esos otros fallan.
 
@@ -609,12 +609,10 @@ Tu endpoint FastAPI es un héroe, ¡pero no invencible! Si depende de otros para
     * **Shallow (`/health/live`):** ¿Está FastAPI vivo? Devuelve 200 OK.
     * **Deep (`/health/ready`):** ¿Están *mis dependencias críticas* (BBDD, API clave) vivas? Si no, devuelve 503. Kubernetes usa esto para saber si mandar tráfico o reiniciar.
 
-**¡Pruébalo! (Conceptual con tu código anterior):**
-* En el endpoint que llama al `servicio_X_breaker`, si se lanza `CircuitBreakerError`, en lugar de un 503, devuelve un 200 OK con `{"data_servicio_x": null, "message": "Datos de Servicio X no disponibles temporalmente"}`. ¡Eso es degradación!
 
 ---
 
-## 4.8. Logs con `trace_id`
+## 4.8. Diseño de endpoints resilientes a fallos de servicios externos
 
 Cuando tienes 1000 peticiones por segundo y algo falla, ¿cómo encuentras *esa* petición? ¡Con un `trace_id` (o Correlation ID)! Es un ID único que viaja con la petición por todos tus servicios.
 
@@ -648,7 +646,7 @@ Cuando tienes 1000 peticiones por segundo y algo falla, ¿cómo encuentras *esa*
 
 ---
 
-## 4.9. Dashboards de Errores
+## 4.9. Visibilidad de errores mediante dashboards
 
 Tus logs y métricas son oro, ¡pero necesitas un mapa del tesoro! Un dashboard (en Grafana, Kibana, Datadog...) te muestra de un vistazo:
 
@@ -671,7 +669,7 @@ Tus logs y métricas son oro, ¡pero necesitas un mapa del tesoro! Un dashboard 
 
 ---
 
-## 4.10. Simular Fallos
+## 4.10. Pruebas para simular fallos y degradación controlada
 
 ¿Cómo sabes que tus Retries, Circuit Breakers y Fallbacks funcionan? ¡Provocándolos!
 
@@ -753,9 +751,7 @@ Usa `app.dependency_overrides` para inyectar un "cliente falso" que simule fallo
 
 ---
 
-¡Y eso es todo, guerrero de la resiliencia! Has pasado de entender los errores a **anticiparlos, manejarlos, aprender de ellos y probar tus defensas**. Con estas herramientas y mentalidad, tus microservicios FastAPI no solo serán funcionales, sino **auténticas fortalezas digitales**. ¡A construir con calidad y confianza!
-
-## 4.7. Diseño de Endpoints Resilientes
+#### Diseño de Endpoints Resilientes
 
 Un endpoint resiliente no se rinde fácil. Si una dependencia falla, intenta dar la mejor respuesta posible, ¡incluso si es parcial!
 
@@ -898,8 +894,8 @@ async def health_ready(request: Request):
             detail=f"Servicio no listo, dependencia crítica falló: {str(e)}"
         )
 
-# if __name__ == "__main__":
-#     uvicorn.run("main_resiliente:app", host="0.0.0.0", port=8000, reload=True)
+if __name__ == "__main__":
+    uvicorn.run("main_resiliente:app", host="0.0.0.0", port=8000, reload=True)
 ```
 
 **¡Pruébalo!**
@@ -919,7 +915,7 @@ async def health_ready(request: Request):
 
 ---
 
-## 4.8. Captura y Log de Trazas con Contexto
+#### Captura y Log de Trazas con Contexto
 
 Un `trace_id` (o Correlation ID) es un ID único que se pasa entre servicios para una petición. ¡Esencial para depurar en microservicios!
 
@@ -1007,8 +1003,8 @@ async def endpoint_trazable(request: Request):
         "respuesta_de_otro_servicio": respuesta_servicio_externo
     }
 
-# if __name__ == "__main__":
-#     uvicorn.run("main_trazabilidad:app", host="0.0.0.0", port=8001, reload=True)
+if __name__ == "__main__":
+    uvicorn.run("main_trazabilidad:app", host="0.0.0.0", port=8001, reload=True)
 ```
 
 **¡Pruébalo!**
@@ -1028,208 +1024,6 @@ async def endpoint_trazable(request: Request):
 
 ---
 
-## 4.9. Visibilidad de Errores con Dashboards
-
-No podemos crear un dashboard Grafana aquí, pero sí podemos generar las **métricas** que alimentarían uno. Usaremos `prometheus-client` (¡instálalo!: `pip install prometheus-client`).
-
-**Escenario Práctico:** Un endpoint FastAPI que cuenta las peticiones HTTP y los errores 5xx, exponiéndolos para Prometheus.
-
-```python
-# main_metricas.py
-from fastapi import FastAPI, Request, HTTPException, status
-from prometheus_client import Counter, Histogram, make_asgi_app # Para métricas
-import time
-import random
-import uvicorn
-import uuid # Para el trace_id (reutilizamos el middleware)
-
-# --- Middleware para Trace ID (copiado de main_trazabilidad.py para completitud) ---
-# (Opcional para este ejemplo de métricas, pero bueno para la consistencia)
-app = FastAPI(title="API con Métricas Prometheus")
-
-@app.middleware("http")
-async def trace_id_middleware_metrics(request: Request, call_next):
-    trace_id = request.headers.get("X-Trace-ID") or str(uuid.uuid4())
-    request.state.trace_id = trace_id
-    response = await call_next(request)
-    response.headers["X-Trace-ID"] = trace_id
-    return response
-
-# --- Métricas Prometheus ---
-# Contador para peticiones HTTP totales, desglosado por método y path
-PETICIONES_HTTP_TOTAL = Counter(
-    "http_requests_total_app", # Nombre de la métrica
-    "Total de peticiones HTTP recibidas por la aplicación", # Descripción
-    ["method", "path", "status_code"] # Etiquetas (dimensions)
-)
-
-# Histograma para la latencia de las peticiones
-LATENCIA_PETICIONES_HTTP_SEGUNDOS = Histogram(
-    "http_request_duration_seconds_app",
-    "Latencia de las peticiones HTTP en segundos",
-    ["method", "path"]
-)
-
-# Middleware para registrar métricas de cada petición
-@app.middleware("http")
-async def registrar_metricas_middleware(request: Request, call_next):
-    start_time = time.time()
-    
-    # Intentar obtener el path real, no el completo con parámetros
-    # Para plantillas de ruta de FastAPI, esto puede ser más complejo de obtener aquí.
-    # Starlette expone request.scope.get('route').path si hay una ruta macheada.
-    path_template = request.scope.get('path') # Default a path crudo
-    if request.scope.get('root_path') and request.scope.get('path').startswith(request.scope.get('root_path')):
-         path_template = request.scope.get('path')[len(request.scope.get('root_path')):]
-
-    if hasattr(request, "url_for") and request.scope.get('route'):
-         path_template = request.scope['route'].path # Mejor, usa la plantilla de la ruta
-
-    try:
-        response = await call_next(request)
-        status_code_for_metric = response.status_code
-        return response
-    except Exception as e:
-        # Si una excepción no manejada llega aquí (debería ser raro con buenos handlers)
-        status_code_for_metric = status.HTTP_500_INTERNAL_SERVER_ERROR
-        raise e # Relanzar para que los handlers de FastAPI la procesen
-    finally:
-        process_time = time.time() - start_time
-        # Registrar latencia
-        LATENCIA_PETICIONES_HTTP_SEGUNDOS.labels(
-            method=request.method,
-            path=path_template # Usar la plantilla de ruta
-        ).observe(process_time)
-        # Registrar contador de peticiones
-        PETICIONES_HTTP_TOTAL.labels(
-            method=request.method,
-            path=path_template, # Usar la plantilla de ruta
-            status_code=status_code_for_metric
-        ).inc()
-
-
-# --- Endpoint que a veces falla ---
-@app.get("/datos-aleatorios")
-async def get_datos_aleatorios():
-    if random.random() < 0.2: # 20% de probabilidad de error 500
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Fallo aleatorio simulado")
-    elif random.random() < 0.4: # Otro 20% (total 40% de no 200) de error 400
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Petición mala simulada")
-    return {"data": "Todo bien!", "numero_aleatorio": random.randint(1,100)}
-
-# --- Montar la app de métricas de Prometheus ---
-# Esto expone un endpoint /metrics que Prometheus puede scrapear
-app_metricas_prometheus = make_asgi_app()
-app.mount("/metrics", app_metricas_prometheus)
-
-# if __name__ == "__main__":
-#     uvicorn.run("main_metricas:app", host="0.0.0.0", port=8002, reload=True)
-```
-
-**¡Pruébalo!**
-1.  Guarda como `main_metricas.py`. Necesitas `prometheus-client`.
-2.  Ejecuta: `uvicorn main_metricas:app --reload --port 8002`
-3.  Llama a `GET http://localhost:8002/datos-aleatorios` varias veces. Algunas darán 200, otras 500, otras 400.
-4.  Ahora, ve a `http://localhost:8002/metrics` en tu navegador.
-    * Verás un montón de texto. Busca `http_requests_total_app` y `http_request_duration_seconds_app`.
-    * Verás cómo se incrementan los contadores y se registran las latencias, ¡con etiquetas (labels) para método, path y código de estado!
-    * Esto es lo que Prometheus "scrapearía" y tú visualizarías en Grafana para ver:
-        * `sum(rate(http_requests_total_app{status_code=~"5.."}[5m]))` (Tasa de errores 5xx)
-        * `histogram_quantile(0.95, sum(rate(http_request_duration_seconds_app_bucket[5m])) by (le, path))` (Latencia P95 por path)
-
-**Claves para Dashboards Aquí:**
-* **Métricas Clave:** Peticiones, errores, latencia (los Golden Signals).
-* **Etiquetas (Labels):** Permiten filtrar y agregar (ej. errores *solo* del endpoint `/datos-aleatorios`).
-* **Prometheus `make_asgi_app()`:** La forma fácil de exponer métricas en FastAPI.
-
----
-
-## 4.10. Pruebas de Fallos
-
-¿Cómo sabes que tu Circuit Breaker (de 4.6) o tu Fallback (de 4.7) realmente funcionan? ¡Simulando el fallo en un test! FastAPI y `pytest` son tus aliados.
-
-**Escenario Práctico:** Testear el endpoint `/productos/{product_id}/detalles` de `main_resiliente.py` (sección 4.7). Vamos a simular que el servicio de opiniones *siempre* falla o *siempre* da timeout, y verificar que el endpoint principal sigue devolviendo los datos del producto.
-
-```python
-# test_main_resiliente.py
-# Asegúrate que main_resiliente.py esté en la misma carpeta o PYTHONPATH
-# Necesitas: pip install pytest httpx
-
-from fastapi.testclient import TestClient
-from main_resiliente import app, get_opiniones_from_service # Importa la app y la función a mockear
-import httpx # Para el RequestError
-import asyncio # Para el TimeoutError
-
-client = TestClient(app)
-
-# --- Mock del servicio de opiniones que SIEMPRE falla con RequestError ---
-async def mock_opiniones_falla_request_error(product_id: str, current_trace_id: str):
-    print(f"MOCK OPINIONES (RequestError): Se pidió para {product_id}, simulando fallo.")
-    raise httpx.RequestError("Mock: Fallo de red en servicio de opiniones", request=None)
-
-# --- Mock del servicio de opiniones que SIEMPRE da Timeout ---
-async def mock_opiniones_falla_timeout(product_id: str, current_trace_id: str):
-    print(f"MOCK OPINIONES (Timeout): Se pidió para {product_id}, simulando timeout.")
-    # Para que asyncio.wait_for lance TimeoutError, la corrutina debe tardar más que el timeout
-    # Aquí, para asegurar que el wait_for del endpoint (0.5s) salte, hacemos que esta tarde un poco más.
-    await asyncio.sleep(1) # Tarda 1 segundo, el endpoint espera solo 0.5s
-    return [] # Nunca se llegará aquí si el timeout del endpoint es menor
-
-def test_producto_detalles_cuando_opiniones_fallan_con_request_error():
-    # Sobrescribimos la dependencia 'get_opiniones_from_service' con nuestro mock
-    app.dependency_overrides[get_opiniones_from_service] = mock_opiniones_falla_request_error
-    
-    response = client.get("/productos/P001/detalles")
-    
-    app.dependency_overrides = {} # ¡MUY IMPORTANTE limpiar el override después del test!
-
-    assert response.status_code == 200
-    data = response.json()
-    assert data["producto"]["id"] == "P001"
-    assert data["opiniones"] == [] # Fallback a lista vacía
-    assert "Opiniones no disponibles temporalmente (fallo de servicio)" in data["aviso_degradacion"]
-    print("TEST (RequestError): Pasó OK. Producto devuelto, opiniones degradadas.")
-
-def test_producto_detalles_cuando_opiniones_dan_timeout():
-    app.dependency_overrides[get_opiniones_from_service] = mock_opiniones_falla_timeout
-    
-    response = client.get("/productos/P001/detalles")
-    
-    app.dependency_overrides = {}
-
-    assert response.status_code == 200
-    data = response.json()
-    assert data["producto"]["id"] == "P001"
-    assert data["opiniones"] == []
-    assert "Opiniones no disponibles temporalmente (timeout)" in data["aviso_degradacion"]
-    print("TEST (Timeout): Pasó OK. Producto devuelto, opiniones degradadas por timeout.")
-
-def test_producto_no_encontrado_sigue_dando_404():
-    # No necesitamos mockear opiniones aquí porque fallará antes
-    response = client.get("/productos/P_NO_EXISTE/detalles")
-    assert response.status_code == 404
-    assert "Producto P_NO_EXISTE no encontrado" in response.json()["detail"]
-    print("TEST (404): Pasó OK. Producto no existente gestionado correctamente.")
-
-# Para ejecutar:
-# 1. Guarda este archivo como test_main_resiliente.py en la misma carpeta que main_resiliente.py
-# 2. Desde la terminal, en esa carpeta, ejecuta: pytest
-# (Asegúrate de que uvicorn NO esté corriendo main_resiliente.py mientras corres los tests,
-#  ya que TestClient inicia su propia instancia de la app)
-```
-
-**¡Pruébalo!**
-1.  Guarda `main_resiliente.py` y `test_main_resiliente.py` en la misma carpeta.
-2.  Instala `pytest`: `pip install pytest`
-3.  Desde la terminal, en esa carpeta, ejecuta: `pytest` o `pytest -s` (para ver los prints).
-4.  Verás cómo los tests pasan, demostrando que tu endpoint maneja los fallos del servicio de opiniones y se degrada correctamente.
-
-**Claves para Probar Fallos Aquí:**
-* `TestClient`: Para llamar a tu API FastAPI como si fueras un cliente HTTP.
-* `app.dependency_overrides`: El truco de FastAPI para reemplazar dependencias (como tu función `get_opiniones_from_service`) con Mocks durante los tests. Esto te da control total sobre lo que hacen tus dependencias.
-* **Aserciones Específicas:** Verifica no solo el código de estado, sino también el cuerpo de la respuesta para asegurar que la degradación o el manejo de errores es el esperado.
-
----
 
 
 ## Referencias bibliográficas
