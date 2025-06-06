@@ -34,7 +34,7 @@
 | 🧠 Temas        | Tema 1.7 a 1.11, Tema 2.5, 2.10, Tema 3.1 a 3.3                             |
 | ⚙️ Tecnologías  | httpx, routers FastAPI, Docker Compose avanzado                             |
 | 📁 Entregable   | 4 servicios (`users`, `products`, `orders`, `payments`) + 1 gateway (`api`)             |
-| 🧪 Tareas clave | <p> - Identificar los Bounded Contexts. <br> - Separar en `auth-service`, `product-service`, `order-service`, `payment-service`.  <br> - Definir APIs REST independientes para cada microservicio. <br> - Reverse Proxy hacia los microservicios. <br> - HTTPS con certificados SSL. <br> - Redirección de tráfico por rutas. <br> - Aplicar patrones de comunicación síncrona y asíncrona. <br> - Patrón **Strangler Fig** para migración progresiva. </p>
+| 🧪 Tareas clave | <p> - Identificar los Bounded Contexts. <br> - Separar en `auth-service`, `product-service`, `order-service`, `payment-service`.  <br> - Definir APIs REST independientes para cada microservicio. <br> - Reverse Proxy hacia los microservicios. <br> - HTTPS con certificados SSL. <br> - Redirección de tráfico por rutas. <br> - Aplicar patrones de comunicación síncrona y asíncrona. <br> - Patrón **Strangler Fig** para migración progresiva. </p> 
 |
 | 🧩 Repositorios | `lab02-microservicios-ecommerce` (fase intermedia)                    |
 
