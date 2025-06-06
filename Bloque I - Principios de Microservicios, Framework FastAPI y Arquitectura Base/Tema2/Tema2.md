@@ -1850,7 +1850,7 @@ def create_user(email: str, ...):
 
 #### 4. La Traducción: `app.exception_handler`
 
-Aquí ocurre la magia. Usamos el decorador `@app.exception_handler(MiExcepcion)` para registrar una función que **interceptará** nuestra excepción personalizada y la **transformará** en una respuesta HTTP.
+Usamos el decorador `@app.exception_handler(MiExcepcion)` para registrar una función que **interceptará** nuestra excepción personalizada y la **transformará** en una respuesta HTTP.
 
 ```python
 # Concepto: app/api/exception_handlers.py o main.py
@@ -1882,14 +1882,14 @@ async def business_rule_handler(request: Request, exc: BusinessRuleViolationErro
     )
 
 # --- Registro en main.py ---
-# from fastapi import FastAPI
-# from .api import exception_handlers
-# from .domain.exceptions import ...
+from fastapi import FastAPI
+from .api import exception_handlers
+from .domain.exceptions import ...
 
-# app = FastAPI()
-# app.add_exception_handler(ResourceNotFoundError, exception_handlers.resource_not_found_handler)
-# app.add_exception_handler(EmailAlreadyExistsError, exception_handlers.email_exists_handler)
-# app.add_exception_handler(BusinessRuleViolationError, exception_handlers.business_rule_handler)
+app = FastAPI()
+app.add_exception_handler(ResourceNotFoundError, exception_handlers.resource_not_found_handler)
+app.add_exception_handler(EmailAlreadyExistsError, exception_handlers.email_exists_handler)
+app.add_exception_handler(BusinessRuleViolationError, exception_handlers.business_rule_handler)
 ```
 
 **Importante:** El orden de registro puede importar si tienes jerarquías. FastAPI usará el manejador más específico que encuentre.
@@ -1933,7 +1933,7 @@ Este diagrama muestra cómo una excepción nacida en la lógica de negocio se tr
 | `PaymentFailedError` | 402 / 400 | Fallo en el pago (raro 402, a menudo 400). |
 
 
-El manejo de excepciones personalizadas no es un lujo, es una **necesidad** para construir APIs de alta calidad. En FastAPI, gracias a su sistema de *exception handlers*, podemos implementar un **puente robusto y semántico** entre los errores detectados en nuestro **Dominio** y las respuestas HTTP que enviamos a nuestros clientes. Esto nos permite crear APIs que no solo funcionan, sino que también **comunican eficazmente** cuando las cosas no salen como se esperaba, respetando el **desacoplamiento** y la **claridad** que promueve nuestra arquitectura DDD y Hexagonal. ¡Esto no es "flojear", es construir como profesionales!
+El manejo de excepciones personalizadas no es un lujo, es una **necesidad** para construir APIs de alta calidad. En FastAPI, gracias a su sistema de *exception handlers*, podemos implementar un **puente robusto y semántico** entre los errores detectados en nuestro **Dominio** y las respuestas HTTP que enviamos a nuestros clientes. Esto nos permite crear APIs que no solo funcionan, sino que también **comunican eficazmente** cuando las cosas no salen como se esperaba, respetando el **desacoplamiento** y la **claridad** que promueve nuestra arquitectura DDD y Hexagonal. 
 
 ---
 
@@ -1974,7 +1974,7 @@ Aquí es donde **Pydantic**, a través de su biblioteca hermana `pydantic-settin
 
 Esto significa que una variable de entorno **siempre** sobrescribirá un valor en tu `.env`, lo cual es ideal (`.env` para desarrollo local, variables de entorno para producción).
 
-#### 3\. Implementación Práctica y Rigurosa
+**Implementación Práctica y Rigurosa**
 
 **1. Instalar:** `pip install pydantic-settings`
 
@@ -2058,27 +2058,7 @@ async def get_app_info(cfg: Settings = Depends(get_settings)):
     }
 ```
 
-**Visualizando la Inyección de `Settings`:**
 
-```mermaid
-graph TD
-    A["Inicio App: main.py"] --> B["Importa app.core.config"]
-    B --> C["Crea settings = Settings()"]
-    C --> D["Lee .env o variables de entorno"]
-    D --> E["Instancia global de settings"]
-
-    F["Petición a /info"] --> G["Endpoint: /info"]
-    G -->|Pide Depends → get_settings| H["Sistema DI de FastAPI"]
-    H --> I["Ejecuta get_settings"]
-    I -->|Devuelve instancia| E
-    H -->|Inyecta cfg| G
-    G --> J["Usa cfg.debug_mode"]
-    J --> K["Devuelve respuesta"]
-
-    style E fill:#e74c3c,stroke:#333
-
-
-```
 
 La configuración es la columna vertebral invisible de cualquier aplicación. Usar `pydantic-settings` con FastAPI no es solo una "buena práctica", es una **declaración de intenciones**: apostamos por la **robustez, la seguridad y la claridad**. Al definir nuestras configuraciones como modelos Pydantic, ganamos **validación automática, tipado estricto y una gestión de entornos flexible y centralizada**. Integrado con el sistema de Inyección de Dependencias, nos permite acceder a la configuración de forma limpia y desacoplada, asegurando que nuestros microservicios sean **predecibles y fáciles de desplegar** en cualquier entorno. ¡Esto es construir con calidad altísima\!
 
