@@ -40,17 +40,17 @@
 
 ***
 
-## 🔹 LAB 3 – Gestión de Errores y Resiliencia
+## 🔹 LAB 3 – Creación de Microservicio gRPC
 
 | Item            | Detalles                                                            |
 | --------------- | ------------------------------------------------------------------- |
 | 🕒 Duración     | 1.5 h                                                               |
 | 🎯 Objetivo     | Añadir manejo de errores resiliente y Circuit Breaker básico        |
-| 🧠 Temas        | Tema 4 completo                                                     |
-| ⚙️ Tecnologías  | pybreaker, logging, fallback handlers                               |
-| 📁 Entregable   | API Gateway con retry y tolerancia a fallos de servicios caídos     |
-| 🧪 Tareas clave | <p>- Simular fallos<br>- Implementar retry<br>- Circuit breaker</p> |
-| 🧩 Repositorios | `lab03-resilience-gateway`                                          |
+| 🧠 Temas        | Tema 3 completo                                                     |
+| ⚙️ Tecnologías  | gRPC                               |
+| 📁 Entregable   | Servicio Rest que se comunica con gRPC     |
+| 🧪 Tareas clave | <p>- Diseño MS <br>- Desarrollo <br>- Pruebas</p> |
+| 🧩 Repositorios | `lab03-grpc-todo`                                          |
 
 ***
 
