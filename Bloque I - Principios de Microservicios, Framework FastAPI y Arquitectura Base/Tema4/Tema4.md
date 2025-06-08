@@ -635,11 +635,542 @@ o
 
 
 ---
-## 4.7. Diseño de endpoints resilientes a fallos de servicios externos
+
+
+## 4.7. Diseño de Endpoints que Aceptan el Fallo (Degradación Controlada)
+
+#### Definición
+
+Un endpoint resiliente no es aquel que nunca falla, sino aquel que **sabe cómo fallar bien**. La degradación controlada es la técnica de diseñar un endpoint para que, cuando una de sus dependencias no críticas falle, pueda seguir ofreciendo una respuesta útil en lugar de un error completo (como un `500 Internal Server Error`). La idea es devolver datos parciales, datos de una caché, o una versión simplificada de la respuesta.
+
+#### Ejemplo Práctico
+
+Imagina un endpoint que muestra los detalles de un producto. Obtiene la información principal de un servicio (`servicio-productos`) y el stock en tiempo real de otro (`servicio-inventario`). Si el servicio de inventario falla, preferimos mostrar la información del producto con un aviso de "Stock no disponible" antes que no mostrar nada.
+
+**1. Crea un mock de los servicios externos (`mock_servicios.py`):**
+Este servidor simula nuestras dependencias. Podemos hacer que el servicio de inventario falle si le pasamos un parámetro en la URL.
+
+```python
+# mock_servicios.py
+from fastapi import FastAPI, Response, status
+
+app = FastAPI()
+
+@app.get("/products/{product_id}")
+async def get_product_info(product_id: str):
+    return {"id": product_id, "name": "Poción de Maná", "description": "Restaura 100 MP."}
+
+@app.get("/inventory/{product_id}")
+async def get_inventory(product_id: str, fail: bool = False):
+    if fail:
+        return Response(status_code=status.HTTP_503_SERVICE_UNAVAILABLE)
+    return {"product_id": product_id, "stock": 42}
+
+```
+
+**2. Crea tu API principal resiliente (`main_resiliente.py`):**
+
+```python
+# main_resiliente.py
+from fastapi import FastAPI, HTTPException
+import httpx
+
+app = FastAPI()
+
+PRODUCT_API_URL = "http://localhost:9001/products"
+INVENTORY_API_URL = "http://localhost:9002/inventory"
+
+@app.get("/product-details/{product_id}")
+async def get_product_details(product_id: str):
+    try:
+        async with httpx.AsyncClient() as client:
+            # 1. Obtener información principal (crítica)
+            product_response = await client.get(f"{PRODUCT_API_URL}/{product_id}")
+            product_response.raise_for_status() # Si esto falla, el endpoint entero falla
+            product_data = product_response.json()
+
+            # 2. Obtener stock (no crítico) con fallback
+            stock_data = {"stock": None, "status": "No se pudo verificar el stock"}
+            try:
+                inventory_response = await client.get(f"{INVENTORY_API_URL}/{product_id}", timeout=2.0)
+                inventory_response.raise_for_status()
+                stock_data = {"stock": inventory_response.json()["stock"], "status": "Verificado"}
+            except (httpx.RequestError, httpx.HTTPStatusError):
+                # Fallback: Si la llamada al inventario falla, no rompemos.
+                # Simplemente usamos los datos por defecto y seguimos.
+                pass
+
+            # 3. Componer la respuesta final
+            return {
+                "product_info": product_data,
+                "inventory": stock_data
+            }
+
+    except httpx.HTTPStatusError as e:
+        # Si el servicio crítico de productos falla
+        raise HTTPException(status_code=502, detail=f"El servicio de productos falló: {e.response.status_code}")
+```
+
+#### Pruebas con `curl`
+
+**Paso 1: Ejecuta los servidores**
+```bash
+# Terminal 1: Mock de productos
+uvicorn mock_servicios:app --host 0.0.0.0 --port 9001
+
+# Terminal 2: Mock de inventario
+uvicorn mock_servicios:app --host 0.0.0.0 --port 9002
+
+# Terminal 3: API principal
+uvicorn main_resiliente:app --host 0.0.0.0 --port 8000
+```
+
+**Paso 2: Prueba el caso de éxito**
+Todos los servicios funcionan. `curl` devuelve la respuesta completa.
+```bash
+curl http://localhost:8000/product-details/mana-potion
+```
+**Salida esperada (éxito):**
+```json
+{
+  "product_info": {
+    "id": "mana-potion",
+    "name": "Poción de Maná",
+    "description": "Restaura 100 MP."
+  },
+  "inventory": {
+    "stock": 42,
+    "status": "Verificado"
+  }
+}
+```
+
+**Paso 3: Prueba la degradación controlada**
+Forzamos el fallo del servicio de inventario (`?fail=true`). El endpoint no devuelve un error 5xx, sino la respuesta parcial.
+```bash
+curl "http://localhost:9002/inventory/mana-potion?fail=true" # Así se llama para simular el fallo en el servicio de inventario
+```
+Ahora, al llamar a nuestro endpoint principal, este manejará el error internamente.
+```bash
+#Llamamos al endpoint principal. Él internamente llamará al servicio de inventario que fallará.
+curl http://localhost:8000/product-details/mana-potion
+```
+**Salida esperada (degradada):**
+```json
+{
+  "product_info": {
+    "id": "mana-potion",
+    "name": "Poción de Maná",
+    "description": "Restaura 100 MP."
+  },
+  "inventory": {
+    "stock": null,
+    "status": "No se pudo verificar el stock"
+  }
+}
+```
+
+---
 
 ## 4.8 Captura y log de trazas con contexto de peticiones
-## 4.9 Visibilidad de errores mediante dashboards
-## 4.10 Pruebas para simular fallos y degradación controlada
+
+#### Definición
+
+El logging con contexto consiste en enriquecer cada mensaje de log con información clave sobre la petición que lo generó. En lugar de un inútil `"Conexión fallida"`, obtenemos un registro que nos dice **quién, qué y cuándo**. El **`trace_id`** es un identificador único que se crea para cada petición y se propaga por todos los logs y llamadas a otros servicios, permitiendo reconstruir la secuencia completa de eventos. El **logging estructurado** (en formato JSON) hace que estos logs sean legibles por máquinas, facilitando su búsqueda y análisis.
+
+#### Ejemplo Práctico
+
+Usaremos `structlog` para generar logs en JSON, con un middleware en FastAPI que inyecta automáticamente un `trace_id`.
+
+```python
+# main_logs.py
+import uuid
+from fastapi import FastAPI, Request, HTTPException
+import structlog
+
+# Configura structlog para que use el contexto y renderice a JSON
+structlog.configure(
+    processors=[
+        structlog.contextvars.merge_contextvars, # Clave para el trace_id
+        structlog.processors.add_log_level,
+        structlog.processors.TimeStamper(fmt="iso", utc=True),
+        structlog.processors.JSONRenderer(),
+    ],
+    logger_factory=structlog.PrintLoggerFactory(),
+)
+log = structlog.get_logger()
+
+app = FastAPI()
+
+# Middleware para inyectar el trace_id en el contexto de log
+@app.middleware("http")
+async def add_context_middleware(request: Request, call_next):
+    trace_id = str(uuid.uuid4())
+    structlog.contextvars.clear_contextvars()
+    structlog.contextvars.bind_contextvars(trace_id=trace_id)
+    
+    response = await call_next(request)
+    response.headers["X-Trace-ID"] = trace_id
+    return response
+
+@app.get("/user/{user_id}")
+async def get_user(user_id: str):
+    log.info("user_lookup_started", user_id=user_id) # Log con contexto
+    
+    if user_id == "admin":
+        log.warn("admin_user_accessed", permissions="full")
+        return {"user": user_id, "status": "ok"}
+    
+    raise HTTPException(status_code=404, detail="Usuario no encontrado")
+
+# Un handler genérico que también loguea con contexto
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    log.error(
+        "http_error",
+        status_code=exc.status_code,
+        detail=exc.detail,
+        path=request.url.path
+    )
+    return await request.app.default_exception_handler(request, exc)
+```
+
+#### Pruebas con `curl`
+
+**Paso 1: Ejecuta el servidor**
+```bash
+# Terminal 1
+uvicorn main_logs:app --host 0.0.0.0 --port 8000
+```
+
+**Paso 2: Lanza peticiones con `curl` y observa la consola del servidor**
+
+**Prueba 1: Un usuario normal que falla**
+```bash
+curl -i http://localhost:8000/user/bob
+```
+**Salida en la consola del servidor:**
+```json
+{"trace_id": "...", "log_level": "info", "event": "user_lookup_started", "user_id": "bob", "timestamp": "..."}
+{"trace_id": "...", "log_level": "error", "event": "http_error", "status_code": 404, "detail": "Usuario no encontrado", "path": "/user/bob", "timestamp": "..."}
+```
+
+**Prueba 2: Un usuario especial que tiene éxito**
+```bash
+curl -i http://localhost:8000/user/admin
+```
+**Salida en la consola del servidor:**
+```json
+{"trace_id": "...", "log_level": "info", "event": "user_lookup_started", "user_id": "admin", "timestamp": "..."}
+{"trace_id": "...", "log_level": "warning", "event": "admin_user_accessed", "permissions": "full", "timestamp": "..."}
+```
+Como puedes ver, cada línea de log comparte el mismo `trace_id` para una misma petición, y el formato JSON permite filtrar fácilmente por `log_level`, `event` o cualquier otro campo.
+
+---
+
+## 4.9. Visibilidad de Errores Mediante Dashboards
+
+De acuerdo. Tienes toda la razón, la solución con Prometheus y Grafana es potente pero puede ser excesiva para este tema si se verá en detalle más adelante.
+
+Busquemos el equilibrio perfecto: una herramienta de dashboard **real y visual** que sea **extremadamente simple** de levantar, sin Docker ni configuraciones complejas.
+
+Usaremos **Streamlit**, una librería de Python que crea dashboards web interactivos con muy poco código. Es la forma más rápida de pasar de datos a una visualización web.
+
+Aquí tienes la versión final del punto 4.9, simplificada y directa.
+
+---
+
+#### Definición
+
+Un dashboard es una interfaz visual que nos permite entender la salud de nuestra aplicación de un vistazo. En lugar de leer logs o métricas en texto plano, los vemos representados en gráficos y números clave.
+
+Para este ejemplo, usaremos una herramienta real llamada **Streamlit**. Crearemos un dashboard web que se actualizará en tiempo real, leyendo los logs que genera nuestra API. Es la solución perfecta para visualizar datos sin la complejidad de herramientas de producción como Grafana.
+
+#### Ejemplo Práctico
+
+Necesitaremos solo dos ficheros de Python.
+
+**Paso 1: La API que Genera los Datos (`app_generadora.py`)**
+
+Esta es una API FastAPI que, por cada petición, escribe una línea en un fichero de logs (`api_logs.log`) con detalles como el código de estado y la latencia.
+
+```python
+# app_generadora.py
+import time
+import logging
+import json
+from fastapi import FastAPI, Request
+
+# --- Configuración del Logger para escribir a un fichero en formato JSON ---
+log_file = "api_logs.log"
+handler = logging.FileHandler(log_file)
+# No usamos un formatter complejo, escribiremos el JSON directamente.
+
+logger = logging.getLogger('api_logger')
+logger.setLevel(logging.INFO)
+logger.addHandler(handler)
+logger.propagate = False
+# -------------------------------------------------------------
+
+app = FastAPI()
+
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = (time.time() - start_time) * 1000  # en milisegundos
+
+    log_entry = {
+        "timestamp": time.strftime('%Y-%m-%dT%H:%M:%S'),
+        "status_code": response.status_code,
+        "latency_ms": process_time,
+        "path": request.url.path
+    }
+    logger.info(json.dumps(log_entry))
+    return response
+
+@app.get("/")
+def endpoint_exitoso():
+    return {"status": "ok"}
+
+@app.get("/lento")
+async def endpoint_lento():
+    import asyncio
+    await asyncio.sleep(1.5)
+    return {"status": "ok, pero lento"}
+
+@app.get("/error-cliente")
+def endpoint_error_cliente():
+    from fastapi import HTTPException
+    raise HTTPException(status_code=404, detail="Recurso no encontrado")
+
+@app.get("/error-servidor")
+def endpoint_error_servidor():
+    _ = 1 / 0
+```
+
+**Paso 2: El Dashboard Web con Streamlit (`dashboard_streamlit.py`)**
+
+Este script lee el fichero de logs, lo procesa con la librería `pandas` y muestra los resultados usando `streamlit`.
+
+```python
+# dashboard_streamlit.py
+import streamlit as st
+import pandas as pd
+import json
+from datetime import datetime
+
+LOG_FILE = "api_logs.log"
+
+st.set_page_config(
+    page_title="Dashboard API en Vivo",
+    page_icon="📊",
+    layout="wide",
+)
+
+def load_data():
+    """Lee el fichero de logs y lo convierte en un DataFrame de Pandas."""
+    records = []
+    try:
+        with open(LOG_FILE, 'r') as f:
+            for line in f:
+                records.append(json.loads(line))
+        return pd.DataFrame(records)
+    except FileNotFoundError:
+        return pd.DataFrame() # Devuelve un DataFrame vacío si el log no existe
+
+# Título del dashboard
+st.title("📊 Dashboard de Salud de la API en Vivo")
+
+# Cargar los datos
+df = load_data()
+
+if df.empty:
+    st.warning("No se han registrado peticiones todavía. ¡Usa `curl` para generar tráfico!")
+else:
+    # Convertir tipos para asegurar cálculos correctos
+    df['timestamp'] = pd.to_datetime(df['timestamp'])
+    df['latency_ms'] = pd.to_numeric(df['latency_ms'])
+    df['status_code'] = pd.to_numeric(df['status_code'])
+
+    # --- Métricas Principales ---
+    col1, col2, col3, col4 = st.columns(4)
+    total_requests = len(df)
+    server_errors = len(df[df['status_code'] >= 500])
+    client_errors = len(df[(df['status_code'] >= 400) & (df['status_code'] < 500)])
+    avg_latency = df['latency_ms'].mean()
+
+    col1.metric("Peticiones Totales", f"{total_requests}")
+    col2.metric("Errores de Servidor (5xx)", f"{server_errors}")
+    col3.metric("Errores de Cliente (4xx)", f"{client_errors}")
+    col4.metric("Latencia Media", f"{avg_latency:.2f} ms")
+
+    # --- Gráficos ---
+    st.divider()
+    col_a, col_b = st.columns(2)
+
+    # Gráfico de peticiones por código de estado
+    status_counts = df['status_code'].value_counts().reset_index()
+    status_counts.columns = ['Código de Estado', 'Número de Peticiones']
+    with col_a:
+        st.subheader("Peticiones por Código de Estado")
+        st.bar_chart(status_counts, x='Código de Estado', y='Número de Peticiones')
+
+    # Gráfico de latencia a lo largo del tiempo
+    with col_b:
+        st.subheader("Latencia a lo largo del tiempo (ms)")
+        st.line_chart(df, x='timestamp', y='latency_ms')
+
+# Auto-refresco de la página cada 2 segundos
+st.rerun(ttl=2)
+```
+
+#### Pruebas en Vivo: `curl` vs. tu Dashboard Web
+
+**Paso 1: Instala las librerías necesarias**
+```bash
+pip install fastapi uvicorn pandas streamlit
+```
+
+**Paso 2: Inicia la API**
+En una terminal, lanza el servidor que generará los logs.
+```bash
+# Terminal 1: API
+uvicorn app_generadora:app --port 8000
+```
+
+**Paso 3: ¡Lanza tu Dashboard Web!**
+En una segunda terminal, ejecuta el comando de Streamlit.
+```bash
+# Terminal 2: Dashboard
+streamlit run dashboard_streamlit.py
+```
+Este comando **abrirá automáticamente una pestaña en tu navegador** mostrando el dashboard. Al principio, estará vacío.
+
+**Paso 4: Ataca la API con `curl` y mira la magia en tu navegador**
+
+Usa una tercera terminal para las peticiones. Verás cómo el dashboard en tu navegador se actualiza solo.
+
+1.  **Genera tráfico exitoso:**
+    ```bash
+    # Terminal 3: Cliente
+    curl http://localhost:8000/
+    ```
+    *En el navegador:* Aparecerá una petición, una barra para el código 200 y un punto en el gráfico de latencia.
+
+2.  **Provoca un error de servidor (500):**
+    ```bash
+    # Terminal 3: Cliente
+    curl http://localhost:8000/error-servidor
+    ```
+    *En el navegador:* La métrica "Errores de Servidor" subirá a 1 y aparecerá una barra para el código 500.
+
+3.  **Genera una petición lenta:**
+    ```bash
+    # Terminal 3: Cliente
+    curl http://localhost:8000/lento
+    ```
+    *En el navegador:* Verás un pico evidente en el gráfico de "Latencia a lo largo del tiempo".
+
+Con este método, has usado una **herramienta de dashboard real** de una forma extremadamente simple, probando de manera visual e interactiva el impacto de cada tipo de petición en la salud de tu sistema.
+
+---
+
+## 4.10. Pruebas para Simular Fallos y Degradación Controlada
+
+#### Definición
+
+Probar la resiliencia significa verificar que tus patrones de defensa (Retry, Circuit Breaker, Fallbacks) funcionan como esperas **antes de llegar a producción**. En lugar de probar solo el "camino feliz", creas tests automatizados que simulan activamente las condiciones de fallo: una API que no responde, una base de datos lenta, una respuesta de red corrupta. A esto se le llama una forma de **Ingeniería del Caos a pequeña escala**.
+
+#### Ejemplo Práctico
+
+Vamos a probar automáticamente que el endpoint del **apartado 4.7** (`main_resiliente.py`) se degrada correctamente cuando el servicio de inventario falla. Usaremos `pytest` y `respx` (un mock para `httpx`).
+
+**1. Crea tu archivo de test (`test_resiliencia.py`):**
+```python
+# test_resiliencia.py
+import pytest
+import respx
+import httpx
+from fastapi.testclient import TestClient
+from main_resiliente import app # Importa tu app de FastAPI
+
+# URLs de los servicios que vamos a mockear
+PRODUCT_API_URL = "http://localhost:9001/products/mana-potion"
+INVENTORY_API_URL = "http://localhost:9002/inventory/mana-potion"
+
+client = TestClient(app)
+
+@respx.mock
+def test_endpoint_degrades_gracefully_when_inventory_fails():
+    # 1. Mock del camino feliz para el servicio de productos (crítico)
+    respx.get(PRODUCT_API_URL).mock(
+        return_value=httpx.Response(200, json={"id": "mana-potion", "name": "Poción de Maná"})
+    )
+    
+    # 2. Mock del CAMINO DE FALLO para el servicio de inventario (no crítico)
+    respx.get(INVENTORY_API_URL).mock(
+        return_value=httpx.Response(503) # Service Unavailable
+    )
+
+    # 3. Llama a nuestro endpoint
+    response = client.get("/product-details/mana-potion")
+
+    # 4. Verificaciones (Asserts)
+    # El endpoint debe responder OK (200), no un error 5xx
+    assert response.status_code == 200
+    
+    data = response.json()
+    
+    # La información del producto debe estar presente
+    assert data["product_info"]["name"] == "Poción de Maná"
+    
+    # La información del inventario debe reflejar el estado de fallback
+    assert data["inventory"]["stock"] is None
+    assert "No se pudo verificar" in data["inventory"]["status"]
+
+@respx.mock
+def test_endpoint_fails_when_critical_service_fails():
+    # Mock del servicio de productos fallando
+    respx.get(PRODUCT_API_URL).mock(return_value=httpx.Response(500))
+    # No necesitamos mockear el inventario porque la ejecución parará antes
+
+    response = client.get("/product-details/mana-potion")
+
+    # Si el servicio crítico falla, todo el endpoint debe fallar
+    assert response.status_code == 502 # Bad Gateway
+    assert "El servicio de productos falló" in response.json()["detail"]
+```
+
+#### Pruebas (ejecución con `pytest`)
+
+En lugar de `curl`, la prueba aquí es ejecutar el motor de tests.
+
+**Paso 1: Instala las dependencias de testing**
+```bash
+pip install pytest respx
+```
+
+**Paso 2: Ejecuta los tests desde tu terminal**
+```bash
+pytest -v
+```
+
+**Salida esperada:**
+```
+============================= test session starts ==============================
+...
+collected 2 items
+
+test_resiliencia.py::test_endpoint_degrades_gracefully_when_inventory_fails PASSED [ 50%]
+test_resiliencia.py::test_endpoint_fails_when_critical_service_fails PASSED    [100%]
+
+============================== 2 passed in ...s ================================
+
+```
+
+Este resultado `PASSED` es la prueba definitiva y automatizada de que tu lógica de degradación controlada funciona exactamente como la diseñaste. Has verificado tu red de seguridad antes de que ocurra un incendio real.
+
 ---
 
 

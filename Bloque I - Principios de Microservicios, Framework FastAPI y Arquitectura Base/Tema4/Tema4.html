@@ -1,0 +1,1159 @@
+<!DOCTYPE html><html><head>
+      <title>Tema4</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="file:///c:\Users\Admin\.vscode\extensions\shd101wyy.markdown-preview-enhanced-0.8.18\crossnote\dependencies\katex\katex.min.css">
+      
+      
+      
+      
+      
+      <style>
+      code[class*=language-],pre[class*=language-]{color:#333;background:0 0;font-family:Consolas,"Liberation Mono",Menlo,Courier,monospace;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.4;-moz-tab-size:8;-o-tab-size:8;tab-size:8;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:.8em;overflow:auto;border-radius:3px;background:#f5f5f5}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal;background:#f5f5f5}.token.blockquote,.token.comment{color:#969896}.token.cdata{color:#183691}.token.doctype,.token.macro.property,.token.punctuation,.token.variable{color:#333}.token.builtin,.token.important,.token.keyword,.token.operator,.token.rule{color:#a71d5d}.token.attr-value,.token.regex,.token.string,.token.url{color:#183691}.token.atrule,.token.boolean,.token.code,.token.command,.token.constant,.token.entity,.token.number,.token.property,.token.symbol{color:#0086b3}.token.prolog,.token.selector,.token.tag{color:#63a35c}.token.attr-name,.token.class,.token.class-name,.token.function,.token.id,.token.namespace,.token.pseudo-class,.token.pseudo-element,.token.url-reference .token.variable{color:#795da3}.token.entity{cursor:help}.token.title,.token.title .token.punctuation{font-weight:700;color:#1d3e81}.token.list{color:#ed6a43}.token.inserted{background-color:#eaffea;color:#55a532}.token.deleted{background-color:#ffecec;color:#bd2c00}.token.bold{font-weight:700}.token.italic{font-style:italic}.language-json .token.property{color:#183691}.language-markup .token.tag .token.punctuation{color:#333}.language-css .token.function,code.language-css{color:#0086b3}.language-yaml .token.atrule{color:#63a35c}code.language-yaml{color:#183691}.language-ruby .token.function{color:#333}.language-markdown .token.url{color:#795da3}.language-makefile .token.symbol{color:#795da3}.language-makefile .token.variable{color:#183691}.language-makefile .token.builtin{color:#0086b3}.language-bash .token.keyword{color:#0086b3}pre[data-line]{position:relative;padding:1em 0 1em 3em}pre[data-line] .line-highlight-wrapper{position:absolute;top:0;left:0;background-color:transparent;display:block;width:100%}pre[data-line] .line-highlight{position:absolute;left:0;right:0;padding:inherit 0;margin-top:1em;background:hsla(24,20%,50%,.08);background:linear-gradient(to right,hsla(24,20%,50%,.1) 70%,hsla(24,20%,50%,0));pointer-events:none;line-height:inherit;white-space:pre}pre[data-line] .line-highlight:before,pre[data-line] .line-highlight[data-end]:after{content:attr(data-start);position:absolute;top:.4em;left:.6em;min-width:1em;padding:0 .5em;background-color:hsla(24,20%,50%,.4);color:#f4f1ef;font:bold 65%/1.5 sans-serif;text-align:center;vertical-align:.3em;border-radius:999px;text-shadow:none;box-shadow:0 1px #fff}pre[data-line] .line-highlight[data-end]:after{content:attr(data-end);top:auto;bottom:.4em}html body{font-family:'Helvetica Neue',Helvetica,'Segoe UI',Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ol,html body>ul{margin-bottom:16px}html body ol,html body ul{padding-left:2em}html body ol.no-list,html body ul.no-list{padding:0;list-style-type:none}html body ol ol,html body ol ul,html body ul ol,html body ul ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;background-color:#f0f0f0;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:700;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:700}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::after,html body code::before{letter-spacing:-.2em;content:'\00a0'}html body pre>code{padding:0;margin:0;word-break:normal;white-space:pre;background:0 0;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:after,html body pre code:before,html body pre tt:after,html body pre tt:before{content:normal}html body blockquote,html body dl,html body ol,html body p,html body pre,html body ul{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body code,html body pre{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview ul{list-style:disc}.markdown-preview ul ul{list-style:circle}.markdown-preview ul ul ul{list-style:square}.markdown-preview ol{list-style:decimal}.markdown-preview ol ol,.markdown-preview ul ol{list-style-type:lower-roman}.markdown-preview ol ol ol,.markdown-preview ol ul ol,.markdown-preview ul ol ol,.markdown-preview ul ul ol{list-style-type:lower-alpha}.markdown-preview .newpage,.markdown-preview .pagebreak{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center!important}.markdown-preview:not([data-for=preview]) .code-chunk .code-chunk-btn-group{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .status{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .output-div{margin-bottom:16px}.markdown-preview .md-toc{padding:0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link div,.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}.markdown-preview .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0;min-height:100vh}@media screen and (min-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{font-size:14px!important;padding:1em}}@media print{html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc{padding:0 16px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link div,html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% - 300px);padding:2em calc(50% - 457px - 300px / 2);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+      </style>
+      <!-- The content below will be included at the end of the <head> element. --><script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function () {
+    // your code here
+  });
+</script></head><body for="html-export">
+    
+    
+      <div class="crossnote markdown-preview  ">
+      
+<h1 id="tema-4-manejo-de-errores-y-circuit-breakers-en-microservicios">Tema 4. Manejo de errores y Circuit Breakers en Microservicios </h1>
+<ul>
+<li><a href="#objetivos">Objetivos</a></li>
+<li><a href="#41-dise%C3%B1o-de-estrategia-global-de-manejo-de-errores">4.1 Diseño de estrategia global de manejo de errores</a></li>
+<li><a href="#42-implementaci%C3%B3n-de-controladores-de-excepciones-personalizados-en-fastapi">4.2 Implementación de controladores de excepciones personalizados en FastAPI</a></li>
+<li><a href="#43-definici%C3%B3n-de-errores-de-negocio-vs-errores-t%C3%A9cnicos">4.3 Definición de errores de negocio vs errores técnicos</a></li>
+<li><a href="#44-aplicaci%C3%B3n-del-patr%C3%B3n-retry-con-backoff-exponencial">4.4 Aplicación del patrón Retry con backoff exponencial</a></li>
+<li><a href="#45-introducci%C3%B3n-a-patrones-circuit-breaker-y-bulkhead">4.5 Introducción a patrones Circuit Breaker y Bulkhead</a></li>
+<li><a href="#46-implementaci%C3%B3n-de-circuit-breakers-con-pybreaker">4.6 Implementación de circuit breakers con <code>pybreaker</code></a></li>
+<li><a href="#47-dise%C3%B1o-de-endpoints-resilientes-a-fallos-de-servicios-externos">4.7 Diseño de endpoints resilientes a fallos de servicios externos</a></li>
+<li><a href="#48-captura-y-log-de-trazas-con-contexto-de-peticiones">4.8 Captura y log de trazas con contexto de peticiones</a></li>
+<li><a href="#49-visibilidad-de-errores-mediante-dashboards">4.9 Visibilidad de errores mediante dashboards</a></li>
+<li><a href="#410-pruebas-para-simular-fallos-y-degradaci%C3%B3n-controlada">4.10 Pruebas para simular fallos y degradación controlada</a></li>
+<li><a href="#referencias-bibliogr%C3%A1ficas">Referencias Bibliográficas</a></li>
+</ul>
+<hr>
+<h2 id="objetivos">Objetivos </h2>
+<ul>
+<li><strong>Diseñar un escudo anti-errores</strong> para tus APIs FastAPI, distinguiendo problemas del cliente de fallos internos, ¡y comunicándolos con clase!</li>
+<li><strong>Implementar Exception Handlers personalizados en FastAPI</strong> que capturen errores específicos y devuelvan respuestas JSON estandarizadas y útiles.</li>
+<li><strong>Aplicar el patrón Retry con <code>tenacity</code></strong> en tus llamadas a servicios externos desde FastAPI, para superar fallos temporales como un campeón.</li>
+<li><strong>Desplegar Circuit Breakers con <code>pybreaker</code></strong> para proteger tus endpoints FastAPI de servicios dependientes que fallan en cascada.</li>
+<li><strong>Construir endpoints FastAPI que no se vienen abajo</strong>, sino que se degradan con elegancia cuando las cosas se ponen feas.</li>
+<li><strong>Inyectar <code>trace_id</code> en tus logs y peticiones FastAPI</strong> para seguir la pista a los problemas como un detective experto, usando logging estructurado.</li>
+<li><strong>Idear dashboards que te cuenten la verdad</strong> sobre los errores de tus servicios, sin ahogarte en datos.</li>
+<li><strong>Jugar al "Ingeniero del Caos" (¡en pequeñito!)</strong> simulando fallos en tus tests FastAPI para probar tus defensas.</li>
+</ul>
+<hr>
+<h2 id="41-estrategia-global-de-errores">4.1. Estrategia Global de Errores </h2>
+<p>Imagina que eres el arquitecto de un rascacielos. No esperas a que haya un incendio para pensar en salidas de emergencia. ¡Lo mismo con los errores!</p>
+<p><strong>Principios Prácticos para FastAPI:</strong></p>
+<ol>
+<li><strong>Errores Claros, No Silencios Raros:</strong> Si algo falla, FastAPI debe decirlo alto y claro.</li>
+<li><strong>Contratos de Error:</strong> Tu OpenAPI (<code>/docs</code>) debe insinuar (o definir) cómo se ven tus errores.</li>
+<li><strong>Aislar el Fuego:</strong> Un fallo en un endpoint no debe tumbar todo el server FastAPI.</li>
+<li><strong>Todo Queda Registrado (con Contexto):</strong> Cada error importante, un log. ¡Con <code>trace_id</code>!</li>
+</ol>
+<p><strong>Paso Práctico 1: Clasifica Tus Errores (La Tabla de Diagnóstico Rápido)</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Quién Falla</th>
+<th style="text-align:left">Qué Pasa</th>
+<th style="text-align:left">Código HTTP</th>
+<th style="text-align:left">¿Reintentar?</th>
+<th style="text-align:left">Ejemplo FastAPI</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>Cliente</strong></td>
+<td style="text-align:left">Datos malformados (Pydantic no valida)</td>
+<td style="text-align:left">422</td>
+<td style="text-align:left">¡NO!</td>
+<td style="text-align:left">Falta un campo en el JSON.</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Datos no válidos (pero bien formados)</td>
+<td style="text-align:left">400</td>
+<td style="text-align:left">¡NO!</td>
+<td style="text-align:left">Pides 1000 items, y el máx es 100.</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">No autenticado</td>
+<td style="text-align:left">401</td>
+<td style="text-align:left">¡NO!</td>
+<td style="text-align:left">Token JWT erróneo.</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">No autorizado</td>
+<td style="text-align:left">403</td>
+<td style="text-align:left">¡NO!</td>
+<td style="text-align:left">Eres user, no admin.</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Recurso no existe</td>
+<td style="text-align:left">404</td>
+<td style="text-align:left">¡NO!</td>
+<td style="text-align:left">Buscas <code>GET /items/999</code> y 999 no está.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Servidor</strong></td>
+<td style="text-align:left">Regla de negocio rota</td>
+<td style="text-align:left">409 / 400</td>
+<td style="text-align:left">¡NO!</td>
+<td style="text-align:left">"Email ya existe", "Stock insuficiente".</td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">¡Ups! Un bug en <em>mi</em> código FastAPI</td>
+<td style="text-align:left">500</td>
+<td style="text-align:left">NO (hasta arreglar)</td>
+<td style="text-align:left"><code>variable_none.metodo()</code></td>
+</tr>
+<tr>
+<td style="text-align:left"></td>
+<td style="text-align:left">Servicio externo (BBDD, otra API) KO</td>
+<td style="text-align:left">503 / 504</td>
+<td style="text-align:left"><strong>¡SÍ!</strong> (con cabeza)</td>
+<td style="text-align:left">La API de pagos no responde.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Paso Práctico 2: El Formato JSON de Error Universal</strong></p>
+<p>Cualquier error que devuelva FastAPI, que tenga esta pinta:</p>
+<pre data-role="codeBlock" data-info="json" class="language-json json"><code><span class="token punctuation">{</span>
+  <span class="token property">"trace_id"</span><span class="token operator">:</span> <span class="token string">"un-uuid-super-unico-por-peticion"</span><span class="token punctuation">,</span>
+  <span class="token property">"error_code"</span><span class="token operator">:</span> <span class="token string">"STOCK_INSUFICIENTE"</span><span class="token punctuation">,</span> <span class="token comment">// Un código tuyo, para máquinas</span>
+  <span class="token property">"message"</span><span class="token operator">:</span> <span class="token string">"No hay suficiente 'SuperPocion'. Pediste: 10, Quedan: 2."</span><span class="token punctuation">,</span> <span class="token comment">// Para humanos</span>
+  <span class="token property">"status_code"</span><span class="token operator">:</span> <span class="token number">409</span><span class="token punctuation">,</span> <span class="token comment">// El HTTP que es</span>
+  <span class="token property">"service_name"</span><span class="token operator">:</span> <span class="token string">"mi-servicio-fastapi"</span><span class="token punctuation">,</span> <span class="token comment">// Quién soy yo</span>
+  <span class="token property">"context"</span><span class="token operator">:</span> <span class="token punctuation">{</span><span class="token property">"item_id"</span><span class="token operator">:</span> <span class="token string">"SuperPocion"</span><span class="token punctuation">,</span> <span class="token property">"solicitado"</span><span class="token operator">:</span> <span class="token number">10</span><span class="token punctuation">,</span> <span class="token property">"disponible"</span><span class="token operator">:</span> <span class="token number">2</span><span class="token punctuation">}</span> <span class="token comment">// Chicha extra</span>
+<span class="token punctuation">}</span>
+</code></pre><blockquote>
+<p>Ejemplo; <code>error_code</code> que usarías en una API de gestión de tareas (ej: <code>TAREA_NO_ENCONTRADA</code>, <code>FECHA_INVALIDA</code>).</p>
+</blockquote>
+<hr>
+<h2 id="42-exception-handlers-en-fastapi">4.2. Exception Handlers en FastAPI </h2>
+<p>FastAPI te deja poner (<em>Exception Handlers</em>) que atrapan excepciones específicas y deciden cómo responder</p>
+<p><strong>La Magia: <code>@app.exception_handler(MiErrorCustom)</code></strong></p>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code><span class="token comment"># main.py (o donde definas tu app FastAPI)</span>
+<span class="token keyword keyword-from">from</span> fastapi <span class="token keyword keyword-import">import</span> FastAPI<span class="token punctuation">,</span> Request<span class="token punctuation">,</span> status
+<span class="token keyword keyword-from">from</span> fastapi<span class="token punctuation">.</span>responses <span class="token keyword keyword-import">import</span> JSONResponse
+<span class="token keyword keyword-from">from</span> pydantic <span class="token keyword keyword-import">import</span> BaseModel
+<span class="token keyword keyword-import">import</span> uuid
+
+<span class="token comment"># --- 1. Tus Errores Personalizados (¡Hereda de Exception!) ---</span>
+<span class="token keyword keyword-class">class</span> <span class="token class-name">RecursoNoEncontradoError</span><span class="token punctuation">(</span>Exception<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword keyword-def">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> nombre_recurso<span class="token punctuation">:</span> <span class="token builtin">str</span><span class="token punctuation">,</span> id_recurso<span class="token punctuation">:</span> <span class="token builtin">any</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>nombre_recurso <span class="token operator">=</span> nombre_recurso
+        self<span class="token punctuation">.</span>id_recurso <span class="token operator">=</span> id_recurso
+        self<span class="token punctuation">.</span>message <span class="token operator">=</span> <span class="token string-interpolation"><span class="token string">f"</span><span class="token interpolation"><span class="token punctuation">{</span>nombre_recurso<span class="token punctuation">}</span></span><span class="token string"> con ID '</span><span class="token interpolation"><span class="token punctuation">{</span>id_recurso<span class="token punctuation">}</span></span><span class="token string">' no encontrado."</span></span>
+        self<span class="token punctuation">.</span>error_code <span class="token operator">=</span> <span class="token string-interpolation"><span class="token string">f"</span><span class="token interpolation"><span class="token punctuation">{</span>nombre_recurso<span class="token punctuation">.</span>upper<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">}</span></span><span class="token string">_NOT_FOUND"</span></span>
+        <span class="token builtin">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>__init__<span class="token punctuation">(</span>self<span class="token punctuation">.</span>message<span class="token punctuation">)</span>
+
+<span class="token keyword keyword-class">class</span> <span class="token class-name">ReglaNegocioError</span><span class="token punctuation">(</span>Exception<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword keyword-def">def</span> <span class="token function">__init__</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> message<span class="token punctuation">:</span> <span class="token builtin">str</span><span class="token punctuation">,</span> error_code<span class="token punctuation">:</span> <span class="token builtin">str</span><span class="token punctuation">,</span> context<span class="token punctuation">:</span> <span class="token builtin">dict</span> <span class="token operator">=</span> <span class="token boolean">None</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        self<span class="token punctuation">.</span>message <span class="token operator">=</span> message
+        self<span class="token punctuation">.</span>error_code <span class="token operator">=</span> error_code
+        self<span class="token punctuation">.</span>context <span class="token operator">=</span> context <span class="token keyword keyword-or">or</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+        <span class="token builtin">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>__init__<span class="token punctuation">(</span>self<span class="token punctuation">.</span>message<span class="token punctuation">)</span>
+
+<span class="token comment"># --- 2. Tu App FastAPI ---</span>
+app <span class="token operator">=</span> FastAPI<span class="token punctuation">(</span>title<span class="token operator">=</span><span class="token string">"API Resiliente"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># --- Middleware para Trace ID (simplificado) ---</span>
+<span class="token decorator annotation punctuation">@app<span class="token punctuation">.</span>middleware</span><span class="token punctuation">(</span><span class="token string">"http"</span><span class="token punctuation">)</span>
+<span class="token keyword keyword-async">async</span> <span class="token keyword keyword-def">def</span> <span class="token function">add_trace_id_middleware</span><span class="token punctuation">(</span>request<span class="token punctuation">:</span> Request<span class="token punctuation">,</span> call_next<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    trace_id <span class="token operator">=</span> <span class="token builtin">str</span><span class="token punctuation">(</span>uuid<span class="token punctuation">.</span>uuid4<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    request<span class="token punctuation">.</span>state<span class="token punctuation">.</span>trace_id <span class="token operator">=</span> trace_id <span class="token comment"># Guardamos en request.state</span>
+    response <span class="token operator">=</span> <span class="token keyword keyword-await">await</span> call_next<span class="token punctuation">(</span>request<span class="token punctuation">)</span>
+    response<span class="token punctuation">.</span>headers<span class="token punctuation">[</span><span class="token string">"X-Trace-ID"</span><span class="token punctuation">]</span> <span class="token operator">=</span> trace_id
+    <span class="token keyword keyword-return">return</span> response
+
+<span class="token comment"># --- 3. Esto es lo que tú configuras (Exception Handlers) ---</span>
+<span class="token decorator annotation punctuation">@app<span class="token punctuation">.</span>exception_handler</span><span class="token punctuation">(</span>RecursoNoEncontradoError<span class="token punctuation">)</span>
+<span class="token keyword keyword-async">async</span> <span class="token keyword keyword-def">def</span> <span class="token function">handle_recurso_no_encontrado</span><span class="token punctuation">(</span>request<span class="token punctuation">:</span> Request<span class="token punctuation">,</span> exc<span class="token punctuation">:</span> RecursoNoEncontradoError<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    trace_id <span class="token operator">=</span> <span class="token builtin">getattr</span><span class="token punctuation">(</span>request<span class="token punctuation">.</span>state<span class="token punctuation">,</span> <span class="token string">"trace_id"</span><span class="token punctuation">,</span> <span class="token string">"N/A"</span><span class="token punctuation">)</span>
+    <span class="token keyword keyword-return">return</span> JSONResponse<span class="token punctuation">(</span>
+        status_code<span class="token operator">=</span>status<span class="token punctuation">.</span>HTTP_404_NOT_FOUND<span class="token punctuation">,</span>
+        content<span class="token operator">=</span><span class="token punctuation">{</span>
+            <span class="token string">"trace_id"</span><span class="token punctuation">:</span> trace_id<span class="token punctuation">,</span> <span class="token string">"error_code"</span><span class="token punctuation">:</span> exc<span class="token punctuation">.</span>error_code<span class="token punctuation">,</span>
+            <span class="token string">"message"</span><span class="token punctuation">:</span> exc<span class="token punctuation">.</span>message<span class="token punctuation">,</span> <span class="token string">"status_code"</span><span class="token punctuation">:</span> <span class="token number">404</span><span class="token punctuation">,</span> <span class="token string">"service_name"</span><span class="token punctuation">:</span> app<span class="token punctuation">.</span>title<span class="token punctuation">,</span>
+            <span class="token string">"context"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token string">"recurso"</span><span class="token punctuation">:</span> exc<span class="token punctuation">.</span>nombre_recurso<span class="token punctuation">,</span> <span class="token string">"id"</span><span class="token punctuation">:</span> exc<span class="token punctuation">.</span>id_recurso<span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">)</span>
+
+<span class="token decorator annotation punctuation">@app<span class="token punctuation">.</span>exception_handler</span><span class="token punctuation">(</span>ReglaNegocioError<span class="token punctuation">)</span>
+<span class="token keyword keyword-async">async</span> <span class="token keyword keyword-def">def</span> <span class="token function">handle_regla_negocio</span><span class="token punctuation">(</span>request<span class="token punctuation">:</span> Request<span class="token punctuation">,</span> exc<span class="token punctuation">:</span> ReglaNegocioError<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    trace_id <span class="token operator">=</span> <span class="token builtin">getattr</span><span class="token punctuation">(</span>request<span class="token punctuation">.</span>state<span class="token punctuation">,</span> <span class="token string">"trace_id"</span><span class="token punctuation">,</span> <span class="token string">"N/A"</span><span class="token punctuation">)</span>
+    <span class="token comment"># El status code podría ser un atributo de la excepción o decidirse aquí</span>
+    status_code_http <span class="token operator">=</span> status<span class="token punctuation">.</span>HTTP_400_BAD_REQUEST <span class="token comment"># Default, podría ser 409</span>
+    <span class="token keyword keyword-if">if</span> <span class="token string">"EMAIL_ALREADY_EXISTS"</span> <span class="token keyword keyword-in">in</span> exc<span class="token punctuation">.</span>error_code <span class="token keyword keyword-or">or</span> <span class="token string">"STOCK_INSUFFICIENTE"</span> <span class="token keyword keyword-in">in</span> exc<span class="token punctuation">.</span>error_code<span class="token punctuation">:</span> <span class="token comment"># Ejemplo de lógica</span>
+        status_code_http <span class="token operator">=</span> status<span class="token punctuation">.</span>HTTP_409_CONFLICT
+
+    <span class="token keyword keyword-return">return</span> JSONResponse<span class="token punctuation">(</span>
+        status_code<span class="token operator">=</span>status_code_http<span class="token punctuation">,</span>
+        content<span class="token operator">=</span><span class="token punctuation">{</span>
+            <span class="token string">"trace_id"</span><span class="token punctuation">:</span> trace_id<span class="token punctuation">,</span> <span class="token string">"error_code"</span><span class="token punctuation">:</span> exc<span class="token punctuation">.</span>error_code<span class="token punctuation">,</span>
+            <span class="token string">"message"</span><span class="token punctuation">:</span> exc<span class="token punctuation">.</span>message<span class="token punctuation">,</span> <span class="token string">"status_code"</span><span class="token punctuation">:</span> status_code_http<span class="token punctuation">,</span> <span class="token string">"service_name"</span><span class="token punctuation">:</span> app<span class="token punctuation">.</span>title<span class="token punctuation">,</span>
+            <span class="token string">"context"</span><span class="token punctuation">:</span> exc<span class="token punctuation">.</span>context
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">)</span>
+
+<span class="token comment"># --- Handler Genérico para 500 (¡El último recurso!) ---</span>
+<span class="token decorator annotation punctuation">@app<span class="token punctuation">.</span>exception_handler</span><span class="token punctuation">(</span>Exception<span class="token punctuation">)</span>
+<span class="token keyword keyword-async">async</span> <span class="token keyword keyword-def">def</span> <span class="token function">handle_generic_exception</span><span class="token punctuation">(</span>request<span class="token punctuation">:</span> Request<span class="token punctuation">,</span> exc<span class="token punctuation">:</span> Exception<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    trace_id <span class="token operator">=</span> <span class="token builtin">getattr</span><span class="token punctuation">(</span>request<span class="token punctuation">.</span>state<span class="token punctuation">,</span> <span class="token string">"trace_id"</span><span class="token punctuation">,</span> <span class="token string">"N/A"</span><span class="token punctuation">)</span>
+    <span class="token comment"># ¡Loggear este con ERROR y stack trace! Aquí solo mostramos la respuesta.</span>
+    <span class="token keyword keyword-print">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"ERROR INESPERADO (RID: </span><span class="token interpolation"><span class="token punctuation">{</span>trace_id<span class="token punctuation">}</span></span><span class="token string">): </span><span class="token interpolation"><span class="token punctuation">{</span>exc<span class="token punctuation">}</span></span><span class="token string">"</span></span><span class="token punctuation">,</span> exc_info<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span> <span class="token comment"># A consola por ahora</span>
+    <span class="token keyword keyword-return">return</span> JSONResponse<span class="token punctuation">(</span>
+        status_code<span class="token operator">=</span>status<span class="token punctuation">.</span>HTTP_500_INTERNAL_SERVER_ERROR<span class="token punctuation">,</span>
+        content<span class="token operator">=</span><span class="token punctuation">{</span>
+            <span class="token string">"trace_id"</span><span class="token punctuation">:</span> trace_id<span class="token punctuation">,</span> <span class="token string">"error_code"</span><span class="token punctuation">:</span> <span class="token string">"INTERNAL_SERVER_ERROR"</span><span class="token punctuation">,</span>
+            <span class="token string">"message"</span><span class="token punctuation">:</span> <span class="token string">"Ocurrió un error inesperado en el servidor."</span><span class="token punctuation">,</span>
+            <span class="token string">"status_code"</span><span class="token punctuation">:</span> <span class="token number">500</span><span class="token punctuation">,</span> <span class="token string">"service_name"</span><span class="token punctuation">:</span> app<span class="token punctuation">.</span>title
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">)</span>
+
+<span class="token comment"># --- Tus Endpoints (que pueden lanzar estos errores) ---</span>
+db_items <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">"item1"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token string">"id"</span><span class="token punctuation">:</span> <span class="token string">"item1"</span><span class="token punctuation">,</span> <span class="token string">"nombre"</span><span class="token punctuation">:</span> <span class="token string">"Poción de Salud"</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token string">"item2"</span><span class="token punctuation">:</span> <span class="token punctuation">{</span><span class="token string">"id"</span><span class="token punctuation">:</span> <span class="token string">"item2"</span><span class="token punctuation">,</span> <span class="token string">"nombre"</span><span class="token punctuation">:</span> <span class="token string">"Espada de Luz"</span><span class="token punctuation">}</span><span class="token punctuation">}</span>
+db_users_emails <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">"test@example.com"</span><span class="token punctuation">}</span>
+
+<span class="token keyword keyword-class">class</span> <span class="token class-name">UserCreate</span><span class="token punctuation">(</span>BaseModel<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    email<span class="token punctuation">:</span> <span class="token builtin">str</span>
+    nombre<span class="token punctuation">:</span> <span class="token builtin">str</span>
+
+<span class="token decorator annotation punctuation">@app<span class="token punctuation">.</span>get</span><span class="token punctuation">(</span><span class="token string">"/items/{item_id}"</span><span class="token punctuation">)</span>
+<span class="token keyword keyword-async">async</span> <span class="token keyword keyword-def">def</span> <span class="token function">get_item</span><span class="token punctuation">(</span>item_id<span class="token punctuation">:</span> <span class="token builtin">str</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword keyword-if">if</span> item_id <span class="token keyword keyword-not">not</span> <span class="token keyword keyword-in">in</span> db_items<span class="token punctuation">:</span>
+        <span class="token keyword keyword-raise">raise</span> RecursoNoEncontradoError<span class="token punctuation">(</span>nombre_recurso<span class="token operator">=</span><span class="token string">"Item"</span><span class="token punctuation">,</span> id_recurso<span class="token operator">=</span>item_id<span class="token punctuation">)</span>
+    <span class="token keyword keyword-return">return</span> db_items<span class="token punctuation">[</span>item_id<span class="token punctuation">]</span>
+
+<span class="token decorator annotation punctuation">@app<span class="token punctuation">.</span>post</span><span class="token punctuation">(</span><span class="token string">"/users"</span><span class="token punctuation">)</span>
+<span class="token keyword keyword-async">async</span> <span class="token keyword keyword-def">def</span> <span class="token function">create_user</span><span class="token punctuation">(</span>user<span class="token punctuation">:</span> UserCreate<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword keyword-if">if</span> user<span class="token punctuation">.</span>email <span class="token keyword keyword-in">in</span> db_users_emails<span class="token punctuation">:</span>
+        <span class="token keyword keyword-raise">raise</span> ReglaNegocioError<span class="token punctuation">(</span>
+            message<span class="token operator">=</span><span class="token string-interpolation"><span class="token string">f"El email '</span><span class="token interpolation"><span class="token punctuation">{</span>user<span class="token punctuation">.</span>email<span class="token punctuation">}</span></span><span class="token string">' ya está registrado."</span></span><span class="token punctuation">,</span>
+            error_code<span class="token operator">=</span><span class="token string">"EMAIL_ALREADY_EXISTS"</span><span class="token punctuation">,</span>
+            context<span class="token operator">=</span><span class="token punctuation">{</span><span class="token string">"email_conflictivo"</span><span class="token punctuation">:</span> user<span class="token punctuation">.</span>email<span class="token punctuation">}</span>
+        <span class="token punctuation">)</span>
+    <span class="token keyword keyword-if">if</span> <span class="token keyword keyword-not">not</span> <span class="token string">"@"</span> <span class="token keyword keyword-in">in</span> user<span class="token punctuation">.</span>email<span class="token punctuation">:</span> <span class="token comment"># Simulación de otra regla de negocio</span>
+         <span class="token keyword keyword-raise">raise</span> ReglaNegocioError<span class="token punctuation">(</span>message<span class="token operator">=</span><span class="token string">"Formato de email inválido."</span><span class="token punctuation">,</span> error_code<span class="token operator">=</span><span class="token string">"INVALID_EMAIL_FORMAT"</span><span class="token punctuation">)</span>
+
+    <span class="token comment"># Simular un fallo inesperado a veces</span>
+    <span class="token keyword keyword-import">import</span> random
+    <span class="token keyword keyword-if">if</span> random<span class="token punctuation">.</span>random<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">0.1</span><span class="token punctuation">:</span> <span class="token comment"># 10% de las veces</span>
+        <span class="token keyword keyword-raise">raise</span> ValueError<span class="token punctuation">(</span><span class="token string">"¡Algo explotó inesperadamente!"</span><span class="token punctuation">)</span> <span class="token comment"># Esto será capturado por handle_generic_exception</span>
+
+    db_users_emails<span class="token punctuation">.</span>add<span class="token punctuation">(</span>user<span class="token punctuation">.</span>email<span class="token punctuation">)</span>
+    <span class="token keyword keyword-return">return</span> <span class="token punctuation">{</span><span class="token string">"mensaje"</span><span class="token punctuation">:</span> <span class="token string-interpolation"><span class="token string">f"Usuario </span><span class="token interpolation"><span class="token punctuation">{</span>user<span class="token punctuation">.</span>nombre<span class="token punctuation">}</span></span><span class="token string"> creado con email </span><span class="token interpolation"><span class="token punctuation">{</span>user<span class="token punctuation">.</span>email<span class="token punctuation">}</span></span><span class="token string">"</span></span><span class="token punctuation">}</span>
+
+</code></pre><p><strong>¡Pruébalo!</strong></p>
+<ol>
+<li>Guarda como <code>main.py</code>. Instala <code>fastapi</code> y <code>uvicorn</code>.</li>
+<li>Ejecuta: <code>uvicorn main:app --reload</code></li>
+<li>Prueba en tu navegador o Postman:
+<ul>
+<li><code>GET http://localhost:8000/items/item1</code> (Éxito)</li>
+<li><code>GET http://localhost:8000/items/item_NO_EXISTE</code> (Debería dar 404 con tu JSON formateado)</li>
+<li><code>POST http://localhost:8000/users</code> con JSON <code>{"email": "nuevo@example.com", "nombre": "Tester"}</code> (Éxito la primera vez)</li>
+<li><code>POST http://localhost:8000/users</code> con JSON <code>{"email": "nuevo@example.com", "nombre": "Tester"}</code> (¡Error 409 con tu JSON!)</li>
+<li><code>POST http://localhost:8000/users</code> con JSON <code>{"email": "emailinvalido", "nombre": "Tester Inválido"}</code> (¡Error 400 con tu JSON!)</li>
+<li>Llama varias veces a <code>POST /users</code> con emails válidos y nuevos hasta que te toque el 10% de <code>ValueError</code> (¡Error 500 con tu JSON!).</li>
+</ul>
+</li>
+<li>Observa la cabecera <code>X-Trace-ID</code> en las respuestas.</li>
+</ol>
+<p><strong>Desafío Práctico:</strong></p>
+<ul>
+<li>Crea una nueva excepción <code>AutenticacionFallidaError</code> y su handler para que devuelva un 401. Lánzala en un nuevo endpoint <code>/secure_data</code> si una cabecera <code>X-Token</code> no es "secreto123".</li>
+</ul>
+<hr>
+<h2 id="43-errores-de-negocio-vs-técnicos-culpa-del-cliente-o-mía">4.3. Errores de Negocio vs. Técnicos: ¿Culpa del Cliente o Mía? </h2>
+<p>Es vital saber si el error es porque el cliente pidió algo "imposible" (Negocio) o porque nuestro código/infra "explotó" (Técnico).</p>
+<ul>
+<li>
+<p><strong>Errores de Negocio (Normalmente 4xx):</strong></p>
+<ul>
+<li>"No puedes reservar un hotel para ayer." (FastAPI devuelve 400/409)</li>
+<li>"Ese usuario no existe." (FastAPI devuelve 404)</li>
+<li>FastAPI te ayuda con Pydantic (422 si el JSON no machea el modelo).</li>
+<li><strong>Acción:</strong> El cliente debe arreglar su petición. Tú loggeas <code>INFO</code> o <code>WARNING</code>. <strong>¡No despiertes a nadie!</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>Errores Técnicos (Normalmente 5xx):</strong></p>
+<ul>
+<li>"¡No me puedo conectar a la base de datos!" (FastAPI devuelve 500/503)</li>
+<li>"Una variable es <code>None</code> y esperaba un objeto." (FastAPI devuelve 500)</li>
+<li><strong>Acción:</strong> ¡Es tu culpa (o de tu infra)! El cliente no puede hacer nada. Loggea <code>ERROR</code> con todo el detalle (stack trace), ¡y que suenen las alarmas!</li>
+</ul>
+</li>
+</ul>
+<p><strong>¡Pruébalo! (Con el código anterior):</strong></p>
+<ul>
+<li><code>RecursoNoEncontradoError</code> y <code>ReglaNegocioError</code> son <strong>Errores de Negocio</strong>.</li>
+<li>El <code>ValueError</code> que simulamos es un <strong>Error Técnico</strong> (un bug imprevisto).</li>
+<li>Observa cómo los handlers devuelven 404/400/409 para los de negocio y 500 para el técnico.</li>
+</ul>
+<hr>
+<h2 id="44-aplicación-del-patrón-retry-con-backoff-exponencial">4.4. Aplicación del patrón Retry con backoff exponencial </h2>
+<hr>
+<blockquote>
+<p>Implementar el patrón <strong>Retry</strong> en una API basada en <strong>FastAPI</strong> para hacer la aplicación más resiliente a fallos temporales de servicios externos.</p>
+</blockquote>
+<p>Cuando un microservicio hace una petición HTTP a otro servicio, este puede fallar de manera <strong>intermitente</strong> (por ejemplo, <code>503 Service Unavailable</code>). En estos casos, es una <strong>buena práctica reintentar</strong> la petición en lugar de fallar inmediatamente.</p>
+<p>Aplicaremos un <strong>Retry automático</strong> con una estrategia de:</p>
+<ul>
+<li><strong>Número máximo de reintentos</strong>.</li>
+<li><strong>Tiempo de espera</strong> entre reintentos (backoff simple o exponencial).</li>
+</ul>
+<hr>
+<h3 id="qué-es-el-patrón-retry"><strong>¿Qué es el patrón Retry?</strong> </h3>
+<ul>
+<li><strong>Retry</strong>: Volver a intentar una operación fallida, suponiendo que el error puede resolverse solo (por ejemplo, en un pico de carga).</li>
+<li><strong>Backoff</strong>: Añadir una espera entre reintentos para no saturar el sistema.</li>
+<li><strong>Exponencial</strong>: Incrementar el tiempo de espera de forma progresiva entre intentos.</li>
+</ul>
+<p><strong>Beneficios</strong>:</p>
+<ul>
+<li>Mejora la <strong>resiliencia</strong>.</li>
+<li>Reduce el <strong>impacto</strong> de fallos temporales.</li>
+<li>Evita saturar servicios que están bajo estrés.</li>
+</ul>
+<hr>
+<h3 id="ejemplo-práctico-con-fastapi-y-tenacity"><strong>Ejemplo práctico con FastAPI y Tenacity</strong> </h3>
+<h3 id="-librerías-necesarias">🔹 <strong>Librerías necesarias</strong> </h3>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code>pip <span class="token function">install</span> fastapi uvicorn tenacity httpx
+</code></pre><hr>
+<h4 id="1-servicio-externo-simulado-fake_service">1. <strong>Servicio externo simulado (<code>fake_service</code>)</strong> </h4>
+<p>Un servicio que falla aleatoriamente un 70% de las veces para simular fallos temporales:</p>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code><span class="token comment"># fake_service.py</span>
+<span class="token keyword keyword-from">from</span> fastapi <span class="token keyword keyword-import">import</span> FastAPI<span class="token punctuation">,</span> Response
+<span class="token keyword keyword-import">import</span> random
+
+app <span class="token operator">=</span> FastAPI<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token decorator annotation punctuation">@app<span class="token punctuation">.</span>get</span><span class="token punctuation">(</span><span class="token string">"/fake_service"</span><span class="token punctuation">)</span>
+<span class="token keyword keyword-def">def</span> <span class="token function">fake_service</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword keyword-if">if</span> random<span class="token punctuation">.</span>random<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">0.7</span><span class="token punctuation">:</span>
+        <span class="token keyword keyword-return">return</span> Response<span class="token punctuation">(</span>
+            content<span class="token operator">=</span><span class="token string">"{'error': 'Temporary failure'}"</span><span class="token punctuation">,</span>
+            status_code<span class="token operator">=</span><span class="token number">503</span><span class="token punctuation">,</span>
+            media_type<span class="token operator">=</span><span class="token string">"application/json"</span>
+        <span class="token punctuation">)</span>
+    <span class="token keyword keyword-return">return</span> <span class="token punctuation">{</span><span class="token string">"message"</span><span class="token punctuation">:</span> <span class="token string">"Service OK"</span><span class="token punctuation">}</span>
+</code></pre><p>✅ <strong>Este servicio</strong> responderá 503 muchas veces aleatoriamente.</p>
+<hr>
+<h4 id="2-cliente-con-retry-en-fastapi">2. <strong>Cliente con Retry en FastAPI</strong> </h4>
+<p>Este cliente reintentará automáticamente si recibe un <code>503 Service Unavailable</code>:</p>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code><span class="token comment"># retry_client.py</span>
+<span class="token keyword keyword-from">from</span> fastapi <span class="token keyword keyword-import">import</span> FastAPI<span class="token punctuation">,</span> HTTPException
+<span class="token keyword keyword-import">import</span> httpx
+<span class="token keyword keyword-from">from</span> tenacity <span class="token keyword keyword-import">import</span> retry<span class="token punctuation">,</span> stop_after_attempt<span class="token punctuation">,</span> wait_fixed<span class="token punctuation">,</span> RetryError
+<span class="token keyword keyword-import">import</span> logging
+
+logging<span class="token punctuation">.</span>basicConfig<span class="token punctuation">(</span>level<span class="token operator">=</span>logging<span class="token punctuation">.</span>INFO<span class="token punctuation">)</span>
+logger <span class="token operator">=</span> logging<span class="token punctuation">.</span>getLogger<span class="token punctuation">(</span>__name__<span class="token punctuation">)</span>
+
+app <span class="token operator">=</span> FastAPI<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+EXTERNAL_SERVICE_URL <span class="token operator">=</span> <span class="token string">"http://localhost:9000/fake_service"</span>
+
+<span class="token comment"># Retry decorator: reintenta hasta 3 veces si hay un fallo 503</span>
+<span class="token decorator annotation punctuation">@retry</span><span class="token punctuation">(</span>
+    stop<span class="token operator">=</span>stop_after_attempt<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">,</span>    <span class="token comment"># máximo 3 intentos</span>
+    wait<span class="token operator">=</span>wait_fixed<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span>             <span class="token comment"># espera fija de 2 segundos entre intentos</span>
+<span class="token punctuation">)</span>
+<span class="token keyword keyword-def">def</span> <span class="token function">call_external_service</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    response <span class="token operator">=</span> httpx<span class="token punctuation">.</span>get<span class="token punctuation">(</span>EXTERNAL_SERVICE_URL<span class="token punctuation">)</span>
+    <span class="token keyword keyword-if">if</span> response<span class="token punctuation">.</span>status_code <span class="token operator">==</span> <span class="token number">503</span><span class="token punctuation">:</span>
+        logger<span class="token punctuation">.</span>warning<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"503 Service Unavailable, reintentando..."</span></span><span class="token punctuation">)</span>
+        <span class="token keyword keyword-raise">raise</span> Exception<span class="token punctuation">(</span><span class="token string">"503 Service Unavailable"</span><span class="token punctuation">)</span>
+    response<span class="token punctuation">.</span>raise_for_status<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword keyword-return">return</span> response<span class="token punctuation">.</span>json<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token decorator annotation punctuation">@app<span class="token punctuation">.</span>get</span><span class="token punctuation">(</span><span class="token string">"/call-service/"</span><span class="token punctuation">)</span>
+<span class="token keyword keyword-def">def</span> <span class="token function">call_service</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword keyword-try">try</span><span class="token punctuation">:</span>
+        result <span class="token operator">=</span> call_external_service<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword keyword-return">return</span> <span class="token punctuation">{</span><span class="token string">"result"</span><span class="token punctuation">:</span> result<span class="token punctuation">}</span>
+    <span class="token keyword keyword-except">except</span> RetryError<span class="token punctuation">:</span>
+        <span class="token keyword keyword-raise">raise</span> HTTPException<span class="token punctuation">(</span>status_code<span class="token operator">=</span><span class="token number">500</span><span class="token punctuation">,</span> detail<span class="token operator">=</span><span class="token string">"Servicio no disponible después de varios intentos"</span><span class="token punctuation">)</span>
+    <span class="token keyword keyword-except">except</span> Exception <span class="token keyword keyword-as">as</span> e<span class="token punctuation">:</span>
+        <span class="token keyword keyword-raise">raise</span> HTTPException<span class="token punctuation">(</span>status_code<span class="token operator">=</span><span class="token number">500</span><span class="token punctuation">,</span> detail<span class="token operator">=</span><span class="token builtin">str</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre><hr>
+<h4 id="3-cómo-ejecutarlo">3. <strong>Cómo ejecutarlo</strong> </h4>
+<p>🔹 <strong>Terminal 1</strong>: Levantar el servicio que falla</p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code>uvicorn fake_service:app <span class="token parameter variable">--host</span> <span class="token number">0.0</span>.0.0 <span class="token parameter variable">--port</span> <span class="token number">9000</span> <span class="token parameter variable">--reload</span>
+</code></pre><p>🔹 <strong>Terminal 2</strong>: Levantar el cliente con retry</p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code>uvicorn retry_client:app <span class="token parameter variable">--host</span> <span class="token number">0.0</span>.0.0 <span class="token parameter variable">--port</span> <span class="token number">8000</span> <span class="token parameter variable">--reload</span>
+</code></pre><p>🔹 <strong>Probar</strong></p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code><span class="token function">curl</span> http://localhost:8000/call-service/
+</code></pre><p><strong>Resultados esperados</strong>:</p>
+<ul>
+<li>
+<p>Si el servicio externo responde 503, se verá:</p>
+<pre data-role="codeBlock" data-info="" class="language-text"><code>WARNING:root:503 Service Unavailable, reintentando...
+</code></pre><p>repetido hasta 3 veces y, si sigue fallando, respuesta:</p>
+<pre data-role="codeBlock" data-info="json" class="language-json json"><code><span class="token punctuation">{</span>
+  <span class="token property">"detail"</span><span class="token operator">:</span> <span class="token string">"Servicio no disponible después de varios intentos"</span>
+<span class="token punctuation">}</span>
+</code></pre></li>
+<li>
+<p>Si en alguno de los intentos responde 200 OK:</p>
+<pre data-role="codeBlock" data-info="json" class="language-json json"><code><span class="token punctuation">{</span>
+  <span class="token property">"result"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"message"</span><span class="token operator">:</span> <span class="token string">"Service OK"</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></li>
+</ul>
+<hr>
+<table>
+<thead>
+<tr>
+<th>Configuración</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Máximo número de intentos</strong></td>
+<td><code>3</code></td>
+</tr>
+<tr>
+<td><strong>Tiempo entre intentos</strong></td>
+<td><code>2 segundos</code></td>
+</tr>
+<tr>
+<td><strong>Error que dispara retry</strong></td>
+<td><code>503 Service Unavailable</code></td>
+</tr>
+<tr>
+<td><strong>Comportamiento si todos fallan</strong></td>
+<td>Devolver <code>500 Servicio no disponible</code></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Tenacity</strong> solo reintenta si lanzas una <strong>excepción</strong>.</li>
+<li>No debes capturar las excepciones dentro de la función decorada; déjalas subir.</li>
+<li>Se puede configurar <strong>backoff exponencial</strong> con <code>wait_exponential()</code> en vez de <code>wait_fixed()</code> para un patrón más realista.</li>
+</ul>
+<hr>
+<h2 id="45-introducción-a-patrones-circuit-breaker-y-bulkhead">4.5 Introducción a patrones Circuit Breaker y Bulkhead </h2>
+<ul>
+<li>
+<p><strong>Circuit Breaker (Interruptor Automático):</strong></p>
+<ul>
+<li>Si un servicio externo falla <em>demasiado</em>, ¡deja de llamarlo por un rato! Es como un fusible.</li>
+<li>Estados: <strong>Cerrado</strong> (pasan llamadas), <strong>Abierto</strong> (¡no pasa nada!, fallo rápido), <strong>Semi-Abierto</strong> (deja pasar una llamada de prueba a ver si ya funciona).</li>
+<li>Lo veremos en acción en 4.6.</li>
+</ul>
+</li>
+<li>
+<p><strong>Bulkhead (Compartimentos Estancos):</strong></p>
+<ul>
+<li>No dejes que un servicio lento te consuma <em>todos</em> los recursos (hilos, conexiones). Aísla los recursos por cada servicio externo al que llamas.</li>
+<li><strong>En FastAPI/asyncio:</strong> Es menos sobre hilos y más sobre limitar tareas concurrentes a un servicio específico (ej: usando <code>asyncio.Semaphore</code> para envolver las llamadas a un servicio X).</li>
+</ul>
+</li>
+</ul>
+<p><strong>¡Pruébalo (Conceptual)!</strong></p>
+<ul>
+<li>Imagina que llamas a 3 servicios (A, B, C). Si B se pone superlento y no tienes Bulkhead, podría acaparar todas tus "manos" (trabajadores asyncio) y ni A ni C recibirían atención. Con Bulkhead, B solo puede usar sus "manos" asignadas.</li>
+</ul>
+<hr>
+<h2 id="46-implementación-de-circuit-breakers-con-pybreaker">4.6 Implementación de circuit breakers con pybreaker </h2>
+<p>La librería <code>pybreaker</code> es genial para esto: <code>pip install pybreaker</code></p>
+<p>Cuando un servicio externo falla repetidamente, es mejor <strong>detener las llamadas</strong> para no saturarlo y proteger nuestro sistema. Para esto usamos un <strong>Circuit Breaker</strong>.</p>
+<h3 id="qué-es-un-circuit-breaker">¿Qué es un Circuit Breaker? </h3>
+<p>Es un <em>patrón de resiliencia</em> que:</p>
+<ul>
+<li><strong>CLOSED (cerrado)</strong>: deja pasar llamadas normalmente.</li>
+<li><strong>OPEN (abierto)</strong>: bloquea las llamadas tras un número de fallos.</li>
+<li><strong>HALF-OPEN (semiabierto)</strong>: prueba si el servicio ha vuelto y reabre si tiene éxito.</li>
+</ul>
+<hr>
+<h3 id="instalación">Instalación </h3>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code>pip <span class="token function">install</span> fastapi uvicorn httpx pybreaker
+</code></pre><p>¡Perfecto! Vamos a montarlo todo bien, en dos archivos: uno será el <strong>Mock API</strong> y otro tu <strong>Breaker con FastAPI</strong>.</p>
+<hr>
+<p><strong>PASO 1: Mock API que falla aleatoriamente</strong></p>
+<p><strong>Crea un archivo <code>mock_service.py</code>:</strong></p>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code><span class="token comment"># mock_service.py</span>
+
+<span class="token keyword keyword-from">from</span> fastapi <span class="token keyword keyword-import">import</span> FastAPI<span class="token punctuation">,</span> HTTPException
+<span class="token keyword keyword-import">import</span> random
+
+app <span class="token operator">=</span> FastAPI<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token decorator annotation punctuation">@app<span class="token punctuation">.</span>get</span><span class="token punctuation">(</span><span class="token string">"/unstable"</span><span class="token punctuation">)</span>
+<span class="token keyword keyword-def">def</span> <span class="token function">unstable_service</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword keyword-if">if</span> random<span class="token punctuation">.</span>random<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">0.5</span><span class="token punctuation">:</span>  <span class="token comment"># 50% de probabilidades de fallo</span>
+        <span class="token keyword keyword-raise">raise</span> HTTPException<span class="token punctuation">(</span>status_code<span class="token operator">=</span><span class="token number">500</span><span class="token punctuation">,</span> detail<span class="token operator">=</span><span class="token string">"Fallo simulado"</span><span class="token punctuation">)</span>
+    <span class="token keyword keyword-return">return</span> <span class="token punctuation">{</span><span class="token string">"message"</span><span class="token punctuation">:</span> <span class="token string">"Todo OK"</span><span class="token punctuation">}</span>
+</code></pre><hr>
+<p><strong>PASO 2: FastAPI + PyBreaker</strong></p>
+<p><strong>Crea un archivo <code>main.py</code>:</strong></p>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code><span class="token comment"># main.py</span>
+
+<span class="token keyword keyword-from">from</span> fastapi <span class="token keyword keyword-import">import</span> FastAPI<span class="token punctuation">,</span> HTTPException
+<span class="token keyword keyword-import">import</span> httpx
+<span class="token keyword keyword-import">import</span> pybreaker
+<span class="token keyword keyword-import">import</span> logging
+
+<span class="token comment"># Configuración de logging</span>
+logging<span class="token punctuation">.</span>basicConfig<span class="token punctuation">(</span>level<span class="token operator">=</span>logging<span class="token punctuation">.</span>INFO<span class="token punctuation">)</span>
+logger <span class="token operator">=</span> logging<span class="token punctuation">.</span>getLogger<span class="token punctuation">(</span>__name__<span class="token punctuation">)</span>
+
+<span class="token comment"># Listener para ver el estado del breaker</span>
+<span class="token keyword keyword-class">class</span> <span class="token class-name">MyListener</span><span class="token punctuation">(</span>pybreaker<span class="token punctuation">.</span>CircuitBreakerListener<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword keyword-def">def</span> <span class="token function">state_change</span><span class="token punctuation">(</span>self<span class="token punctuation">,</span> cb<span class="token punctuation">,</span> old_state<span class="token punctuation">,</span> new_state<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        logger<span class="token punctuation">.</span>warning<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"Circuit Breaker </span><span class="token interpolation"><span class="token punctuation">{</span>cb<span class="token punctuation">.</span>name<span class="token punctuation">}</span></span><span class="token string"> cambió de </span><span class="token interpolation"><span class="token punctuation">{</span>old_state<span class="token punctuation">.</span>name<span class="token punctuation">}</span></span><span class="token string"> a </span><span class="token interpolation"><span class="token punctuation">{</span>new_state<span class="token punctuation">.</span>name<span class="token punctuation">}</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+
+<span class="token comment"># Circuit Breaker configuración</span>
+breaker <span class="token operator">=</span> pybreaker<span class="token punctuation">.</span>CircuitBreaker<span class="token punctuation">(</span>
+    fail_max<span class="token operator">=</span><span class="token number">3</span><span class="token punctuation">,</span>            <span class="token comment"># Máximo 3 fallos para abrir</span>
+    reset_timeout<span class="token operator">=</span><span class="token number">10</span><span class="token punctuation">,</span>      <span class="token comment"># 10 segundos antes de HALF-OPEN</span>
+    listeners<span class="token operator">=</span><span class="token punctuation">[</span>MyListener<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    name<span class="token operator">=</span><span class="token string">"MockServiceBreaker"</span>
+<span class="token punctuation">)</span>
+
+app <span class="token operator">=</span> FastAPI<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+URL <span class="token operator">=</span> <span class="token string">"http://localhost:9000/unstable"</span>  <span class="token comment"># Nuestro servicio inestable</span>
+
+<span class="token comment"># Función protegida</span>
+<span class="token decorator annotation punctuation">@breaker</span>
+<span class="token keyword keyword-def">def</span> <span class="token function">call_mock_service</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    response <span class="token operator">=</span> httpx<span class="token punctuation">.</span>get<span class="token punctuation">(</span>URL<span class="token punctuation">,</span> timeout<span class="token operator">=</span><span class="token number">2.0</span><span class="token punctuation">)</span>
+    response<span class="token punctuation">.</span>raise_for_status<span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment"># Lanza excepción en error HTTP</span>
+    <span class="token keyword keyword-return">return</span> response<span class="token punctuation">.</span>json<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Endpoint para probar</span>
+<span class="token decorator annotation punctuation">@app<span class="token punctuation">.</span>get</span><span class="token punctuation">(</span><span class="token string">"/call-external"</span><span class="token punctuation">)</span>
+<span class="token keyword keyword-def">def</span> <span class="token function">get_mock_service</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword keyword-try">try</span><span class="token punctuation">:</span>
+        data <span class="token operator">=</span> call_mock_service<span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token keyword keyword-return">return</span> <span class="token punctuation">{</span><span class="token string">"status"</span><span class="token punctuation">:</span> <span class="token string">"ok"</span><span class="token punctuation">,</span> <span class="token string">"data"</span><span class="token punctuation">:</span> data<span class="token punctuation">}</span>
+    <span class="token keyword keyword-except">except</span> pybreaker<span class="token punctuation">.</span>CircuitBreakerError<span class="token punctuation">:</span>
+        logger<span class="token punctuation">.</span>error<span class="token punctuation">(</span><span class="token string">"Circuit Breaker ABIERTO. Servicio Mock NO disponible."</span><span class="token punctuation">)</span>
+        <span class="token keyword keyword-raise">raise</span> HTTPException<span class="token punctuation">(</span>status_code<span class="token operator">=</span><span class="token number">503</span><span class="token punctuation">,</span> detail<span class="token operator">=</span><span class="token string">"Servicio no disponible (Circuito Abierto)."</span><span class="token punctuation">)</span>
+    <span class="token keyword keyword-except">except</span> Exception <span class="token keyword keyword-as">as</span> e<span class="token punctuation">:</span>
+        logger<span class="token punctuation">.</span>error<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"Error contactando servicio Mock: </span><span class="token interpolation"><span class="token punctuation">{</span>e<span class="token punctuation">}</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+        <span class="token keyword keyword-raise">raise</span> HTTPException<span class="token punctuation">(</span>status_code<span class="token operator">=</span><span class="token number">502</span><span class="token punctuation">,</span> detail<span class="token operator">=</span><span class="token string">"Error contactando servicio externo."</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Endpoint para ver el estado del breaker</span>
+<span class="token decorator annotation punctuation">@app<span class="token punctuation">.</span>get</span><span class="token punctuation">(</span><span class="token string">"/breaker-status"</span><span class="token punctuation">)</span>
+<span class="token keyword keyword-def">def</span> <span class="token function">breaker_status</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword keyword-return">return</span> <span class="token punctuation">{</span>
+        <span class="token string">"state"</span><span class="token punctuation">:</span> breaker<span class="token punctuation">.</span>current_state<span class="token punctuation">.</span>name<span class="token punctuation">,</span>
+        <span class="token string">"failures"</span><span class="token punctuation">:</span> breaker<span class="token punctuation">.</span>fail_counter
+    <span class="token punctuation">}</span>
+</code></pre><hr>
+<p><strong>Corre tu FastAPI:</strong></p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code>uvicorn main:app <span class="token parameter variable">--reload</span>
+</code></pre><hr>
+<p><strong>PASO 3: Atacar el sistema</strong></p>
+<p>Un pequeño script para hacer <strong>muchas llamadas</strong> rápidas:</p>
+<p><strong>Crea un <code>attack.py</code>:</strong></p>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code><span class="token comment"># attack.py</span>
+
+<span class="token keyword keyword-import">import</span> requests
+<span class="token keyword keyword-import">import</span> time
+
+URL <span class="token operator">=</span> <span class="token string">"http://localhost:8000/call-external"</span>
+
+<span class="token keyword keyword-for">for</span> i <span class="token keyword keyword-in">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword keyword-try">try</span><span class="token punctuation">:</span>
+        response <span class="token operator">=</span> requests<span class="token punctuation">.</span>get<span class="token punctuation">(</span>URL<span class="token punctuation">)</span>
+        <span class="token keyword keyword-print">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"</span><span class="token interpolation"><span class="token punctuation">{</span>i<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">:</span><span class="token format-spec">02d</span><span class="token punctuation">}</span></span><span class="token string"> --&gt; </span><span class="token interpolation"><span class="token punctuation">{</span>response<span class="token punctuation">.</span>status_code<span class="token punctuation">}</span></span><span class="token string"> | </span><span class="token interpolation"><span class="token punctuation">{</span>response<span class="token punctuation">.</span>json<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">}</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+    <span class="token keyword keyword-except">except</span> Exception <span class="token keyword keyword-as">as</span> e<span class="token punctuation">:</span>
+        <span class="token keyword keyword-print">print</span><span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"</span><span class="token interpolation"><span class="token punctuation">{</span>i<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">:</span><span class="token format-spec">02d</span><span class="token punctuation">}</span></span><span class="token string"> --&gt; ERROR: </span><span class="token interpolation"><span class="token punctuation">{</span>e<span class="token punctuation">}</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+    time<span class="token punctuation">.</span>sleep<span class="token punctuation">(</span><span class="token number">0.5</span><span class="token punctuation">)</span>  <span class="token comment"># medio segundo entre llamadas</span>
+</code></pre><p>Lanza este script:</p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code>python attack.py
+</code></pre><hr>
+<p><strong>¿Qué vas a ver?</strong></p>
+<ul>
+<li>
+<p><strong>Al principio</strong>: respuestas <code>200 OK</code> o fallos <code>502 Bad Gateway</code>.</p>
+</li>
+<li>
+<p><strong>Cuando falle 3 veces seguidas</strong>:<br>
+El breaker se pone en <strong>OPEN</strong> y empiezas a recibir <strong>503 Service Unavailable</strong> instantáneamente.</p>
+</li>
+<li>
+<p><strong>Después de 10 segundos</strong>:<br>
+El breaker entra en <strong>HALF-OPEN</strong>.</p>
+</li>
+<li>
+<p><strong>Una llamada de prueba</strong>:</p>
+<ul>
+<li>Si sale bien → vuelve a <strong>CLOSED</strong>.</li>
+<li>Si falla → vuelve a <strong>OPEN</strong>.</li>
+</ul>
+</li>
+</ul>
+<p>✅ Además, puedes consultar en cualquier momento el estado del breaker:</p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code><span class="token function">curl</span> http://localhost:8000/breaker-status
+</code></pre><p>Te dirá:</p>
+<pre data-role="codeBlock" data-info="json" class="language-json json"><code><span class="token punctuation">{</span>
+  <span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"CLOSED"</span><span class="token punctuation">,</span>
+  <span class="token property">"failures"</span><span class="token operator">:</span> <span class="token number">0</span>
+<span class="token punctuation">}</span>
+</code></pre><p>o</p>
+<pre data-role="codeBlock" data-info="json" class="language-json json"><code><span class="token punctuation">{</span>
+  <span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"OPEN"</span><span class="token punctuation">,</span>
+  <span class="token property">"failures"</span><span class="token operator">:</span> <span class="token number">3</span>
+<span class="token punctuation">}</span>
+</code></pre><p>o</p>
+<pre data-role="codeBlock" data-info="json" class="language-json json"><code><span class="token punctuation">{</span>
+  <span class="token property">"state"</span><span class="token operator">:</span> <span class="token string">"HALF_OPEN"</span><span class="token punctuation">,</span>
+  <span class="token property">"failures"</span><span class="token operator">:</span> <span class="token number">3</span>
+<span class="token punctuation">}</span>
+</code></pre><hr>
+<ul>
+<li>Cómo el <strong>Circuit Breaker</strong> protege tu app:<br>
+Evita seguir llamando a un servicio roto.</li>
+<li>Cómo hace <strong>reintentos</strong> controlados (<code>HALF-OPEN</code>) para ver si ya se recuperó.</li>
+<li><strong>Evita</strong> que tu API explote por servicios inestables externos.</li>
+</ul>
+<hr>
+<h2 id="47-diseño-de-endpoints-que-aceptan-el-fallo-degradación-controlada">4.7. Diseño de Endpoints que Aceptan el Fallo (Degradación Controlada) </h2>
+<h4 id="definición">Definición </h4>
+<p>Un endpoint resiliente no es aquel que nunca falla, sino aquel que <strong>sabe cómo fallar bien</strong>. La degradación controlada es la técnica de diseñar un endpoint para que, cuando una de sus dependencias no críticas falle, pueda seguir ofreciendo una respuesta útil en lugar de un error completo (como un <code>500 Internal Server Error</code>). La idea es devolver datos parciales, datos de una caché, o una versión simplificada de la respuesta.</p>
+<h4 id="ejemplo-práctico">Ejemplo Práctico </h4>
+<p>Imagina un endpoint que muestra los detalles de un producto. Obtiene la información principal de un servicio (<code>servicio-productos</code>) y el stock en tiempo real de otro (<code>servicio-inventario</code>). Si el servicio de inventario falla, preferimos mostrar la información del producto con un aviso de "Stock no disponible" antes que no mostrar nada.</p>
+<p><strong>1. Crea un mock de los servicios externos (<code>mock_servicios.py</code>):</strong><br>
+Este servidor simula nuestras dependencias. Podemos hacer que el servicio de inventario falle si le pasamos un parámetro en la URL.</p>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code><span class="token comment"># mock_servicios.py</span>
+<span class="token keyword keyword-from">from</span> fastapi <span class="token keyword keyword-import">import</span> FastAPI<span class="token punctuation">,</span> Response<span class="token punctuation">,</span> status
+
+app <span class="token operator">=</span> FastAPI<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token decorator annotation punctuation">@app<span class="token punctuation">.</span>get</span><span class="token punctuation">(</span><span class="token string">"/products/{product_id}"</span><span class="token punctuation">)</span>
+<span class="token keyword keyword-async">async</span> <span class="token keyword keyword-def">def</span> <span class="token function">get_product_info</span><span class="token punctuation">(</span>product_id<span class="token punctuation">:</span> <span class="token builtin">str</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword keyword-return">return</span> <span class="token punctuation">{</span><span class="token string">"id"</span><span class="token punctuation">:</span> product_id<span class="token punctuation">,</span> <span class="token string">"name"</span><span class="token punctuation">:</span> <span class="token string">"Poción de Maná"</span><span class="token punctuation">,</span> <span class="token string">"description"</span><span class="token punctuation">:</span> <span class="token string">"Restaura 100 MP."</span><span class="token punctuation">}</span>
+
+<span class="token decorator annotation punctuation">@app<span class="token punctuation">.</span>get</span><span class="token punctuation">(</span><span class="token string">"/inventory/{product_id}"</span><span class="token punctuation">)</span>
+<span class="token keyword keyword-async">async</span> <span class="token keyword keyword-def">def</span> <span class="token function">get_inventory</span><span class="token punctuation">(</span>product_id<span class="token punctuation">:</span> <span class="token builtin">str</span><span class="token punctuation">,</span> fail<span class="token punctuation">:</span> <span class="token builtin">bool</span> <span class="token operator">=</span> <span class="token boolean">False</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword keyword-if">if</span> fail<span class="token punctuation">:</span>
+        <span class="token keyword keyword-return">return</span> Response<span class="token punctuation">(</span>status_code<span class="token operator">=</span>status<span class="token punctuation">.</span>HTTP_503_SERVICE_UNAVAILABLE<span class="token punctuation">)</span>
+    <span class="token keyword keyword-return">return</span> <span class="token punctuation">{</span><span class="token string">"product_id"</span><span class="token punctuation">:</span> product_id<span class="token punctuation">,</span> <span class="token string">"stock"</span><span class="token punctuation">:</span> <span class="token number">42</span><span class="token punctuation">}</span>
+
+</code></pre><p><strong>2. Crea tu API principal resiliente (<code>main_resiliente.py</code>):</strong></p>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code><span class="token comment"># main_resiliente.py</span>
+<span class="token keyword keyword-from">from</span> fastapi <span class="token keyword keyword-import">import</span> FastAPI<span class="token punctuation">,</span> HTTPException
+<span class="token keyword keyword-import">import</span> httpx
+
+app <span class="token operator">=</span> FastAPI<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+PRODUCT_API_URL <span class="token operator">=</span> <span class="token string">"http://localhost:9001/products"</span>
+INVENTORY_API_URL <span class="token operator">=</span> <span class="token string">"http://localhost:9002/inventory"</span>
+
+<span class="token decorator annotation punctuation">@app<span class="token punctuation">.</span>get</span><span class="token punctuation">(</span><span class="token string">"/product-details/{product_id}"</span><span class="token punctuation">)</span>
+<span class="token keyword keyword-async">async</span> <span class="token keyword keyword-def">def</span> <span class="token function">get_product_details</span><span class="token punctuation">(</span>product_id<span class="token punctuation">:</span> <span class="token builtin">str</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword keyword-try">try</span><span class="token punctuation">:</span>
+        <span class="token keyword keyword-async">async</span> <span class="token keyword keyword-with">with</span> httpx<span class="token punctuation">.</span>AsyncClient<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword keyword-as">as</span> client<span class="token punctuation">:</span>
+            <span class="token comment"># 1. Obtener información principal (crítica)</span>
+            product_response <span class="token operator">=</span> <span class="token keyword keyword-await">await</span> client<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"</span><span class="token interpolation"><span class="token punctuation">{</span>PRODUCT_API_URL<span class="token punctuation">}</span></span><span class="token string">/</span><span class="token interpolation"><span class="token punctuation">{</span>product_id<span class="token punctuation">}</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+            product_response<span class="token punctuation">.</span>raise_for_status<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment"># Si esto falla, el endpoint entero falla</span>
+            product_data <span class="token operator">=</span> product_response<span class="token punctuation">.</span>json<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+            <span class="token comment"># 2. Obtener stock (no crítico) con fallback</span>
+            stock_data <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">"stock"</span><span class="token punctuation">:</span> <span class="token boolean">None</span><span class="token punctuation">,</span> <span class="token string">"status"</span><span class="token punctuation">:</span> <span class="token string">"No se pudo verificar el stock"</span><span class="token punctuation">}</span>
+            <span class="token keyword keyword-try">try</span><span class="token punctuation">:</span>
+                inventory_response <span class="token operator">=</span> <span class="token keyword keyword-await">await</span> client<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string-interpolation"><span class="token string">f"</span><span class="token interpolation"><span class="token punctuation">{</span>INVENTORY_API_URL<span class="token punctuation">}</span></span><span class="token string">/</span><span class="token interpolation"><span class="token punctuation">{</span>product_id<span class="token punctuation">}</span></span><span class="token string">"</span></span><span class="token punctuation">,</span> timeout<span class="token operator">=</span><span class="token number">2.0</span><span class="token punctuation">)</span>
+                inventory_response<span class="token punctuation">.</span>raise_for_status<span class="token punctuation">(</span><span class="token punctuation">)</span>
+                stock_data <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token string">"stock"</span><span class="token punctuation">:</span> inventory_response<span class="token punctuation">.</span>json<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token string">"stock"</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token string">"status"</span><span class="token punctuation">:</span> <span class="token string">"Verificado"</span><span class="token punctuation">}</span>
+            <span class="token keyword keyword-except">except</span> <span class="token punctuation">(</span>httpx<span class="token punctuation">.</span>RequestError<span class="token punctuation">,</span> httpx<span class="token punctuation">.</span>HTTPStatusError<span class="token punctuation">)</span><span class="token punctuation">:</span>
+                <span class="token comment"># Fallback: Si la llamada al inventario falla, no rompemos.</span>
+                <span class="token comment"># Simplemente usamos los datos por defecto y seguimos.</span>
+                <span class="token keyword keyword-pass">pass</span>
+
+            <span class="token comment"># 3. Componer la respuesta final</span>
+            <span class="token keyword keyword-return">return</span> <span class="token punctuation">{</span>
+                <span class="token string">"product_info"</span><span class="token punctuation">:</span> product_data<span class="token punctuation">,</span>
+                <span class="token string">"inventory"</span><span class="token punctuation">:</span> stock_data
+            <span class="token punctuation">}</span>
+
+    <span class="token keyword keyword-except">except</span> httpx<span class="token punctuation">.</span>HTTPStatusError <span class="token keyword keyword-as">as</span> e<span class="token punctuation">:</span>
+        <span class="token comment"># Si el servicio crítico de productos falla</span>
+        <span class="token keyword keyword-raise">raise</span> HTTPException<span class="token punctuation">(</span>status_code<span class="token operator">=</span><span class="token number">502</span><span class="token punctuation">,</span> detail<span class="token operator">=</span><span class="token string-interpolation"><span class="token string">f"El servicio de productos falló: </span><span class="token interpolation"><span class="token punctuation">{</span>e<span class="token punctuation">.</span>response<span class="token punctuation">.</span>status_code<span class="token punctuation">}</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+</code></pre><h4 id="pruebas-con-curl">Pruebas con <code>curl</code> </h4>
+<p><strong>Paso 1: Ejecuta los servidores</strong></p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code><span class="token comment"># Terminal 1: Mock de productos</span>
+uvicorn mock_servicios:app <span class="token parameter variable">--host</span> <span class="token number">0.0</span>.0.0 <span class="token parameter variable">--port</span> <span class="token number">9001</span>
+
+<span class="token comment"># Terminal 2: Mock de inventario</span>
+uvicorn mock_servicios:app <span class="token parameter variable">--host</span> <span class="token number">0.0</span>.0.0 <span class="token parameter variable">--port</span> <span class="token number">9002</span>
+
+<span class="token comment"># Terminal 3: API principal</span>
+uvicorn main_resiliente:app <span class="token parameter variable">--host</span> <span class="token number">0.0</span>.0.0 <span class="token parameter variable">--port</span> <span class="token number">8000</span>
+</code></pre><p><strong>Paso 2: Prueba el caso de éxito</strong><br>
+Todos los servicios funcionan. <code>curl</code> devuelve la respuesta completa.</p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code><span class="token function">curl</span> http://localhost:8000/product-details/mana-potion
+</code></pre><p><strong>Salida esperada (éxito):</strong></p>
+<pre data-role="codeBlock" data-info="json" class="language-json json"><code><span class="token punctuation">{</span>
+  <span class="token property">"product_info"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"mana-potion"</span><span class="token punctuation">,</span>
+    <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Poción de Maná"</span><span class="token punctuation">,</span>
+    <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Restaura 100 MP."</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token property">"inventory"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"stock"</span><span class="token operator">:</span> <span class="token number">42</span><span class="token punctuation">,</span>
+    <span class="token property">"status"</span><span class="token operator">:</span> <span class="token string">"Verificado"</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre><p><strong>Paso 3: Prueba la degradación controlada</strong><br>
+Forzamos el fallo del servicio de inventario (<code>?fail=true</code>). El endpoint no devuelve un error 5xx, sino la respuesta parcial.</p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code><span class="token function">curl</span> <span class="token string">"http://localhost:9002/inventory/mana-potion?fail=true"</span> <span class="token comment"># Así se llama para simular el fallo en el servicio de inventario</span>
+</code></pre><p>Ahora, al llamar a nuestro endpoint principal, este manejará el error internamente.</p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code><span class="token comment">#Llamamos al endpoint principal. Él internamente llamará al servicio de inventario que fallará.</span>
+<span class="token function">curl</span> http://localhost:8000/product-details/mana-potion
+</code></pre><p><strong>Salida esperada (degradada):</strong></p>
+<pre data-role="codeBlock" data-info="json" class="language-json json"><code><span class="token punctuation">{</span>
+  <span class="token property">"product_info"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"id"</span><span class="token operator">:</span> <span class="token string">"mana-potion"</span><span class="token punctuation">,</span>
+    <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Poción de Maná"</span><span class="token punctuation">,</span>
+    <span class="token property">"description"</span><span class="token operator">:</span> <span class="token string">"Restaura 100 MP."</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token property">"inventory"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"stock"</span><span class="token operator">:</span> <span class="token null keyword">null</span><span class="token punctuation">,</span>
+    <span class="token property">"status"</span><span class="token operator">:</span> <span class="token string">"No se pudo verificar el stock"</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre><hr>
+<h2 id="48-captura-y-log-de-trazas-con-contexto-de-peticiones">4.8 Captura y log de trazas con contexto de peticiones </h2>
+<h4 id="definición-1">Definición </h4>
+<p>El logging con contexto consiste en enriquecer cada mensaje de log con información clave sobre la petición que lo generó. En lugar de un inútil <code>"Conexión fallida"</code>, obtenemos un registro que nos dice <strong>quién, qué y cuándo</strong>. El <strong><code>trace_id</code></strong> es un identificador único que se crea para cada petición y se propaga por todos los logs y llamadas a otros servicios, permitiendo reconstruir la secuencia completa de eventos. El <strong>logging estructurado</strong> (en formato JSON) hace que estos logs sean legibles por máquinas, facilitando su búsqueda y análisis.</p>
+<h4 id="ejemplo-práctico-1">Ejemplo Práctico </h4>
+<p>Usaremos <code>structlog</code> para generar logs en JSON, con un middleware en FastAPI que inyecta automáticamente un <code>trace_id</code>.</p>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code><span class="token comment"># main_logs.py</span>
+<span class="token keyword keyword-import">import</span> uuid
+<span class="token keyword keyword-from">from</span> fastapi <span class="token keyword keyword-import">import</span> FastAPI<span class="token punctuation">,</span> Request<span class="token punctuation">,</span> HTTPException
+<span class="token keyword keyword-import">import</span> structlog
+
+<span class="token comment"># Configura structlog para que use el contexto y renderice a JSON</span>
+structlog<span class="token punctuation">.</span>configure<span class="token punctuation">(</span>
+    processors<span class="token operator">=</span><span class="token punctuation">[</span>
+        structlog<span class="token punctuation">.</span>contextvars<span class="token punctuation">.</span>merge_contextvars<span class="token punctuation">,</span> <span class="token comment"># Clave para el trace_id</span>
+        structlog<span class="token punctuation">.</span>processors<span class="token punctuation">.</span>add_log_level<span class="token punctuation">,</span>
+        structlog<span class="token punctuation">.</span>processors<span class="token punctuation">.</span>TimeStamper<span class="token punctuation">(</span>fmt<span class="token operator">=</span><span class="token string">"iso"</span><span class="token punctuation">,</span> utc<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        structlog<span class="token punctuation">.</span>processors<span class="token punctuation">.</span>JSONRenderer<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    logger_factory<span class="token operator">=</span>structlog<span class="token punctuation">.</span>PrintLoggerFactory<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span>
+log <span class="token operator">=</span> structlog<span class="token punctuation">.</span>get_logger<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+app <span class="token operator">=</span> FastAPI<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Middleware para inyectar el trace_id en el contexto de log</span>
+<span class="token decorator annotation punctuation">@app<span class="token punctuation">.</span>middleware</span><span class="token punctuation">(</span><span class="token string">"http"</span><span class="token punctuation">)</span>
+<span class="token keyword keyword-async">async</span> <span class="token keyword keyword-def">def</span> <span class="token function">add_context_middleware</span><span class="token punctuation">(</span>request<span class="token punctuation">:</span> Request<span class="token punctuation">,</span> call_next<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    trace_id <span class="token operator">=</span> <span class="token builtin">str</span><span class="token punctuation">(</span>uuid<span class="token punctuation">.</span>uuid4<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    structlog<span class="token punctuation">.</span>contextvars<span class="token punctuation">.</span>clear_contextvars<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    structlog<span class="token punctuation">.</span>contextvars<span class="token punctuation">.</span>bind_contextvars<span class="token punctuation">(</span>trace_id<span class="token operator">=</span>trace_id<span class="token punctuation">)</span>
+    
+    response <span class="token operator">=</span> <span class="token keyword keyword-await">await</span> call_next<span class="token punctuation">(</span>request<span class="token punctuation">)</span>
+    response<span class="token punctuation">.</span>headers<span class="token punctuation">[</span><span class="token string">"X-Trace-ID"</span><span class="token punctuation">]</span> <span class="token operator">=</span> trace_id
+    <span class="token keyword keyword-return">return</span> response
+
+<span class="token decorator annotation punctuation">@app<span class="token punctuation">.</span>get</span><span class="token punctuation">(</span><span class="token string">"/user/{user_id}"</span><span class="token punctuation">)</span>
+<span class="token keyword keyword-async">async</span> <span class="token keyword keyword-def">def</span> <span class="token function">get_user</span><span class="token punctuation">(</span>user_id<span class="token punctuation">:</span> <span class="token builtin">str</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    log<span class="token punctuation">.</span>info<span class="token punctuation">(</span><span class="token string">"user_lookup_started"</span><span class="token punctuation">,</span> user_id<span class="token operator">=</span>user_id<span class="token punctuation">)</span> <span class="token comment"># Log con contexto</span>
+    
+    <span class="token keyword keyword-if">if</span> user_id <span class="token operator">==</span> <span class="token string">"admin"</span><span class="token punctuation">:</span>
+        log<span class="token punctuation">.</span>warn<span class="token punctuation">(</span><span class="token string">"admin_user_accessed"</span><span class="token punctuation">,</span> permissions<span class="token operator">=</span><span class="token string">"full"</span><span class="token punctuation">)</span>
+        <span class="token keyword keyword-return">return</span> <span class="token punctuation">{</span><span class="token string">"user"</span><span class="token punctuation">:</span> user_id<span class="token punctuation">,</span> <span class="token string">"status"</span><span class="token punctuation">:</span> <span class="token string">"ok"</span><span class="token punctuation">}</span>
+    
+    <span class="token keyword keyword-raise">raise</span> HTTPException<span class="token punctuation">(</span>status_code<span class="token operator">=</span><span class="token number">404</span><span class="token punctuation">,</span> detail<span class="token operator">=</span><span class="token string">"Usuario no encontrado"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Un handler genérico que también loguea con contexto</span>
+<span class="token decorator annotation punctuation">@app<span class="token punctuation">.</span>exception_handler</span><span class="token punctuation">(</span>HTTPException<span class="token punctuation">)</span>
+<span class="token keyword keyword-async">async</span> <span class="token keyword keyword-def">def</span> <span class="token function">http_exception_handler</span><span class="token punctuation">(</span>request<span class="token punctuation">:</span> Request<span class="token punctuation">,</span> exc<span class="token punctuation">:</span> HTTPException<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    log<span class="token punctuation">.</span>error<span class="token punctuation">(</span>
+        <span class="token string">"http_error"</span><span class="token punctuation">,</span>
+        status_code<span class="token operator">=</span>exc<span class="token punctuation">.</span>status_code<span class="token punctuation">,</span>
+        detail<span class="token operator">=</span>exc<span class="token punctuation">.</span>detail<span class="token punctuation">,</span>
+        path<span class="token operator">=</span>request<span class="token punctuation">.</span>url<span class="token punctuation">.</span>path
+    <span class="token punctuation">)</span>
+    <span class="token keyword keyword-return">return</span> <span class="token keyword keyword-await">await</span> request<span class="token punctuation">.</span>app<span class="token punctuation">.</span>default_exception_handler<span class="token punctuation">(</span>request<span class="token punctuation">,</span> exc<span class="token punctuation">)</span>
+</code></pre><h4 id="pruebas-con-curl-1">Pruebas con <code>curl</code> </h4>
+<p><strong>Paso 1: Ejecuta el servidor</strong></p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code><span class="token comment"># Terminal 1</span>
+uvicorn main_logs:app <span class="token parameter variable">--host</span> <span class="token number">0.0</span>.0.0 <span class="token parameter variable">--port</span> <span class="token number">8000</span>
+</code></pre><p><strong>Paso 2: Lanza peticiones con <code>curl</code> y observa la consola del servidor</strong></p>
+<p><strong>Prueba 1: Un usuario normal que falla</strong></p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code><span class="token function">curl</span> <span class="token parameter variable">-i</span> http://localhost:8000/user/bob
+</code></pre><p><strong>Salida en la consola del servidor:</strong></p>
+<pre data-role="codeBlock" data-info="json" class="language-json json"><code><span class="token punctuation">{</span><span class="token property">"trace_id"</span><span class="token operator">:</span> <span class="token string">"..."</span><span class="token punctuation">,</span> <span class="token property">"log_level"</span><span class="token operator">:</span> <span class="token string">"info"</span><span class="token punctuation">,</span> <span class="token property">"event"</span><span class="token operator">:</span> <span class="token string">"user_lookup_started"</span><span class="token punctuation">,</span> <span class="token property">"user_id"</span><span class="token operator">:</span> <span class="token string">"bob"</span><span class="token punctuation">,</span> <span class="token property">"timestamp"</span><span class="token operator">:</span> <span class="token string">"..."</span><span class="token punctuation">}</span>
+<span class="token punctuation">{</span><span class="token property">"trace_id"</span><span class="token operator">:</span> <span class="token string">"..."</span><span class="token punctuation">,</span> <span class="token property">"log_level"</span><span class="token operator">:</span> <span class="token string">"error"</span><span class="token punctuation">,</span> <span class="token property">"event"</span><span class="token operator">:</span> <span class="token string">"http_error"</span><span class="token punctuation">,</span> <span class="token property">"status_code"</span><span class="token operator">:</span> <span class="token number">404</span><span class="token punctuation">,</span> <span class="token property">"detail"</span><span class="token operator">:</span> <span class="token string">"Usuario no encontrado"</span><span class="token punctuation">,</span> <span class="token property">"path"</span><span class="token operator">:</span> <span class="token string">"/user/bob"</span><span class="token punctuation">,</span> <span class="token property">"timestamp"</span><span class="token operator">:</span> <span class="token string">"..."</span><span class="token punctuation">}</span>
+</code></pre><p><strong>Prueba 2: Un usuario especial que tiene éxito</strong></p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code><span class="token function">curl</span> <span class="token parameter variable">-i</span> http://localhost:8000/user/admin
+</code></pre><p><strong>Salida en la consola del servidor:</strong></p>
+<pre data-role="codeBlock" data-info="json" class="language-json json"><code><span class="token punctuation">{</span><span class="token property">"trace_id"</span><span class="token operator">:</span> <span class="token string">"..."</span><span class="token punctuation">,</span> <span class="token property">"log_level"</span><span class="token operator">:</span> <span class="token string">"info"</span><span class="token punctuation">,</span> <span class="token property">"event"</span><span class="token operator">:</span> <span class="token string">"user_lookup_started"</span><span class="token punctuation">,</span> <span class="token property">"user_id"</span><span class="token operator">:</span> <span class="token string">"admin"</span><span class="token punctuation">,</span> <span class="token property">"timestamp"</span><span class="token operator">:</span> <span class="token string">"..."</span><span class="token punctuation">}</span>
+<span class="token punctuation">{</span><span class="token property">"trace_id"</span><span class="token operator">:</span> <span class="token string">"..."</span><span class="token punctuation">,</span> <span class="token property">"log_level"</span><span class="token operator">:</span> <span class="token string">"warning"</span><span class="token punctuation">,</span> <span class="token property">"event"</span><span class="token operator">:</span> <span class="token string">"admin_user_accessed"</span><span class="token punctuation">,</span> <span class="token property">"permissions"</span><span class="token operator">:</span> <span class="token string">"full"</span><span class="token punctuation">,</span> <span class="token property">"timestamp"</span><span class="token operator">:</span> <span class="token string">"..."</span><span class="token punctuation">}</span>
+</code></pre><p>Como puedes ver, cada línea de log comparte el mismo <code>trace_id</code> para una misma petición, y el formato JSON permite filtrar fácilmente por <code>log_level</code>, <code>event</code> o cualquier otro campo.</p>
+<hr>
+<h2 id="49-visibilidad-de-errores-mediante-dashboards">4.9. Visibilidad de Errores Mediante Dashboards </h2>
+<p>De acuerdo. Tienes toda la razón, la solución con Prometheus y Grafana es potente pero puede ser excesiva para este tema si se verá en detalle más adelante.</p>
+<p>Busquemos el equilibrio perfecto: una herramienta de dashboard <strong>real y visual</strong> que sea <strong>extremadamente simple</strong> de levantar, sin Docker ni configuraciones complejas.</p>
+<p>Usaremos <strong>Streamlit</strong>, una librería de Python que crea dashboards web interactivos con muy poco código. Es la forma más rápida de pasar de datos a una visualización web.</p>
+<p>Aquí tienes la versión final del punto 4.9, simplificada y directa.</p>
+<hr>
+<h4 id="definición-2">Definición </h4>
+<p>Un dashboard es una interfaz visual que nos permite entender la salud de nuestra aplicación de un vistazo. En lugar de leer logs o métricas en texto plano, los vemos representados en gráficos y números clave.</p>
+<p>Para este ejemplo, usaremos una herramienta real llamada <strong>Streamlit</strong>. Crearemos un dashboard web que se actualizará en tiempo real, leyendo los logs que genera nuestra API. Es la solución perfecta para visualizar datos sin la complejidad de herramientas de producción como Grafana.</p>
+<h4 id="ejemplo-práctico-2">Ejemplo Práctico </h4>
+<p>Necesitaremos solo dos ficheros de Python.</p>
+<p><strong>Paso 1: La API que Genera los Datos (<code>app_generadora.py</code>)</strong></p>
+<p>Esta es una API FastAPI que, por cada petición, escribe una línea en un fichero de logs (<code>api_logs.log</code>) con detalles como el código de estado y la latencia.</p>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code><span class="token comment"># app_generadora.py</span>
+<span class="token keyword keyword-import">import</span> time
+<span class="token keyword keyword-import">import</span> logging
+<span class="token keyword keyword-import">import</span> json
+<span class="token keyword keyword-from">from</span> fastapi <span class="token keyword keyword-import">import</span> FastAPI<span class="token punctuation">,</span> Request
+
+<span class="token comment"># --- Configuración del Logger para escribir a un fichero en formato JSON ---</span>
+log_file <span class="token operator">=</span> <span class="token string">"api_logs.log"</span>
+handler <span class="token operator">=</span> logging<span class="token punctuation">.</span>FileHandler<span class="token punctuation">(</span>log_file<span class="token punctuation">)</span>
+<span class="token comment"># No usamos un formatter complejo, escribiremos el JSON directamente.</span>
+
+logger <span class="token operator">=</span> logging<span class="token punctuation">.</span>getLogger<span class="token punctuation">(</span><span class="token string">'api_logger'</span><span class="token punctuation">)</span>
+logger<span class="token punctuation">.</span>setLevel<span class="token punctuation">(</span>logging<span class="token punctuation">.</span>INFO<span class="token punctuation">)</span>
+logger<span class="token punctuation">.</span>addHandler<span class="token punctuation">(</span>handler<span class="token punctuation">)</span>
+logger<span class="token punctuation">.</span>propagate <span class="token operator">=</span> <span class="token boolean">False</span>
+<span class="token comment"># -------------------------------------------------------------</span>
+
+app <span class="token operator">=</span> FastAPI<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token decorator annotation punctuation">@app<span class="token punctuation">.</span>middleware</span><span class="token punctuation">(</span><span class="token string">"http"</span><span class="token punctuation">)</span>
+<span class="token keyword keyword-async">async</span> <span class="token keyword keyword-def">def</span> <span class="token function">log_requests</span><span class="token punctuation">(</span>request<span class="token punctuation">:</span> Request<span class="token punctuation">,</span> call_next<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    start_time <span class="token operator">=</span> time<span class="token punctuation">.</span>time<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    response <span class="token operator">=</span> <span class="token keyword keyword-await">await</span> call_next<span class="token punctuation">(</span>request<span class="token punctuation">)</span>
+    process_time <span class="token operator">=</span> <span class="token punctuation">(</span>time<span class="token punctuation">.</span>time<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">-</span> start_time<span class="token punctuation">)</span> <span class="token operator">*</span> <span class="token number">1000</span>  <span class="token comment"># en milisegundos</span>
+
+    log_entry <span class="token operator">=</span> <span class="token punctuation">{</span>
+        <span class="token string">"timestamp"</span><span class="token punctuation">:</span> time<span class="token punctuation">.</span>strftime<span class="token punctuation">(</span><span class="token string">'%Y-%m-%dT%H:%M:%S'</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token string">"status_code"</span><span class="token punctuation">:</span> response<span class="token punctuation">.</span>status_code<span class="token punctuation">,</span>
+        <span class="token string">"latency_ms"</span><span class="token punctuation">:</span> process_time<span class="token punctuation">,</span>
+        <span class="token string">"path"</span><span class="token punctuation">:</span> request<span class="token punctuation">.</span>url<span class="token punctuation">.</span>path
+    <span class="token punctuation">}</span>
+    logger<span class="token punctuation">.</span>info<span class="token punctuation">(</span>json<span class="token punctuation">.</span>dumps<span class="token punctuation">(</span>log_entry<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword keyword-return">return</span> response
+
+<span class="token decorator annotation punctuation">@app<span class="token punctuation">.</span>get</span><span class="token punctuation">(</span><span class="token string">"/"</span><span class="token punctuation">)</span>
+<span class="token keyword keyword-def">def</span> <span class="token function">endpoint_exitoso</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword keyword-return">return</span> <span class="token punctuation">{</span><span class="token string">"status"</span><span class="token punctuation">:</span> <span class="token string">"ok"</span><span class="token punctuation">}</span>
+
+<span class="token decorator annotation punctuation">@app<span class="token punctuation">.</span>get</span><span class="token punctuation">(</span><span class="token string">"/lento"</span><span class="token punctuation">)</span>
+<span class="token keyword keyword-async">async</span> <span class="token keyword keyword-def">def</span> <span class="token function">endpoint_lento</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword keyword-import">import</span> asyncio
+    <span class="token keyword keyword-await">await</span> asyncio<span class="token punctuation">.</span>sleep<span class="token punctuation">(</span><span class="token number">1.5</span><span class="token punctuation">)</span>
+    <span class="token keyword keyword-return">return</span> <span class="token punctuation">{</span><span class="token string">"status"</span><span class="token punctuation">:</span> <span class="token string">"ok, pero lento"</span><span class="token punctuation">}</span>
+
+<span class="token decorator annotation punctuation">@app<span class="token punctuation">.</span>get</span><span class="token punctuation">(</span><span class="token string">"/error-cliente"</span><span class="token punctuation">)</span>
+<span class="token keyword keyword-def">def</span> <span class="token function">endpoint_error_cliente</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword keyword-from">from</span> fastapi <span class="token keyword keyword-import">import</span> HTTPException
+    <span class="token keyword keyword-raise">raise</span> HTTPException<span class="token punctuation">(</span>status_code<span class="token operator">=</span><span class="token number">404</span><span class="token punctuation">,</span> detail<span class="token operator">=</span><span class="token string">"Recurso no encontrado"</span><span class="token punctuation">)</span>
+
+<span class="token decorator annotation punctuation">@app<span class="token punctuation">.</span>get</span><span class="token punctuation">(</span><span class="token string">"/error-servidor"</span><span class="token punctuation">)</span>
+<span class="token keyword keyword-def">def</span> <span class="token function">endpoint_error_servidor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    _ <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">/</span> <span class="token number">0</span>
+</code></pre><p><strong>Paso 2: El Dashboard Web con Streamlit (<code>dashboard_streamlit.py</code>)</strong></p>
+<p>Este script lee el fichero de logs, lo procesa con la librería <code>pandas</code> y muestra los resultados usando <code>streamlit</code>.</p>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code><span class="token comment"># dashboard_streamlit.py</span>
+<span class="token keyword keyword-import">import</span> streamlit <span class="token keyword keyword-as">as</span> st
+<span class="token keyword keyword-import">import</span> pandas <span class="token keyword keyword-as">as</span> pd
+<span class="token keyword keyword-import">import</span> json
+<span class="token keyword keyword-from">from</span> datetime <span class="token keyword keyword-import">import</span> datetime
+
+LOG_FILE <span class="token operator">=</span> <span class="token string">"api_logs.log"</span>
+
+st<span class="token punctuation">.</span>set_page_config<span class="token punctuation">(</span>
+    page_title<span class="token operator">=</span><span class="token string">"Dashboard API en Vivo"</span><span class="token punctuation">,</span>
+    page_icon<span class="token operator">=</span><span class="token string">"📊"</span><span class="token punctuation">,</span>
+    layout<span class="token operator">=</span><span class="token string">"wide"</span><span class="token punctuation">,</span>
+<span class="token punctuation">)</span>
+
+<span class="token keyword keyword-def">def</span> <span class="token function">load_data</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token triple-quoted-string string">"""Lee el fichero de logs y lo convierte en un DataFrame de Pandas."""</span>
+    records <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    <span class="token keyword keyword-try">try</span><span class="token punctuation">:</span>
+        <span class="token keyword keyword-with">with</span> <span class="token builtin">open</span><span class="token punctuation">(</span>LOG_FILE<span class="token punctuation">,</span> <span class="token string">'r'</span><span class="token punctuation">)</span> <span class="token keyword keyword-as">as</span> f<span class="token punctuation">:</span>
+            <span class="token keyword keyword-for">for</span> line <span class="token keyword keyword-in">in</span> f<span class="token punctuation">:</span>
+                records<span class="token punctuation">.</span>append<span class="token punctuation">(</span>json<span class="token punctuation">.</span>loads<span class="token punctuation">(</span>line<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token keyword keyword-return">return</span> pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span>records<span class="token punctuation">)</span>
+    <span class="token keyword keyword-except">except</span> FileNotFoundError<span class="token punctuation">:</span>
+        <span class="token keyword keyword-return">return</span> pd<span class="token punctuation">.</span>DataFrame<span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment"># Devuelve un DataFrame vacío si el log no existe</span>
+
+<span class="token comment"># Título del dashboard</span>
+st<span class="token punctuation">.</span>title<span class="token punctuation">(</span><span class="token string">"📊 Dashboard de Salud de la API en Vivo"</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Cargar los datos</span>
+df <span class="token operator">=</span> load_data<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword keyword-if">if</span> df<span class="token punctuation">.</span>empty<span class="token punctuation">:</span>
+    st<span class="token punctuation">.</span>warning<span class="token punctuation">(</span><span class="token string">"No se han registrado peticiones todavía. ¡Usa `curl` para generar tráfico!"</span><span class="token punctuation">)</span>
+<span class="token keyword keyword-else">else</span><span class="token punctuation">:</span>
+    <span class="token comment"># Convertir tipos para asegurar cálculos correctos</span>
+    df<span class="token punctuation">[</span><span class="token string">'timestamp'</span><span class="token punctuation">]</span> <span class="token operator">=</span> pd<span class="token punctuation">.</span>to_datetime<span class="token punctuation">(</span>df<span class="token punctuation">[</span><span class="token string">'timestamp'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    df<span class="token punctuation">[</span><span class="token string">'latency_ms'</span><span class="token punctuation">]</span> <span class="token operator">=</span> pd<span class="token punctuation">.</span>to_numeric<span class="token punctuation">(</span>df<span class="token punctuation">[</span><span class="token string">'latency_ms'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    df<span class="token punctuation">[</span><span class="token string">'status_code'</span><span class="token punctuation">]</span> <span class="token operator">=</span> pd<span class="token punctuation">.</span>to_numeric<span class="token punctuation">(</span>df<span class="token punctuation">[</span><span class="token string">'status_code'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+
+    <span class="token comment"># --- Métricas Principales ---</span>
+    col1<span class="token punctuation">,</span> col2<span class="token punctuation">,</span> col3<span class="token punctuation">,</span> col4 <span class="token operator">=</span> st<span class="token punctuation">.</span>columns<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span>
+    total_requests <span class="token operator">=</span> <span class="token builtin">len</span><span class="token punctuation">(</span>df<span class="token punctuation">)</span>
+    server_errors <span class="token operator">=</span> <span class="token builtin">len</span><span class="token punctuation">(</span>df<span class="token punctuation">[</span>df<span class="token punctuation">[</span><span class="token string">'status_code'</span><span class="token punctuation">]</span> <span class="token operator">&gt;=</span> <span class="token number">500</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    client_errors <span class="token operator">=</span> <span class="token builtin">len</span><span class="token punctuation">(</span>df<span class="token punctuation">[</span><span class="token punctuation">(</span>df<span class="token punctuation">[</span><span class="token string">'status_code'</span><span class="token punctuation">]</span> <span class="token operator">&gt;=</span> <span class="token number">400</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span> <span class="token punctuation">(</span>df<span class="token punctuation">[</span><span class="token string">'status_code'</span><span class="token punctuation">]</span> <span class="token operator">&lt;</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    avg_latency <span class="token operator">=</span> df<span class="token punctuation">[</span><span class="token string">'latency_ms'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>mean<span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+    col1<span class="token punctuation">.</span>metric<span class="token punctuation">(</span><span class="token string">"Peticiones Totales"</span><span class="token punctuation">,</span> <span class="token string-interpolation"><span class="token string">f"</span><span class="token interpolation"><span class="token punctuation">{</span>total_requests<span class="token punctuation">}</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+    col2<span class="token punctuation">.</span>metric<span class="token punctuation">(</span><span class="token string">"Errores de Servidor (5xx)"</span><span class="token punctuation">,</span> <span class="token string-interpolation"><span class="token string">f"</span><span class="token interpolation"><span class="token punctuation">{</span>server_errors<span class="token punctuation">}</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+    col3<span class="token punctuation">.</span>metric<span class="token punctuation">(</span><span class="token string">"Errores de Cliente (4xx)"</span><span class="token punctuation">,</span> <span class="token string-interpolation"><span class="token string">f"</span><span class="token interpolation"><span class="token punctuation">{</span>client_errors<span class="token punctuation">}</span></span><span class="token string">"</span></span><span class="token punctuation">)</span>
+    col4<span class="token punctuation">.</span>metric<span class="token punctuation">(</span><span class="token string">"Latencia Media"</span><span class="token punctuation">,</span> <span class="token string-interpolation"><span class="token string">f"</span><span class="token interpolation"><span class="token punctuation">{</span>avg_latency<span class="token punctuation">:</span><span class="token format-spec">.2f</span><span class="token punctuation">}</span></span><span class="token string"> ms"</span></span><span class="token punctuation">)</span>
+
+    <span class="token comment"># --- Gráficos ---</span>
+    st<span class="token punctuation">.</span>divider<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    col_a<span class="token punctuation">,</span> col_b <span class="token operator">=</span> st<span class="token punctuation">.</span>columns<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span>
+
+    <span class="token comment"># Gráfico de peticiones por código de estado</span>
+    status_counts <span class="token operator">=</span> df<span class="token punctuation">[</span><span class="token string">'status_code'</span><span class="token punctuation">]</span><span class="token punctuation">.</span>value_counts<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span>reset_index<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    status_counts<span class="token punctuation">.</span>columns <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token string">'Código de Estado'</span><span class="token punctuation">,</span> <span class="token string">'Número de Peticiones'</span><span class="token punctuation">]</span>
+    <span class="token keyword keyword-with">with</span> col_a<span class="token punctuation">:</span>
+        st<span class="token punctuation">.</span>subheader<span class="token punctuation">(</span><span class="token string">"Peticiones por Código de Estado"</span><span class="token punctuation">)</span>
+        st<span class="token punctuation">.</span>bar_chart<span class="token punctuation">(</span>status_counts<span class="token punctuation">,</span> x<span class="token operator">=</span><span class="token string">'Código de Estado'</span><span class="token punctuation">,</span> y<span class="token operator">=</span><span class="token string">'Número de Peticiones'</span><span class="token punctuation">)</span>
+
+    <span class="token comment"># Gráfico de latencia a lo largo del tiempo</span>
+    <span class="token keyword keyword-with">with</span> col_b<span class="token punctuation">:</span>
+        st<span class="token punctuation">.</span>subheader<span class="token punctuation">(</span><span class="token string">"Latencia a lo largo del tiempo (ms)"</span><span class="token punctuation">)</span>
+        st<span class="token punctuation">.</span>line_chart<span class="token punctuation">(</span>df<span class="token punctuation">,</span> x<span class="token operator">=</span><span class="token string">'timestamp'</span><span class="token punctuation">,</span> y<span class="token operator">=</span><span class="token string">'latency_ms'</span><span class="token punctuation">)</span>
+
+<span class="token comment"># Auto-refresco de la página cada 2 segundos</span>
+st<span class="token punctuation">.</span>rerun<span class="token punctuation">(</span>ttl<span class="token operator">=</span><span class="token number">2</span><span class="token punctuation">)</span>
+</code></pre><h4 id="pruebas-en-vivo-curl-vs-tu-dashboard-web">Pruebas en Vivo: <code>curl</code> vs. tu Dashboard Web </h4>
+<p><strong>Paso 1: Instala las librerías necesarias</strong></p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code>pip <span class="token function">install</span> fastapi uvicorn pandas streamlit
+</code></pre><p><strong>Paso 2: Inicia la API</strong><br>
+En una terminal, lanza el servidor que generará los logs.</p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code><span class="token comment"># Terminal 1: API</span>
+uvicorn app_generadora:app <span class="token parameter variable">--port</span> <span class="token number">8000</span>
+</code></pre><p><strong>Paso 3: ¡Lanza tu Dashboard Web!</strong><br>
+En una segunda terminal, ejecuta el comando de Streamlit.</p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code><span class="token comment"># Terminal 2: Dashboard</span>
+streamlit run dashboard_streamlit.py
+</code></pre><p>Este comando <strong>abrirá automáticamente una pestaña en tu navegador</strong> mostrando el dashboard. Al principio, estará vacío.</p>
+<p><strong>Paso 4: Ataca la API con <code>curl</code> y mira la magia en tu navegador</strong></p>
+<p>Usa una tercera terminal para las peticiones. Verás cómo el dashboard en tu navegador se actualiza solo.</p>
+<ol>
+<li>
+<p><strong>Genera tráfico exitoso:</strong></p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code><span class="token comment"># Terminal 3: Cliente</span>
+<span class="token function">curl</span> http://localhost:8000/
+</code></pre><p><em>En el navegador:</em> Aparecerá una petición, una barra para el código 200 y un punto en el gráfico de latencia.</p>
+</li>
+<li>
+<p><strong>Provoca un error de servidor (500):</strong></p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code><span class="token comment"># Terminal 3: Cliente</span>
+<span class="token function">curl</span> http://localhost:8000/error-servidor
+</code></pre><p><em>En el navegador:</em> La métrica "Errores de Servidor" subirá a 1 y aparecerá una barra para el código 500.</p>
+</li>
+<li>
+<p><strong>Genera una petición lenta:</strong></p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code><span class="token comment"># Terminal 3: Cliente</span>
+<span class="token function">curl</span> http://localhost:8000/lento
+</code></pre><p><em>En el navegador:</em> Verás un pico evidente en el gráfico de "Latencia a lo largo del tiempo".</p>
+</li>
+</ol>
+<p>Con este método, has usado una <strong>herramienta de dashboard real</strong> de una forma extremadamente simple, probando de manera visual e interactiva el impacto de cada tipo de petición en la salud de tu sistema.</p>
+<hr>
+<h2 id="410-pruebas-para-simular-fallos-y-degradación-controlada">4.10. Pruebas para Simular Fallos y Degradación Controlada </h2>
+<h4 id="definición-3">Definición </h4>
+<p>Probar la resiliencia significa verificar que tus patrones de defensa (Retry, Circuit Breaker, Fallbacks) funcionan como esperas <strong>antes de llegar a producción</strong>. En lugar de probar solo el "camino feliz", creas tests automatizados que simulan activamente las condiciones de fallo: una API que no responde, una base de datos lenta, una respuesta de red corrupta. A esto se le llama una forma de <strong>Ingeniería del Caos a pequeña escala</strong>.</p>
+<h4 id="ejemplo-práctico-3">Ejemplo Práctico </h4>
+<p>Vamos a probar automáticamente que el endpoint del <strong>apartado 4.7</strong> (<code>main_resiliente.py</code>) se degrada correctamente cuando el servicio de inventario falla. Usaremos <code>pytest</code> y <code>respx</code> (un mock para <code>httpx</code>).</p>
+<p><strong>1. Crea tu archivo de test (<code>test_resiliencia.py</code>):</strong></p>
+<pre data-role="codeBlock" data-info="python" class="language-python python"><code><span class="token comment"># test_resiliencia.py</span>
+<span class="token keyword keyword-import">import</span> pytest
+<span class="token keyword keyword-import">import</span> respx
+<span class="token keyword keyword-import">import</span> httpx
+<span class="token keyword keyword-from">from</span> fastapi<span class="token punctuation">.</span>testclient <span class="token keyword keyword-import">import</span> TestClient
+<span class="token keyword keyword-from">from</span> main_resiliente <span class="token keyword keyword-import">import</span> app <span class="token comment"># Importa tu app de FastAPI</span>
+
+<span class="token comment"># URLs de los servicios que vamos a mockear</span>
+PRODUCT_API_URL <span class="token operator">=</span> <span class="token string">"http://localhost:9001/products/mana-potion"</span>
+INVENTORY_API_URL <span class="token operator">=</span> <span class="token string">"http://localhost:9002/inventory/mana-potion"</span>
+
+client <span class="token operator">=</span> TestClient<span class="token punctuation">(</span>app<span class="token punctuation">)</span>
+
+<span class="token decorator annotation punctuation">@respx<span class="token punctuation">.</span>mock</span>
+<span class="token keyword keyword-def">def</span> <span class="token function">test_endpoint_degrades_gracefully_when_inventory_fails</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># 1. Mock del camino feliz para el servicio de productos (crítico)</span>
+    respx<span class="token punctuation">.</span>get<span class="token punctuation">(</span>PRODUCT_API_URL<span class="token punctuation">)</span><span class="token punctuation">.</span>mock<span class="token punctuation">(</span>
+        return_value<span class="token operator">=</span>httpx<span class="token punctuation">.</span>Response<span class="token punctuation">(</span><span class="token number">200</span><span class="token punctuation">,</span> json<span class="token operator">=</span><span class="token punctuation">{</span><span class="token string">"id"</span><span class="token punctuation">:</span> <span class="token string">"mana-potion"</span><span class="token punctuation">,</span> <span class="token string">"name"</span><span class="token punctuation">:</span> <span class="token string">"Poción de Maná"</span><span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token punctuation">)</span>
+    
+    <span class="token comment"># 2. Mock del CAMINO DE FALLO para el servicio de inventario (no crítico)</span>
+    respx<span class="token punctuation">.</span>get<span class="token punctuation">(</span>INVENTORY_API_URL<span class="token punctuation">)</span><span class="token punctuation">.</span>mock<span class="token punctuation">(</span>
+        return_value<span class="token operator">=</span>httpx<span class="token punctuation">.</span>Response<span class="token punctuation">(</span><span class="token number">503</span><span class="token punctuation">)</span> <span class="token comment"># Service Unavailable</span>
+    <span class="token punctuation">)</span>
+
+    <span class="token comment"># 3. Llama a nuestro endpoint</span>
+    response <span class="token operator">=</span> client<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">"/product-details/mana-potion"</span><span class="token punctuation">)</span>
+
+    <span class="token comment"># 4. Verificaciones (Asserts)</span>
+    <span class="token comment"># El endpoint debe responder OK (200), no un error 5xx</span>
+    <span class="token keyword keyword-assert">assert</span> response<span class="token punctuation">.</span>status_code <span class="token operator">==</span> <span class="token number">200</span>
+    
+    data <span class="token operator">=</span> response<span class="token punctuation">.</span>json<span class="token punctuation">(</span><span class="token punctuation">)</span>
+    
+    <span class="token comment"># La información del producto debe estar presente</span>
+    <span class="token keyword keyword-assert">assert</span> data<span class="token punctuation">[</span><span class="token string">"product_info"</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">"name"</span><span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token string">"Poción de Maná"</span>
+    
+    <span class="token comment"># La información del inventario debe reflejar el estado de fallback</span>
+    <span class="token keyword keyword-assert">assert</span> data<span class="token punctuation">[</span><span class="token string">"inventory"</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">"stock"</span><span class="token punctuation">]</span> <span class="token keyword keyword-is">is</span> <span class="token boolean">None</span>
+    <span class="token keyword keyword-assert">assert</span> <span class="token string">"No se pudo verificar"</span> <span class="token keyword keyword-in">in</span> data<span class="token punctuation">[</span><span class="token string">"inventory"</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">"status"</span><span class="token punctuation">]</span>
+
+<span class="token decorator annotation punctuation">@respx<span class="token punctuation">.</span>mock</span>
+<span class="token keyword keyword-def">def</span> <span class="token function">test_endpoint_fails_when_critical_service_fails</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># Mock del servicio de productos fallando</span>
+    respx<span class="token punctuation">.</span>get<span class="token punctuation">(</span>PRODUCT_API_URL<span class="token punctuation">)</span><span class="token punctuation">.</span>mock<span class="token punctuation">(</span>return_value<span class="token operator">=</span>httpx<span class="token punctuation">.</span>Response<span class="token punctuation">(</span><span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token comment"># No necesitamos mockear el inventario porque la ejecución parará antes</span>
+
+    response <span class="token operator">=</span> client<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">"/product-details/mana-potion"</span><span class="token punctuation">)</span>
+
+    <span class="token comment"># Si el servicio crítico falla, todo el endpoint debe fallar</span>
+    <span class="token keyword keyword-assert">assert</span> response<span class="token punctuation">.</span>status_code <span class="token operator">==</span> <span class="token number">502</span> <span class="token comment"># Bad Gateway</span>
+    <span class="token keyword keyword-assert">assert</span> <span class="token string">"El servicio de productos falló"</span> <span class="token keyword keyword-in">in</span> response<span class="token punctuation">.</span>json<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token string">"detail"</span><span class="token punctuation">]</span>
+</code></pre><h4 id="pruebas-ejecución-con-pytest">Pruebas (ejecución con <code>pytest</code>) </h4>
+<p>En lugar de <code>curl</code>, la prueba aquí es ejecutar el motor de tests.</p>
+<p><strong>Paso 1: Instala las dependencias de testing</strong></p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code>pip <span class="token function">install</span> pytest respx
+</code></pre><p><strong>Paso 2: Ejecuta los tests desde tu terminal</strong></p>
+<pre data-role="codeBlock" data-info="bash" class="language-bash bash"><code>pytest <span class="token parameter variable">-v</span>
+</code></pre><p><strong>Salida esperada:</strong></p>
+<pre data-role="codeBlock" data-info="" class="language-text"><code>============================= test session starts ==============================
+...
+collected 2 items
+
+test_resiliencia.py::test_endpoint_degrades_gracefully_when_inventory_fails PASSED [ 50%]
+test_resiliencia.py::test_endpoint_fails_when_critical_service_fails PASSED    [100%]
+
+============================== 2 passed in ...s ================================
+
+</code></pre><p>Este resultado <code>PASSED</code> es la prueba definitiva y automatizada de que tu lógica de degradación controlada funciona exactamente como la diseñaste. Has verificado tu red de seguridad antes de que ocurra un incendio real.</p>
+<hr>
+<h2 id="referencias-bibliográficas">Referencias bibliográficas </h2>
+<h3 id="estrategias-de-manejo-de-errores-y-principios-de-resiliencia">Estrategias de Manejo de Errores y Principios de Resiliencia </h3>
+<ul>
+<li>
+<p><strong>[1] FastAPI - Handling Errors.</strong> (s.f.). Tiangolo - FastAPI Official Documentation.</p>
+<ul>
+<li>Recuperado de <a href="https://fastapi.tiangolo.com/tutorial/handling-errors/">https://fastapi.tiangolo.com/tutorial/handling-errors/</a></li>
+<li><em>Documentación oficial sobre el manejo de <code>HTTPException</code> y <code>RequestValidationError</code>, y la implementación de controladores de excepciones personalizados (sección 4.2).</em></li>
+</ul>
+</li>
+</ul>
+<h3 id="implementación-de-patrones-de-resiliencia">Implementación de Patrones de Resiliencia </h3>
+<ul>
+<li>
+<p><strong>[2] <code>pybreaker</code> - PyPI.</strong> (s.f.).</p>
+<ul>
+<li>Recuperado de <a href="https://pypi.org/project/pybreaker/">https://pypi.org/project/pybreaker/</a></li>
+<li><em>Librería Python para implementar el patrón Circuit Breaker, utilizada en la sección 4.6.</em></li>
+<li>Documentación: <a href="https://www.google.com/search?q=https://pybreaker.readthedocs.io/">https://pybreaker.readthedocs.io/</a></li>
+</ul>
+</li>
+<li>
+<p><strong>[3] <code>tenacity</code> - PyPI.</strong> (s.f.).</p>
+<ul>
+<li>Recuperado de <a href="https://pypi.org/project/tenacity/">https://pypi.org/project/tenacity/</a></li>
+<li><em>Librería Python para reintentar acciones con diversas estrategias (backoff exponencial), mencionada en la sección 4.4.</em></li>
+<li>Documentación: <a href="https://tenacity.readthedocs.io/">https://tenacity.readthedocs.io/</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="observabilidad-logging-y-tracing">Observabilidad: Logging y Tracing </h3>
+<ul>
+<li>
+<p><strong>[6] <code>structlog</code> - Structured Logging for Python.</strong> (s.f.).</p>
+<ul>
+<li>Recuperado de <a href="https://www.structlog.org/en/stable/">https://www.structlog.org/en/stable/</a></li>
+<li><em>Librería avanzada para logging estructurado en Python, recomendada en la sección 4.8.</em></li>
+</ul>
+</li>
+<li>
+<p><strong>[7] <code>python-json-logger</code> - PyPI.</strong> (s.f.).</p>
+<ul>
+<li>Recuperado de <a href="https://pypi.org/project/python-json-logger/">https://pypi.org/project/python-json-logger/</a></li>
+<li><em>Formateador de logs JSON para la librería estándar <code>logging</code> de Python (sección 4.8).</em></li>
+</ul>
+</li>
+<li>
+<p><strong>[8] OpenTelemetry Documentation.</strong> (s.f.). OpenTelemetry Authors.</p>
+<ul>
+<li>Recuperado de <a href="https://opentelemetry.io/docs/">https://opentelemetry.io/docs/</a></li>
+<li><em>Estándar y conjunto de herramientas para telemetría (trazas, métricas, logs), detallado en la sección 4.8. Incluye SDKs para Python e instrumentación para FastAPI, HTTPX, etc.</em></li>
+<li>W3C Trace Context: <a href="https://www.w3.org/TR/trace-context/">https://www.w3.org/TR/trace-context/</a></li>
+</ul>
+</li>
+<li>
+<p><strong>[9] Jaeger Tracing.</strong> (s.f.). Jaeger Authors, CNCF.</p>
+<ul>
+<li>Recuperado de <a href="https://www.jaegertracing.io/docs/">https://www.jaegertracing.io/docs/</a></li>
+<li><em>Backend popular para visualización de trazas distribuidas, compatible con OpenTelemetry.</em></li>
+</ul>
+</li>
+<li>
+<p><strong>[10] Grafana Loki.</strong> (s.f.). Grafana Labs.</p>
+<ul>
+<li>Recuperado de <a href="https://grafana.com/docs/loki/latest/">https://grafana.com/docs/loki/latest/</a></li>
+<li><em>Sistema de agregación de logs inspirado en Prometheus, optimizado para Grafana.</em></li>
+</ul>
+</li>
+</ul>
+<h3 id="visualización-y-dashboards">Visualización y Dashboards </h3>
+<ul>
+<li>
+<p><strong>[11] Grafana Documentation.</strong> (s.f.). Grafana Labs.</p>
+<ul>
+<li>Recuperado de <a href="https://grafana.com/docs/grafana/latest/">https://grafana.com/docs/grafana/latest/</a></li>
+<li><em>Herramienta líder para visualización de métricas y logs, y creación de dashboards (sección 4.9).</em></li>
+</ul>
+</li>
+<li>
+<p><strong>[12] Prometheus Monitoring System.</strong> (s.f.). Prometheus Authors.</p>
+<ul>
+<li>Recuperado de <a href="https://prometheus.io/docs/introduction/overview/">https://prometheus.io/docs/introduction/overview/</a></li>
+<li><em>Sistema de monitorización y alerta, comúnmente usado con Grafana para métricas.</em></li>
+</ul>
+</li>
+</ul>
+
+      </div>
+      
+      
+    
+    
+    
+    
+    
+    
+  
+    </body></html>
