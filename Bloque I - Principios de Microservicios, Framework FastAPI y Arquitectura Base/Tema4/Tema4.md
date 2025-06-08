@@ -30,7 +30,7 @@
 
 
 
-## 4.1. Estrategia Global de Errores: Tu Plan Maestro Anti-Caos
+## 4.1. Estrategia Global de Errores
 
 Imagina que eres el arquitecto de un rascacielos. No esperas a que haya un incendio para pensar en salidas de emergencia. ¡Lo mismo con los errores!
 
@@ -47,14 +47,14 @@ Imagina que eres el arquitecto de un rascacielos. No esperas a que haya un incen
 | :------------ | :----------------------------------------- | :---------- | :----------- | :---------------------------------------------- |
 | **Cliente** | Datos malformados (Pydantic no valida)     | 422         | ¡NO!         | Falta un campo en el JSON.                      |
 |               | Datos no válidos (pero bien formados)      | 400         | ¡NO!         | Pides 1000 items, y el máx es 100.              |
-|               | No autenticado                             | 401         | ¡NO!         | Token JWT chungo.                               |
+|               | No autenticado                             | 401         | ¡NO!         | Token JWT erróneo.                               |
 |               | No autorizado                              | 403         | ¡NO!         | Eres user, no admin.                            |
 |               | Recurso no existe                          | 404         | ¡NO!         | Buscas `GET /items/999` y 999 no está.          |
 | **Servidor** | Regla de negocio rota                      | 409 / 400   | ¡NO!         | "Email ya existe", "Stock insuficiente".        |
 |               | ¡Ups! Un bug en *mi* código FastAPI        | 500         | NO (hasta arreglar) | `variable_none.metodo()`                   |
 |               | Servicio externo (BBDD, otra API) KO       | 503 / 504   | **¡SÍ!** (con cabeza) | La API de pagos no responde.                 |
 
-**Paso Práctico 2: El Formato JSON de Error Universal (¡Tu Comunicado Oficial!)**
+**Paso Práctico 2: El Formato JSON de Error Universal**
 
 Cualquier error que devuelva FastAPI, que tenga esta pinta:
 
@@ -113,7 +113,7 @@ async def add_trace_id_middleware(request: Request, call_next):
     response.headers["X-Trace-ID"] = trace_id
     return response
 
-# --- 3. Tus Porteros (Exception Handlers) ---
+# --- 3. Esto es lo que tú configuras (Exception Handlers) ---
 @app.exception_handler(RecursoNoEncontradoError)
 async def handle_recurso_no_encontrado(request: Request, exc: RecursoNoEncontradoError):
     trace_id = getattr(request.state, "trace_id", "N/A")
@@ -232,131 +232,185 @@ Es vital saber si el error es porque el cliente pidió algo "imposible" (Negocio
 
 ---
 
-## 4.4. Patrón Retry con `tenacity`: 
+## 4.4. Aplicación del patrón Retry con backoff exponencial
 
-A veces, llamar a otra API o a la BBDD falla por un instante. Reintenta, pero con cabeza: espera un poco más cada vez (backoff exponencial) y añade un toque de azar (jitter) para no saturar.
 
-La librería `tenacity` es tu amiga: `pip install tenacity`
+---
 
-De acuerdo, entiendo que el ejemplo anterior tenía bastantes detalles. Vamos a simplificarlo significativamente para que los conceptos básicos de Tenacity y el manejo de errores sean más fáciles de seguir. También simplificaremos el desafío.
 
-### Ejemplo Simplificado de Cliente Resistente
 
-Nos centraremos en:
-1.  Reintentar solo `TimeoutException`, `NetworkError` y un `HTTPStatusError` específico (503).
-2.  Menos intentos y una estrategia de espera más simple por defecto.
-3.  Simulación de menos tipos de error.
-4.  Manejo de excepciones en el endpoint un poco más directo.
+> Implementar el patrón **Retry** en una API basada en **FastAPI** para hacer la aplicación más resiliente a fallos temporales de servicios externos.
 
-```python
-# cliente_externo_simple.py
-from fastapi import FastAPI, HTTPException, status
-import httpx
-import uvicorn
-from tenacity import retry, stop_after_attempt, wait_fixed, RetryError, retry_if_exception
-import random
+Cuando un microservicio hace una petición HTTP a otro servicio, este puede fallar de manera **intermitente** (por ejemplo, `503 Service Unavailable`). En estos casos, es una **buena práctica reintentar** la petición en lugar de fallar inmediatamente.
 
-# --- 0. Definición de la App FastAPI ---
-app = FastAPI(title="Cliente Externo Simple")
+Aplicaremos un **Retry automático** con una estrategia de:
 
-# --- 1. Define qué errores quieres reintentar (versión simplificada) ---
-def es_error_reintentable_simple(exception: Exception) -> bool:
-    """Decide si una excepción merece un reintento (lógica simplificada)."""
-    if isinstance(exception, (httpx.TimeoutException, httpx.NetworkError)):
-        print(f"DEBUG: Reintentando por Timeout/Network: {type(exception).__name__}")
-        return True
-    
-    if isinstance(exception, httpx.HTTPStatusError):
-        # Solo reintentamos errores 503 (Servicio No Disponible)
-        if exception.response.status_code == status.HTTP_503_SERVICE_UNAVAILABLE:
-            print(f"DEBUG: Reintentando por HTTPStatusError 503: Código {exception.response.status_code}")
-            return True
-            
-    print(f"DEBUG: NO se reintenta: {type(exception).__name__} - {str(exception)}")
-    return False
+* **Número máximo de reintentos**.
+* **Tiempo de espera** entre reintentos (backoff simple o exponencial).
 
-# --- 2. Decora tu función de llamada externa (parámetros simplificados) ---
-@retry(
-    stop=stop_after_attempt(2),  # Máximo 2 intentos (1 original + 1 reintento)
-    wait=wait_fixed(1),          # Espera fija de 1 segundo entre reintentos
-    retry=retry_if_exception(es_error_reintentable_simple),
-    reraise=True
-)
-async def llamar_api_externa_simple(url: str, client: httpx.AsyncClient):
-    print(f"Intentando llamar a {url}...")
-    
-    # Simular fallo aleatoriamente (50% de probabilidad)
-    if random.random() < 0.6: # Falla el 60% de las veces para ver reintentos
-        # Elige un tipo de error para simular (lista simplificada)
-        error_type = random.choice(["timeout", "http_503", "http_400"]) 
-        print(f"SIMULANDO FALLO: {error_type}")
-        
-        mock_request = httpx.Request("GET", url)
+---
 
-        if error_type == "timeout":
-            raise httpx.TimeoutException("Timeout simulado", request=mock_request)
-        elif error_type == "http_503": # Error reintentable
-            mock_response = httpx.Response(status.HTTP_503_SERVICE_UNAVAILABLE, request=mock_request, content=b"Servicio no disponible")
-            raise httpx.HTTPStatusError("503 Servicio No Disponible simulado", request=mock_request, response=mock_response)
-        elif error_type == "http_400": # Error NO reintentable
-            mock_response = httpx.Response(status.HTTP_400_BAD_REQUEST, request=mock_request, content=b"Peticion incorrecta")
-            raise httpx.HTTPStatusError("400 Bad Request simulado", request=mock_request, response=mock_response)
+### **¿Qué es el patrón Retry?**
 
-    print(f"ÉXITO llamando a {url}")
-    return {"data_externa": f"Datos de {url} recibidos!"}
+* **Retry**: Volver a intentar una operación fallida, suponiendo que el error puede resolverse solo (por ejemplo, en un pico de carga).
+* **Backoff**: Añadir una espera entre reintentos para no saturar el sistema.
+* **Exponencial**: Incrementar el tiempo de espera de forma progresiva entre intentos.
 
-# --- 3. Endpoint FastAPI (manejo de errores simplificado) ---
-@app.get("/datos-externos-simple")
-async def get_datos_simple():
-    url_externa_test = "http://servicio-simulado-simple.com/api/data"
-    
-    async with httpx.AsyncClient() as client:
-        try:
-            resultado = await llamar_api_externa_simple(url_externa_test, client)
-            return resultado
-        except RetryError as e: 
-            last_exc = e.last_attempt.exception()
-            print(f"FALLO DEFINITIVO tras {e.attempt_number} intentos. Última excepción: {type(last_exc).__name__} - {str(last_exc)}")
-            
-            # Devolvemos un 503 genérico si todos los reintentos fallaron
-            # Podrías inspeccionar last_exc para un código más específico si quisieras
-            raise HTTPException(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE, 
-                detail=f"Servicio externo no disponible tras reintentos. Causa final: {str(last_exc)}"
-            )
-        except httpx.HTTPStatusError as e_http: 
-            # Captura HTTPStatusError que no fueron reintentados (ej. el 400 simulado)
-            print(f"Error HTTP no reintentado: {e_http.response.status_code} - {e_http}")
-            raise HTTPException(status_code=e_http.response.status_code, detail=str(e_http))
-        except Exception as e: 
-            # Otros errores inesperados
-            print(f"Error inesperado: {type(e).__name__} - {e}")
-            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Error inesperado en el servidor.")
+**Beneficios**:
 
-# --- Para ejecutar este script directamente ---
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
+* Mejora la **resiliencia**.
+* Reduce el **impacto** de fallos temporales.
+* Evita saturar servicios que están bajo estrés.
+
+---
+
+### **Ejemplo práctico con FastAPI y Tenacity**
+
+### 🔹 **Librerías necesarias**
+
+```bash
+pip install fastapi uvicorn tenacity httpx
 ```
 
+---
 
-### Desafío Práctico Simplificado
+#### 1. **Servicio externo simulado (`fake_service`)**
 
-Ahora, basado en este código más simple:
+Un servicio que falla aleatoriamente un 70% de las veces para simular fallos temporales:
 
-**Desafío 1: Observar el Número de Intentos**
+```python
+# fake_service.py
+from fastapi import FastAPI, Response
+import random
 
-1.  Ejecuta el script `cliente_externo_simple.py`.
-2.  Llama al endpoint `http://localhost:8000/datos-externos-simple` varias veces hasta que veas que ocurre un error reintentable (como "Timeout simulado" o "503 Servicio No Disponible simulado") y luego falla definitivamente.
-3.  **Observa la consola del servidor**: ¿Cuántas veces se imprime "Intentando llamar a..." antes de que aparezca "FALLO DEFINITIVO"? Debería ser 2 veces (el intento original + 1 reintento).
-4.  **Modifica** la línea `@retry( stop=stop_after_attempt(2), ...)` para que sea `@retry( stop=stop_after_attempt(4), ...)`.
-5.  Vuelve a ejecutar y prueba. Ahora, ¿cuántas veces se intenta antes del fallo definitivo? (Debería ser 4).
+app = FastAPI()
 
+@app.get("/fake_service")
+def fake_service():
+    if random.random() < 0.7:
+        return Response(
+            content="{'error': 'Temporary failure'}",
+            status_code=503,
+            media_type="application/json"
+        )
+    return {"message": "Service OK"}
+```
+
+✅ **Este servicio** responderá 503 muchas veces aleatoriamente.
+
+---
+
+#### 2. **Cliente con Retry en FastAPI**
+
+Este cliente reintentará automáticamente si recibe un `503 Service Unavailable`:
+
+```python
+# retry_client.py
+from fastapi import FastAPI, HTTPException
+import httpx
+from tenacity import retry, stop_after_attempt, wait_fixed, RetryError
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+app = FastAPI()
+
+EXTERNAL_SERVICE_URL = "http://localhost:9000/fake_service"
+
+# Retry decorator: reintenta hasta 3 veces si hay un fallo 503
+@retry(
+    stop=stop_after_attempt(3),    # máximo 3 intentos
+    wait=wait_fixed(2)             # espera fija de 2 segundos entre intentos
+)
+def call_external_service():
+    response = httpx.get(EXTERNAL_SERVICE_URL)
+    if response.status_code == 503:
+        logger.warning(f"503 Service Unavailable, reintentando...")
+        raise Exception("503 Service Unavailable")
+    response.raise_for_status()
+    return response.json()
+
+@app.get("/call-service/")
+def call_service():
+    try:
+        result = call_external_service()
+        return {"result": result}
+    except RetryError:
+        raise HTTPException(status_code=500, detail="Servicio no disponible después de varios intentos")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+```
+
+---
+
+#### 3. **Cómo ejecutarlo**
+
+🔹 **Terminal 1**: Levantar el servicio que falla
+
+```bash
+uvicorn fake_service:app --host 0.0.0.0 --port 9000 --reload
+```
+
+🔹 **Terminal 2**: Levantar el cliente con retry
+
+```bash
+uvicorn retry_client:app --host 0.0.0.0 --port 8000 --reload
+```
+
+🔹 **Probar**
+
+```bash
+curl http://localhost:8000/call-service/
+```
+ **Resultados esperados**:
+
+* Si el servicio externo responde 503, se verá:
+
+  ```
+  WARNING:root:503 Service Unavailable, reintentando...
+  ```
+
+  repetido hasta 3 veces y, si sigue fallando, respuesta:
+
+  ```json
+  {
+    "detail": "Servicio no disponible después de varios intentos"
+  }
+  ```
+
+* Si en alguno de los intentos responde 200 OK:
+
+  ```json
+  {
+    "result": {
+      "message": "Service OK"
+    }
+  }
+  ```
+
+---
+
+
+
+| Configuración                      | Valor                                 |
+| ---------------------------------- | ------------------------------------- |
+| **Máximo número de intentos**      | `3`                                   |
+| **Tiempo entre intentos**          | `2 segundos`                          |
+| **Error que dispara retry**        | `503 Service Unavailable`             |
+| **Comportamiento si todos fallan** | Devolver `500 Servicio no disponible` |
+
+
+
+* **Tenacity** solo reintenta si lanzas una **excepción**.
+* No debes capturar las excepciones dentro de la función decorada; déjalas subir.
+* Se puede configurar **backoff exponencial** con `wait_exponential()` en vez de `wait_fixed()` para un patrón más realista.
 
 
 
 ---
 
-## 4.5. Circuit Breaker y Bulkhead
+## 4.5 Introducción a patrones Circuit Breaker y Bulkhead
 
 * **Circuit Breaker (Interruptor Automático):**
     * Si un servicio externo falla *demasiado*, ¡deja de llamarlo por un rato! Es como un fusible.
@@ -372,7 +426,8 @@ Ahora, basado en este código más simple:
 
 ---
 
-## 4.6. Circuit Breakers con `pybreaker`: El Fusible Inteligente
+## 4.6 Implementación de circuit breakers con pybreaker
+
 
 La librería `pybreaker` es genial para esto: `pip install pybreaker`
 
@@ -582,446 +637,9 @@ o
 ---
 ## 4.7. Diseño de endpoints resilientes a fallos de servicios externos
 
-Tu endpoint FastAPI es un héroe, ¡pero no invencible! Si depende de otros para funcionar, debe saber qué hacer cuando esos otros fallan.
-
-**Estrategias Prácticas:**
-
-1.  **Timeouts Agresivos (¡Ya los vimos!):** Usa `httpx.Timeout` en tus clientes. No esperes eternamente.
-2.  **Fallbacks (Plan B):** Si el servicio de recomendaciones falla, ¿puedes mostrar la página de producto sin ellas? O con recomendaciones cacheadas/por defecto?
-
-    ```python
-    # En tu servicio de aplicación (no en el endpoint FastAPI directamente)
-     async def get_product_page_data(product_id: str, user_id: str):
-         producto = await self.product_repo.get_by_id(product_id)
-         if not producto: raise RecursoNoEncontradoError(...)
-
-         try:
-             # Esta llamada usa cliente con Retry y Circuit Breaker
-             recomendaciones = await self.reco_service_client.get_for_product(product_id, user_id)
-         except (CircuitBreakerError, httpx.HTTPError) as e: # O tu ExternalServiceError
-             logger.warning(f"Recomendaciones no disponibles para {product_id}. Usando fallback. Error: {e}")
-             recomendaciones = [{"id": "default1", "nombre": "Producto Popular 1"}] # Fallback!
-
-         return {"producto": producto, "recomendaciones": recomendaciones}
-    ```
-3.  **Degradación Agraciada:** Es el resultado del fallback. El servicio sigue funcionando, pero quizás con menos funcionalidades. ¡Mejor eso que un error 500 total!
-4.  **Health Checks (`/health`):**
-    * **Shallow (`/health/live`):** ¿Está FastAPI vivo? Devuelve 200 OK.
-    * **Deep (`/health/ready`):** ¿Están *mis dependencias críticas* (BBDD, API clave) vivas? Si no, devuelve 503. Kubernetes usa esto para saber si mandar tráfico o reiniciar.
-
-
----
-
-## 4.8. Diseño de endpoints resilientes a fallos de servicios externos
-
-Cuando tienes 1000 peticiones por segundo y algo falla, ¿cómo encuentras *esa* petición? ¡Con un `trace_id` (o Correlation ID)! Es un ID único que viaja con la petición por todos tus servicios.
-
-**Implementación Práctica (Simplificada) en FastAPI:**
-* **Middleware (ya lo hicimos en 4.2):**
-    * Al llegar una petición: ¿Tiene cabecera `X-Trace-ID` (o `X-Correlation-ID`)? Úsala. Si no, genera un `uuid.uuid4()`.
-    * Guárdala en `request.state.trace_id`.
-    * **Importante:** ¡Añádela a TODOS tus logs!
-    * Al responder, incluye la cabecera `X-Trace-ID` en la respuesta.
-* **Logging Estructurado (JSON):** Usa `python-json-logger` o `structlog` para que tus logs sean JSON y siempre incluyan el `trace_id`.
-
-    ```python
-    # Ejemplo de cómo usar el trace_id en un log dentro de un endpoint
-     logger = logging.getLogger(__name__) # Configurado para JSON y con filtro/adapter para trace_id
-
-     @app.get("/algun-endpoint")
-     async def mi_endpoint(request: Request):
-         trace_id = getattr(request.state, "trace_id", "N/A")
-         logger.info(f"Procesando endpoint (RID: {trace_id})", extra={"trace_id_field": trace_id})
-         # ... tu lógica ...
-         if algo_malo_pero_no_excepcion:
-              logger.warning(f"Algo raro pasó (RID: {trace_id})", extra={"trace_id_field": trace_id, "detalle": "info extra"})
-         return {"ok": True}
-    ```
-* **Propagación:** Cuando tu servicio FastAPI llame a *otro* servicio, ¡pasa el `trace_id` en las cabeceras de esa nueva petición!
-
-**¡Pruébalo!**
-* Asegúrate que el middleware de 4.2 está activo.
-* En tus endpoints, añade logs (un simple `print` con el `trace_id` de `request.state.trace_id` sirve para esta prueba rápida).
-* Llama a tus endpoints y verifica que el `trace_id` aparece en la consola y en las cabeceras de respuesta.
-
----
-
-## 4.9. Visibilidad de errores mediante dashboards
-
-Tus logs y métricas son oro, ¡pero necesitas un mapa del tesoro! Un dashboard (en Grafana, Kibana, Datadog...) te muestra de un vistazo:
-
-* **Tasa de Errores Global (5xx vs 4xx):** ¿Estamos ardiendo?
-* **Errores por Endpoint:** ¿Qué endpoint es el más problemático?
-* **Top N `error_code`:** ¿Qué errores de negocio son los más comunes?
-* **Latencia (P95, P99):** ¿Estamos lentos? ¡La lentitud es el nuevo downtime!
-* **Estado de Circuit Breakers:** ¿Cuántos están abiertos? ¿Cuáles?
-* **Métricas de Saturación:** CPU, memoria, tamaño de colas.
-
-**¡Pruébalo (Mentalmente)!**
-* Imagina un dashboard con un gran número rojo si la tasa de 5xx sube del 1%.
-* Otro gráfico con las barras de los 5 endpoints que más errores 404 dan.
-* Un semáforo por cada Circuit Breaker (Verde=Cerrado, Rojo=Abierto).
-
-**Herramientas Populares:**
-* **Logs:** ELK Stack (Elasticsearch, Logstash, Kibana), Grafana Loki.
-* **Métricas:** Prometheus + Grafana.
-* **Tracing Distribuido:** Jaeger, Zipkin, Grafana Tempo (con OpenTelemetry).
-
----
-
-## 4.10. Pruebas para simular fallos y degradación controlada
-
-¿Cómo sabes que tus Retries, Circuit Breakers y Fallbacks funcionan? ¡Provocándolos!
-
-**En FastAPI (Pruebas de Integración con `pytest`):**
-
-Usa `app.dependency_overrides` para inyectar un "cliente falso" que simule fallos cuando tu endpoint lo llame.
-
-```python
-# tests/test_resiliencia_endpoints.py (requiere pytest, httpx)
- from fastapi.testclient import TestClient
- from main import app # Tu app FastAPI
- from app.dependencies import get_servicio_x_client # Tu dependencia original
- from app.clients.base import BaseServicioXClient # Clase base de tu cliente
-
- class MockServicioXFallaSiempre(BaseServicioXClient): # Implementa la interfaz de tu cliente real
-     async def get_data(self, param: str) -> dict:
-         print("MOCK SERVICIO X: Simulando fallo siempre...")
-         raise httpx.RequestError("Mock: Fallo de red en Servicio X", request=None)
-
- class MockServicioXFallaAlPrincipioLuegoOk(BaseServicioXClient):
-     intentos = 0
-     max_fallos = 2 # Falla las primeras 2 veces
-     async def get_data(self, param: str) -> dict:
-         MockServicioXFallaAlPrincipioLuegoOk.intentos += 1
-         if MockServicioXFallaAlPrincipioLuegoOk.intentos <= MockServicioXFallaAlPrincipioLuegoOk.max_fallos:
-             print(f"MOCK SERVICIO X (Falla/Ok): Intento {MockServicioXFallaAlPrincipioLuegoOk.intentos}, simulando fallo...")
-             raise httpx.RequestError("Mock: Fallo temporal en Servicio X", request=None)
-         print(f"MOCK SERVICIO X (Falla/Ok): Intento {MockServicioXFallaAlPrincipioLuegoOk.intentos}, simulando ÉXITO!")
-         return {"data_mock": "Datos del mock exitosos!"}
-
-
- client = TestClient(app)
-
- def test_endpoint_con_servicio_x_cb_abierto():
-     # Configura el breaker para que se abra rápido para el test
-     # Esto es un poco más complejo de testear unitariamente sin acceso directo al breaker global.
-#     # Una opción es tener un breaker por test o resetearlo.
-#     # Para este ejemplo, asumimos que podemos manipular el breaker o que el test lo llevará a OPEN.
-
-     app.dependency_overrides[get_servicio_x_client] = lambda: MockServicioXFallaSiempre()
-     print("\n--- Testeando Circuit Breaker (esperamos que se abra) ---")
-#     # Llamar varias veces para abrir el circuit breaker (según fail_max del breaker)
-     for i in range(servicio_X_breaker.fail_max + 1): # +1 para asegurar que intentó abrirse
-         print(f"Llamada {i+1} para intentar abrir CB...")
-         response = client.get("/datos-servicio-x-cb") # Asume que este endpoint usa el cliente que estamos mockeando
-         if servicio_X_breaker.is_open:
-             assert response.status_code == status.HTTP_503_SERVICE_UNAVAILABLE # CB Abierto
-             assert "Circuito Abierto" in response.json()["detail"]
-             print(f"CB ABIERTO como se esperaba en llamada {i+1}!")
-             break
-     else: # Si el bucle termina sin break
-         assert False, f"El Circuit Breaker no se abrió después de {servicio_X_breaker.fail_max + 1} llamadas fallidas."
-
-     app.dependency_overrides = {} # Limpiar
-
- def test_endpoint_con_retry_y_luego_exito():
-      # Reiniciar contador de intentos del mock para este test
-     MockServicioXFallaAlPrincipioLuegoOk.intentos = 0
-#     # Asegúrate que el breaker esté cerrado al inicio de este test o usa un breaker diferente.
-#     # Aquí asumimos que el breaker se resetea o es diferente.
-#     # Para un test real, el estado del breaker entre tests puede ser un problema.
-#     # Resetear el breaker o usar uno nuevo por test es más robusto.
-     servicio_X_breaker.close() # Ejemplo de reset, si el breaker lo permite
-
-#     # Esta prueba es para el endpoint /datos-externos-retry que usa tenacity
-     app.dependency_overrides[llamar_api_externa_con_reintentos_dependency] = lambda: MockServicioXFallaAlPrincipioLuegoOk() # Asumiendo que tienes una dependencia para esto
-     print("\n--- Testeando Retry (esperamos éxito después de fallos) ---")
-     response = client.get("/datos-externos-retry") # Este endpoint usa tenacity
-     assert response.status_code == status.HTTP_200_OK
-     assert response.json()["data_mock"] == "Datos del mock exitosos!"
-     print(f"ÉXITO con Retry después de {MockServicioXFallaAlPrincipioLuegoOk.intentos} intentos totales.")
-     app.dependency_overrides = {}
-```
-**(Nota: El código de testeo anterior es conceptual y avanzado. Testear Circuit Breakers y Retries de forma aislada y fiable en tests de integración requiere un buen manejo del estado de estos componentes entre tests o el uso de mocks más sofisticados. Para `tenacity`, podrías mockear `httpx.AsyncClient` directamente en el módulo donde se usa).**
-
-**Herramientas Más Pro (Fuera de FastAPI puro):**
-* **Toxiproxy:** Un proxy que pones entre tu servicio y sus dependencias para inyectar latencia, errores de red, etc., ¡sin tocar tu código!
-* **Chaos Mesh / LitmusChaos (para Kubernetes):** Para "romper" cosas a nivel de infraestructura.
-
----
-
-#### Diseño de Endpoints Resilientes
-
-Un endpoint resiliente no se rinde fácil. Si una dependencia falla, intenta dar la mejor respuesta posible, ¡incluso si es parcial!
-
-**Escenario Práctico:** Un endpoint que muestra detalles de un producto y, opcionalmente, opiniones de usuarios (que vienen de otro servicio). Si las opiniones fallan, ¡al menos devolvemos el producto!
-
-```python
-# main_resiliente.py
-from fastapi import FastAPI, HTTPException, Request, status
-from fastapi.responses import JSONResponse
-import httpx # pip install httpx
-import asyncio
-import random
-import uvicorn
-import uuid # Para el trace_id
-
-# --- Configuración básica de logging para ver el trace_id ---
-import logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - TRACE_ID: %(trace_id)s - %(message)s')
-logger = logging.getLogger(__name__)
-
-# --- Middleware para Trace ID (simple) ---
-@app.middleware("http")
-async def add_trace_id_middleware(request: Request, call_next):
-    # Intenta obtener el trace_id de la cabecera, o genera uno nuevo
-    trace_id = request.headers.get("X-Trace-ID") or str(uuid.uuid4())
-    request.state.trace_id = trace_id # Lo guardamos en el estado de la petición
-
-    # Adaptador para que el logger pueda acceder al trace_id de request.state
-    class RequestStateAdapter(logging.LoggerAdapter):
-        def process(self, msg, kwargs):
-            try:
-                # Intenta acceder a request.state.trace_id de forma segura
-                current_trace_id = request.state.trace_id
-            except AttributeError: # Si request.state no existe o no tiene trace_id
-                current_trace_id = "N/A" # O un valor por defecto
-            
-            # Asegura que 'extra' exista en kwargs
-            if 'extra' not in kwargs:
-                kwargs['extra'] = {}
-            kwargs['extra']['trace_id'] = current_trace_id
-            return msg, kwargs
-
-    # Usamos un logger específico adaptado para este request
-    request_logger = RequestStateAdapter(logger, {})
-
-    # Para uso dentro de los endpoints, podemos pasar el logger o el trace_id
-    # request.state.logger = request_logger # Opcional, para pasarlo directamente
-
-    response = await call_next(request)
-    response.headers["X-Trace-ID"] = trace_id
-    return response
-
-
-app = FastAPI(title="API Resiliente de Productos")
-
-# --- Simulación de Clientes a Servicios Externos ---
-async def get_product_data_from_db(product_id: str, current_trace_id: str):
-    # Simula una BBDD rápida y fiable para datos del producto
-    await asyncio.sleep(0.05)
-    if product_id == "P001":
-        return {"id": "P001", "nombre": "Super Teclado Pro", "precio": 99.99}
-    return None
-
-async def get_opiniones_from_service(product_id: str, current_trace_id: str):
-    # Simula un servicio de opiniones que a veces falla o tarda
-    # ¡Importante! Propagar X-Trace-ID si esto fuera una llamada HTTP real
-    headers = {"X-Trace-ID": current_trace_id}
-    logger.info(f"Llamando a servicio de opiniones para {product_id} (Simulado con headers: {headers})")
-
-    await asyncio.sleep(random.uniform(0.1, 0.8)) # Latencia variable
-    if random.random() < 0.4: # 40% de probabilidad de fallo
-        logger.error(f"Fallo simulado en servicio de opiniones para {product_id}")
-        raise httpx.RequestError("Fallo simulado en servicio de opiniones", request=None)
-    return [
-        {"usuario": "User123", "rating": 5, "texto": "¡Excelente!"},
-        {"usuario": "FanDelProducto", "rating": 4, "texto": "Muy bueno, lo recomiendo."},
-    ]
-
-# --- Endpoint Resiliente ---
-@app.get("/productos/{product_id}/detalles")
-async def get_producto_con_opiniones(product_id: str, request: Request):
-    trace_id = request.state.trace_id # Obtenemos el trace_id
-    request_logger = logging.LoggerAdapter(logger, {'trace_id': trace_id})
-
-
-    request_logger.info(f"Petición para detalles del producto {product_id}")
-    producto_data = await get_product_data_from_db(product_id, trace_id)
-
-    if not producto_data:
-        request_logger.warning(f"Producto {product_id} no encontrado.")
-        # Usaremos nuestro handler para RecursoNoEncontradoError si lo tuviéramos
-        # Por ahora, una HTTPException directa para simplificar
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Producto {product_id} no encontrado")
-
-    opiniones_data = [] # Fallback: lista vacía
-    mensaje_degradacion = None
-    try:
-        # Timeout agresivo para el servicio de opiniones
-        opiniones_data = await asyncio.wait_for(
-            get_opiniones_from_service(product_id, trace_id),
-            timeout=0.5 # ¡Solo 500ms de paciencia!
-        )
-        request_logger.info(f"Opiniones para {product_id} obtenidas exitosamente.")
-    except httpx.RequestError:
-        request_logger.error(f"Servicio de opiniones falló para {product_id}. Degradando respuesta.")
-        mensaje_degradacion = "Opiniones no disponibles temporalmente (fallo de servicio)."
-    except asyncio.TimeoutError:
-        request_logger.warning(f"Servicio de opiniones timed out para {product_id}. Degradando respuesta.")
-        mensaje_degradacion = "Opiniones no disponibles temporalmente (timeout)."
-    
-    respuesta_final = {"producto": producto_data, "opiniones": opiniones_data}
-    if mensaje_degradacion:
-        respuesta_final["aviso_degradacion"] = mensaje_degradacion
-        
-    request_logger.info(f"Respuesta para {product_id} ensamblada.")
-    return respuesta_final
-
-# --- Health Checks ---
-@app.get("/health/live", status_code=status.HTTP_200_OK)
-async def health_live():
-    # Shallow: Solo verifica que la app FastAPI está arriba
-    return {"status": "ok", "message": "Servicio vivo"}
-
-@app.get("/health/ready", status_code=status.HTTP_200_OK)
-async def health_ready(request: Request):
-    # Deep: Intenta una operación crítica simple para ver si está listo
-    # (Ej: ping a la BBDD o a un servicio esencial)
-    # Aquí simulamos una dependencia que debe estar ok
-    trace_id = request.state.trace_id
-    request_logger = logging.LoggerAdapter(logger, {'trace_id': trace_id})
-    try:
-        # Simula chequear una dependencia esencial (ej: el servicio de productos "P001")
-        await asyncio.wait_for(get_product_data_from_db("P001", trace_id), timeout=0.2)
-        request_logger.info("Chequeo de dependencia profunda OK.")
-        return {"status": "ok", "message": "Servicio listo y dependencias OK"}
-    except Exception as e:
-        request_logger.error(f"Chequeo de dependencia profunda FALLÓ: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail=f"Servicio no listo, dependencia crítica falló: {str(e)}"
-        )
-
-if __name__ == "__main__":
-    uvicorn.run("main_resiliente:app", host="0.0.0.0", port=8000, reload=True)
-```
-
-**¡Pruébalo!**
-1.  Guarda como `main_resiliente.py`.
-2.  Ejecuta: `uvicorn main_resiliente:app --reload`
-3.  Llama a `GET http://localhost:8000/productos/P001/detalles` varias veces:
-    * Algunas veces verás el producto Y las opiniones.
-    * Otras, verás el producto y el `aviso_degradacion` porque el servicio de opiniones falló o tardó demasiado. ¡Pero la API sigue respondiendo 200 OK con lo que tiene!
-4.  Prueba `GET http://localhost:8000/productos/P_NO_EXISTE/detalles` (dará 404).
-5.  Prueba `GET http://localhost:8000/health/live` y `GET http://localhost:8000/health/ready`.
-
-**Claves de Resiliencia Aquí:**
-* **Fallback:** `opiniones_data` inicia como `[]`.
-* **Timeout Específico:** `asyncio.wait_for` para el servicio de opiniones.
-* **Degradación Agraciada:** Si las opiniones fallan, se loggea y se añade un `aviso_degradacion`. El endpoint sigue útil.
-* **Health Checks:** Para que sistemas externos sepan si tu servicio está bien.
-
----
-
-#### Captura y Log de Trazas con Contexto
-
-Un `trace_id` (o Correlation ID) es un ID único que se pasa entre servicios para una petición. ¡Esencial para depurar en microservicios!
-
-**Escenario Práctico:** Un middleware en FastAPI que genera/propaga un `trace_id`, y un endpoint que lo loggea.
-
-```python
-# main_trazabilidad.py
-from fastapi import FastAPI, Request
-import uuid
-import logging
-import uvicorn
-
-# --- Configuración de Logging Estructurado (Simplificado para consola) ---
-# En producción usarías python-json-logger o structlog para JSON real.
-# Este es un formateador simple para demostrar el concepto.
-class TraceIdFormatter(logging.Formatter):
-    def format(self, record):
-        # Inyecta el trace_id en el registro si está disponible
-        record.trace_id = getattr(record, 'trace_id', 'N/A')
-        return super().format(record)
-
-# Logger principal
-logger = logging.getLogger("mi_app_con_trazas")
-logger.setLevel(logging.INFO)
-handler = logging.StreamHandler() # A la consola
-formatter = TraceIdFormatter('%(asctime)s - %(levelname)s - App: %(name)s - TraceID: %(trace_id)s - %(message)s')
-handler.setFormatter(formatter)
-logger.addHandler(handler)
-# Evitar que se propague al logger root si ya tiene handlers
-logger.propagate = False
-
-
-app = FastAPI(title="API con Trazabilidad")
-
-# --- Middleware para Trace ID ---
-@app.middleware("http")
-async def trace_id_middleware(request: Request, call_next):
-    # 1. Busca un trace_id entrante (ej. de un API Gateway u otro servicio)
-    trace_id_entrante = request.headers.get("X-Trace-ID")
-    
-    # 2. Si no hay, genera uno nuevo
-    id_para_esta_peticion = trace_id_entrante or str(uuid.uuid4())
-    
-    # 3. Guarda el trace_id en el estado de la petición para acceso en endpoints
-    request.state.trace_id = id_para_esta_peticion
-    
-    # 4. Pasa la petición al siguiente en la cadena
-    response = await call_next(request)
-    
-    # 5. Añade el trace_id a la cabecera de la respuesta
-    response.headers["X-Trace-ID"] = id_para_esta_peticion
-    
-    return response
-
-# --- Cliente HTTP para simular llamada a otro servicio ---
-async def llamar_a_otro_servicio(trace_id_a_propagar: str):
-    # En una llamada real, usarías httpx y añadirías el trace_id a las cabeceras
-    logger.info(f"Llamando a servicio_externo... (Propagando TraceID: {trace_id_a_propagar})", extra={'trace_id': trace_id_a_propagar})
-    await asyncio.sleep(0.1) # Simula llamada de red
-    # Simula respuesta del servicio externo
-    logger.info(f"Respuesta de servicio_externo recibida.", extra={'trace_id': trace_id_a_propagar})
-    return {"mensaje_externo": "Datos del servicio B!", "trace_id_recibido_por_B_simulado": trace_id_a_propagar}
-
-@app.get("/mi-endpoint-trazable")
-async def endpoint_trazable(request: Request):
-    # Accede al trace_id desde el estado de la petición
-    trace_id_actual = request.state.trace_id
-    
-    # Usa un diccionario para pasar el trace_id al logger via 'extra'
-    log_extra = {'trace_id': trace_id_actual}
-    
-    logger.info("Inicio del procesamiento en /mi-endpoint-trazable", extra=log_extra)
-    
-    # ... tu lógica de negocio aquí ...
-    datos_intermedios = {"info": "procesamiento local completado"}
-    logger.info(f"Datos intermedios: {datos_intermedios}", extra=log_extra)
-    
-    # Simular llamada a otro servicio, propagando el trace_id
-    respuesta_servicio_externo = await llamar_a_otro_servicio(trace_id_actual)
-    
-    logger.info("Fin del procesamiento en /mi-endpoint-trazable", extra=log_extra)
-    return {
-        "mensaje_local": "Procesamiento en mi-endpoint-trazable finalizado.",
-        "trace_id_usado": trace_id_actual,
-        "respuesta_de_otro_servicio": respuesta_servicio_externo
-    }
-
-if __name__ == "__main__":
-    uvicorn.run("main_trazabilidad:app", host="0.0.0.0", port=8001, reload=True)
-```
-
-**¡Pruébalo!**
-1.  Guarda como `main_trazabilidad.py`.
-2.  Ejecuta: `uvicorn main_trazabilidad:app --reload --port 8001`
-3.  Abre tu navegador/Postman y llama a `GET http://localhost:8001/mi-endpoint-trazable`.
-    * Observa la consola: Verás los logs, ¡cada uno con su `TraceID`!
-    * Observa las cabeceras de la respuesta: Debería estar `X-Trace-ID`.
-4.  Ahora, llama de nuevo pero añade una cabecera `X-Trace-ID: MI-TRACE-ID-PERSONALIZADO-123` a tu petición.
-    * Observa la consola: ¡Todos los logs para esa petición ahora usan `MI-TRACE-ID-PERSONALIZADO-123`! Y la respuesta también lo tiene.
-
-**Claves de Trazabilidad Aquí:**
-* **Middleware:** Centraliza la lógica del `trace_id`.
-* `request.state`: Un buen sitio para guardar información de la petición.
-* **Logging con `extra`:** Así se pasan datos dinámicos (como el `trace_id`) a los formateadores de logs.
-* **Propagación:** Si llamas a otros servicios, ¡no olvides pasarles el `trace_id`!
-
+## 4.8 Captura y log de trazas con contexto de peticiones
+## 4.9 Visibilidad de errores mediante dashboards
+## 4.10 Pruebas para simular fallos y degradación controlada
 ---
 
 

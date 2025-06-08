@@ -33,23 +33,12 @@
 
 ## 5.1 Autenticación basada en JWT con FastAPI
 
-La autenticación es el proceso de verificar la identidad de un usuario,\
-cliente o servicio. JSON Web Tokens (JWT) son un estándar abierto (RFC\
-7519\) que define una forma compacta y autónoma para transmitir\
-información de forma segura entre partes como un objeto JSON. Son\
-especialmente adecuados para escenarios de microservicios debido a su\
-naturaleza stateless.
+La autenticación es el proceso de verificar la identidad de un usuario, cliente o servicio. JSON Web Tokens (JWT) son un estándar abierto (RFC 7519) que define una forma compacta y autónoma para transmitir información de forma segura entre partes como un objeto JSON. Son especialmente adecuados para escenarios de microservicios debido a su naturaleza stateless.
 
-**Estructura de un JWT:** Un JWT consta de tres partes separadas por\
-puntos (`.`):
+**Estructura de un JWT:** Un JWT consta de tres partes separadas porpuntos (`.`):
 
-1. **Header (Cabecera):** Típicamente consiste en dos partes: el tipo\
-   de token (`typ`, que es JWT) y el algoritmo de firma utilizado\
-   (`alg`, como HMAC SHA256 o RSA SHA256).`json { "alg": "HS256", "typ": "JWT" }` Esta\
-   parte se codifica en Base64Url.
-2.  **Payload (Carga Útil):** Contiene las "claims" (afirmaciones),\
-    que son declaraciones sobre una entidad (normalmente el usuario) y\
-    datos adicionales. Hay tres tipos de claims:
+1. **Header (Cabecera):** Típicamente consiste en dos partes: el tipo de token (`typ`, que es JWT) y el algoritmo de firma utilizado (`alg`, como HMAC SHA256 o RSA SHA256).`json { "alg": "HS256", "typ": "JWT" }` Esta parte se codifica en Base64Url.
+2.  **Payload (Carga Útil):** Contiene las "claims" (afirmaciones), que son declaraciones sobre una entidad (normalmente el usuario) y datos adicionales. Hay tres tipos de claims:
 
     * **Registered claims (Registradas):** Un conjunto de claims\
       predefinidas no obligatorias pero recomendadas, como `iss`\
