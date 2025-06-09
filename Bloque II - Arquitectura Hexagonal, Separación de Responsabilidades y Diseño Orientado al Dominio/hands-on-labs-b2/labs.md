@@ -33,43 +33,29 @@
 
 ***
 
-## 🔹 LAB 3 – Gestión de Errores y Resiliencia
-
+## 🔹 LAB 3 – Desarollo Servicio gRPC
 | Item            | Detalles                                                            |
 | --------------- | ------------------------------------------------------------------- |
 | 🕒 Duración     | 1.5 h                                                               |
-| 🎯 Objetivo     | Añadir manejo de errores resiliente y Circuit Breaker básico        |
-| 🧠 Temas        | Tema 4 completo                                                     |
-| ⚙️ Tecnologías  | pybreaker, logging, fallback handlers                               |
-| 📁 Entregable   | API Gateway con retry y tolerancia a fallos de servicios caídos     |
-| 🧪 Tareas clave | <p>- Simular fallos<br>- Implementar retry<br>- Circuit breaker</p> |
-| 🧩 Repositorios | `lab01-resilience-gateway`                                          |
+| 🎯 Objetivo     | Implementar servicio gRPC
+| 🧠 Temas        | Tema 3 completo                                                     |
+| ⚙️ Tecnologías  | gRPCs                               |
+| 📁 Entregable   | Proyecto docker   |
+| 🧪 Tareas Crear servicio API REST que llame a gRPC |
+| 🧩 Repositorios | `lab01-grpc-todo`                                          |
 
 ***
 
-## 🔹 LAB 4 – Seguridad Básica con JWT y CORS
+## 🔹 LAB 4 – Seguridad Básica con JWT, CORS y Resilencia
 
 | Item            | Detalles                                                                    |
 | --------------- | --------------------------------------------------------------------------- |
 | 🕒 Duración     | 1.5 h                                                                       |
 | 🎯 Objetivo     | Añadir autenticación JWT y configuración segura de endpoints                |
 | 🧠 Temas        | Tema 5 completo                                                             |
-| ⚙️ Tecnologías  | FastAPI JWT Auth, CORS, validación con Pydantic                             |
-| 📁 Entregable   | Sistema protegido con login, tokens y autorización por scope                |
-| 🧪 Tareas clave | <p>- Generar y validar JWT<br>- Proteger endpoints<br>- Configurar CORS</p> |
-| 🧩 Repositorios | `lab01-secure-microservices`                                                |
+| ⚙️ Tecnologías  | FastAPI JWT Auth, CORS, validación con Pydantic, circuit breaker                             |
+| 📁 Entregable   | Sistema protegido con login, tokens y autorización por scope y circuite breaker               |
+| 🧪 Tareas clave | <p>- Generar y validar JWT<br>- Proteger endpoints<br>- Configurar CORS</p> <br> - Circuit breaker |
+| 🧩 Repositorios | `lab04-seguridad`   |
 
 ***
-
-## 📦 Resultado final tras Bloque 1
-
-Un sistema distribuido con:
-
-* 🔐 Seguridad básica
-* 🛡️ Resiliencia básica
-* 🌐 Comunicación REST
-* 📦 Despliegue profesional en Docker Compose
-
-***
-
-¿Quieres que empecemos ya con la **implementación paso a paso del LAB 1: Monolito base**, con su README, enunciado y código completo inicial?
