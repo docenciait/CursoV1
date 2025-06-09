@@ -35,6 +35,8 @@
 
 La autenticación es el proceso de verificar la identidad de un usuario, cliente o servicio. JSON Web Tokens (JWT) son un estándar abierto (RFC 7519) que define una forma compacta y autónoma para transmitir información de forma segura entre partes como un objeto JSON. Son especialmente adecuados para escenarios de microservicios debido a su naturaleza stateless.
 
+![alt text](image-1.png)
+
 **Estructura de un JWT:** Un JWT consta de tres partes separadas porpuntos (`.`):
 
 1. **Header (Cabecera):** Típicamente consiste en dos partes: el tipo de token (`typ`, que es JWT) y el algoritmo de firma utilizado (`alg`, como HMAC SHA256 o RSA SHA256).`json { "alg": "HS256", "typ": "JWT" }` Esta parte se codifica en Base64Url.
@@ -288,11 +290,11 @@ curl -X GET "http://localhost:8000/users/me" \
 ## 5.2 Autorización por roles y scopes (RBAC)
 
 
-
+> **RBAC**: Role Based Access Control
 
 > La **autorización** es el proceso que ocurre *después* de la autenticación. Responde a la pregunta: **"¿Tiene este usuario permiso para realizar esta acción?"**.
 
-Existen varios modelos para gestionar permisos, pero uno muy común y flexible es una combinación de **roles** y **scopes**:
+Existen varios modelos para gestionar permisos, pero uno muy común y flexible es una combinación de **roles** y **scopes** [RFC 6749](https://datatracker.ietf.org/doc/html/rfc6749):
 
 * **Rol**: Es una etiqueta que agrupa a un tipo de usuario. Define *quién* es el usuario en un sentido funcional.
     * *Ejemplos*: `admin`, `editor`, `viewer`, `premium_user`.
@@ -477,9 +479,26 @@ Vamos a probar los permisos de nuestros dos usuarios.
     ```
 
 ---
-Hemos implementado con éxito un sistema de autorización granular. El token ahora no solo dice *quién* es el usuario, sino también *qué puede hacer*.
+**Validación de varios scopes**:
 
-Cuando quieras, continuamos con el punto **5.3 Comunicación segura con HTTPS y certificados**.
+La combinación de `Security` y `SecurityScopes` en FastAPI es un mecanismo elegante para la autorización granular. En el decorador de un endpoint, usas `Security(funcion_guardia, scopes=['permiso1', 'permiso2'])` para dar una orden clara: "protege esta ruta con este guardia y exígele que el usuario tenga todos estos permisos". 
+
+```python
+@app.post("/items/publish")
+async def publish_item(current_user: dict = Security(get_current_user, scopes=["items:write", "items:publish"])
+...
+```
+
+FastAPI entonces llama a tu `funcion_guardia` e "inyecta" esa lista de permisos en un parámetro especial tipado como `SecurityScopes`. De este modo, tu función de guardia se vuelve genérica y reutilizable: no conoce los permisos de antemano, simplemente recibe la lista de requisitos del endpoint a través de `SecurityScopes` y comprueba si el token del usuario los cumple todos, implementando una lógica de autorización (Y/AND) limpia y desacoplada de la lógica de negocio.
+
+```python
+async def get_current_user(security_scopes: SecurityScopes, token: str = Depends(oauth2_scheme) ):
+    ...
+     for required_scope in security_scopes.scopes: # `scopes` es la lista de strings dentro del objeto SecurityScopes
+        if required_scope not in user_scopes:
+    ...
+```
+
 
 ## 5.3 Comunicación segura con HTTPS y certificados
 
@@ -822,9 +841,7 @@ from pydantic import BaseModel
 
 ---
 
-### **5.5 Políticas de CORS Estrictas**
 
-#### **Definición** 🌐
 
 Por defecto, los navegadores web aplican una regla de seguridad fundamental llamada **"Política del Mismo Origen" (Same-Origin Policy o SOP)**. Esta política impide que un script cargado en una página web (por ejemplo, `https://mi-frontend.com`) pueda hacer peticiones a una API que se encuentra en un origen diferente (por ejemplo, `https://api.mi-empresa.com`). Un "origen" es la combinación de protocolo (http/https), dominio y puerto.
 
