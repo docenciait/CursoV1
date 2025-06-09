@@ -92,147 +92,161 @@ La autenticación es el proceso de verificar la identidad de un usuario, cliente
 4. El cliente almacena el access token (ej. en `localStorage`,`sessionStorage`, o memoria) y lo envía en la cabecera`Authorization` con el esquema `Bearer` en cada solicitud a los\
    endpoints protegidos. `Authorization: Bearer <token>`
 
-**Implementación en FastAPI:**
 
-FastAPI facilita la integración de JWT mediante su sistema de\
-dependencias y utilidades de seguridad.
 
-1. **Instalar bibliotecas necesarias:**`bash pip install fastapi "uvicorn[standard]" python-jose[cryptography] "passlib[bcrypt]"`
-   * `python-jose`: Para codificar y decodificar JWTs.
-   * `passlib`: Para el hashing de contraseñas.
-2. **Configuración y Funciones Auxiliares (ej. en `auth.py`):**
+#### **Ejemplo Práctico** 
+
+Vamos a construir una API con dos endpoints:
+* `/token`: Un endpoint público donde el usuario envía su nombre y contraseña para recibir un JWT.
+* `/users/me`: Un endpoint protegido que solo devuelve información si se presenta un JWT válido.
+
+**1. Preparación (Instalación de librerías):**
+Abre tu terminal e instala todo lo necesario:
+```bash
+pip install "fastapi[all]" "python-jose[cryptography]" "passlib[bcrypt]" bcrypt==3.2.0
+```
+
+**2. Código de la Aplicación:**
+Guarda este código en un fichero llamado `main_sec_5_1.py`:
 
 ```python
+# main_sec_5_1.py
 from datetime import datetime, timedelta, timezone
-    from typing import Optional, Any
-    from jose import JWTError, jwt
-    from passlib.context import CryptContext
-    from fastapi import Depends, HTTPException, status
-    from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm # OAuth2PasswordRequestForm para el endpoint de login
+from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from jose import JWTError, jwt
+from passlib.context import CryptContext
 
-    # Configuración de seguridad
-    SECRET_KEY = "your-super-secret-key-please-change-this"  # ¡Mantener esto seguro y fuera del código fuente!
-    ALGORITHM = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES = 30
+# --- 1. Configuración de Seguridad ---
+# ¡IMPORTANTE! En un proyecto real, esta clave debe ser mucho más compleja y
+# cargada desde un lugar seguro (variables de entorno, gestor de secretos), NUNCA en el código.
+SECRET_KEY = "mi-clave-secreta-para-el-ejemplo-de-jwt"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-    pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-    oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token") # "token" es la URL relativa del endpoint de login
+# --- 2. Utilidades para Contraseñas y Tokens ---
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token") # Le dice a FastAPI dónde está el endpoint de login
 
-    def verify_password(plain_password: str, hashed_password: str) -> bool:
-        return pwd_context.verify(plain_password, hashed_password)
-
-    def get_password_hash(password: str) -> str:
-        return pwd_context.hash(password)
-
-    def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
-        to_encode = data.copy()
-        if expires_delta:
-            expire = datetime.now(timezone.utc) + expires_delta
-        else:
-            expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-        to_encode.update({"exp": expire})
-        encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-        return encoded_jwt
-
-    async def get_current_user(token: str = Depends(oauth2_scheme)) -> dict: # Devuelve el payload del token (o un modelo de usuario)
-        credentials_exception = HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-        try:
-            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            username: Optional[str] = payload.get("sub")
-            if username is None:
-                raise credentials_exception
-            # Aquí podrías cargar el usuario desde la BD si es necesario,
-            # o simplemente devolver el payload si contiene suficiente información.
-            # token_data = TokenData(username=username) # Si usas un modelo Pydantic para los datos del token
-        except JWTError:
-            raise credentials_exception
-
-        # Validar si el token ha expirado (aunque jwt.decode ya lo hace si 'exp' está presente)
-        # exp = payload.get("exp")
-        # if exp and datetime.fromtimestamp(exp, timezone.utc) < datetime.now(timezone.utc):
-        #     raise HTTPException(
-        #         status_code=status.HTTP_401_UNAUTHORIZED,
-        #         detail="Token has expired",
-        #         headers={"WWW-Authenticate": "Bearer"},
-        #     )
-
-        return payload # O el objeto de usuario cargado
-```
-
-1. **Endpoint de Login/Token (ej. en `main.py`):**
-
-```python
-from fastapi import FastAPI, Depends, HTTPException, status
-    from fastapi.security import OAuth2PasswordRequestForm
-    from pydantic import BaseModel
-    # from .auth import create_access_token, get_password_hash, verify_password, get_current_user # Si está en auth.py
-
-    # --- Simulación de base de datos de usuarios ---
-    fake_users_db = {
-        "user1": {
-            "username": "user1",
-            "full_name": "User One",
-            "email": "user1@example.com",
-            "hashed_password": get_password_hash("password123"), # Usar passlib
-            "disabled": False,
-            "roles": ["user"]
-        },
-        "admin1": {
-            "username": "admin1",
-            "full_name": "Admin One",
-            "email": "admin1@example.com",
-            "hashed_password": get_password_hash("adminpass"),
-            "disabled": False,
-            "roles": ["admin", "user"]
-        }
+# --- 3. Base de Datos Ficticia de Usuarios ---
+# En un caso real, esto vendría de una base de datos.
+fake_users_db = {
+    "user1": {
+        "username": "user1",
+        "full_name": "Usuario Uno",
+        "email": "user1@example.com",
+        "hashed_password": pwd_context.hash("pass123"), # La contraseña "pass123" hasheada
     }
+}
 
-    def get_user_from_db(username: str) -> Optional[dict]: # Devuelve un dict o un modelo Pydantic de Usuario
-        if username in fake_users_db:
-            return fake_users_db[username]
-        return None
-    # --- Fin simulación BD ---
+# --- 4. Funciones de Creación y Verificación de JWT ---
+def create_access_token(data: dict):
+    to_encode = data.copy()
+    expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
 
-    app = FastAPI()
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+    """
+    Esta es la dependencia "guardián". Se encarga de:
+    1. Extraer el token de la cabecera 'Authorization'.
+    2. Decodificarlo y validar su firma y expiración.
+    3. Devolver los datos del usuario si todo es correcto.
+    4. Lanzar una excepción si algo falla.
+    """
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="No se pudieron validar las credenciales",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+    
+    user = fake_users_db.get(username)
+    if user is None:
+        raise credentials_exception
+    return user
 
-    class Token(BaseModel):
-        access_token: str
-        token_type: str
+# --- 5. La Aplicación FastAPI ---
+app = FastAPI()
 
-    @app.post("/token", response_model=Token)
-    async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
-        user = get_user_from_db(form_data.username)
-        if not user or not verify_password(form_data.password, user["hashed_password"]):
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Incorrect username or password",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-        if user["disabled"]:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Inactive user")
-
-        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-        access_token = create_access_token(
-            data={"sub": user["username"], "roles": user.get("roles", [])}, # Incluir roles en el token
-            expires_delta=access_token_expires
+@app.post("/token", summary="Iniciar sesión y obtener un token")
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+    user_in_db = fake_users_db.get(form_data.username)
+    if not user_in_db or not pwd_context.verify(form_data.password, user_in_db["hashed_password"]):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Usuario o contraseña incorrectos",
         )
-        return {"access_token": access_token, "token_type": "bearer"}
+    # El "sub" (subject) es el identificador único del usuario en el token.
+    access_token = create_access_token(data={"sub": user_in_db["username"]})
+    return {"access_token": access_token, "token_type": "bearer"}
 
-    @app.get("/users/me")
-    async def read_users_me(current_user_payload: dict = Depends(get_current_user)):
-        # current_user_payload contendrá el payload decodificado del JWT
-        # Si get_current_user cargara un objeto User, sería de ese tipo.
-        username = current_user_payload.get("sub")
-        user_info = get_user_from_db(username) # Volver a cargar para obtener info completa si es necesario
-        if not user_info:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
-        return user_info
+@app.get("/users/me", summary="Obtener perfil del usuario actual (protegido)")
+async def read_users_me(current_user: dict = Depends(get_current_user)):
+    # Gracias a `Depends(get_current_user)`, este código solo se ejecuta
+    # si el token es válido. `current_user` contendrá los datos del usuario.
+    # Eliminamos el hash de la contraseña antes de devolver los datos.
+    user_info = current_user.copy()
+    user_info.pop("hashed_password")
+    return user_info
 ```
 
+**3. Ejecuta la Aplicación:**
+```bash
+uvicorn main_sec_5_1:app --reload
+```
+
+#### **Pruebas con `curl`** ✅
+
+Ahora, vamos a probar que nuestra autenticación funciona.
+
+**1. Intenta acceder al endpoint protegido SIN token (debe fallar):**
+```bash
+curl -X GET "http://localhost:8000/users/me"
+```
+*Respuesta esperada (401 Unauthorized):*
+```json
+{"detail":"Not authenticated"}
+```
+¡Perfecto! El guardián está haciendo su trabajo.
+
+**2. Inicia sesión para obtener un token:**
+```bash
+curl -X POST "http://localhost:8000/token" \
+-H "Content-Type: application/x-www-form-urlencoded" \
+-d "username=user1&password=pass123"
+```
+*Respuesta esperada:*
+```json
+{"access_token":"eyJhbGciOi...","token_type":"bearer"}
+```
+**Copia el valor del `access_token`**. Lo necesitaremos para el siguiente paso.
+
+**3. Accede al endpoint protegido CON el token (debe funcionar):**
+
+Reemplaza `TU_TOKEN_COPIADO_AQUI` con el token que acabas de obtener.
+
+```bash
+TOKEN="TU_TOKEN_COPIADO_AQUI"
+
+curl -X GET "http://localhost:8000/users/me" \
+-H "Authorization: Bearer $TOKEN"
+```
+*Respuesta esperada (200 OK):*
+```json
+{"username":"user1","full_name":"Usuario Uno","email":"user1@example.com"}
+```
+
+
+
+---
 **Consideraciones de Seguridad para JWT:**
 
 * **HTTPS Siempre:** Los JWTs solo deben transmitirse sobre HTTPS para\
@@ -273,327 +287,359 @@ from fastapi import FastAPI, Depends, HTTPException, status
 
 ## 5.2 Autorización por roles y scopes (RBAC)
 
-La autenticación confirma _quién_ es un usuario, mientras que la\
-autorización determina _qué_ se le permite hacer a ese usuario\
-autenticado.
 
-* **Role-Based Access Control (RBAC - Control de Acceso Basado en**\
-  **Roles):**
-  * **Concepto:** Los permisos no se asignan directamente a los\
-    usuarios, sino a "roles" (ej. `administrador`, `editor`,`visualizador`, `cliente_premium`). Luego, los usuarios son\
-    asignados a uno o más roles.
-  * **Ventajas:** Simplifica la gestión de permisos. Cambiar los\
-    permisos de un rol afecta a todos los usuarios con ese rol.
-* **Scopes (Ámbitos - a menudo en el contexto de OAuth2):**
-  * **Concepto:** Representan permisos más granulares que los roles.\
-    Un cliente (o un usuario actuando a través de un cliente) puede\
-    solicitar acceso a ciertos scopes. El servidor de autorización\
-    puede conceder un subconjunto de los scopes solicitados.
-  * Ejemplos de scopes: `read:profile`, `write:articles`,`manage:orders`.
-  * Un rol puede agrupar varios scopes. Por ejemplo, el rol `editor`\
-    podría tener los scopes `read:articles`, `write:articles`,`publish:articles`.
 
-**Implementación en FastAPI:**
 
-1. **Incluir Información de Roles/Scopes en el JWT:**
-   * Durante la creación del token (endpoint `/token`), después de\
-     autenticar al usuario, obtener sus roles y/o scopes (de la base\
-     de datos, LDAP, etc.) e incluirlos como una claim privada en el\
-     payload del JWT.
+> La **autorización** es el proceso que ocurre *después* de la autenticación. Responde a la pregunta: **"¿Tiene este usuario permiso para realizar esta acción?"**.
+
+Existen varios modelos para gestionar permisos, pero uno muy común y flexible es una combinación de **roles** y **scopes**:
+
+* **Rol**: Es una etiqueta que agrupa a un tipo de usuario. Define *quién* es el usuario en un sentido funcional.
+    * *Ejemplos*: `admin`, `editor`, `viewer`, `premium_user`.
+
+* **Scope (Ámbito o Permiso)**: Es una autorización granular para realizar una acción muy específica. Define *qué puede hacer* el usuario.
+    * *Ejemplos*: `items:read`, `items:write`, `users:delete`, `billing:view`.
+
+La práctica habitual es asignar uno o más roles a un usuario, y que cada rol lleve asociados un conjunto de scopes. Para mantener nuestros microservicios rápidos y autónomos, la mejor estrategia es **incluir los roles y scopes del usuario directamente en el payload del JWT** al iniciar sesión.
+
+#### **Ejemplo Práctico** 
+
+Vamos a ampliar nuestro ejemplo anterior. Ahora, al iniciar sesión, el token JWT contendrá los permisos del usuario. Crearemos endpoints que requieran scopes específicos para poder ser accedidos.
+
+**1. Preparación:**
+Continuaremos con el fichero del punto anterior. No se necesitan nuevas librerías.
+
+**2. Código de la Aplicación:**
+Guarda este código como `main_sec_5_2.py`. Fíjate en los cambios marcados con comentarios.
 
 ```python
-# En create_access_token, al formar el payload
-        user_roles = get_user_roles_from_db(user["username"]) # Función hipotética
-        user_scopes = get_user_scopes_from_db(user["username"]) # Función hipotética
-        token_data = {
-            "sub": user["username"],
-            "roles": user_roles, # ej: ["admin", "user"]
-            "scopes": user_scopes # ej: ["profile:read", "orders:write"]
-        }
-        access_token = create_access_token(data=token_data)
-```
+# main_sec_5_2.py
+from datetime import datetime, timedelta, timezone
+from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from jose import JWTError, jwt
+from passlib.context import CryptContext
 
-1. **Dependencias de FastAPI para Verificar Roles/Scopes:**
-   * Crear funciones de dependencia que tomen el payload del usuario\
-     actual (obtenido por `get_current_user`) y verifiquen si posee\
-     los roles o scopes necesarios para acceder a un endpoint.
+# --- Configuración (sin cambios) ---
+SECRET_KEY = "mi-clave-secreta-para-el-ejemplo-de-jwt"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-```python
-# En auth.py o un nuevo archivo de autorización
-    from fastapi import Depends, HTTPException, status
-    # from .auth import get_current_user # Asumiendo que get_current_user devuelve un payload con 'roles' y 'scopes'
+# --- Base de Datos Ficticia (¡Ahora con roles y scopes!) ---
+fake_users_db = {
+    "user_viewer": {
+        "username": "user_viewer",
+        "full_name": "Usuario Lector",
+        "email": "viewer@example.com",
+        "hashed_password": pwd_context.hash("pass123"),
+        "roles": ["viewer"],
+        "scopes": ["items:read"], # Solo puede leer
+    },
+    "user_editor": {
+        "username": "user_editor",
+        "full_name": "Usuario Editor",
+        "email": "editor@example.com",
+        "hashed_password": pwd_context.hash("pass456"),
+        "roles": ["editor"],
+        "scopes": ["items:read", "items:write"], # Puede leer y escribir
+    }
+}
 
-    # Clase para encapsular la lógica de chequeo de roles
-    class RoleChecker:
-        def __init__(self, allowed_roles: list[str]):
-            self.allowed_roles = allowed_roles
+# --- Funciones de JWT (create_access_token sin cambios) ---
+def create_access_token(data: dict):
+    to_encode = data.copy()
+    expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    to_encode.update({"exp": expire})
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
 
-        def __call__(self, current_user_payload: dict = Depends(get_current_user)):
-            user_roles = current_user_payload.get("roles", [])
-            for role in self.allowed_roles:
-                if role in user_roles:
-                    return current_user_payload # Éxito, el usuario tiene al menos uno de los roles permitidos
+# --- Dependencias de Seguridad (get_current_user ahora extrae más claims) ---
+async def get_current_user_from_token(token: str = Depends(oauth2_scheme)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="No se pudieron validar las credenciales",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+        
+        # Extraemos los scopes del payload del token
+        scopes = payload.get("scopes", [])
+        
+    except JWTError:
+        raise credentials_exception
+    
+    # Devolvemos un diccionario con los datos del usuario del token
+    return {"username": username, "scopes": scopes}
 
-            print(f"User {current_user_payload.get('sub')} with roles {user_roles} not in allowed roles {self.allowed_roles}")
+
+# --- NUEVA Dependencia de AUTORIZACIÓN ---
+def require_scope(required_scope: str):
+    """
+    Esta es una factoría de dependencias. Devuelve una función 'checker'
+    que verifica si el scope requerido está en la lista de scopes del usuario.
+    """
+    async def scope_checker(current_user: dict = Depends(get_current_user_from_token)):
+        if required_scope not in current_user.get("scopes", []):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"Not enough permissions. Required roles: {self.allowed_roles}"
+                detail=f"Permisos insuficientes. Se requiere el scope: '{required_scope}'"
             )
+        return current_user
+    return scope_checker
 
-    # Clase para encapsular la lógica de chequeo de scopes
-    class ScopeChecker:
-        def __init__(self, required_scopes: list[str]):
-            self.required_scopes = set(required_scopes)
+# --- Aplicación FastAPI ---
+app = FastAPI()
 
-        def __call__(self, current_user_payload: dict = Depends(get_current_user)):
-            user_scopes = set(current_user_payload.get("scopes", []))
-            if not self.required_scopes.issubset(user_scopes):
-                missing_scopes = self.required_scopes - user_scopes
-                print(f"User {current_user_payload.get('sub')} missing scopes: {missing_scopes}")
-                raise HTTPException(
-                    status_code=status.HTTP_403_FORBIDDEN,
-                    detail=f"Not enough permissions. Required scopes: {list(self.required_scopes)}"
-                )
-            return current_user_payload
+# El endpoint de login ahora debe incluir los scopes en el token
+@app.post("/token", summary="Iniciar sesión para obtener un token con scopes")
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+    user_in_db = fake_users_db.get(form_data.username)
+    if not user_in_db or not pwd_context.verify(form_data.password, user_in_db["hashed_password"]):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Usuario o contraseña incorrectos",
+        )
+    
+    # Creamos el token incluyendo el username (sub) y sus scopes
+    access_token = create_access_token(
+        data={"sub": user_in_db["username"], "scopes": user_in_db["scopes"]}
+    )
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
+# --- Endpoints Protegidos por Scopes ---
+@app.get("/items", summary="Leer lista de items (requiere scope 'items:read')")
+async def read_items(current_user: dict = Depends(require_scope("items:read"))):
+    return [{"id": 1, "name": "Poción de Salud"}, {"id": 2, "name": "Espada Mágica"}]
+
+@app.post("/items", summary="Crear un item (requiere scope 'items:write')")
+async def create_item(current_user: dict = Depends(require_scope("items:write"))):
+    return {"status": "success", "message": f"Item creado por el usuario '{current_user['username']}'"}
+
 ```
 
-1. **Proteger Endpoints:**
-   * Usar las dependencias en los endpoints.
-
-```python
-# En main.py
-    # from .auth_dependencies import RoleChecker, ScopeChecker # Si están en otro archivo
-
-    # Instancias de los checkers para roles/scopes específicos
-    allow_admin_only = RoleChecker(allowed_roles=["admin"])
-    allow_user_or_admin = RoleChecker(allowed_roles=["user", "admin"])
-    require_order_read_scope = ScopeChecker(required_scopes=["orders:read"])
-    require_order_write_scope = ScopeChecker(required_scopes=["orders:write", "orders:read"]) # Escribir implica leer
-
-    @app.get("/admin/dashboard")
-    async def get_admin_dashboard(admin_payload: dict = Depends(allow_admin_only)):
-        return {"message": f"Welcome to the admin dashboard, {admin_payload.get('sub')}!"}
-
-    @app.get("/orders/{order_id}")
-    async def get_order(order_id: str, user_payload: dict = Depends(require_order_read_scope)):
-        # Lógica para obtener el pedido, asumiendo que el scope es suficiente
-        # Se podría añadir lógica para verificar si el usuario es dueño del pedido.
-        return {"order_id": order_id, "details": "Order details...", "retrieved_by": user_payload.get("sub")}
-
-    @app.post("/orders")
-    async def create_order_endpoint(user_payload: dict = Depends(require_order_write_scope)):
-        return {"message": f"Order created by {user_payload.get('sub')}"}
+**3. Ejecuta la Aplicación:**
+```bash
+uvicorn main_sec_5_2:app --reload
 ```
 
-1. **Documentación OpenAPI con Scopes (FastAPI `Security`):**
-   * FastAPI puede integrar scopes de OAuth2 en la documentación\
-     generada por OpenAPI (Swagger UI / ReDoc). Esto permite a los\
-     usuarios de la API saber qué scopes son necesarios para cada\
-     endpoint.
+#### **Pruebas con `curl`** ✅
 
-```python
-from fastapi.security import OAuth2PasswordBearer, SecurityScopes
+Vamos a probar los permisos de nuestros dos usuarios.
 
-    # oauth2_scheme definido como antes (tokenUrl="token")
-    # ...
+**Escenario 1: El Lector (`user_viewer`)**
 
-    # En get_current_user_with_scopes, también se puede verificar el scope del token si es necesario
-    async def get_current_user_with_scopes(
-        security_scopes: SecurityScopes, # FastAPI inyecta los scopes definidos en el endpoint
-        token: str = Depends(oauth2_scheme)
-    ):
-        user_payload = await get_current_user(token) # Reutiliza la función get_current_user
+1.  **Obtén el token para `user_viewer`:**
+    ```bash
+    curl -X POST "http://localhost:8000/token" -H "Content-Type: application/x-www-form-urlencoded" -d "username=user_viewer&password=pass123"
+    ```
+    Copia el `access_token` que te devuelve.
 
-        if security_scopes.scopes: # Si el endpoint define scopes requeridos
-            user_token_scopes = set(user_payload.get("scopes", []))
-            for scope in security_scopes.scopes:
-                if scope not in user_token_scopes:
-                    raise HTTPException(
-                        status_code=status.HTTP_403_FORBIDDEN,
-                        detail=f"Not enough permissions. Missing scope: {scope}",
-                        headers={"WWW-Authenticate": f'Bearer scope="{security_scopes.scope_str}"'},
-                    )
-        return user_payload # Devuelve el payload completo para que otras dependencias puedan usar roles, etc.
+2.  **Intenta LEER items (debería funcionar):**
+    ```bash
+    TOKEN_VIEWER="TU_TOKEN_DE_VIEWER_AQUI"
+    curl -X GET "http://localhost:8000/items" -H "Authorization: Bearer $TOKEN_VIEWER"
+    ```
+    *Respuesta esperada (200 OK):* Un JSON con la lista de items.
 
-    # Endpoint protegido con scopes definidos para OpenAPI y verificados por la dependencia
-    @app.get("/items_scoped/", dependencies=[Depends(RoleChecker(allowed_roles=["user"]))]) # Ejemplo de rol + scope
-    async def read_items_scoped(
-        current_user: dict = Depends(get_current_user_with_scopes) # No se especifica `scopes` aquí, pero la dependencia lo hace
-        # Si se quiere que FastAPI gestione los scopes directamente en la dependencia:
-        # current_user: dict = Security(get_current_user_with_scopes, scopes=["items:read", "items:list"])
-    ):
-        # Si se usa Security(... scopes=[...]), la dependencia `get_current_user_with_scopes`
-        # verificará esos scopes.
-        # `current_user` será el payload del token.
-        return [{"item_id": "Foo", "owner": current_user.get("sub")}]
+3.  **Intenta CREAR un item (debería fallar):**
+    ```bash
+    TOKEN_VIEWER="TU_TOKEN_DE_VIEWER_AQUI"
+    curl -X POST "http://localhost:8000/items" -H "Authorization: Bearer $TOKEN_VIEWER"
+    ```
+    *Respuesta esperada (403 Forbidden):*
+    ```json
+    {"detail":"Permisos insuficientes. Se requiere el scope: 'items:write'"}
+    ```
 
-    # Para que los scopes aparezcan en la UI de OpenAPI, necesitas configurar `security_schemes`
-    # en la inicialización de FastAPI o en el decorador del endpoint, y usarlos con `Security`.
-    # Ejemplo de cómo FastAPI lo integra en la documentación:
-    # app = FastAPI(
-    #     swagger_ui_oauth2_redirect_url="/oauth2-redirect",
-    #     swagger_ui_init_oauth={
-    #         "clientId": "your-client-id", # Si usas un flujo OAuth2 completo
-    #         "scopes": "openid profile items:read items:write"
-    #     }
-    # )
-    # Y en el APIRouter o app, al definir el security scheme:
-    # security = OAuth2PasswordBearer(
-    #     tokenUrl="token",
-    #     scopes={"items:read": "Read items.", "items:write": "Write items."}
-    # )
-    # @app.get("/items_with_openapi_scopes")
-    # async def read_items_with_openapi_scopes(
-    #     user: dict = Security(get_current_user_with_scopes, scopes=["items:read"])
-    # ):
-    #     return {"message": "You have items:read scope!"}
-```
+**Escenario 2: El Editor (`user_editor`)**
+
+1.  **Obtén el token para `user_editor`:**
+    ```bash
+    curl -X POST "http://localhost:8000/token" -H "Content-Type: application/x-www-form-urlencoded" -d "username=user_editor&password=pass456"
+    ```
+    Copia este nuevo `access_token`.
+
+2.  **Intenta CREAR un item (debería funcionar):**
+    ```bash
+    TOKEN_EDITOR="TU_TOKEN_DE_EDITOR_AQUI"
+    curl -X POST "http://localhost:8000/items" -H "Authorization: Bearer $TOKEN_EDITOR"
+    ```
+    *Respuesta esperada (200 OK):*
+    ```json
+    {"status":"success","message":"Item creado por el usuario 'user_editor'"}
+    ```
+
+---
+Hemos implementado con éxito un sistema de autorización granular. El token ahora no solo dice *quién* es el usuario, sino también *qué puede hacer*.
+
+Cuando quieras, continuamos con el punto **5.3 Comunicación segura con HTTPS y certificados**.
 
 ## 5.3 Comunicación segura con HTTPS y certificados
 
-La comunicación en tránsito entre clientes y microservicios, y entre los\
-propios microservicios, debe ser cifrada para proteger la\
-confidencialidad e integridad de los datos. HTTPS (HTTP sobre TLS/SSL)\
-es el estándar para esto.
+La definición de HTTPS, TLS y certificados es la misma que la anterior. La diferencia radica en la implementación.
 
-* **Importancia:**
-  * **Confidencialidad:** Evita que atacantes (eavesdroppers) lean\
-    los datos transmitidos (ej. credenciales, datos personales,\
-    información de negocio sensible).
-  * **Integridad:** Asegura que los datos no han sido alterados\
-    durante la transmisión (man-in-the-middle attacks).
-  * **Autenticación (del servidor):** El certificado TLS/SSL permite\
-    al cliente verificar la identidad del servidor al que se está\
-    conectando.
-* **TLS/SSL Certificados:**
-  * **Propósito:** Un certificado digital vincula una identidad (ej.\
-    el nombre de dominio de un servidor) a una clave pública. La\
-    clave privada correspondiente se mantiene secreta en el\
-    servidor.
-  * **Cómo Funcionan (simplificado):**
-    1. El cliente se conecta al servidor.
-    2. El servidor presenta su certificado.
-    3. El cliente verifica el certificado:
-       * ¿Es emitido por una Autoridad de Certificación (CA) de\
-         confianza? (Las CAs raíz están preinstaladas en\
-         navegadores/Sistemas Operativos).
-       * ¿El nombre de dominio en el certificado coincide con el\
-         dominio al que se conecta?
-       * ¿El certificado no ha expirado y no ha sido revocado?
-    4. Si es válido, el cliente y el servidor usan las claves para\
-       establecer una conexión cifrada segura.
-  * **Tipos:**
-    * **Certificados Firmados por CA (CA-signed):** Emitidos por\
-      CAs públicas de confianza (Let's Encrypt, Comodo, DigiCert,\
-      etc.). Necesarios para sitios públicos.
-    * **Certificados Autofirmados (Self-signed):** Generados por\
-      el propio administrador del servidor. No son de confianza\
-      para navegadores públicos (muestran advertencias) pero\
-      pueden usarse para comunicación interna entre microservicios\
-      si los clientes están configurados para confiar en la CA\
-      interna o en el certificado específico.
-    * **Certificados de CA Privada:** Una organización puede\
-      operar su propia CA interna para emitir certificados para\
-      sus servicios internos.
-* **Configuración de HTTPS para Aplicaciones FastAPI:**
-  1. **Usando un Reverse Proxy (Recomendado para Producción):**
-     * **Concepto:** Un servidor como Nginx, Traefik, Caddy, o un\
-       balanceador de carga en la nube (AWS ALB/ELB, Azure\
-       Application Gateway, Google Cloud Load Balancer) se coloca\
-       delante de la aplicación FastAPI.
-     * **TLS Termination:** El reverse proxy maneja las conexiones\
-       HTTPS entrantes, desencripta el tráfico (termina TLS), y\
-       luego se comunica con la aplicación FastAPI (que corre\
-       Uvicorn) a través de HTTP plano en una red interna segura\
-       (ej. dentro de una VPC o un clúster de Kubernetes).
-     * **Beneficios:**
-       * Centraliza la gestión de certificados TLS.
-       * Puede manejar la renovación automática de certificados\
-         (ej. Caddy, Traefik con Let's Encrypt).
-       * Proporciona otras funcionalidades (balanceo de carga,\
-         caching, compresión, WAF).
-       * Simplifica la configuración de la aplicación FastAPI\
-         (Uvicorn no necesita preocuparse por SSL).
-     *   **Ejemplo (Nginx como reverse proxy con TLS):** \`\`\`nginx\
-         \# /etc/nginx/sites-available/myfastapiapp server { listen\
-         80; server\_name myapi.example.com; # Redirigir HTTP a HTTPS\
-         (opcional, pero recomendado) location / { return 301[https://$host$request\_uri](https://$host$request_uri); } }
+HTTPS cifra el tráfico para protegerlo de espionaje y manipulación. En una arquitectura de producción, un servidor web como Nginx actúa como "terminador TLS", gestionando la conexión segura con el cliente y comunicándose con nuestra aplicación FastAPI a través de una red interna más simple y rápida.
 
-         server { listen 443 ssl http2; # Habilitar SSL y HTTP/2\
-         server\_name myapi.example.com;
+`Cliente <--- (Tráfico Cifrado HTTPS) ---> Nginx <--- (Tráfico sin cifrar HTTP) ---> Aplicación FastAPI`
 
-         ```
-           ssl_certificate /etc/letsencrypt/live/myapi.example.com/fullchain.pem; # Certificado de Let's Encrypt
-           ssl_certificate_key /etc/letsencrypt/live/myapi.example.com/privkey.pem; # Clave privada
+#### Ejemplo Práctico 
 
-           # Configuraciones SSL recomendadas (ciphers, protocolos, etc.)
-           # ssl_protocols TLSv1.2 TLSv1.3;
-           # ssl_prefer_server_ciphers off;
-           # ssl_ciphers 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:...';
+La forma más sencilla y reproducible de montar este entorno es con Docker y Docker Compose. Así definimos nuestros dos servicios (la app y el proxy) y cómo se conectan.
 
-           location / {
-               proxy_pass http://127.0.0.1:8000; # Asumiendo que FastAPI/Uvicorn corre en el puerto 8000 localmente
-               proxy_set_header Host $host;
-               proxy_set_header X-Real-IP $remote_addr;
-               proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-               proxy_set_header X-Forwarded-Proto $scheme; # Importante para que FastAPI sepa que la conexión original fue HTTPS
-           }
-         ```
 
-         }\
-         \`\``En FastAPI, si se usa un proxy, se debe configurar Uvicorn para que confíe en las cabeceras`X-Forwarded-Proto`y`X-Forwarded-For`usando el parámetro`--proxy-headers`al iniciar Uvicorn, o configurando`app\
-         \= FastAPI(..., proxy\_headers=True)\` si el proxy está\
-         configurado correctamente.
-  2. **Configurando Uvicorn Directamente con SSL (para desarrollo o**\
-     **setups específicos):**
-     * Uvicorn puede servir HTTPS directamente si se le\
-       proporcionan los archivos del certificado y la clave\
-       privada.
-     * **Comando:**`bash uvicorn main:app --host 0.0.0.0 --port 8443 --ssl-keyfile ./key.pem --ssl-certfile ./cert.pem`\
-       Donde `key.pem` es tu clave privada y `cert.pem` es tu\
-       certificado (y la cadena de certificados si es necesario).
-     * Adecuado para desarrollo local o entornos donde un reverse\
-       proxy no es factible, pero generalmente menos robusto para\
-       producción que un proxy dedicado.
-  3. **Let's Encrypt:**
-     * Una CA gratuita, automatizada y abierta que proporciona\
-       certificados TLS.
-     * Herramientas como `Certbot` pueden obtener e instalar\
-       certificados de Let's Encrypt y configurar automáticamente\
-       reverse proxies como Nginx o Apache.
-     * Muchos proxies modernos (Caddy, Traefik) tienen integración\
-       nativa con Let's Encrypt para la gestión automática de\
-       certificados.
-* **mTLS (Mutual TLS) para Comunicación Segura Inter-Servicios:**
-  * **Concepto:** En TLS estándar, solo el cliente verifica la\
-    identidad del servidor. En mTLS, tanto el cliente como el\
-    servidor se autentican mutuamente presentando y validando\
-    certificados digitales.
-  * **Propósito en Microservicios:** Proporciona una autenticación\
-    fuerte y cifrado para la comunicación entre microservicios\
-    dentro de una red interna (Este-Oeste). Asegura que solo los\
-    servicios autorizados (con certificados válidos emitidos por una\
-    CA interna de confianza) puedan comunicarse entre sí.
-  * **Implementación:**
-    * Cada microservicio necesita su propio par de\
-      clave/certificado.
-    * Se requiere una CA interna (privada) para emitir y gestionar\
-      estos certificados.
-    * Los clientes HTTP (ej. `httpx` en un servicio FastAPI que\
-      llama a otro) y los servidores (Uvicorn en el servicio\
-      llamado) deben ser configurados para mTLS:
-      * El servidor se configura para solicitar un certificado\
-        del cliente y verificarlo contra la CA interna.
-      * El cliente se configura para presentar su certificado y\
-        también para verificar el certificado del servidor\
-        contra la CA interna.
-    * **Service Mesh (Istio, Linkerd, Consul Connect):**\
-      Simplifican enormemente la implementación y gestión de mTLS.\
-      Los proxies sidecar (Envoy, Linkerd2-proxy) manejan el\
-      handshake mTLS automáticamente entre servicios, sin que las\
-      aplicaciones necesiten ser modificadas para ser conscientes\
-      de mTLS. El plano de control del mesh gestiona la CA, la\
-      emisión y rotación de certificados.
+**Paso 1: La Aplicación FastAPI (Sin Cambios en el Código)**
+
+Usaremos exactamente el mismo fichero `main_sec_5_2.py` de la sección anterior. Lo importante es que **nuestra app no sabrá nada de SSL**. Ella correrá en HTTP normal.
+
+**Paso 2: Generar los Certificados (Igual que Antes)**
+
+En la raíz de tu proyecto, ejecuta el comando para crear tu certificado y clave auto-firmados:
+```bash
+openssl req -x509 -newkey rsa:4096 -nodes -out cert.pem -keyout key.pem -days 365
+```
+(Recuerda que puedes pulsar Enter a todas las preguntas para desarrollo local).
+
+**Paso 3: Crear la Configuración de Nginx**
+
+Crea un fichero llamado `nginx.conf`. Este le dice a Nginx cómo comportarse.
+
+**Fichero: `nginx.conf`**
+```nginx
+server {
+    # Nginx escuchará en el puerto 443 para tráfico HTTPS
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name localhost;
+
+    # Le indicamos dónde están el certificado y la clave privada
+    ssl_certificate /etc/nginx/certs/cert.pem;
+    ssl_certificate_key /etc/nginx/certs/key.pem;
+
+    # La raíz de la web, aunque no la usaremos mucho para la API
+    root /usr/share/nginx/html;
+
+    # La configuración principal: todo lo que llegue se reenvía a la API
+    location / {
+        # 'fastapi_app' es el nombre del servicio de nuestra API en docker-compose
+        # El puerto 8000 es donde escucha Uvicorn dentro de la red de Docker
+        proxy_pass http://fastapi_app:8000;
+        
+        # Cabeceras importantes para que la app FastAPI sepa
+        # de dónde vino la petición original
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+**Paso 4: Crear los Ficheros de Docker**
+
+Necesitaremos tres ficheros más para orquestar todo: `requirements.txt`, `Dockerfile` para nuestra app, y `docker-compose.yml` para unirlos.
+
+**Fichero: `requirements.txt`**
+```txt
+fastapi[all]
+python-jose[cryptography]
+passlib[bcrypt]
+```
+
+**Fichero: `Dockerfile`**
+```dockerfile
+# Usamos una imagen oficial de Python
+FROM python:3.11-slim
+
+# Establecemos el directorio de trabajo dentro del contenedor
+WORKDIR /app
+
+# Copiamos el fichero de requisitos e instalamos las dependencias
+COPY ./requirements.txt .
+RUN pip install --no-cache-dir --upgrade -r requirements.txt
+
+# Copiamos el código de nuestra aplicación
+COPY ./main_sec_5_2.py .
+
+# El comando que se ejecutará cuando el contenedor arranque
+# --host 0.0.0.0 es crucial para que sea accesible desde otros contenedores
+CMD ["uvicorn", "main_sec_5_2:app", "--host", "0.0.0.0", "--port", "8000"]
+```
+
+**Fichero: `docker-compose.yml`**
+```yaml
+version: '3.8'
+
+services:
+  fastapi_app:
+    build: . # Construye la imagen usando el Dockerfile en la carpeta actual
+    container_name: mi_fastapi_app
+    # No exponemos el puerto 8000 al exterior, solo Nginx necesita verlo.
+
+  nginx:
+    image: nginx:latest
+    container_name: mi_nginx_proxy
+    ports:
+      # Mapeamos el puerto 443 del host al 443 del contenedor
+      - "443:443"
+    volumes:
+      # Montamos nuestra configuración de Nginx dentro del contenedor
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      # Montamos nuestros certificados dentro del contenedor
+      - ./cert.pem:/etc/nginx/certs/cert.pem
+      - ./key.pem:/etc/nginx/certs/key.pem
+    depends_on:
+      - fastapi_app # Nginx no arrancará hasta que la app esté lista
+```
+
+**Estructura final de tu carpeta:**
+```
+.
+├── cert.pem
+├── key.pem
+├── main_sec_5_2.py
+├── requirements.txt
+├── Dockerfile
+├── nginx.conf
+└── docker-compose.yml
+```
+
+#### **Pruebas con el Entorno Completo** ✅
+
+**1. Levantar todo el sistema:**
+Con todos los ficheros en su sitio, abre una terminal en esa carpeta y ejecuta:
+```bash
+docker-compose up --build
+```
+Docker construirá la imagen de tu aplicación y arrancará ambos contenedores.
+
+**2. Prueba con el Navegador:**
+* Abre tu navegador y ve a `https://localhost/docs` (ya no necesitas especificar el puerto, porque usamos el 443 estándar de HTTPS).
+* Verás la misma advertencia de seguridad que antes. Acéptala.
+* ¡La documentación de FastAPI cargará! Has accedido de forma segura a través de Nginx.
+
+**3. Prueba con `curl`:**
+`curl` ahora hablará directamente con Nginx en el puerto 443.
+```bash
+# Obtén un token (recuerda que ahora es a través de https://localhost)
+curl https://localhost/token --insecure \
+-H "Content-Type: application/x-www-form-urlencoded" \
+-d "username=user_viewer&password=pass123"
+```
+Copia el token y úsalo para acceder a un endpoint protegido:
+```bash
+TOKEN="TU_TOKEN_AQUI"
+curl https://localhost/items --insecure -H "Authorization: Bearer $TOKEN"
+```
+La respuesta debería ser un `200 OK` con la lista de items. Has completado el flujo profesional: tu petición `curl` viaja cifrada hasta Nginx, y Nginx la reenvía de forma segura a tu aplicación FastAPI.
+
+---
 
 ## 5.4 Validación de inputs y outputs
 
@@ -772,104 +818,155 @@ from pydantic import BaseModel
 
 ## 5.5 Políticas de CORS estrictas
 
-Cross-Origin Resource Sharing (CORS) es un mecanismo de seguridad del\
-navegador que restringe las solicitudes HTTP que una página web en un\
-origen (dominio, protocolo, puerto) puede hacer a un servidor en un\
-origen diferente. Es una relajación controlada de la Same-Origin Policy\
-(SOP).
+¡Sin problema! Saltamos al 5.5. Este es un punto que causa muchos dolores de cabeza en el desarrollo frontend, así que es muy importante entenderlo bien.
 
-* **Por Qué es Necesario CORS:**
-  * La SOP impide que un script en `pagina-a.com` lea datos de una\
-    respuesta de `api-b.com` a menos que `api-b.com` lo permita\
-    explícitamente. Esto protege los datos del usuario en`api-b.com` de ser accedidos por sitios maliciosos.
-  * CORS permite a `api-b.com` especificar qué orígenes externos\
-    (`pagina-a.com`) tienen permiso para acceder a sus recursos.
-* **Riesgos de Políticas CORS Demasiado Permisivas:**
-  * Configurar `Access-Control-Allow-Origin: *` (permitir cualquier\
-    origen) puede ser peligroso, especialmente si la API maneja\
-    datos sensibles o requiere autenticación basada en\
-    cookies/sesiones (con `Access-Control-Allow-Credentials: true`).\
-    Un sitio malicioso podría hacer que el navegador de un usuario\
-    autenticado envíe solicitudes a tu API y leer las respuestas.
-* **Configuración de CORS Middleware en FastAPI:** FastAPI proporciona`CORSMiddleware` para configurar fácilmente las cabeceras CORS.
+---
+
+### **5.5 Políticas de CORS Estrictas**
+
+#### **Definición** 🌐
+
+Por defecto, los navegadores web aplican una regla de seguridad fundamental llamada **"Política del Mismo Origen" (Same-Origin Policy o SOP)**. Esta política impide que un script cargado en una página web (por ejemplo, `https://mi-frontend.com`) pueda hacer peticiones a una API que se encuentra en un origen diferente (por ejemplo, `https://api.mi-empresa.com`). Un "origen" es la combinación de protocolo (http/https), dominio y puerto.
+
+**CORS (Cross-Origin Resource Sharing)** es el mecanismo que permite **relajar esta restricción de forma segura**. Es un sistema basado en cabeceras HTTP que el **servidor** utiliza para decirle al **navegador** qué orígenes externos tienen permiso para acceder a sus recursos.
+
+Una **política de CORS estricta** significa que, en lugar de permitir el acceso desde cualquier sitio (usando un comodín `*`), tú defines una lista explícita y limitada de los orígenes en los que confías (tu aplicación frontend, por ejemplo).
+
+#### **Ejemplo Práctico** 🚦
+
+FastAPI hace que configurar CORS sea muy sencillo a través de un middleware. Vamos a configurar nuestra API para que solo acepte peticiones de nuestro frontend oficial y de nuestro entorno de desarrollo local.
+
+**1. Código de la Aplicación:**
+Añade este bloque de código al principio de tu fichero (`main_sec_5_2.py` o uno nuevo).
 
 ```python
-from fastapi import FastAPI
-    from fastapi.middleware.cors import CORSMiddleware
+# ... (importaciones existentes)
+from fastapi.middleware.cors import CORSMiddleware
 
-    app = FastAPI()
+app = FastAPI() # Asumiendo que esta es la inicialización de tu app
 
-    # Orígenes permitidos (ser lo más específico posible)
-    # Para desarrollo, podrías tener "http://localhost:3000" (si tu frontend corre ahí)
-    # Para producción, serían tus dominios de frontend específicos.
-    origins = [
-        "https://mydomain.com",         # Tu frontend de producción
-        "https://www.mydomain.com",
-        "http://localhost:8080",      # Frontend de desarrollo local
-        # "http://127.0.0.1:8080",    # A veces necesario también para localhost
-    ]
+# --- Lista de orígenes permitidos ---
+# En producción, aquí solo debería estar el dominio de tu frontend.
+origins = [
+    "https://mi-frontend-oficial.com",
+    "http://localhost:3000", # Origen común para desarrollo con React/Vue/Angular
+]
 
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=origins,  # Lista de orígenes permitidos. ["*"] es muy permisivo.
-        allow_credentials=True, # Permitir cookies/auth headers. ¡Usar con origins específicos!
-        allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"], # Métodos HTTP permitidos. ["*"] para todos.
-        allow_headers=["Authorization", "Content-Type", "X-Custom-Header"], # Cabeceras permitidas. ["*"] para todas.
-        expose_headers=["X-Custom-Response-Header"], # Cabeceras que el navegador puede acceder en la respuesta.
-        max_age=600, # Tiempo en segundos que el resultado de una preflight request puede ser cacheado.
-    )
+# --- Añadir el Middleware de CORS ---
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,       # Especifica los orígenes permitidos
+    allow_credentials=True,      # Permite cookies (importante para sesiones)
+    allow_methods=["GET", "POST", "PUT", "DELETE"], # Métodos HTTP permitidos
+    allow_headers=["Authorization", "Content-Type"], # Cabeceras HTTP permitidas
+)
 
-    @app.get("/")
-    async def main():
-        return {"message": "Hello with CORS"}
+# ... (El resto de tus endpoints, como /token, /items, etc.)
 ```
 
-* **Buenas Prácticas para Políticas CORS Estrictas:**
-  1. **`allow_origins`:**
-     * **Sé Específico:** En lugar de `["*"]`, lista explícitamente\
-       los dominios, protocolos y puertos de los orígenes que deben\
-       tener acceso.
-     * Si `allow_credentials` es `True`, `allow_origins` NO PUEDE\
-       ser `["*"]`. Debe ser una lista de orígenes específicos.
-     * Considera la posibilidad de configurar los orígenes\
-       permitidos a través de variables de entorno para diferentes\
-       entornos (dev, staging, prod).
-  2. **`allow_methods`:**
-     * Solo permite los métodos HTTP que tu API realmente usa y que\
-       los clientes de esos orígenes necesitan (ej. `GET`, `POST`,`PUT`, `DELETE`). Evita `["*"]` si no todos los métodos son\
-       necesarios desde el navegador.
-  3. **`allow_headers`:**
-     * Solo permite las cabeceras que los clientes necesitan enviar\
-       (ej. `Content-Type`, `Authorization`, cabeceras\
-       personalizadas como `X-CSRF-Token`). Evita `["*"]`.
-  4. **`allow_credentials`:**
-     * Establece a `True` solo si necesitas que el navegador envíe\
-       cookies o cabeceras de autenticación (como `Authorization`)\
-       con las solicitudes cross-origin.
-     * **Si es `True`, `allow_origins` debe ser una lista**\
-       **específica de orígenes, no `["*"]`.**
-  5. **`expose_headers`:**
-     * Por defecto, los navegadores solo exponen un conjunto\
-       limitado de cabeceras de respuesta simples. Si tu API\
-       devuelve cabeceras personalizadas que el JavaScript del\
-       cliente necesita leer, debes listarlas aquí.
-  6. **`max_age`:**
-     * Controla cuánto tiempo el navegador puede cachear los\
-       resultados de una "preflight request" (solicitud OPTIONS).\
-       Un valor razonable (ej. 10 minutos = 600 segundos) puede\
-       reducir el número de preflight requests.
-* **Preflight Requests (Solicitudes OPTIONS):**
-  * Para ciertas solicitudes cross-origin "no simples" (ej.\
-    aquellas con métodos distintos de GET/HEAD/POST, o con`Content-Type` distinto de `application/x-www-form-urlencoded`,`multipart/form-data`, `text/plain`, o con cabeceras\
-    personalizadas), el navegador envía automáticamente una\
-    solicitud HTTP `OPTIONS` (preflight request) al servidor.
-  * El servidor responde a esta preflight request con las cabeceras\
-    CORS (ej. `Access-Control-Allow-Origin`,`Access-Control-Allow-Methods`, `Access-Control-Allow-Headers`)\
-    para indicar si la solicitud real está permitida.
-  * Si la preflight es exitosa, el navegador procede con la\
-    solicitud real.
-  * `CORSMiddleware` de FastAPI maneja estas preflight requests\
-    automáticamente según su configuración.
+**2. Ejecuta la Aplicación:**
+```bash
+uvicorn tu_fichero_de_app:app --reload
+```
+
+#### **Pruebas (Cómo Verificarlo)** ✅
+
+Probar CORS es diferente a probar otros endpoints, porque la restricción la aplica **el navegador**, no el servidor. `curl` no tiene una política de mismo origen, por lo que siempre funcionará. La clave es simular lo que hace un navegador.
+
+**Prueba 1: Simular la Petición "Preflight" con `curl`**
+
+Para peticiones "complejas" (como `POST` con `Content-Type: application/json` o que incluyen la cabecera `Authorization`), el navegador primero envía una petición `OPTIONS` llamada "preflight" para pedir permiso al servidor. Podemos simular esto.
+
+* **Simulando una petición desde un origen PERMITIDO:**
+    ```bash
+    curl -X OPTIONS "http://localhost:8000/items" \
+    -H "Origin: http://localhost:3000" \
+    -H "Access-Control-Request-Method: POST" \
+    -H "Access-Control-Request-Headers: Authorization" \
+    -v 
+    ```
+    * **Respuesta esperada:** Verás un `HTTP/1.1 200 OK` y, lo más importante, las cabeceras de respuesta que dan permiso:
+        ```
+        < access-control-allow-origin: http://localhost:3000
+        < access-control-allow-credentials: true
+        ...
+        ```
+        Esto le dice al navegador: "Adelante, puedes enviar la petición POST real".
+
+* **Simulando una petición desde un origen NO PERMITIDO:**
+    ```bash
+    curl -X OPTIONS "http://localhost:8000/items" \
+    -H "Origin: https://un-sitio-raro.com" \
+    -H "Access-Control-Request-Method: POST" \
+    -v
+    ```
+    * **Respuesta esperada:** Aunque podrías recibir un `200 OK`, **NO verás las cabeceras `access-control-allow-origin`**. La ausencia de esta cabecera le indica al navegador que el permiso ha sido denegado y que debe bloquear la petición real.
+
+**Prueba 2: El Escenario Real en el Navegador**
+
+Esta es la prueba definitiva.
+
+1.  Crea un fichero en tu ordenador llamado `test_cors.html`.
+2.  Pega el siguiente código en él. Este script intentará crear un item usando el token de tu usuario editor.
+
+    ```html
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Test CORS</title>
+    </head>
+    <body>
+        <h1>Prueba de CORS a FastAPI</h1>
+        <button onclick="realizarPeticion()">Intentar Crear Item</button>
+        <p>Abre la consola del desarrollador (F12) para ver el resultado.</p>
+
+        <script>
+            function realizarPeticion() {
+                // Pega aquí un token válido de tu usuario editor
+                const token = "TU_TOKEN_DE_EDITOR_AQUI"; 
+
+                fetch('http://localhost:8000/items', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ "item": "nuevo desde la web" })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('La respuesta de red no fue OK');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('¡Éxito! Respuesta:', data);
+                    alert('¡Petición exitosa!');
+                })
+                .catch(error => {
+                    console.error('Error en la petición fetch:', error);
+                    alert('¡La petición falló! Revisa la consola para ver el error de CORS.');
+                });
+            }
+        </script>
+    </body>
+    </html>
+    ```
+
+3.  Abre el fichero `test_cors.html` directamente en tu navegador (haciendo doble clic en él).
+4.  Abre la consola de desarrollador (normalmente con `F12`).
+5.  Haz clic en el botón "Intentar Crear Item".
+
+* **Resultado esperado:** La petición **fallará**. En la consola, verás un error muy claro que dice algo como:
+    > Access to fetch at 'http://localhost:8000/items' from origin 'null' has been blocked by CORS policy...
+
+Esto ocurre porque el origen de un fichero local es `null`, y `null` no está en nuestra lista de orígenes permitidos. Has probado que tu política de CORS estricta funciona perfectamente.
+
+---
+Configurar CORS correctamente es una de las defensas más importantes para una API que será consumida por una aplicación web.
+
+Cuando estés listo, podemos seguir con el **5.4 Validación de inputs y outputs**, o el que prefieras.
 
 ## 5.6 Protección de endpoints WebSocket y REST
 
@@ -1922,6 +2019,110 @@ aplicación), y comunicar claramente los límites a los consumidores de la\
 API. 
 
 ---
+
+## Reto práctico Blindando la API con SSL y CORS
+
+#### **El Objetivo** 🎯
+
+El objetivo es tomar la configuración del proxy inverso Nginx con SSL del punto 5.3 y añadirle una capa de seguridad adicional: una política de CORS estricta.
+
+Al final, tu sistema deberá:
+1.  Servir todo el tráfico exclusivamente a través de **HTTPS**. Cualquier intento de conectar por HTTP deberá ser redirigido automáticamente a HTTPS.
+2.  Permitir que la API sea llamada únicamente desde un dominio frontend específico y seguro: `https://mi-app.com`.
+
+#### **El Escenario** 🎬
+
+Imagina que ya tienes tu API funcionando detrás de Nginx con un certificado auto-firmado, como vimos en el punto 5.3. El equipo de frontend acaba de desplegar su aplicación en `https://mi-app.com` y te reportan que, al intentar hacer login o llamar a cualquier endpoint, el navegador les muestra un error de CORS en la consola y la aplicación no funciona. Tu misión es solucionar este problema.
+
+#### **Punto de Partida** 🏁
+
+Comienza con la configuración completa del **punto 5.3 con Nginx y Docker**. Deberías tener en tu carpeta los siguientes ficheros:
+* `main_sec_5_2.py` (nuestra app FastAPI con autenticación y autorización)
+* `requirements.txt`
+* `Dockerfile`
+* `nginx.conf`
+* `docker-compose.yml`
+* `cert.pem` y `key.pem`
+
+#### **El Reto: Tus Tareas** 🚀
+
+**Tarea 1: Forzar HTTPS en Nginx**
+
+Actualmente, nuestro Nginx escucha en el puerto 443 (HTTPS), pero no hace nada si alguien intenta acceder por el puerto 80 (HTTP). Debes modificar tu fichero `nginx.conf` para que cualquier petición que llegue al puerto 80 sea **redirigida permanentemente (código 301)** a su equivalente en HTTPS.
+
+* **Pista:** Necesitarás añadir un nuevo bloque `server` que escuche en el `listen 80;` y use la directiva `return 301 https://$host$request_uri;`.
+
+**Tarea 2: Configurar la Política de CORS en FastAPI**
+
+Ahora, debes modificar tu aplicación FastAPI (`main_sec_5_2.py`) para que le diga al navegador que solo confía en las peticiones que vienen de `https://mi-app.com`.
+
+* **Pista:** Añade el `CORSMiddleware` a tu aplicación. La configuración debe ser estricta:
+    * `allow_origins`: Solo debe contener `["https://mi-app.com"]`.
+    * `allow_methods`: Permite solo los métodos que tu API realmente necesita (ej: `["GET", "POST"]`).
+    * `allow_headers`: Permite solo las cabeceras necesarias, como `["Authorization", "Content-Type"]`.
+    * `allow_credentials`: Debe ser `True`.
+
+**Tarea 3: Reconstruir y Probar**
+
+Una vez hechos los cambios en `nginx.conf` y `main_sec_5_2.py`, necesitas reconstruir tu imagen de Docker para que los cambios en el código Python surtan efecto.
+
+* **Pista:** Detén los contenedores si están corriendo (`docker-compose down`) y luego levántalos de nuevo con el comando `docker-compose up --build`.
+
+#### **Cómo Comprobar tu Solución** ✅
+
+Debes verificar que ambas tareas se han completado con éxito.
+
+**1. Verificar la Redirección a HTTPS:**
+Usa `curl` para hacer una petición a la versión HTTP de tu servidor. El flag `-I` solo muestra las cabeceras de la respuesta.
+```bash
+curl -I http://localhost
+```
+* **Resultado Esperado:** Debes recibir una respuesta `301 Moved Permanently` que te redirige a la versión HTTPS.
+    ```
+    HTTP/1.1 301 Moved Permanently
+    Server: nginx/1.27.0
+    Date: ...
+    Content-Type: text/html
+    Content-Length: 169
+    Connection: keep-alive
+    Location: https://localhost/
+    ```
+
+**2. Verificar la Política de CORS (Simulando un Navegador):**
+Usaremos `curl` para enviar una petición de "preflight" (`OPTIONS`), como haría un navegador antes de un POST.
+
+* **Caso 1: Origen PERMITIDO (debe funcionar)**
+    ```bash
+    curl -X OPTIONS https://localhost/token --insecure \
+    -H "Origin: https://mi-app.com" \
+    -H "Access-Control-Request-Method: POST" \
+    -v
+    ```
+    * **Resultado Esperado:** La respuesta del servidor debe incluir las cabeceras CORS que dan permiso, reflejando el origen que enviaste.
+        ```
+        < HTTP/1.1 200 OK
+        ...
+        < access-control-allow-origin: https://mi-app.com
+        < access-control-allow-credentials: true
+        ```
+
+* **Caso 2: Origen DENEGADO (debe ser bloqueado)**
+    ```bash
+    curl -X OPTIONS https://localhost/token --insecure \
+    -H "Origin: https://sitio-malicioso.com" \
+    -v
+    ```
+    * **Resultado Esperado:** La respuesta del servidor **NO debe incluir** la cabecera `access-control-allow-origin`. Su ausencia es la señal para el navegador de que la petición está prohibida.
+
+#### **Punto Extra (Bonus)** 🌟
+
+Modifica tu `nginx.conf` para añadir una cabecera de seguridad adicional que mejore tu puntuación en los tests de seguridad web: `Strict-Transport-Security (HSTS)`.
+
+* **Pista:** Añade esta línea dentro de tu bloque `server` de HTTPS:
+    `add_header Strict-Transport-Security 'max-age=31536000; includeSubDomains' always;`
+* **Investiga:** ¿Qué hace exactamente esta cabecera y por qué es una buena práctica de seguridad?
+
+
 
 ## Referencias 
 
