@@ -9,7 +9,7 @@
   
   * [Tema 3. Introducción a la comunicación entre microservicios síncrona y asíncrona](<Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base/Tema3/Tema3.md>)
    
-  * [Tema 4. Manejo de errores y circuit breakers en microservicios](<Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base/Tema4/Tema4.md>)
+  * [Tema 4. Manejo de errores y circuit breakers en microservicios](<Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base/Tema4/Tema4.md>) 
   
   * [Tema 5. Seguridad y buenas prácticas en microservicios](<Bloque I - Principios de Microservicios, Framework FastAPI y Arquitectura Base/Tema5/Tema5.md>) 
  
