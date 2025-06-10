@@ -1576,7 +1576,7 @@ Para los profesionales que desarrollan aplicaciones FastAPI y se enfrentan a dom
 -----
 
 
-## Referncias bibliográficas
+## Referencias bibliográficas
 
 **Libros Fundamentales y de Referencia**
 
