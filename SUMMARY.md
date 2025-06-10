@@ -1,6 +1,5 @@
 # Table of contents
 
-
 * [Presentación del Curso](README.md)
 * [Requerimientos Previos](Requerimientos%20Previos.md)
 * [Proyecto Final](<Proyecto/Tema16.md>)
