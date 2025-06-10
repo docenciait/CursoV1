@@ -22,6 +22,7 @@
 * Reconocer la importancia de desarrollar un Lenguaje Ubicuo y definir Contextos Delimitados claros para un modelado efectivo del dominio.
 * Visualizar cómo los principios de DDD pueden aplicarse en la práctica para estructurar aplicaciones, incluyendo su posible integración con frameworks como FastAPI.
 ---
+
 ## 7.1 Bloques tácticos y estratégicos del DDD
 
 Domain-Driven Design (DDD) es una metodología para el desarrollo de software que se enfoca en modelar el software para que coincida con un dominio o negocio complejo. Para abordar esta complejidad, DDD se divide en dos conjuntos principales de patrones o "bloques": **Estratégicos** y **Tácticos**.
