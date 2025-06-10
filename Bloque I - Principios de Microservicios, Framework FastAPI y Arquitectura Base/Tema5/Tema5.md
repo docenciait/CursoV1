@@ -841,7 +841,7 @@ Aunque el objeto `fake_user_db` devuelto por la función contiene `hashed_passwo
 * **Reutiliza Modelos:** Define modelos Pydantic en una librería compartida si varios microservicios necesitan validar las mismas estructuras de datos, asegurando la consistencia.
 * **Combina Validación y Documentación:** Una de las grandes ventajas de FastAPI es que estos modelos Pydantic se utilizan para generar automáticamente la documentación de la API (Swagger UI / OpenAPI), por lo que la validación y la documentación siempre están sincronizadas.
 
-
+## 5.5 Políticas de CORS estrictas
 
 ### Definición y Explicación de lo Importante
 
