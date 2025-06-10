@@ -1591,9 +1591,10 @@ Imagina el siguiente escenario en tu aplicación: **Un usuario cancela su suscri
 
 Intenta dibujar (mentalmente o en papel) el flujo completo, desde que el usuario hace clic en "Cancelar Suscripción" en la interfaz, pasando por el adaptador de entrada, el servicio de aplicación, la entidad, el despachador de eventos, y finalmente llegando a los manejadores.
 
------
 
-¡Y eso es un vistazo dinámico a los eventos de dominio\! Son una pieza clave para construir aplicaciones que no solo funcionan, sino que también son adaptables, resilientes y cuentan la historia de tu negocio de manera efectiva.
+
+
+
 ---
 
 ## 6.8 Implementar casos de uso en la capa de aplicación
@@ -1883,7 +1884,7 @@ La Inyección de Dependencias es un patrón de diseño en el que un objeto recib
 
 -----
 
-### **Acto 2: FastAPI al Rescate con `Depends` - ¡Tu Ayudante de Cocina Personal\!**
+### **Acto 2: FastAPI al Rescate con `Depends`**
 
 Ya conocéis `Depends` de FastAPI. Es ese sistema elegante y potente que nos permite declarar dependencias para nuestros path operations, y FastAPI se encarga de resolverlas y proporcionarlas.
 

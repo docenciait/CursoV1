@@ -1536,213 +1536,133 @@ Este enfoque elimina por completo los secretos del código y la configuración l
 El Open Web Application Security Project (OWASP) es una comunidad online\
 sin ánimo de lucro que produce artículos, metodologías, documentación,\
 herramientas y tecnologías en el campo de la seguridad de aplicaciones\
-web. Su proyecto más conocido es el **OWASP Top 10**.
+web. *.
+Perfecto. Aquí tienes el desarrollo completo y profesional de la **sección 5.9 – Análisis de vulnerabilidades OWASP**, actualizado a 2025, con foco en microservicios, FastAPI y prácticas seguras modernas:
 
-*   **OWASP Top 10:** Es un documento de concienciación estándar para\
-    desarrolladores y seguridad de aplicaciones web. Representa un\
-    amplio consenso sobre los riesgos de seguridad más críticos para las\
-    aplicaciones web (y, por extensión, APIs). La lista se actualiza\
-    periódicamente. Aunque se centra en "aplicaciones web", muchos de\
-    los riesgos son directamente aplicables a microservicios y APIs\
-    REST/WebSocket.
 
-    **Algunas Categorías del OWASP Top 10 (ej. de la lista 2021) y su**\
-    **Relevancia para Microservicios/APIs:**
+El **objetivo** es garantizar que los microservicios sean seguros frente a las amenazas más frecuentes, aplicando las recomendaciones del **OWASP Top 10 (versión 2025)**. Se busca integrar el análisis de vulnerabilidades en el ciclo de vida del software, detectando fallos de diseño, configuración y código antes de llegar a producción.
 
-    1. **A01:2021 - Broken Access Control (Control de Acceso Roto):**
-       * **Descripción:** Restricciones sobre lo que los usuarios\
-         autenticados pueden hacer no se aplican correctamente. Los\
-         atacantes pueden explotar estos fallos para acceder a\
-         funcionalidades y/o datos no autorizados.
-       * **Relevancia en Microservicios:** Fallos en la\
-         implementación de RBAC (roles), scopes, o validaciones de\
-         propiedad de recursos. Endpoints que no verifican\
-         adecuadamente si el usuario autenticado tiene permiso para\
-         la acción o el recurso específico.
-       * **Mitigación con FastAPI:** Implementar autorización robusta\
-         (ver 5.2), usar dependencias para verificar permisos en cada\
-         endpoint relevante, pruebas exhaustivas de los flujos de\
-         autorización.
-    2. **A02:2021 - Cryptographic Failures (Fallos Criptográficos):**
-       * **Descripción:** Fallos relacionados con la criptografía (o\
-         su ausencia) que pueden llevar a la exposición de datos\
-         sensibles. Esto incluye la transmisión de datos en texto\
-         plano, uso de algoritmos débiles, mala gestión de claves.
-       * **Relevancia en Microservicios:** No usar HTTPS para toda la\
-         comunicación (externa e interna si es posible), uso de\
-         algoritmos de firma de JWT débiles (ej. `alg: none` o HS256\
-         con secretos débiles), almacenamiento inseguro de secretos,\
-         cifrado incorrecto de datos en reposo.
-       * **Mitigación:** Usar HTTPS/mTLS (5.3), algoritmos de firma\
-         JWT fuertes (RS256/ES256), gestión segura de claves (5.7,\
-         5.8), cifrado de datos sensibles en BBDD.
-    3. **A03:2021 - Injection (Inyección):**
-       * **Descripción:** Fallos que permiten a un atacante enviar\
-         datos hostiles a un intérprete (SQL, OS, NoSQL, LDAP, XSS,\
-         etc.) como parte de un comando o consulta.
-       * **Relevancia en Microservicios:**
-         * **SQL Injection:** Si se construyen queries SQL\
-           concatenando strings con input del usuario.
-         * **NoSQL Injection:** Similar, para bases de datos NoSQL.
-         * **OS Command Injection:** Si se usan inputs del usuario\
-           para construir comandos del sistema operativo.
-         * **Cross-Site Scripting (XSS Reflejado/Almacenado):** Más\
-           relevante si la API devuelve HTML o si los datos\
-           almacenados por la API se renderizan sin escapar en un\
-           frontend. Para APIs JSON, el riesgo principal es que el\
-           frontend sea vulnerable.
-       * **Mitigación con FastAPI:**
-         * **Pydantic para validación de tipos y formatos:** Ayuda\
-           a asegurar que los datos tienen la forma esperada antes\
-           de usarlos.
-         * **Usar ORMs parametrizados (SQLAlchemy):** Previenen\
-           SQLi al separar los datos de las queries.
-         * **Validación de entrada estricta (5.4).**
-         * Evitar ejecutar comandos del sistema operativo con input\
-           del usuario.
-         * Para XSS en APIs JSON: Asegurar que los frontends que\
-           consumen la API escapen correctamente los datos antes de\
-           renderizarlos. `response_model` puede ayudar a no\
-           filtrar datos inesperados.
-    4. **A04:2021 - Insecure Design (Diseño Inseguro):**
-       * **Descripción:** Una categoría más amplia que se enfoca en\
-         las debilidades resultantes de un diseño de seguridad\
-         deficiente o ausente. Falta de modelado de amenazas,\
-         requisitos de seguridad no considerados, etc.
-       * **Relevancia en Microservicios:** No tener una estrategia de\
-         seguridad global, flujos de autenticación/autorización\
-         débiles, falta de aislamiento entre servicios, confianza\
-         implícita en la red interna.
-       * **Mitigación:** Modelado de amenazas, "security by\
-         design", aplicar principios de seguridad (mínimo\
-         privilegio, defensa en profundidad), revisiones de diseño de\
-         seguridad.
-    5. **A05:2021 - Security Misconfiguration (Configuración Incorrecta**\
-       **de Seguridad):**
-       * **Descripción:** Configuraciones de seguridad por defecto\
-         inseguras, configuraciones incompletas o ad-hoc, mensajes de\
-         error verbosos que revelan información, servicios o\
-         funcionalidades innecesarias habilitadas.
-       * **Relevancia en Microservicios:** CORS demasiado permisivo\
-         (5.5), no deshabilitar modos DEBUG en producción, puertos\
-         innecesarios abiertos, permisos de ficheros/directorios\
-         incorrectos, gestión de errores que expone stack traces\
-         (4.1, 4.2).
-       * **Mitigación:** Hardening de la configuración de todos los\
-         componentes (servidor web/ASGI, base de datos, sistema\
-         operativo, cloud), infraestructura como código (IaC) con\
-         linters de seguridad, auditorías de configuración.
-    6. **A06:2021 - Vulnerable and Outdated Components (Componentes**\
-       **Vulnerables y Desactualizados):**
-       * **Descripción:** Usar software (frameworks, bibliotecas, SO,\
-         aplicaciones) con vulnerabilidades conocidas.
-       * **Relevancia en Microservicios:** Dependencias de Python\
-         desactualizadas (`requirements.txt`), imágenes base de\
-         Docker obsoletas, versiones antiguas de bases de datos o\
-         proxies.
-       * **Mitigación:** Gestión de parches, análisis de composición\
-         de software (SCA) para identificar dependencias vulnerables\
-         (ej. `pip-audit`, `safety`, Snyk, Dependabot/GitHub Advanced\
-         Security), actualizar regularmente las dependencias y la\
-         infraestructura.
-    7. **A07:2021 - Identification and Authentication Failures (Fallos**\
-       **de Identificación y Autenticación):**
-       * **Descripción:** Funciones de aplicación relacionadas con la\
-         autenticación y gestión de sesión implementadas\
-         incorrectamente, permitiendo a los atacantes comprometer\
-         contraseñas, claves, tokens de sesión, o explotar fallos de\
-         implementación para asumir identidades de otros usuarios.
-       * **Relevancia en Microservicios:** Políticas de contraseñas\
-         débiles (si se gestionan usuarios), JWTs sin expiración o\
-         con expiración muy larga, gestión insegura de refresh\
-         tokens, endpoints de login vulnerables a enumeración de\
-         usuarios o ataques de fuerza bruta, falta de multi-factor\
-         authentication (MFA).
-       * **Mitigación:** Implementación robusta de JWT (5.1), MFA,\
-         políticas de contraseñas fuertes, protección contra fuerza\
-         bruta (rate limiting en login - 5.11), gestión segura de\
-         sesiones/tokens.
-    8. **A08:2021 - Software and Data Integrity Failures (Fallos de**\
-       **Integridad de Software y Datos):**
-       * **Descripción:** Código y infraestructura que no protegen\
-         contra violaciones de integridad. Por ejemplo, confiar en\
-         plugins o bibliotecas de fuentes no seguras, o la\
-         deserialización insegura de datos.
-       * **Relevancia en Microservicios:** Descargar dependencias de\
-         Python de repositorios no confiables, deserialización de\
-         datos no validados (aunque Pydantic ayuda mucho aquí), falta\
-         de verificación de firmas en actualizaciones de software.
-       * **Mitigación:** Usar fuentes de confianza para dependencias,\
-         verificar hashes/firmas, validación estricta de cualquier\
-         dato serializado antes de procesarlo.
-    9. **A09:2021 - Security Logging and Monitoring Failures (Fallos de**\
-       **Registro y Monitorización de Seguridad):**
-       * **Descripción:** Registro y monitorización insuficientes de\
-         eventos de seguridad, lo que dificulta la detección de\
-         brechas, la respuesta a incidentes y el análisis forense.
-       * **Relevancia en Microservicios:** Falta de auditoría (5.10),\
-         logs sin suficiente contexto o sin correlation IDs (4.8),\
-         alertas no configuradas para actividades sospechosas o\
-         fallos críticos.
-       * **Mitigación:** Implementar logging y auditoría exhaustivos,\
-         monitorización de seguridad y alertas (SIEM), practicar la\
-         respuesta a incidentes.
-    10. **A10:2021 - Server-Side Request Forgery (SSRF):**
-        * **Descripción:** Un fallo que permite a un atacante inducir\
-          a una aplicación del lado del servidor a realizar peticiones\
-          HTTP a un dominio elegido por el atacante. Puede usarse para\
-          escanear redes internas, acceder a metadatos de instancia en\
-          la nube, o interactuar con servicios internos no expuestos.
-        * **Relevancia en Microservicios:** Si un microservicio toma\
-          una URL (o parte de ella) de la entrada del usuario (o de\
-          otro servicio) y luego realiza una petición a esa URL sin la\
-          validación adecuada.
-        * **Mitigación:**
-          * Nunca confiar en URLs proporcionadas por el usuario.
-          * Validar estrictamente cualquier URL contra una lista\
-            blanca de dominios, IPs, y puertos permitidos.
-          * Evitar que las respuestas de las peticiones inducidas\
-            por SSRF se devuelvan directamente al cliente.
-          * Usar firewalls de red y de aplicación para restringir\
-            las capacidades de red saliente de los microservicios al\
-            mínimo necesario.
-* **Cómo FastAPI Ayuda y Dónde se Requiere Cuidado Adicional:**
-  * **Fortalezas de FastAPI:**
-    * **Validación de Tipos y Datos con Pydantic:** Mitiga\
-      enormemente los riesgos de inyección y errores de\
-      procesamiento de datos (A03, A08).
-    * **Utilidades de Seguridad Integradas:** Para OAuth2, JWT,\
-      API keys, facilitando la implementación de autenticación\
-      (A07).
-    * **Generación Automática de Esquemas OpenAPI:** Promueve\
-      contratos API claros, lo que indirectamente ayuda a la\
-      seguridad al definir claramente las interfaces.
-  * **Áreas de Cuidado Adicional (Responsabilidad del**\
-    **Desarrollador):**
-    * **Lógica de Autorización (Control de Acceso):** FastAPI\
-      proporciona las herramientas, pero la lógica correcta de\
-      RBAC/scopes debe ser implementada por el desarrollador\
-      (A01).
-    * **Gestión de Secretos y Configuración Segura:** (A02, A05,\
-      A07).
-    * **HTTPS y Seguridad de Red:** (A02).
-    * **Manejo de Dependencias y Componentes:** (A06).
-    * **Logging y Monitorización:** (A09).
-    * **Lógica de Negocio Específica:** Prevenir SSRF si se\
-      manejan URLs, lógica de negocio segura.
-* **Pruebas de Seguridad Continuas:**
-  * **SAST (Static Application Security Testing):** Analizar el\
-    código fuente en busca de patrones de vulnerabilidades\
-    conocidos. Herramientas como SonarQube, Bandit (para Python).
-  * **DAST (Dynamic Application Security Testing):** Probar la\
-    aplicación en ejecución enviando peticiones maliciosas\
-    simuladas. Herramientas como OWASP ZAP, Burp Suite.
-  * **SCA (Software Composition Analysis):** Analizar dependencias\
-    para identificar vulnerabilidades conocidas (ver A06).
-  * **Penetration Testing (Pruebas de Penetración):** Contratar a\
-    expertos para que intenten explotar vulnerabilidades de forma\
-    manual y creativa.
-  * **Revisiones de Código con Enfoque en Seguridad.**
+
+### Fundamentos del OWASP Top 10 (2025)
+
+OWASP (Open Worldwide Application Security Project) publica periódicamente las 10 vulnerabilidades más críticas en aplicaciones web. La versión 2025 prioriza amenazas frecuentes en arquitecturas modernas como microservicios, APIs REST, contenedores y entornos cloud.
+
+| Nº  | Categoría OWASP 2025                     | Descripción resumida                                                      |
+| --- | ---------------------------------------- | ------------------------------------------------------------------------- |
+| A01 | Broken Access Control                    | Controles de acceso incorrectos o ausentes.                               |
+| A02 | Cryptographic Failures                   | Uso incorrecto o débil de criptografía.                                   |
+| A03 | Injection                                | SQL, NoSQL, OS command injection, etc.                                    |
+| A04 | Insecure Design                          | Fallos conceptuales o falta de hardening.                                 |
+| A05 | Security Misconfiguration                | Errores en configuración de sistemas y servicios.                         |
+| A06 | Vulnerable & Outdated Components         | Uso de librerías con CVEs conocidas.                                      |
+| A07 | Identification & Authentication Failures | Fallos en login, gestión de sesiones, etc.                                |
+| A08 | Software & Data Integrity Failures       | Ausencia de verificación de integridad (e.g., actualizaciones, paquetes). |
+| A09 | Logging & Monitoring Failures            | Fallos en la detección y respuesta ante incidentes.                       |
+| A10 | Server-Side Request Forgery (SSRF)       | Redirección forzada a recursos internos o externos maliciosos.            |
+
+---
+
+### Estrategias de Análisis de Vulnerabilidades
+
+**1. Escaneos Automáticos**
+
+* **SAST (Static Application Security Testing)**
+  Analiza el código fuente sin ejecutarlo.
+  Herramientas sugeridas: SonarQube, Bandit (para Python), Semgrep.
+
+* **DAST (Dynamic Application Security Testing)**
+  Analiza aplicaciones en ejecución como si fueran atacantes externos.
+  Herramientas: OWASP ZAP, Burp Suite (Community o Pro).
+
+* **SCA (Software Composition Analysis)**
+  Detecta librerías vulnerables en dependencias.
+  Herramientas: `safety`, `pip-audit`, Snyk, Dependabot.
+
+**2. Integración en CI/CD**
+
+* Escaneos automáticos en el pipeline (`GitHub Actions`, `GitLab CI`, `Jenkins`, etc.).
+* Revisión de dependencias con `pip-audit` o Snyk antes de cada merge.
+* Despliegues bloqueados si se detectan CVEs críticos no mitigados.
+
+```yaml
+# Ejemplo CI con pip-audit en GitHub Actions
+jobs:
+  security-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+      - name: Install deps
+        run: pip install -r requirements.txt
+      - name: Run pip-audit
+        run: pip install pip-audit && pip-audit
+```
+
+---
+
+### Prácticas concretas para microservicios FastAPI
+
+| Riesgo OWASP           | Práctica recomendada                                                                            |
+| ---------------------- | ----------------------------------------------------------------------------------------------- |
+| Broken Access Control  | Usa OAuth2 + Scopes. Valida roles y permisos por endpoint.                                      |
+| Cryptographic Failures | Usa `https`, JWT con HS256 o RS256, `secrets` en lugar de `random`.                             |
+| Injection              | Nunca uses SQL sin ORM o parámetros preparados.                                                 |
+| Insecure Design        | Haz *threat modeling*, sigue principios SOLID, valida todo input/response.                      |
+| Misconfiguration       | Usa `.env`, configura CORS, cabeceras seguras, apaga debugging.                                 |
+| Outdated Components    | Automatiza escaneos y usa dependencias activas.                                                 |
+| Auth Failures          | Usa tiempo de expiración en tokens, rotate secrets.                                             |
+| Integrity Failures     | Usa hashes/verificación de integridad, SBOMs, firma de paquetes.                                |
+| Logging Failures       | Loguea intentos fallidos, usa `logging.warning` con contexto, monitorea con Prometheus/Grafana. |
+| SSRF                   | Valida URLs externas, no permitas redirecciones sin control, usa timeouts.                      |
+
+---
+
+### Checklist de verificación segura (según OWASP)
+
+| Revisión de Seguridad                                              | ¿Aplicada? |
+| ------------------------------------------------------------------ | ---------- |
+| ✅ Validación de entradas y salidas con Pydantic                    | ✅          |
+| ✅ Acceso por JWT + scopes en FastAPI                               | ✅          |
+| ✅ Deshabilitación de documentación pública en producción (`/docs`) | ✅          |
+| ✅ Verificación de dependencias seguras con SCA                     | ✅          |
+| ✅ Escaneos OWASP ZAP sobre entorno de staging                      | ⬜          |
+| ✅ Integración de pruebas en CI/CD                                  | ✅          |
+| ✅ Logging estructurado y alertas de errores                        | ✅          |
+| ✅ Auditoría de roles, permisos y endpoints expuestos               | ⬜          |
+| ✅ Pruebas de resiliencia ante errores                              | ✅          |
+
+---
+
+## 📈 Indicadores de Éxito
+
+* ⏱️ Tiempo promedio de corrección de CVEs: **< 7 días**.
+* 📉 Reducción de vulnerabilidades detectadas: **≥ 80%** en 3 meses.
+* 📦 Actualización de dependencias críticas: **100% automatizada**.
+* 🔐 Cobertura de escaneo en microservicios: **> 90% del código**.
+
+---
+
+### Actividad práctica recomendada
+
+**Objetivo:**
+Aplicar el OWASP Top 10 a un microservicio FastAPI.
+
+**Tareas:**
+
+1. Lanza un microservicio vulnerable (se puede usar [`vulny-fastapi`](https://github.com/tarunlalwani/vulny-fastapi) como base).
+2. Analízalo con OWASP ZAP.
+3. Aplica mejoras de seguridad:
+
+   * JWT + scopes.
+   * Cabeceras seguras.
+   * Validación Pydantic estricta.
+   * Eliminación de endpoints abiertos.
+4. Documenta las vulnerabilidades corregidas.
+5. Añade `pip-audit` y `safety` al `Makefile`.
+
+---
+
 
 ---
 ## 5.10 Auditoría y trazabilidad de usuarios
@@ -2015,7 +1935,7 @@ Ahora, debes modificar tu aplicación FastAPI (`main_sec_5_2.py`) para que le di
 
 **Tarea 3: Reconstruir y Probar**
 
-Una vez hechos los cambios en `nginx.conf` y `main_sec_5_2.py`, necesitas reconstruir tu imagen de Docker para que los cambios en el código Python surtan efecto.
+Una vez hechos los cambios en `nginx.conf` y `main_sec_auth.py`, necesitas reconstruir tu imagen de Docker para que los cambios en el código Python surtan efecto.
 
 * **Pista:** Detén los contenedores si están corriendo (`docker-compose down`) y luego levántalos de nuevo con el comando `docker-compose up --build`.
 
@@ -2065,13 +1985,11 @@ Usaremos `curl` para enviar una petición de "preflight" (`OPTIONS`), como harí
     ```
     * **Resultado Esperado:** La respuesta del servidor **NO debe incluir** la cabecera `access-control-allow-origin`. Su ausencia es la señal para el navegador de que la petición está prohibida.
 
-#### **Punto Extra (Bonus)** 🌟
+#### **Punto Extra (Bonus)**
 
-Modifica tu `nginx.conf` para añadir una cabecera de seguridad adicional que mejore tu puntuación en los tests de seguridad web: `Strict-Transport-Security (HSTS)`.
+- Añade circuit breakers al endpint GET /items
+- Añade rate limit a GET /items
 
-* **Pista:** Añade esta línea dentro de tu bloque `server` de HTTPS:
-    `add_header Strict-Transport-Security 'max-age=31536000; includeSubDomains' always;`
-* **Investiga:** ¿Qué hace exactamente esta cabecera y por qué es una buena práctica de seguridad?
 
 
 
