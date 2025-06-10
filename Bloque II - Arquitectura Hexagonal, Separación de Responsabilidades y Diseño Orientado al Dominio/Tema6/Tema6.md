@@ -1506,7 +1506,8 @@ Un Manejador es una pieza de código que:
 
 **Un Vistazo a un Manejador (Python Conceptual):**
 
-# En aplicacion/manejadores_eventos/producto_handlers.py
+**En aplicacion/manejadores_eventos/producto_handlers.py**
+
 from dominio.eventos.producto_eventos import ProductoRegistradoEvento # El evento que nos interesa
 from aplicacion.puertos.salida.inotificador import INotificador # Puerto para enviar emails/slack, etc.
 
@@ -1787,17 +1788,17 @@ class ServicioGestionInventario(IGestionInventarioInputPort):
 # from pydantic import BaseModel
 # from uuid import UUID
 
-# class DatosAjusteStockDTO(BaseModel):
-#     id_producto: UUID
-#     cantidad_ajuste: int # Positivo para añadir, negativo para quitar
-#     motivo: str | None = None
+class DatosAjusteStockDTO(BaseModel):
+    id_producto: UUID
+    cantidad_ajuste: int # Positivo para añadir, negativo para quitar
+    motivo: str | None = None
 
-# class ProductoStockActualizadoDTO(BaseModel):
-#     id_producto: UUID
-#     nombre_producto: str
-#     stock_actual: int
-#     ajuste_realizado: int
-#     mensaje: str
+class ProductoStockActualizadoDTO(BaseModel):
+    id_producto: UUID
+    nombre_producto: str
+    stock_actual: int
+    ajuste_realizado: int
+    mensaje: str
 ```
 
 ### Principios Clave para Implementar Servicios de Aplicación
@@ -2182,24 +2183,10 @@ Imaginad que necesitamos integrar un **servicio de notificaciones**.
       * ¿Cómo crearíais el proveedor `get_notification_service()` en `infrastructure/dependencies/notification_providers.py`?
       * Si vuestro `UserService` necesita enviar una notificación tras registrar un usuario, ¿cómo le inyectaríais `NotificationServicePort`?
 
-¡Discutidlo en grupos pequeños y presentad vuestra solución de "cableado"\!
+¡Discutidlo en grupos pequeños y presentad vuestra solución de !
 
 -----
 
-**Conclusión y Próximos Pasos:**
-
-Dominar la inyección de dependencias con FastAPI no es solo una técnica de FastAPI; es la forma de dar vida real y pragmática a los principios de la Arquitectura Hexagonal. Permite que el núcleo de tu aplicación sea robusto, testable e independiente de los detalles cambiantes del mundo exterior.
-
-Recuerda: **Abstracciones en el núcleo, concreciones en la infraestructura, y FastAPI `Depends` como el maestro de ceremonias que los une elegantemente.**
-
-**Referencias Bibliográficas y Lecturas Recomendadas:**
-
-  * **FastAPI Dependency Injection:** [https://fastapi.tiangolo.com/tutorial/dependencies/](https://fastapi.tiangolo.com/tutorial/dependencies/) (¡La fuente oficial\!)
-  * **Alistair Cockburn - Hexagonal Architecture:** [https://alistair.cockburn.us/hexagonal-architecture/](https://alistair.cockburn.us/hexagonal-architecture/) (El origen)
-  * **Martin Fowler - Dependency Injection:** [https://martinfowler.com/articles/injection.html](https://martinfowler.com/articles/injection.html) (Conceptos clave)
-  * **Robert C. Martin (Uncle Bob) - Clean Architecture:** Aunque no es Hexagonal per se, comparte muchos principios sobre la inversión de dependencias. (Libro "Clean Architecture: A Craftsman's Guide to Software Structure and Design")
-
-En la próxima sesión, pondremos todo esto aún más en práctica al diseñar pruebas para el núcleo sin depender de infraestructuras (¡ya hemos visto un adelanto con `dependency_overrides`\!).
 
 
 ## 6.10 Ejemplo de microservicio hexagonal completo con FastAPI

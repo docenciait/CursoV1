@@ -32,6 +32,8 @@ Comprender ambos es fundamental para aplicar DDD eficazmente, ya que los patrone
 
 El Diseño Estratégico se centra en la **visión macro del sistema**. Su objetivo principal es descomponer sistemas grandes y complejos en partes más manejables, definiendo límites claros y las relaciones entre ellas. Es el primer paso y el más crucial para evitar el "Big Ball of Mud" (Gran Bola de Lodo), donde todo está interconectado sin una estructura clara.
 
+![alt text](image-1.png)
+
 Los pilares fundamentales del Diseño Estratégico son:
 
 1. **Bounded Context (Contexto Delimitado):**
@@ -47,7 +49,7 @@ Los pilares fundamentales del Diseño Estratégico son:
    * **Importancia:** Proporciona una visión global de la arquitectura del sistema y ayuda a tomar decisiones informadas sobre la integración y la evolución de los contextos.
    * **Resultado:** Visibilidad de las interdependencias, facilitación de la planificación estratégica y gestión de la integración.
 
-A continuación, un diagrama Mermaid que ilustra un Mapa de Contextos simplificado:
+A continuación, un diagrama que ilustra un Mapa de Contextos simplificado:
 
 ```mermaid
 graph TD
@@ -412,6 +414,7 @@ Comprender y aplicar ambos conjuntos de herramientas es esencial para aprovechar
 En el punto 7.1 introdujimos los Bounded Contexts (Contextos Delimitados) como un pilar del diseño estratégico en DDD. Ahora, profundizaremos en qué son exactamente, por qué son cruciales y, lo más importante, cómo podemos empezar a definir sus fronteras en nuestros sistemas. Esta comprensión es fundamental para estructurar vuestras aplicaciones FastAPI de manera que reflejen y sirvan eficazmente al dominio de negocio.
 
 ***
+
 
 #### ¿Qué es un Bounded Context? El Corazón de la Autonomía del Modelo
 
