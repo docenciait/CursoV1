@@ -189,28 +189,60 @@ Es el núcleo más interno y valioso. Representa el conocimiento del negocio en 
 
 ### 2\. Capa de Aplicación (El Director de Orquesta)
 
-Esta capa envuelve al dominio y actúa como la API pública del núcleo.
 
-  * **Su Propósito:** Orquestar los objetos de dominio para ejecutar **casos de uso** específicos que responden a las necesidades del mundo exterior. No contiene lógica de negocio, pero dirige a los objetos de dominio que sí la tienen.
-  * **¿Qué Contiene?**
-      * **Casos de Uso / Servicios de Aplicación:** Clases como `CrearPedidoCasoDeUso` o `ObtenerDetallesDeUsuario`. Cada método público de estas clases representa un caso de uso completo.
-      * **Puertos (Interfaces):** Aquí se definen los **contratos** para las dependencias externas (los puertos de salida). Por ejemplo, la interfaz abstracta `RepositorioDePedidos` o `ServicioDeNotificaciones`.
-      * **DTOs (Data Transfer Objects):** Opcionalmente, objetos simples para transferir datos de entrada y salida del núcleo, evitando exponer los modelos de dominio internos.
-  * **Reglas Clave:**
-      * Depende **únicamente** de la capa de Dominio.
-      * Coordina la lógica, pero no la implementa. Gestiona transacciones y llama a los repositorios.
-      * Sigue siendo independiente de la infraestructura (no sabe de HTTP ni de SQL).
-  * **Ejemplo de Estructura de Ficheros:**
-    ```
-    mi_servicio/
-    └── nucleo/
-        └── aplicacion/
-            ├── __init__.py
-            ├── casos_de_uso/
-            │   └── crear_pedido.py # Clase CrearPedidoCasoDeUso
-            └── puertos/
-                └── repositorios.py # Interfaz RepositorioDePedidos
-    ```
+
+Esta capa envuelve al dominio y expone la **interfaz del núcleo**: define *cómo* el exterior puede interactuar con el sistema sin preocuparse de los detalles técnicos. Actúa como una **fachada organizadora de casos de uso**, implementando las reglas de orquestación necesarias para ejecutar acciones del negocio.
+
+
+
+####  **Su Propósito**
+
+* Encapsular los **casos de uso** de la aplicación (ej. registrar un pedido, actualizar el stock, procesar un pago).
+* **Exponer puertos de entrada**: son interfaces que definen las operaciones que los adaptadores externos pueden invocar para interactuar con el sistema.
+* **Utilizar puertos de salida**: se conecta con interfaces que abstraen recursos externos (como persistencia, mensajería, APIs externas).
+* **Coordinar la interacción** entre entidades de dominio, servicios de dominio y adaptadores tecnológicos, pero sin asumir la lógica de negocio en sí.
+
+
+
+####  **¿Qué Contiene?**
+
+* **Puertos de Entrada (Input Ports):** Interfaces que definen qué operaciones puede invocar el exterior (por ejemplo, `IGestionInventarioInputPort`). Son implementadas por los servicios de aplicación.
+* **Casos de Uso / Servicios de Aplicación:** Clases que implementan los puertos de entrada y orquestan las acciones necesarias, interactuando con el dominio y los puertos de salida. Por ejemplo: `ServicioGestionInventario`, `CrearPedidoCasoDeUso`.
+* **Puertos de Salida (Output Ports):** Interfaces que definen qué necesita la aplicación del mundo exterior (ej. `IRepositorioPedidos`, `IServicioDeNotificaciones`). Estas interfaces serán implementadas por la infraestructura.
+* **DTOs (Data Transfer Objects):** Objetos simples (ej. con Pydantic) que encapsulan los datos de entrada y salida de los casos de uso. Facilitan la comunicación sin exponer directamente el modelo de dominio.
+
+
+####  **Reglas Clave**
+
+* **Depende únicamente del Dominio.** No puede importar nada de FastAPI, SQLAlchemy ni herramientas de infraestructura.
+* **No contiene lógica de negocio interna.** Solo organiza, valida flujos y delega la ejecución a las entidades del dominio.
+* **Define y usa interfaces (puertos).** Los define como contratos que serán utilizados o implementados por otras capas (Interfaces e Infraestructura).
+* **Inversiones de dependencia.** Tanto los adaptadores de entrada como los de salida dependen de esta capa, nunca al revés.
+
+
+
+####  **Ejemplo de Estructura de Ficheros**
+
+```text
+mi_servicio/
+└── nucleo/
+    └── aplicacion/
+        ├── __init__.py
+        ├── casos_de_uso/
+        │   └── crear_pedido.py            # Clase CrearPedidoCasoDeUso, implementa el puerto de entrada
+        ├── puertos/
+        │   ├── entrada/
+        │   │   └── ipedido_input_port.py  # Interface de puerto de entrada
+        │   └── salida/
+        │       └── irepositorio_pedidos.py # Interface de puerto de salida
+        └── dtos/
+            └── pedido_dto.py              # DTOs de entrada/salida del caso de uso
+```
+
+---
+
+Si deseas, puedo acompañar esta explicación con un diagrama Mermaid que muestre gráficamente cómo se conectan los puertos de entrada, servicios de aplicación y puertos de salida. ¿Lo generamos?
+
 
 ### 3\. Capa de Infraestructura (Los Implementadores)
 
@@ -265,6 +297,31 @@ Es la capa más externa, el punto de entrada a la aplicación. A menudo se agrup
     ```
 
 Separar tu código en estas capas te proporciona un mapa claro que fomenta un bajo acoplamiento, alta cohesión y una increíble capacidad para probar y evolucionar tu sistema.
+
+**Tabla Resumen**
+¡Por supuesto! Aquí tienes una **tabla resumen clara, detallada y profesional** sobre la **Arquitectura Hexagonal (Ports and Adapters)**, ideal para usar como guía de referencia en tu curso o proyecto.
+
+---
+
+## 🧱 Tabla resumen de la Arquitectura Hexagonal
+
+| **Elemento**                                       | **Ubicación**                                                              | **Responsabilidad Principal**                                                                   | **Ejemplos Concretos**                                                                                          | **Dependencias Permitidas**            |
+| -------------------------------------------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | -------------------------------------- |
+| 🧠 **Dominio**                                     | `dominio/`                                                                 | Modelar el conocimiento del negocio, sin depender de tecnología                                 | - `Producto`, `Pedido` (Entidades) <br> - `Dinero` (Value Object) <br> - `PedidoConfirmado` (Evento de Dominio) | ❌ No depende de nada externo           |
+| 🔌 **Puertos de Salida**                           | `aplicacion/puertos/salida/` <br> *(en algunos casos: `dominio/puertos/`)* | Definir contratos que necesita la aplicación para interactuar con recursos externos             | - `IRepositorioProductos` <br> - `IServicioDeNotificaciones`                                                    | ✅ Puede importar `dominio`             |
+| 📡 **Puertos de Entrada**                          | `aplicacion/puertos/entrada/`                                              | Definir las operaciones disponibles para los actores externos (casos de uso)                    | - `IGestionProductosInputPort` <br> - `ICrearPedidoPort`                                                        | ✅ Puede importar `dominio` y `dtos`    |
+| 🧩 **Servicios de Aplicación** <br> (Casos de uso) | `aplicacion/servicios/`                                                    | Implementan los puertos de entrada, orquestan entidades de dominio y llaman a puertos de salida | - `ServicioGestionProductos` <br> - `CrearPedidoCasoDeUso`                                                      | ✅ Importa `dominio`, `puertos`, `dtos` |
+| 📦 **DTOs**                                        | `aplicacion/dtos/`                                                         | Estructuras de datos planas para mover datos entre adaptadores y casos de uso                   | - `ProductoDTO`, `PedidoDTO`, `DatosNuevoProductoDTO`                                                           | ✅ Usados por `puertos`, `adaptadores`  |
+| 🧰 **Adaptadores de Entrada**                      | `interfaces/` o `infraestructura/adaptadores_entrada/`                     | Traducen peticiones externas a llamadas a puertos de entrada                                    | - `FastAPIRouter` <br> - `CLI Handler` <br> - `KafkaConsumerAdapter`                                            | ✅ Importa `puertos/entrada`, `dtos`    |
+| 🏗️ **Adaptadores de Salida**                      | `infraestructura/adaptadores_salida/`                                      | Implementan los puertos de salida usando tecnología concreta                                    | - `RepositorioProductosSQLAlchemy` <br> - `ServicioEmailSMTP`                                                   | ✅ Importa `puertos/salida`, `dominio`  |
+| ⚙️ **Infraestructura Técnica**                     | `infraestructura/config/`, `db/`, `orm/`                                   | Inicialización técnica de recursos (base de datos, colas, clientes externos, configuración)     | - `database.py` <br> - `product_model.py` <br> - `event_dispatcher.py`                                          | ✅ Importa cualquier cosa necesaria     |
+| 🚪 **main.py** (Entry Point)                       | raíz del proyecto                                                          | Arranque de la app, configuración de dependencias, routers, middlewares                         | - Crear instancia FastAPI <br> - Cargar contenedores de DI                                                      | ✅ Orquesta toda la app                 |
+| 🧪 **Pruebas del Núcleo**                          | `tests/dominio/`, `tests/aplicacion/`                                      | Validan lógica de negocio y casos de uso sin infraestructura                                    | - `test_producto.py` <br> - `test_gestion_productos.py`                                                         | ✅ Usa mocks o adaptadores en memoria   |
+| 🔬 **Pruebas de Integración**                      | `tests/infraestructura/`, `tests/interfaces/`                              | Validan integraciones entre adaptadores, base de datos y casos de uso                           | - `test_repositorio_sql.py` <br> - `test_rutas_productos.py`                                                    | ✅ Requieren recursos externos          |
+
+
+
+
 
 ---
 
@@ -2199,49 +2256,63 @@ Ahora, juntemos todo en una estructura de proyecto.
 hexagonal_fastapi_ddd/
 ├── app/
 │   ├── __init__.py
-│   ├── application/                 # Casos de Uso, DTOs, Puertos de Entrada (Servicios App)
+│
+│   ├── dominio/                              # Capa de Dominio: modelo de negocio puro
 │   │   ├── __init__.py
-│   │   ├── dtos/
-│   │   │   └── product_dto.py
-│   │   ├── ports/
-│   │   │   └── product_service.py   # Interfaz ProductServicePort
-│   │   └── services/
-│   │       └── product_app_service.py # Implementación ProductApplicationService
-│   ├── domain/                      # Lógica de Negocio Pura
+│   │   ├── modelos/                          # Entidades y Objetos de Valor
+│   │   │   └── producto.py                   # Entidad Producto
+│   │   ├── eventos/                          # Eventos de Dominio
+│   │   │   └── producto_eventos.py
+│   │   └── puertos/                          # Puertos de Salida (Output Ports)
+│   │       └── repositorio_productos.py      # IRepositorioProductos
+│
+│   ├── aplicacion/                           # Capa de Aplicación: orquestación
 │   │   ├── __init__.py
-│   │   ├── entities/
-│   │   │   └── product.py           # Entidad Product
-│   │   ├── events/
-│   │   │   └── product_events.py    # Eventos de Dominio
-│   │   └── ports/
-│   │       └── product_repository.py # Interfaz ProductRepositoryPort
-│   ├── infrastructure/              # Implementaciones Concretas de Adaptadores de Salida y Config
+│   │   ├── dtos/                             # DTOs para entrada/salida de casos de uso
+│   │   │   └── producto_dto.py
+│   │   ├── puertos/
+│   │   │   ├── entrada/
+│   │   │   │   └── igestion_productos.py     # Puerto de entrada IGestionProductosInputPort
+│   │   │   └── salida/
+│   │   │       └── irepositorio_productos.py # Puerto de salida IRepositorioProductos
+│   │   └── servicios/
+│   │       └── gestion_productos.py          # ServicioGestionProductos (implementa puerto de entrada)
+│
+│   ├── infraestructura/                      # Adaptadores de salida + configuración técnica
 │   │   ├── __init__.py
-│   │   ├── database.py              # Configuración de DB (SQLAlchemy, get_session)
-│   │   ├── db_models/
-│   │   │   └── product_model.py     # Modelo SQLAlchemy para Product
-│   │   ├── event_dispatcher.py
-│   │   ├── event_handlers.py
-│   │   └── repositories/
-│   │       └── mariadb_product_repository.py # Implementación MariaDBProductRepository
-│   └── interfaces/                  # Adaptadores de Entrada (API, CLI, etc.)
-│       ├── __init__.py
-│       └── api/
-│           ├── __init__.py
-│           ├── dependencies.py      # Factorías para Inyección de Dependencias
-│           └── product_routes.py    # Endpoints FastAPI para Productos
-├── tests/                           # Pruebas (unitarias, integración)
+│   │   ├── config/
+│   │   │   └── database.py                   # Conexión a DB (SQLAlchemy, sesión, etc.)
+│   │   ├── modelos_orm/
+│   │   │   └── producto_modelo.py            # Modelo SQLAlchemy para Producto
+│   │   ├── eventos/
+│   │   │   ├── dispatcher.py
+│   │   │   └── manejadores.py
+│   │   └── adaptadores_salida/
+│   │       └── repositorio_productos_sql.py  # Implementación con SQLAlchemy del repositorio
+│
+│   ├── interfaces/                            # Adaptadores de Entrada
+│   │   ├── __init__.py
+│   │   └── api/
+│   │       ├── __init__.py
+│   │       ├── dependencias.py               # Inyección de dependencias con FastAPI
+│   │       └── rutas_productos.py            # Endpoints FastAPI para productos
+│
+├── tests/                                     # Pruebas unitarias y de integración
 │   ├── __init__.py
-│   ├── application/
-│   │   └── test_product_service.py
-│   └── domain/
-│       └── test_product_entity.py
-├── .env                             # Variables de entorno (ej. DATABASE_URL)
+│   ├── dominio/
+│   │   └── test_producto.py
+│   ├── aplicacion/
+│   │   └── test_gestion_productos.py
+│   └── infraestructura/
+│       └── test_repositorio_sql.py
+│
+├── .env
 ├── .gitignore
 ├── Dockerfile
 ├── docker-compose.yml
-├── main.py                          # Punto de entrada de la aplicación FastAPI
+├── main.py                                   # Punto de entrada de FastAPI
 └── requirements.txt
+
 ```
 
 **`app/domain/entities/product.py`:** (Como se mostró antes, con `_events` y métodos)
